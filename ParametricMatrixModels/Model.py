@@ -1,4 +1,5 @@
 import jax.numpy as np
+import jax
 from jax import jit, vmap, random
 from .Training import train, make_loss_fn
 from .Modules import BaseModule
@@ -281,7 +282,9 @@ class Model(object):
 
         return model_callable
 
-    def __call__(self, X: np.ndarray) -> np.ndarray:
+    def __call__(
+        self, X: np.ndarray, dtype: Optional[Any] = np.float64
+    ) -> np.ndarray:
         """
         Call the model with the input array.
 
@@ -292,6 +295,12 @@ class Model(object):
                 For example, (batch_size, input_features) for a 1D input or
                 (batch_size, input_height, input_width, input_channels) for a
                 3D input.
+            dtype : Optional[Any], optional
+                Data type of the output array. Default is jax.numpy.float64.
+                It is strongly recommended to perform training in single
+                precision (float32 and complex64) and inference with double
+                precision inputs (float64, the default here) with single
+                precision weights.
 
         Returns
         -------
@@ -307,7 +316,90 @@ class Model(object):
         if self.callable is None:
             self.callable = jit(self._get_callable())
 
-        return self.callable(self.get_params(), X)
+        X_ = X.astype(dtype)
+
+        # make sure the dtype was converted, issue a warning if not
+        if X_.dtype != dtype:
+            print(
+                f"\033[1;91m[WARN] While performing inference with model: "
+                f"Requested dtype ({dtype}) was not successfully applied. "
+                "This is most likely due to JAX_ENABLE_X64 not being set. "
+                "See accompanying JAX warning for more details.\033[0m"
+            )
+
+        return self.callable(self.get_params(), X_)
+
+    predict = __call__
+
+    def set_precision(self, prec: Union[np.dtype, str, int]) -> None:
+        """
+        Set the precision of the model parameters and states.
+
+        Parameters
+        ----------
+            prec : Union[np.dtype, str, int]
+                Precision to set for the model parameters and states.
+                Valid options are:
+                    [for 32-bit precision (all options are equivalent)]
+                    - np.float32, np.complex64, "float32", "complex64"
+                    - "single", "f32", "c64", 32
+                    [for 64-bit precision (all options are equivalent)]
+                    - np.float64, np.complex128, "float64", "complex128"
+                    - "double", "f64", "c128", 64
+        """
+        if not self.ready:
+            raise RuntimeError("Model is not ready. Call compile() first.")
+
+        # convert precision to 32 or 64
+        if prec in [
+            np.float32,
+            np.complex64,
+            "float32",
+            "complex64",
+            "single",
+            "f32",
+            "c64",
+            32,
+        ]:
+            prec = 32
+        elif prec in [
+            np.float64,
+            np.complex128,
+            "float64",
+            "complex128",
+            "double",
+            "f64",
+            "c128",
+            64,
+        ]:
+            prec = 64
+        else:
+            raise ValueError(
+                "Invalid precision. Valid options are:\n"
+                "[for 32-bit precision] np.float32, np.complex64, 'float32', "
+                "'complex64', 'single', 'f32', 'c64', 32;\n"
+                "[for 64-bit precision] np.float64, np.complex128, 'float64', "
+                "'complex128', 'double', 'f64', 'c128', 64."
+            )
+
+        # check if dtype is supported
+        if not jax.config.read("jax_enable_x64") and prec == 64:
+            raise ValueError(
+                "JAX_ENABLE_X64 is not set. "
+                "Please set it to True to use double precision float64 or "
+                "complex128 data types."
+            )
+
+        for module in self.modules:
+            module.set_precision(prec)
+
+    def astype(self, dtype: Union[np.dtype, str]) -> "Model":
+        """
+        Convenience wrapper to set_precision using the dtype argument, returns
+        self.
+        """
+        self.set_precision(dtype)
+        return self
 
     def train(
         self,
@@ -338,6 +430,23 @@ class Model(object):
         # check if the model is ready
         if not self.ready:
             self.compile(random.PRNGKey(seed or 0), X.shape[1:])
+
+        # check if any of the model parameters are double precision and give a
+        # warning if so
+        if any(
+            (
+                np.issubdtype(np.asarray(param).dtype, np.float64)
+                or np.issubdtype(np.asarray(param).dtype, np.complex128)
+            )
+            for param in self.get_params()
+        ):
+            print(
+                "\033[1;91m[WARN] Some parameters are double precision. "
+                "This may lead to significantly slower training on certain "
+                "backends. It is strongly recommended to use single precision "
+                "(float32/complex64) parameters for training. Set the "
+                "precision of the model with Model.set_precision.\033[0m"
+            )
 
         # check dimensions
         input_shape = X.shape[1:]
@@ -465,7 +574,7 @@ class Model(object):
         # savez
         data = self.serialize()
 
-        filename = filename if filename.endswith(".pmm") else filename + ".pmm"
+        filename = filename if filename.endswith(".npz") else filename + ".npz"
         np.savez(filename, **data)
 
     def load(self, filename: str) -> None:
@@ -477,7 +586,7 @@ class Model(object):
             filename : str
                 Name of the file to load the model from.
         """
-        filename = filename if filename.endswith(".pmm") else filename + ".pmm"
+        filename = filename if filename.endswith(".npz") else filename + ".npz"
         data = np.load(filename, allow_pickle=True)
 
         # deserialize the model

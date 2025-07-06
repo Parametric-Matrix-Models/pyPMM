@@ -120,9 +120,9 @@ def adam(step_size, b1=0.9, b2=0.999, eps=1e-8, clip=np.inf):
         """
         Initializes the Adam optimizer state.
         """
-        m = np.zeros_like(x0, dtype=np.float64)
-        v = np.zeros_like(x0, dtype=np.float64)
-        return x0.astype(np.float64), m, v
+        m = np.zeros_like(x0, dtype=np.float32)
+        v = np.zeros_like(x0, dtype=np.float32)
+        return x0.astype(np.float32), m, v
 
     def update(i, dx, state):
         """
@@ -168,9 +168,9 @@ def complex_adam(step_size, b1=0.9, b2=0.999, eps=1e-8, clip=np.inf):
         """
         Initializes the Adam optimizer state.
         """
-        m = np.zeros_like(x0, dtype=np.complex64)
-        v = np.zeros_like(x0, dtype=np.complex64)
-        return x0.astype(np.complex64), m, v
+        m = np.zeros_like(x0)
+        v = np.zeros_like(x0)
+        return x0, m, v
 
     def update(i, dx, state):
         """
@@ -178,14 +178,28 @@ def complex_adam(step_size, b1=0.9, b2=0.999, eps=1e-8, clip=np.inf):
         """
         x, m, v = state
 
-        # conjugate and clip
-        dx = np.clip(dx.real, -clip, clip) - 1j * np.clip(dx.imag, -clip, clip)
+        # choose update based on dtype
+        # this branch will be traced out since JAX arrays are static shape and
+        # dtype
+        if np.iscomplexobj(x):
+            # conjugate and clip
+            dx = np.clip(dx.real, -clip, clip) - 1j * np.clip(
+                dx.imag, -clip, clip
+            )
 
-        m = b1 * m + (1 - b1) * dx
-        v = b2 * v + (1 - b2) * (dx * np.conj(dx))
+            m = b1 * m + (1 - b1) * dx
+            v = b2 * v + (1 - b2) * (dx * np.conj(dx))
+        else:
+            # real numbers, clip
+            dx = np.clip(dx, -clip, clip)
+
+            m = b1 * m + (1 - b1) * dx
+            v = b2 * v + (1 - b2) * dx**2
+
         m_hat = m / (1 - b1 ** (i + 1))
         v_hat = v / (1 - b2 ** (i + 1))
-        x = x - step_size(i) * m_hat / (np.sqrt(v_hat) + eps)
+        x = x - (step_size(i) * m_hat / (np.sqrt(v_hat) + eps)).astype(x.dtype)
+
         return x, m, v
 
     def get_params(state):
@@ -608,6 +622,38 @@ def train(
     """
     Train a model from scratch using the Adam optimizer.
     """
+    # check if any of the data are double precision and give a warning if so
+    # if any(
+    #    (
+    #        d is not None
+    #        and (
+    #            np.issubdtype(np.asarray(d).dtype, np.float64)
+    #            or np.issubdtype(np.asarray(d).dtype, np.complex128)
+    #        )
+    #        for d in (X, Y, X_val, Y_val, Y_unc, Y_val_unc)
+    #    )
+    # ):
+    #    print(
+    #        "\033[1;91m[WARN] Some data are double precision. "
+    #        "This may lead to significantly slower training on certain "
+    #        "backends. It is strongly recommended to use single precision "
+    #        "(float32/complex64) data for training.\033[0m"
+    #    )
+
+    # check if any parameters are double precision and give a warning if so
+    if any(
+        (
+            np.issubdtype(np.asarray(param).dtype, np.float64)
+            or np.issubdtype(np.asarray(param).dtype, np.complex128)
+        )
+        for param in init_params
+    ):
+        print(
+            "\033[1;91m[WARN] Some parameters are double precision. "
+            "This may lead to significantly slower training on certain "
+            "backends. It is strongly recommended to use single precision "
+            "(float32/complex64) parameters for training.\033[0m"
+        )
 
     if callback is None:
         callback = lambda rng, step, params: (rng, params)
@@ -641,15 +687,18 @@ def train(
     # make Y data a dummy array with the same leading dimension as X
     # and redefine the loss function to take Y as a dummy variable
     if Y is None:
-        Y = np.zeros((X.shape[0], 1), dtype=np.float64)
+        Y = np.zeros((X.shape[0], 1), dtype=X.dtype)
         loss_fn_ = loss_fn
         loss_fn = lambda X, Y, params: loss_fn_(X, params)
 
     if Y_unc is None:
         # if no uncertainty in the targets is provided, assume it is 1
-        Y_unc = np.ones_like(Y, dtype=np.float64)
+        Y_unc = np.ones_like(Y)
         loss_fn_ = loss_fn
         loss_fn = lambda X, Y, Y_unc, params: loss_fn_(X, Y, params)
+
+        if Y_val is not None:
+            Y_val_unc = np.ones_like(Y_val)
 
     # input handling
     # if validation data is not provided, use the training data
@@ -793,7 +842,9 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
         # mean relative difference with uncertainty in the targets
         def loss_fn(X, Y, Y_unc, params):
             Y_pred = model_fn(X, params)
-            return np.mean(np.abs((Y_pred - Y) / ((2.0 * (Y + Y_pred) + 1e-4) * Y_unc)))
+            return np.mean(
+                np.abs((Y_pred - Y) / ((2.0 * (Y + Y_pred) + 1e-4) * Y_unc))
+            )
 
     else:
         raise ValueError(f"Unknown loss function: {fn_name}")

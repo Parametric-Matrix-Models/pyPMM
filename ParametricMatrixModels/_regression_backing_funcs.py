@@ -95,7 +95,7 @@ def reg_pmm_predict_func_single(
     Ds = (Ds + Ds.conj().transpose(0, 1, 3, 2)) / 2
     gs = gs.real
 
-    M = A + np.einsum("i,ijk->jk", X, Bs)
+    M = A + np.einsum("i,ijk->jk", X.astype(Bs.dtype), Bs)
 
     E, V = np.linalg.eigh(M)
 

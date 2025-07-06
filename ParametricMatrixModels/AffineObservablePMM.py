@@ -247,6 +247,7 @@ class AffineObservablePMM(BaseModule):
                 raise ValueError(
                     f"Input shape {input_shape} does not match the expected number of features {self.p}"
                 )
+            return
 
         # otherwise, initialize the matrices
         self.p = input_shape[0]  # number of input features

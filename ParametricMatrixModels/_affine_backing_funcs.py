@@ -161,7 +161,7 @@ def affine_pmm_predict_func_single(
         Selected energies (k,).
     """
 
-    H = A + np.einsum("i,ijk->jk", cs, Bs)
+    H = A + np.einsum("i,ijk->jk", cs.astype(Bs.dtype), Bs)
     # Compute the eigenvalues of H
     E = np.linalg.eigvalsh(H)
 

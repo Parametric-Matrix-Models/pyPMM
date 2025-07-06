@@ -7,6 +7,7 @@ other (optionally stateful and trainable) operations in JAX.
 Modules can be combined to create Models.
 """
 
+import jax
 import jax.numpy as np
 from jax import jit, vmap, lax
 from typing import Callable, Tuple, Any, Union, Optional, Dict
@@ -292,6 +293,86 @@ class BaseModule(object):
             Tuple of numpy arrays representing the new state.
         """
         pass
+
+    def set_precision(self, prec: Union[np.dtype, str, int]) -> None:
+        """
+        Set the precision of the module parameters and state.
+
+        Parameters
+        ----------
+            prec : Union[np.dtype, str, int]
+                Precision to set for the module parameters.
+                Valid options are:
+                    [for 32-bit precision (all options are equivalent)]
+                    - np.float32, np.complex64, "float32", "complex64"
+                    - "single", "f32", "c64", 32
+                    [for 64-bit precision (all options are equivalent)]
+                    - np.float64, np.complex128, "float64", "complex128"
+                    - "double", "f64", "c128", 64
+        """
+        if not self.is_ready():
+            raise RuntimeError("Module is not ready. Call compile() first.")
+
+        # convert precision to 32 or 64
+        if prec in [
+            np.float32,
+            np.complex64,
+            "float32",
+            "complex64",
+            "single",
+            "f32",
+            "c64",
+            32,
+        ]:
+            prec = 32
+        elif prec in [
+            np.float64,
+            np.complex128,
+            "float64",
+            "complex128",
+            "double",
+            "f64",
+            "c128",
+            64,
+        ]:
+            prec = 64
+        else:
+            raise ValueError(
+                "Invalid precision. Valid options are:\n"
+                "[for 32-bit precision] np.float32, np.complex64, 'float32', "
+                "'complex64', 'single', 'f32', 'c64', 32;\n"
+                "[for 64-bit precision] np.float64, np.complex128, 'float64', "
+                "'complex128', 'double', 'f64', 'c128', 64."
+            )
+
+        # check if dtype is supported
+        if not jax.config.read("jax_enable_x64") and prec == 64:
+            raise ValueError(
+                "JAX_ENABLE_X64 is not set. "
+                "Please set it to True to use double precision float64 or "
+                "complex128 data types."
+            )
+
+        def set_param_prec(p: np.ndarray) -> np.ndarray:
+            """
+            Set the precision of a single parameter array, choosing real or
+            complex precision based on the original dtype.
+            """
+            if np.iscomplexobj(p):
+                return p.astype(np.complex64 if prec == 32 else np.complex128)
+            else:
+                return p.astype(np.float32 if prec == 32 else np.float64)
+
+        self.set_params(tuple(set_param_prec(p) for p in self.get_params()))
+        self.set_state(tuple(set_param_prec(s) for s in self.get_state()))
+
+    def astype(self, dtype: Union[np.dtype, str]) -> "BaseModule":
+        """
+        Convenience wrapper to set_precision using the dtype argument, returns
+        self.
+        """
+        self.set_precision(dtype)
+        return self
 
     def serialize(self) -> Dict[str, Any]:
         """
