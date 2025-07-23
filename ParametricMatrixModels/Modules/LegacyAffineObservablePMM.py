@@ -2,10 +2,10 @@ from .BaseModule import BaseModule
 import jax.numpy as np
 import jax
 from typing import Callable, Tuple, Any, Union, Optional, Dict
-from ._regression_backing_funcs import reg_pmm_predict_func
+from ._regression_backing_funcs import reg_pmm_predict_func_legacy
 
 
-class AffineObservablePMM(BaseModule):
+class LegacyAffineObservablePMM(BaseModule):
     """
     AffineObservablePMM is a module that implements the affine observable
     Parametric Matrix Model (PMM), which is useful for generalize regression
@@ -14,9 +14,10 @@ class AffineObservablePMM(BaseModule):
     def __init__(
         self,
         n: int = None,
-        r: int = None,
         l: int = None,
         k: int = None,
+        smoothing: Optional[str] = None,
+        smoothing_param: Optional[float] = None,
         Ms: Optional[np.ndarray] = None,
         Ds: Optional[np.ndarray] = None,
         gs: Optional[np.ndarray] = None,
@@ -45,19 +46,29 @@ class AffineObservablePMM(BaseModule):
         ----------
             n : int
                 Size of the PMM matrices (n x n).
-            r : int
-                Number of eigenpairs to use.
             l : int
                 Number of observable matrices
             k : int
                 Number of output features
+            smoothing : Optional[str], optional
+                Smoothing method to use, if any. Options are:
+                - None/"none": No smoothing.
+                - "exact": Modify primary matrix with the commutators to ensure
+                           smooth avoided level crossings.
+                           M_smooth(c) = M(c) + s * i * sum_{ij}^p [M_i, M_j]
+                - "average": Modify the calculation of the primary matrix
+                             eigensystem to average between c - s and c + s.
+                Defaults to None.
+            smoothing_param : Optional[float], optional
+                Smoothing parameter for the smoothing method, if applicable.
+                Defaults to None/0.0.
             Ms : Optional[np.ndarray], optional
                 Optional array of matrices M0, M1, ..., Mp that define the
                 parametric Hamiltonian. Each M must be Hermitian. If not
                 provided, the matrices will be randomly initialized when the
                 module is compiled.
             Ds : Optional[np.ndarray], optional
-                Optional 4D array of matrices D_{kl} that define the
+                Optional 5D array of matrices D_{kl} that define the
                 observables. Each D must be Hermitian. If not provided, the
                 observables will be randomly initialized when the module is
                 compiled.
@@ -71,12 +82,13 @@ class AffineObservablePMM(BaseModule):
         """
 
         # input validation
-        if n is None or r is None or l is None or k is None:
+        if n is None or l is None or k is None:
             # module will be configured later, hopefully
             self.n = None
-            self.r = None
             self.l = None
             self.k = None
+            self.smoothing = None
+            self.smoothing_param = None
             self.p = None
             self.Ms = None
             self.Ds = None
@@ -85,14 +97,25 @@ class AffineObservablePMM(BaseModule):
             return
         if n <= 0 or not isinstance(n, int):
             raise ValueError("n must be a positive integer")
-        if r <= 0 or not isinstance(r, int):
-            raise ValueError("r must be a positive integer")
-        if r > n:
-            raise ValueError("r must be less than or equal to n")
         if l <= 0 or not isinstance(l, int):
             raise ValueError("l must be a positive integer")
+        if l > n:
+            raise ValueError(
+                f"l must be less than or equal to n, got l={l} and n={n}"
+            )
         if k <= 0 or not isinstance(k, int):
             raise ValueError("k must be a positive integer")
+
+        if smoothing not in (None, "none", "exact", "average"):
+            raise ValueError(
+                "smoothing must be one of None, 'none', 'exact', or 'average'"
+            )
+
+        # TODO: handle "average" smoothing for multidimensional inputs
+        if smoothing == "average":
+            raise NotImplementedError(
+                "Average smoothing is not implemented for multidimensional inputs"
+            )
 
         # if any of the parameters are provided, they must all be provided
         if Ms is None and (Ds is not None or gs is not None):
@@ -119,10 +142,10 @@ class AffineObservablePMM(BaseModule):
                     f"Ms must be a 3D array of shape (p+1, n, n) "
                     f"[({Ms.shape[0]}, {n}, {n})], got {Ms.shape}"
                 )
-            if Ds.shape != (k, l, n, n):
+            if Ds.shape != (k, l, l, n, n):
                 raise ValueError(
-                    f"Ds must be a 4D array of shape (k, l, n, n) "
-                    f"[({k}, {l}, {n}, {n})], got {Ds.shape}"
+                    f"Ds must be a 5D array of shape (k, l, l, n, n) "
+                    f"[({k}, {l}, {l}, {n}, {n})], got {Ds.shape}"
                 )
             if gs.shape != (k,):
                 raise ValueError(
@@ -132,16 +155,22 @@ class AffineObservablePMM(BaseModule):
             if not np.allclose(Ms, Ms.conj().transpose((0, 2, 1))):
                 raise ValueError("Ms must be Hermitian matrices")
             # ensure Ds are Hermitian
-            if not np.allclose(Ds, Ds.conj().transpose((0, 1, 3, 2))):
+            if not np.allclose(Ds, Ds.conj().transpose((0, 1, 2, 4, 3))):
                 raise ValueError("Ds must be Hermitian matrices")
+            # ensure Ds is symmetric in the 1, 2 dimensions
+            if not np.allclose(Ds, Ds.transpose((0, 2, 1, 3, 4))):
+                raise ValueError("Ds must be symmetric in the 1, 2 dimensions")
             # ensure gs is real
             if not np.isreal(gs).all():
                 raise ValueError("gs must be a real-valued array")
 
         self.n = n
-        self.r = r
         self.l = l
         self.k = k
+        self.smoothing = smoothing
+        self.smoothing_param = (
+            smoothing_param if smoothing_param is not None else 0.0
+        )
         self.p = (
             (Ms.shape[0] - 1) if Ms is not None else None
         )  # number of input features
@@ -155,7 +184,11 @@ class AffineObservablePMM(BaseModule):
         Returns the name of the module
         """
 
-        return f"AffineObservablePMM ({self.n}x{self.n}, r={self.r}, l={self.l}, k={self.k})"
+        return (
+            f"LegacyAffineObservablePMM ({self.n}x{self.n}, "
+            f"l={self.l}, k={self.k}, smoothing={self.smoothing}, "
+            f"smoothing_param={self.smoothing_param})"
+        )
 
     def is_ready(self) -> bool:
         return (
@@ -174,10 +207,14 @@ class AffineObservablePMM(BaseModule):
         # the total number of trainable floats is then just n^2 per matrix
         # so Ms contributes (p + 1) * n^2 floats
 
-        # each matrix D is also Hermitian, so it contributes k * l * n^2 floats
+        # each matrix D is also Hermitian, so it contributes k * l * (l + 1) / 2* n^2 floats
 
         # gs contributes k floats
-        return (self.p + 1) * self.n**2 + self.k * self.l * self.n**2 + self.k
+        return (
+            (self.p + 1) * self.n**2
+            + self.k * (self.l * (self.l + 1) // 2) * self.n**2
+            + self.k
+        )
 
     def _get_callable(self) -> Callable:
         """
@@ -202,13 +239,14 @@ class AffineObservablePMM(BaseModule):
         The training flag will be traced out, so it doesn't need to be jittable
         """
         return lambda params, input_NF, training, state, rng: (
-            reg_pmm_predict_func(
+            reg_pmm_predict_func_legacy(
                 params[0][0],  # A or M0
                 np.array(params[0][1:]),  # Bs or M1, ..., Mp
                 np.array(params[1]),  # Ds
                 params[2],  # gs
-                self.r,  # r
                 input_NF,  # X
+                self.smoothing,  # smoothing
+                self.smoothing_param,  # smoothing_param
             ),
             state,  # state is not used in this module, return it unchanged
         )
@@ -271,18 +309,20 @@ class AffineObservablePMM(BaseModule):
         self.Ds = self.init_magnitude * (
             jax.random.normal(
                 rng_Dreal,
-                (self.k, self.l, self.n, self.n),
+                (self.k, self.l, self.l, self.n, self.n),
                 dtype=np.complex64,
             )
             + 1j
             * jax.random.normal(
                 rng_Dimag,
-                (self.k, self.l, self.n, self.n),
+                (self.k, self.l, self.l, self.n, self.n),
                 dtype=np.complex64,
             )
         )
         # ensure the Ds are Hermitian
-        self.Ds = (self.Ds + self.Ds.conj().transpose((0, 1, 3, 2))) / 2.0
+        self.Ds = (self.Ds + self.Ds.conj().transpose((0, 1, 2, 4, 3))) / 2.0
+        # ensure Ds is symmetric in the 1, 2 dimensions
+        self.Ds = (self.Ds + self.Ds.transpose((0, 2, 1, 3, 4))) / 2.0
 
         # initialize gs
         self.gs = self.init_magnitude * jax.random.normal(
@@ -317,10 +357,11 @@ class AffineObservablePMM(BaseModule):
         """
         return {
             "n": self.n,
-            "r": self.r,
             "l": self.l,
             "k": self.k,
             "p": self.p,
+            "smoothing": self.smoothing,
+            "smoothing_param": self.smoothing_param,
             "init_magnitude": self.init_magnitude,
         }
 
@@ -376,10 +417,10 @@ class AffineObservablePMM(BaseModule):
                 f"Ms must be a 3D array of shape (p+1, n, n) "
                 f"[({self.p + 1}, {self.n}, {self.n})], got {Ms.shape}"
             )
-        if Ds.shape != (self.k, self.l, self.n, self.n):
+        if Ds.shape != (self.k, self.l, self.l, self.n, self.n):
             raise ValueError(
-                f"Ds must be a 4D array of shape (k, l, n, n) "
-                f"[({self.k}, {self.l}, {self.n}, {self.n})], got {Ds.shape}"
+                f"Ds must be a 4D array of shape (k, l, l, n, n) "
+                f"[({self.k}, {self.l}, {self.l}, {self.n}, {self.n})], got {Ds.shape}"
             )
         if gs.shape != (self.k,):
             raise ValueError(
@@ -389,8 +430,11 @@ class AffineObservablePMM(BaseModule):
         if not np.allclose(Ms, Ms.conj().transpose((0, 2, 1))):
             raise ValueError("Ms must be Hermitian matrices")
         # ensure Ds are Hermitian
-        if not np.allclose(Ds, Ds.conj().transpose((0, 1, 3, 2))):
+        if not np.allclose(Ds, Ds.conj().transpose((0, 1, 2, 4, 3))):
             raise ValueError("Ds must be Hermitian matrices")
+        # ensure Ds is symmetric in the 1, 2 dimensions
+        if not np.allclose(Ds, Ds.transpose((0, 2, 1, 3, 4))):
+            raise ValueError("Ds must be symmetric in the 1, 2 dimensions")
         # ensure gs is real
         if not np.isreal(gs).all():
             raise ValueError("gs must be a real-valued array")

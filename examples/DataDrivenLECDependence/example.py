@@ -153,8 +153,8 @@ model.append_module(
     )
 )
 
-# we can print out the model both before and after preparing it
-print("Model before preparation:")
+# we can print out the model both before and after compiling it
+print("Model before compilation:")
 print("-" * 50)
 print(model)
 print("-" * 50)
@@ -165,29 +165,40 @@ print("-" * 50)
 # can ignore this
 model.compile(jr.key(SEED), cs_train.shape[1:])
 
-print("Model after preparation:")
+print("Model after compilation:")
 print("-" * 50)
 print(model)
 print("-" * 50)
 
 # we can now train the model using the training data
 model.train(
-    cs_train_sc,
-    Es_train_sc,
-    cs_val_sc,
-    Es_val_sc,
+    X=cs_train_sc,
+    Y=Es_train_sc,
+    X_val=cs_val_sc,
+    Y_val=Es_val_sc,
     loss_fn="mse",
     lr=1e-3,
     num_epochs=1000,
-    seed=SEED,
+    batch_seed=SEED,
+    initialization_seed=SEED,
     early_stopping_patience=100,
 )
 
+# save the model to a file
+model.save("example_model.npz")
+
+# we can later load the model from this file
+del model  # delete the current model to free memory
+loaded_model = PMM.Model.from_file("example_model.npz")
+
+# after loading a model, we have to compile it
+loaded_model.compile(jr.key(SEED), cs_train.shape[1:])
+
 # now we can evaluate the model on the test data
-test_Es_pred_sc = model(cs_test_sc)
+test_Es_pred_sc = loaded_model(cs_test_sc)
 # we can also evaluate the model on the training and validation data
-train_Es_pred_sc = model(cs_train_sc)
-val_Es_pred_sc = model(cs_val_sc)
+train_Es_pred_sc = loaded_model(cs_train_sc)
+val_Es_pred_sc = loaded_model(cs_val_sc)
 
 # unscale the predictions
 _, test_Es_pred = scaler.inverse_transform(cs_test_sc, test_Es_pred_sc)
@@ -215,13 +226,13 @@ plt.show()
 
 # we can even pop the Hamiltonian from the model and show what the learned
 # features look like
-model.pop_module()
-model.compile(jr.key(SEED), cs_train.shape[1:])
+loaded_model.pop_module()
+loaded_model.compile(jr.key(SEED), cs_train.shape[1:])
 
 # we can now get the learned features
-f_train_pred_sc = model(cs_train_sc)
-f_val_pred_sc = model(cs_val_sc)
-f_test_pred_sc = model(cs_test_sc)
+f_train_pred_sc = loaded_model(cs_train_sc)
+f_val_pred_sc = loaded_model(cs_val_sc)
+f_test_pred_sc = loaded_model(cs_test_sc)
 
 # and compare them to the true features
 f_train = np.array([features(c) for c in cs_train])

@@ -1,7 +1,7 @@
 from .BaseModule import BaseModule
 from typing import Any, Callable, Dict, Optional, Tuple, Union
 import jax.numpy as np
-from ._helpers import slice_to_string
+from ._helpers import subsets_to_string
 import sys
 
 
@@ -40,7 +40,7 @@ class SubsetModule(BaseModule):
 
     def __init__(
         self,
-        subset: Tuple[slice, ...] = None,
+        subset: Union[Tuple[slice, ...], Tuple[np.ndarray, ...]] = None,
         module: BaseModule = None,
         prepend: bool = True,
         axis: int = 0,
@@ -52,10 +52,11 @@ class SubsetModule(BaseModule):
 
         Parameters
         ----------
-        subset : Tuple[slice, ...]
-            A tuple of slices indicating which parts of the input data to
-            apply the module to. The number of slices must match the shape of
-            the input data, not included the batch dimension. For example, for
+        subset : Union[Tuple[slice, ...], Tuple[np.ndarray, ...]], optional
+            A tuple of slices or index arrays indicating which parts of the
+            input data to apply the module to. The number of slices must match
+            the shape of the input data, not including the batch dimension.
+            For example, for
             input data of shape (num_samples, num_features), a subset of all
             except the first two features would be specified as
             (slice(2, None),).
@@ -87,7 +88,7 @@ class SubsetModule(BaseModule):
         Returns the name of the module
         """
         subname = self.module.name()
-        subset_str = slice_to_string(self.subset)
+        subset_str = subsets_to_string(self.subset)
         pend_str = "PREPEND" if self.prepend else "APPEND"
         pass_str = "PASSTHROUGH, " if self.passthrough else ""
         return f"SubsetModule({subset_str}, {pass_str}{pend_str}, {self.axis}, {subname})"
@@ -201,13 +202,13 @@ class SubsetModule(BaseModule):
             Shape of the input data, e.g. (num_features,).
         """
         self.input_shape = input_shape
-        self.output_shape = self.get_output_shape(input_shape)
 
         # get subinput shape to pass to the module's compile method
         subset_input_zeros = np.zeros(input_shape, dtype=np.float32)[
             self.subset
         ]
         self.module.compile(rng, subset_input_zeros.shape)
+        self.output_shape = self.get_output_shape(input_shape)
 
     def get_output_shape(
         self, input_shape: Tuple[int, ...]
@@ -358,17 +359,24 @@ class SubsetModule(BaseModule):
         module_module = self.module.__module__
         module_serial = self.module.serialize()
 
+        # serialize the subsets by converting any slices to their start, stop,
+        # and step values
+        serial_subsets = (
+            [
+                (
+                    (slc.start, slc.stop, slc.step)
+                    if isinstance(slc, slice)
+                    else slc
+                )
+                for slc in self.subset
+            ]
+            if self.subset
+            else None
+        )
+
         return {
             "name": self.name(),
-            "subset_start": (
-                [slc.start for slc in self.subset] if self.subset else None
-            ),
-            "subset_stop": (
-                [slc.stop for slc in self.subset] if self.subset else None
-            ),
-            "subset_step": (
-                [slc.step for slc in self.subset] if self.subset else None
-            ),
+            "subsets": serial_subsets,
             "prepend": self.prepend,
             "axis": self.axis,
             "passthrough": self.passthrough,
@@ -394,20 +402,16 @@ class SubsetModule(BaseModule):
             Dictionary containing the serialized module data.
         """
 
-        subset_start = data.get("subset_start", None)
-        subset_stop = data.get("subset_stop", None)
-        subset_step = data.get("subset_step", None)
+        subset_slices = data["subsets"]
 
-        subset = (
-            tuple(
-                slice(start, stop, step)
-                for start, stop, step in zip(
-                    subset_start, subset_stop, subset_step
-                )
+        # deserialize the subsets by converting any tuples back to slices
+        if subset_slices is not None:
+            subset = tuple(
+                slice(*slc) if isinstance(slc, tuple) else slc
+                for slc in subset_slices
             )
-            if subset_start is not None
-            else None
-        )
+        else:
+            subset = None
 
         prepend = data["prepend"]
         axis = data["axis"]

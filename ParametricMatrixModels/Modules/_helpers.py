@@ -1,9 +1,9 @@
-def slice_to_string(slice_tuple):
+def subsets_to_string(subset_tuple):
     """
     Convert a tuple of slice objects to __getitem__ notation string.
 
     Args:
-        slice_tuple: A tuple containing slice objects or integers
+        subset_tuple: A tuple containing slice objects or integer arrays
 
     Returns:
         str: String representation in [start:stop:step] format
@@ -21,17 +21,17 @@ def slice_to_string(slice_tuple):
             else:
                 return f"{start}:{stop}:{s.step}"
         else:
-            # Handle integer indices
+            # Handle integer array slices
             return str(s)
 
     # Handle single slice or tuple of slices
-    if isinstance(slice_tuple, slice):
-        return f"[{format_slice(slice_tuple)}]"
-    elif isinstance(slice_tuple, tuple):
-        parts = [format_slice(s) for s in slice_tuple]
+    if isinstance(subset_tuple, slice):
+        return f"[{format_slice(subset_tuple)}]"
+    elif isinstance(subset_tuple, tuple):
+        parts = [format_slice(s) for s in subset_tuple]
         return f"[{', '.join(parts)}]"
     else:
-        return f"[{format_slice(slice_tuple)}]"
+        return f"[{format_slice(subset_tuple)}]"
 
 
 if __name__ == "__main__":

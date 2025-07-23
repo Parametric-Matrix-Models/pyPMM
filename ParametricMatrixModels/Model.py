@@ -5,6 +5,8 @@ from .Training import train, make_loss_fn
 from .Modules import BaseModule
 from typing import Callable, List, Optional, Tuple, Any, Dict, Union
 import sys
+import warnings
+import random
 
 
 class Model(object):
@@ -14,14 +16,13 @@ class Model(object):
 
     def __repr__(self) -> str:
 
-        num_trainable_floats = [
-            module.get_num_trainable_floats() for module in self.modules
-        ]
-        if None in num_trainable_floats:
+        trainable_floats_num = self.get_num_trainable_floats()
+
+        if trainable_floats_num is None:
             num_trainable_floats = "(uninitialized)"
         else:
             num_trainable_floats = (
-                f"(trainable floats: " f"{sum(num_trainable_floats)})"
+                f"(trainable floats: " f"{trainable_floats_num:,})"
             )
 
         rep = (
@@ -34,12 +35,15 @@ class Model(object):
             input_shape = (
                 module.get_output_shape(input_shape) if input_shape else None
             )
+            comment = module.name().startswith("#")
             rep += f"\nModule {i}: {module}" + (
-                f" -> {input_shape}" if input_shape else ""
+                f" -> {input_shape}" if input_shape and not comment else ""
             )
         return rep
 
-    def __init__(self, modules: List[BaseModule] = []) -> None:
+    def __init__(
+        self, modules: List[BaseModule] = [], rng: Any = None
+    ) -> None:
         """
         Initialize the model with the input shape and a list of modules.
 
@@ -48,15 +52,36 @@ class Model(object):
             modules : List[BaseModule], optional
                 List of modules to initialize the model with. Default is an
                 empty list.
+            rng : Any, optional
+                Initial random key for the model. Default is None. If None, a
+                new random key will be generated using JAX's random.PRNGKey. If
+                an integer is provided, it will be used as the seed to create
+                the key.
         """
         self.modules = modules
+        if rng is None:
+            self.rng = jax.random.key(random.randint(0, 2**32 - 1))
+        elif isinstance(rng, int):
+            self.rng = jax.random.key(rng)
+        else:
+            self.rng = rng
         self.reset()
+
+    def get_num_trainable_floats(self) -> Optional[int]:
+        num_trainable_floats = [
+            module.get_num_trainable_floats() for module in self.modules
+        ]
+        if None in num_trainable_floats:
+            return None
+        else:
+            return sum(num_trainable_floats)
 
     def reset(self) -> None:
         self.input_shape = None
         self.output_shape = None
         self.ready = False
         self.parameter_counts = None
+        self.state_counts = None
         self.callable = None
 
     def append_module(self, module: BaseModule) -> None:
@@ -171,6 +196,9 @@ class Model(object):
         self.parameter_counts = [
             len(module.get_params()) for module in self.modules
         ]
+        self.state_counts = [
+            len(module.get_state()) for module in self.modules
+        ]
 
         self.ready = True
 
@@ -220,6 +248,69 @@ class Model(object):
             module.set_params(params[param_index : param_index + count])
             param_index += count
 
+    def get_state(self) -> Tuple[np.ndarray, ...]:
+        """
+        Get the state of the model as a Tuple of numpy arrays.
+
+        Returns
+        -------
+            Tuple[np.ndarray, ...]
+                numpy arrays representing the state of the model. The order of
+                the states should match the order in which they are used in
+                the _get_callable method.
+        """
+        if not self.ready:
+            raise RuntimeError("Model is not ready. Call compile() first.")
+
+        # state tuple must be flat
+        return tuple(
+            state for module in self.modules for state in module.get_state()
+        )
+
+    def set_state(self, state: Tuple[np.ndarray, ...]) -> None:
+        """
+        Set the state of the model from a Tuple of numpy arrays.
+
+        Parameters
+        ----------
+            state: Tuple[np.ndarray, ...]
+                numpy arrays representing the state of the model. The order of
+                the states should match the order in which they are used in
+                the _get_callable method.
+        """
+        if not self.ready:
+            raise RuntimeError("Model is not ready. Call compile() first.")
+
+        if len(state) != sum(self.state_counts):
+            raise ValueError(
+                f"Expected {sum(self.state_counts)} states, "
+                f"but got {len(state)}."
+            )
+
+        # set state for each module
+        state_index = 0
+        for module in self.modules:
+            count = len(module.get_state())
+            module.set_state(state[state_index : state_index + count])
+            state_index += count
+
+    def get_rng(self) -> Any:
+        return self.rng
+
+    def set_rng(self, rng: Any) -> None:
+        """
+        Set the random key for the model.
+
+        Parameters
+        ----------
+            rng : Any
+                Random key to set for the model. JAX PRNGKey or an integer seed.
+        """
+        if isinstance(rng, int):
+            self.rng = jax.random.key(rng)
+        else:
+            self.rng = rng
+
     def _get_callable(
         self,
     ) -> Callable[
@@ -230,7 +321,7 @@ class Model(object):
             Tuple[np.ndarray, ...],
             Any,
         ],
-        np.ndarray,
+        Tuple[np.ndarray, Tuple[np.ndarray, ...]],
     ]:
         """
         This method must return a jax-jittable and jax-gradable callable in the
@@ -259,31 +350,57 @@ class Model(object):
         # get the callables for each module
         module_callables = [module._get_callable() for module in self.modules]
 
-        # TODO:
-        # add training, state, and rng parameters to the callables
-        # and therefore to the training
-
         # parameter tuple must be flattened, so we'll need to iterate over the
         # parameter counts
+        # state tuple must also be flattened, so we'll need to iterate over the
+        # state counts
         # jax will unroll this loop
         def model_callable(
             params: Tuple[np.ndarray],
             X: np.ndarray,
+            training: bool = False,
+            states: Tuple[np.ndarray, ...] = (),
+            rng: Any = None,  # absolutely not optonal
         ) -> np.ndarray:
             param_index = 0
-            for idx, count in enumerate(self.parameter_counts):
+            state_index = 0
+            # split rng key into a key for each module
+            rngs = jax.random.split(rng, len(self.modules))
+            for idx, param_count in enumerate(self.parameter_counts):
+                state_count = self.state_counts[idx]
                 module_params = tuple(
-                    params[param_index : param_index + count]
+                    params[param_index : param_index + param_count]
                 )
-                param_index += count
-                X, _ = module_callables[idx](module_params, X, False, (), None)
+                module_states = tuple(
+                    states[state_index : state_index + state_count]
+                )
+                module_rng = rngs[idx]
 
-            return X
+                X, new_module_states = module_callables[idx](
+                    module_params, X, training, module_states, module_rng
+                )
+                # update the states
+                states = (
+                    states[:state_index]
+                    + new_module_states
+                    + states[state_index + state_count :]
+                )
+
+                # increment indices
+                param_index += param_count
+                state_index += state_count
+
+            return X, states
 
         return model_callable
 
     def __call__(
-        self, X: np.ndarray, dtype: Optional[Any] = np.float64
+        self,
+        X: np.ndarray,
+        dtype: Optional[Any] = np.float64,
+        rng: Any = None,
+        return_state: bool = False,
+        update_state: bool = False,
     ) -> np.ndarray:
         """
         Call the model with the input array.
@@ -301,6 +418,18 @@ class Model(object):
                 precision (float32 and complex64) and inference with double
                 precision inputs (float64, the default here) with single
                 precision weights.
+            rng : Any, optional
+                JAX random key for stochastic modules. Default is None.
+                If None, the saved rng key will be used if it exists, which
+                would be the final rng key from the last training run. If an
+                integer is provided, it will be used as the seed to create a
+                new JAX random key.
+            return_state : bool, optional
+                If True, the model will return the state of the model after
+                evaluation. Default is False.
+            update_state : bool, optional
+                If True, the model will update the state of the model after
+                evaluation. Default is False.
 
         Returns
         -------
@@ -309,6 +438,11 @@ class Model(object):
                 For example, (batch_size, output_features) for a 1D output or
                 (batch_size, output_height, output_width, output_channels) for
                 a 3D output.
+            Tuple[np.ndarray, ...], optional
+                If return_state is True, the model will also return the state
+                of the model as a Tuple of numpy arrays. The order of the
+                states will match the order in which they are used in the
+                _get_callable method.
         """
         if not self.ready:
             raise RuntimeError("Model is not ready. Call compile() first.")
@@ -320,15 +454,36 @@ class Model(object):
 
         # make sure the dtype was converted, issue a warning if not
         if X_.dtype != dtype:
-            print(
-                f"\033[1;91m[WARN] While performing inference with model: "
+            warnings.warn(
+                f"While performing inference with model: "
                 f"Requested dtype ({dtype}) was not successfully applied. "
                 "This is most likely due to JAX_ENABLE_X64 not being set. "
-                "See accompanying JAX warning for more details.\033[0m"
+                "See accompanying JAX warning for more details.",
+                UserWarning,
             )
 
-        return self.callable(self.get_params(), X_)
+        if rng is None:
+            rng = self.get_rng()
+        elif isinstance(rng, int):
+            rng = jax.random.key(rng)
 
+        out, new_state = self.callable(
+            self.get_params(), X_, False, self.get_state(), rng
+        )
+
+        if update_state:
+            warnings.warn(
+                "update_state is True. This is an uncommon use case, make "
+                "sure you know what you are doing.",
+                UserWarning,
+            )
+            self.set_state(new_state)
+        if return_state:
+            return out, new_state
+        else:
+            return out
+
+    # alias for __call__ method
     predict = __call__
 
     def set_precision(self, prec: Union[np.dtype, str, int]) -> None:
@@ -393,6 +548,7 @@ class Model(object):
         for module in self.modules:
             module.set_precision(prec)
 
+    # alias for set_precision method that returns self
     def astype(self, dtype: Union[np.dtype, str]) -> "Model":
         """
         Convenience wrapper to set_precision using the dtype argument, returns
@@ -417,10 +573,11 @@ class Model(object):
         early_stopping_patience: int = 10,
         early_stopping_tolerance: float = 1e-6,
         # advanced options
+        initialization_seed: Optional[int] = None,
         callback: Optional[Callable] = None,
         unroll: Optional[int] = None,
         verbose: bool = True,
-        seed: Optional[int] = None,
+        batch_seed: Optional[int] = None,
         b1: float = 0.9,
         b2: float = 0.999,
         eps: float = 1e-8,
@@ -429,7 +586,10 @@ class Model(object):
 
         # check if the model is ready
         if not self.ready:
-            self.compile(random.PRNGKey(seed or 0), X.shape[1:])
+            initialization_seed = initialization_seed or random.randint(
+                0, 2**32 - 1
+            )
+            self.compile(jax.random.key(initializatio_seed), X.shape[1:])
 
         # check if any of the model parameters are double precision and give a
         # warning if so
@@ -440,12 +600,13 @@ class Model(object):
             )
             for param in self.get_params()
         ):
-            print(
-                "\033[1;91m[WARN] Some parameters are double precision. "
+            warnings.warn(
+                "Some parameters are double precision. "
                 "This may lead to significantly slower training on certain "
                 "backends. It is strongly recommended to use single precision "
                 "(float32/complex64) parameters for training. Set the "
-                "precision of the model with Model.set_precision.\033[0m"
+                "precision of the model with Model.set_precision.",
+                UserWarning,
             )
 
         # check dimensions
@@ -472,11 +633,21 @@ class Model(object):
             self.callable = self._get_callable()
 
         # make the loss function
-        loss_fn = make_loss_fn(loss_fn, lambda x, p: self.callable(p, x))
+        loss_fn = make_loss_fn(
+            loss_fn, lambda x, p, t, s, r: self.callable(p, x, t, s, r)
+        )
 
         # train the model
-        final_params, final_epoch, final_states = train(
+        (
+            final_params,
+            final_model_states,
+            final_model_rng,
+            final_epoch,
+            final_adam_states,
+        ) = train(
             init_params=self.get_params(),
+            init_states=self.get_state(),
+            init_rng=self.get_rng(),
             loss_fn=loss_fn,
             X=X,
             Y=Y,
@@ -493,7 +664,7 @@ class Model(object):
             callback=callback,
             unroll=unroll,
             verbose=verbose,
-            seed=seed,
+            batch_seed=batch_seed,
             b1=b1,
             b2=b2,
             eps=eps,
@@ -503,6 +674,10 @@ class Model(object):
 
         # set the final parameters
         self.set_params(final_params)
+        # set the final state
+        self.set_state(final_model_states)
+        # set the final rng
+        self.set_rng(final_model_rng)
 
     def serialize(self) -> Dict[str, Union[Any, Dict[str, Any]]]:
         """
@@ -523,12 +698,16 @@ class Model(object):
 
         serialized_modules = [module.serialize() for module in self.modules]
 
+        # serialize rng key
+        key_data = jax.random.key_data(self.get_rng())
+
         return {
             "module_typenames": module_typenames,
             "module_modules": module_modules,
             "module_fulltypenames": module_fulltypenames,
             "module_names": module_names,
             "serialized_modules": serialized_modules,
+            "key_data": key_data,
         }
 
     def deserialize(self, data: Dict[str, Any]) -> None:
@@ -559,6 +738,10 @@ class Model(object):
             self.modules, data["serialized_modules"]
         ):
             module.deserialize(serialized_module)
+
+        # deserialize the rng key
+        key = jax.random.wrap_key_data(data["key_data"])
+        self.set_rng(key)
 
     def save(self, filename: str) -> None:
         """

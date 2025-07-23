@@ -49,7 +49,7 @@ class BaseModule(object):
         param_count = self.get_num_trainable_floats()
         ready = self.is_ready()
         if param_count is not None and ready:
-            return f"{self.name()} (trainable floats: {param_count})"
+            return f"{self.name()} (trainable floats: {param_count:,})"
         elif not ready:
             return f"{self.name()} (uninitialized)"
         else:

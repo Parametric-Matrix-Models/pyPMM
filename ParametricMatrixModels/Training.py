@@ -7,6 +7,7 @@ import sys
 from time import time
 import random
 from typing import Callable
+import warnings
 
 """
     Complex Adam Optimizer in fully compiled JAX.
@@ -221,8 +222,10 @@ def complex_adam(step_size, b1=0.9, b2=0.999, eps=1e-8, clip=np.inf):
 
 def _train_step(
     update_fn,
-    states,
+    adam_states,
     get_params,
+    model_states,
+    model_rng,
     i,
     X_batch,
     Y_batch,
@@ -233,12 +236,24 @@ def _train_step(
     Performs a single training step.
     """
 
+    # split the model rng for this step
+    new_model_rng, model_rng = jax.random.split(model_rng)
+
     # Compute gradients
-    dparams = grad_loss_fn(
-        X_batch, Y_batch, Y_unc_batch, tuple(map(get_params, states))
+    dparams, new_states = grad_loss_fn(
+        X_batch,
+        Y_batch,
+        Y_unc_batch,
+        tuple(map(get_params, adam_states)),
+        model_states,
+        model_rng,
     )
 
-    return tuple(map(partial(update_fn, i), dparams, states))
+    return (
+        tuple(map(partial(update_fn, i), dparams, adam_states)),
+        new_states,
+        new_model_rng,
+    )
 
 
 @partial(
@@ -261,11 +276,13 @@ def _train_step(
     ),
 )
 def _train(
-    rng,
+    batch_rng,
     update_fn,  # static, jittable
-    states,
+    adam_states,
     get_params,  # static, jittable
     update_params_direct,  # static, jittable
+    init_states,  # initial model states
+    init_rng,  # initial model rng
     X,
     Y,
     Y_unc,  # uncertainty in the targets, if applicable
@@ -389,7 +406,15 @@ def _train(
         contains the Adam states.
         """
 
-        shuffled_X, shuffled_Y, shuffled_Y_unc, states_, epoch = batch_carry
+        (
+            shuffled_X,
+            shuffled_Y,
+            shuffled_Y_unc,
+            adam_states_,
+            model_states_,
+            model_rng_,
+            epoch,
+        ) = batch_carry
 
         if verbose:
             epoch += jax.pure_callback(
@@ -398,7 +423,7 @@ def _train(
 
         # shuffled_X and shuffled_Y are the pre-shuffled data
         #   for this epoch (constant)
-        # states are the current optimizer states
+        # adam_states are the current optimizer states
         # epoch is the current epoch number (constant)
 
         X_batch = lax.dynamic_slice_in_dim(
@@ -412,10 +437,12 @@ def _train(
         )
 
         # Perform a single training step
-        new_states = _train_step(
+        new_adam_states, new_model_states, new_model_rng = _train_step(
             update_fn,
-            states_,
+            adam_states_,
             get_params,
+            model_states_,
+            model_rng_,
             epoch,
             X_batch,
             Y_batch,
@@ -423,7 +450,15 @@ def _train(
             grad_loss_fn,
         )
 
-        return shuffled_X, shuffled_Y, shuffled_Y_unc, new_states, epoch
+        return (
+            shuffled_X,
+            shuffled_Y,
+            shuffled_Y_unc,
+            new_adam_states,
+            new_model_states,
+            new_model_rng,
+            epoch,
+        )
 
     def epoch_cond_callback(training_state):
         kill_now = killer.kill_now
@@ -431,7 +466,18 @@ def _train(
         return not kill_now
 
     # training_state contains:
-    # (rng, epoch, states, best_states, best_val_loss, patience)
+    # (
+    #   batch_rng,
+    #   epoch,
+    #   adam_states,
+    #   best_adam_states,
+    #   model_states,
+    #   best_model_states,
+    #   model_rng,
+    #   best_model_rng,
+    #   best_val_loss,
+    #   patience
+    # )
 
     def epoch_cond_fn(training_state):
         """
@@ -446,9 +492,18 @@ def _train(
         else:
             cont = True
 
-        rng, epoch, states, best_states, best_val_loss, patience = (
-            training_state
-        )
+        (
+            batch_rng,
+            epoch,
+            adam_states,
+            best_adam_states,
+            model_states,
+            best_model_states,
+            model_rng,
+            best_model_rng,
+            best_val_loss,
+            patience,
+        ) = training_state
         return (
             cont
             & (epoch < num_epochs)
@@ -462,12 +517,21 @@ def _train(
         batching, validation, patience, and progress updates.
         """
 
-        rng, epoch, states, best_states, best_val_loss, patience = (
-            training_state
-        )
+        (
+            batch_rng,
+            epoch,
+            adam_states,
+            best_adam_states,
+            model_states,
+            best_model_states,
+            model_rng,
+            best_model_rng,
+            best_val_loss,
+            patience,
+        ) = training_state
 
         # new random key for this epoch
-        rng, epoch_rng = jax.random.split(rng)
+        batch_rng, epoch_rng = jax.random.split(batch_rng)
 
         # Shuffle the data for this epoch
         shuffled_X = jax.random.permutation(epoch_rng, X)
@@ -487,11 +551,19 @@ def _train(
             # no remainder
             upper = num_batches
 
-        batch_carry = (shuffled_X, shuffled_Y, shuffled_Y_unc, states, epoch)
+        batch_carry = (
+            shuffled_X,
+            shuffled_Y,
+            shuffled_Y_unc,
+            adam_states,
+            model_states,
+            model_rng,
+            epoch,
+        )
         batch_carry = lax.fori_loop(
             0, num_batches, batch_body_fn, batch_carry, unroll=unroll
         )
-        _, _, _, states, _ = batch_carry
+        _, _, _, adam_states, model_states, model_rng, _ = batch_carry
 
         # deal with possible remainder, again this may be traced out
         if X.shape[0] % batch_size > 0:
@@ -515,10 +587,12 @@ def _train(
                 axis=0,
             )
 
-            states = _train_step(
+            adam_states, model_states, model_rng = _train_step(
                 update_fn,
-                states,
+                adam_states,
                 get_params,
+                model_states,
+                model_rng,
                 epoch,
                 X_batch,
                 Y_batch,
@@ -527,8 +601,13 @@ def _train(
             )
 
         # Validation step
-        val_loss = loss_fn(
-            X_val, Y_val, Y_val_unc, tuple(map(get_params, states))
+        val_loss, _ = loss_fn(
+            X_val,
+            Y_val,
+            Y_val_unc,
+            tuple(map(get_params, adam_states)),
+            model_states,
+            model_rng,
         )
 
         # patience handling
@@ -542,12 +621,19 @@ def _train(
             (patience - 1) * (1 - improved)
         )
 
-        best_val_loss, best_states = lax.cond(
-            val_loss < best_val_loss,
-            lambda x, y: x,  # if the validation loss improved
-            lambda x, y: y,  # if the validation loss did not improve
-            (val_loss, states),
-            (best_val_loss, best_states),
+        best_val_loss, best_adam_states, best_model_states, best_model_rng = (
+            lax.cond(
+                val_loss < best_val_loss,
+                lambda x, y: x,  # if the validation loss improved
+                lambda x, y: y,  # if the validation loss did not improve
+                (val_loss, adam_states, model_states, model_rng),
+                (
+                    best_val_loss,
+                    best_adam_states,
+                    best_model_states,
+                    best_model_rng,
+                ),
+            )
         )
 
         if verbose:
@@ -556,45 +642,66 @@ def _train(
             )
 
         # Call the callback function
-        params = tuple(map(get_params, states))
-        rng, params = callback(rng, epoch, params)
-        states = tuple(map(update_params_direct, params, states))
+        params = tuple(map(get_params, adam_states))
+        batch_rng, params = callback(batch_rng, epoch, params)
+        adam_states = tuple(map(update_params_direct, params, adam_states))
 
         # Return the updated state for the next epoch
         return (
-            rng,
+            batch_rng,
             epoch + 1,  # increment epoch
-            states,
-            best_states,
+            adam_states,
+            best_adam_states,
+            model_states,
+            best_model_states,
+            model_rng,
+            best_model_rng,
             best_val_loss,
             patience,
         )
 
     # get initial validation loss
-    val_loss = loss_fn(X_val, Y_val, Y_val_unc, tuple(map(get_params, states)))
+    val_loss, _ = loss_fn(
+        X_val,
+        Y_val,
+        Y_val_unc,
+        tuple(map(get_params, adam_states)),
+        init_states,
+        init_rng,
+    )
 
     # Initial state for the training loop
-    initial_state = (
-        rng,
+    initial_while_state = (
+        batch_rng,
         start_epoch,
-        states,
-        states,  # best_states starts as the initial states
+        adam_states,
+        adam_states,  # best_states starts as the initial states
+        init_states,  # initial model states
+        init_states,  # best model states starts as the initial states
+        init_rng,  # initial model rng
+        init_rng,  # best model rng starts as the initial rng
         val_loss,  # best_val_loss starts as the initial validation loss
         early_stopping_patience,  # patience starts at the configured value
     )
 
     # Run the training loop
-    final_state = lax.while_loop(epoch_cond_fn, epoch_body_fn, initial_state)
+    final_while_state = lax.while_loop(
+        epoch_cond_fn, epoch_body_fn, initial_while_state
+    )
 
-    # Extract the best states and final epoch
+    # Extract the best adam states, model states, model rng, and final epoch
     return (
-        final_state[3],  # best states
-        final_state[1],  # final epoch
+        final_while_state[3],  # best adam_states
+        final_while_state[5],  # best model states
+        final_while_state[7],  # best model rng
+        final_while_state[1],  # final epoch
     )
 
 
 def train(
-    init_params,
+    init_params,  # model parameters
+    init_states,  # model states
+    init_rng,  # model rng
     loss_fn,
     X,
     Y=None,
@@ -612,7 +719,7 @@ def train(
     callback=None,
     unroll=None,
     verbose=True,
-    seed=None,
+    batch_seed=None,
     b1=0.9,
     b2=0.999,
     eps=1e-8,
@@ -622,24 +729,6 @@ def train(
     """
     Train a model from scratch using the Adam optimizer.
     """
-    # check if any of the data are double precision and give a warning if so
-    # if any(
-    #    (
-    #        d is not None
-    #        and (
-    #            np.issubdtype(np.asarray(d).dtype, np.float64)
-    #            or np.issubdtype(np.asarray(d).dtype, np.complex128)
-    #        )
-    #        for d in (X, Y, X_val, Y_val, Y_unc, Y_val_unc)
-    #    )
-    # ):
-    #    print(
-    #        "\033[1;91m[WARN] Some data are double precision. "
-    #        "This may lead to significantly slower training on certain "
-    #        "backends. It is strongly recommended to use single precision "
-    #        "(float32/complex64) data for training.\033[0m"
-    #    )
-
     # check if any parameters are double precision and give a warning if so
     if any(
         (
@@ -648,11 +737,12 @@ def train(
         )
         for param in init_params
     ):
-        print(
-            "\033[1;91m[WARN] Some parameters are double precision. "
+        warnings.warn(
+            "Some parameters are double precision. "
             "This may lead to significantly slower training on certain "
             "backends. It is strongly recommended to use single precision "
-            "(float32/complex64) parameters for training.\033[0m"
+            "(float32/complex64) parameters for training.",
+            UserWarning,
         )
 
     if callback is None:
@@ -689,13 +779,17 @@ def train(
     if Y is None:
         Y = np.zeros((X.shape[0], 1), dtype=X.dtype)
         loss_fn_ = loss_fn
-        loss_fn = lambda X, Y, params: loss_fn_(X, params)
+        loss_fn = lambda X, Y, params, states, rng: loss_fn_(
+            X, params, states, rng
+        )
 
     if Y_unc is None:
         # if no uncertainty in the targets is provided, assume it is 1
         Y_unc = np.ones_like(Y)
         loss_fn_ = loss_fn
-        loss_fn = lambda X, Y, Y_unc, params: loss_fn_(X, Y, params)
+        loss_fn = lambda X, Y, Y_unc, params, states, rng: loss_fn_(
+            X, Y, params, states, rng
+        )
 
         if Y_val is not None:
             Y_val_unc = np.ones_like(Y_val)
@@ -731,13 +825,21 @@ def train(
         )
 
     # set up everything for the JAX trainer
-    grad_loss_fn = grad(loss_fn, argnums=3)
+    # has_aux=True allows us to return the new states from the loss function
+    # this will return (gradients, new_states)
+    grad_loss_fn = grad(loss_fn, argnums=3, has_aux=True)
 
     # random key for JAX
-    if seed is None:
-        seed = random.randint(0, 2**32 - 1)
+    if batch_seed is None:
+        batch_seed = random.randint(0, 2**32 - 1)
 
-    rng = jax.random.key(seed)
+    batch_rng = jax.random.key(batch_seed)
+
+    # random key for the model itself
+    if isinstance(init_rng, int):
+        init_rng = jax.random.key(init_rng)
+    elif init_rng is None:
+        init_rng = jax.random.key(random.randint(0, 2**32 - 1))
 
     # Initialize the optimizer
     if real:
@@ -758,92 +860,119 @@ def train(
             clip=clip,
         )
 
-    states = tuple(map(init_fn, init_params))
+    adam_states = tuple(map(init_fn, init_params))
 
     # train
-    final_states, final_epoch = _train(
-        rng,
-        update_fn,
-        states,
-        get_params,
-        update_params_direct,
-        X,
-        Y,
-        Y_unc,
-        X_val,
-        Y_val,
-        Y_val_unc,
-        loss_fn,
-        grad_loss_fn,
-        batch_size=batch_size,
-        start_epoch=0,  # always start from 0
-        num_epochs=num_epochs,
-        convergence_threshold=convergence_threshold,
-        early_stopping_patience=early_stopping_patience,
-        early_stopping_tolerance=early_stopping_tolerance,
-        callback=callback,
-        unroll=unroll,
-        verbose=verbose,
+    final_adam_states, final_model_states, final_model_rng, final_epoch = (
+        _train(
+            batch_rng,
+            update_fn,
+            adam_states,
+            get_params,
+            update_params_direct,
+            init_states,  # initial model states
+            init_rng,  # initial model rng
+            X,
+            Y,
+            Y_unc,
+            X_val,
+            Y_val,
+            Y_val_unc,
+            loss_fn,
+            grad_loss_fn,
+            batch_size=batch_size,
+            start_epoch=0,  # always start from 0
+            num_epochs=num_epochs,
+            convergence_threshold=convergence_threshold,
+            early_stopping_patience=early_stopping_patience,
+            early_stopping_tolerance=early_stopping_tolerance,
+            callback=callback,
+            unroll=unroll,
+            verbose=verbose,
+        )
     )
 
     # return the final parameters
-    return tuple(map(get_params, final_states)), final_epoch, final_states
+    return (
+        tuple(map(get_params, final_adam_states)),
+        final_model_states,
+        final_model_rng,
+        final_epoch,
+        final_adam_states,
+    )
 
 
 def make_loss_fn(fn_name: str, model_fn: Callable):
     """
     Create a loss function based on the model function.
+
+    The model function should take the input data, parameters, training flag,
+    states, and rng key and return the predicted output and new state.
+
+    The loss function will return (loss, new_states), and gradients can be
+    taken by passing `has_aux=True` to `jax.grad` or `jax.value_and_grad`.
     """
     if fn_name == "mse":
 
-        def loss_fn(X, Y, params):
-            Y_pred = model_fn(X, params)
-            return np.mean(np.abs(Y_pred - Y) ** 2)
+        def loss_fn(X, Y, params, states, rng):
+            Y_pred, new_states = model_fn(X, params, True, states, rng)
+            return np.mean(np.abs(Y_pred - Y) ** 2), new_states
 
     elif fn_name == "mae":
 
-        def loss_fn(X, Y, params):
-            Y_pred = model_fn(X, params)
-            return np.mean(np.abs(Y_pred - Y))
+        def loss_fn(X, Y, params, states, rng):
+            Y_pred, new_states = model_fn(X, params, True, states, rng)
+            return np.mean(np.abs(Y_pred - Y)), new_states
 
     elif fn_name == "mse_unc":
         # MSE with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params):
-            Y_pred = model_fn(X, params)
+        def loss_fn(X, Y, Y_unc, params, states, rng):
+            Y_pred, new_states = model_fn(X, params, True, states, rng)
             # Y_unc is assumed to be the uncertainty in the targets
-            return np.mean(np.abs((Y_pred - Y) / Y_unc) ** 2)
+            return np.mean(np.abs((Y_pred - Y) / Y_unc) ** 2), new_states
 
     elif fn_name == "mae_unc":
         # MAE with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params):
-            Y_pred = model_fn(X, params)
+        def loss_fn(X, Y, Y_unc, params, states, rng):
+            Y_pred, new_states = model_fn(X, params, True, states, rng)
             # Y_unc is assumed to be the uncertainty in the targets
-            return np.mean(np.abs((Y_pred - Y) / Y_unc))
+            return np.mean(np.abs((Y_pred - Y) / Y_unc)), new_states
 
     elif fn_name == "mre":
         # Mean relative error
-        def loss_fn(X, Y, params):
-            Y_pred = model_fn(X, params)
-            return np.mean(np.abs((Y_pred - Y) / (Y + 1e-4)))
+        def loss_fn(X, Y, params, states, rng):
+            Y_pred, new_states = model_fn(X, params, True, states, rng)
+            return np.mean(np.abs((Y_pred - Y) / (Y + 1e-4))), new_states
 
     elif fn_name == "mre_unc":
         # Mean relative error with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params):
-            Y_pred = model_fn(X, params)
-            return np.mean(np.abs((Y_pred - Y) / (Y + 1e-4) / Y_unc))
+        def loss_fn(X, Y, Y_unc, params, states, rng):
+            Y_pred, new_states = model_fn(X, params, True, states, rng)
+            return (
+                np.mean(np.abs((Y_pred - Y) / (Y + 1e-4) / Y_unc)),
+                new_states,
+            )
 
     elif fn_name == "mrd":
         # mean relative difference
-        def loss_fn(X, Y, params):
-            Y_pred = model_fn(X, params)
-            return np.mean(np.abs((Y_pred - Y) / (2.0 * (Y + Y_pred) + 1e-4)))
+        def loss_fn(X, Y, params, states, rng):
+            Y_pred, new_states = model_fn(X, params, True, states, rng)
+            return (
+                np.mean(np.abs((Y_pred - Y) / (2.0 * (Y + Y_pred) + 1e-4))),
+                new_states,
+            )
 
     elif fn_name == "mrd_unc":
         # mean relative difference with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params):
-            Y_pred = model_fn(X, params)
-            return np.mean(
-                np.abs((Y_pred - Y) / ((2.0 * (Y + Y_pred) + 1e-4) * Y_unc))
+        def loss_fn(X, Y, Y_unc, params, states, rng):
+            Y_pred, new_states = model_fn(X, params, True, states, rng)
+            return (
+                np.mean(
+                    np.abs(
+                        (Y_pred - Y) / ((2.0 * (Y + Y_pred) + 1e-4) * Y_unc)
+                    )
+                ),
+                new_states,
             )
 
     else:
