@@ -1,5 +1,6 @@
+from typing import Optional, Tuple, Union
+
 import jax.numpy as np
-from typing import Optional, Union, Tuple
 
 """
 StandardScaler and UniformScaler
@@ -86,67 +87,3 @@ class UniformScaler:
         """
         self.fit(cs, Es)
         return self.transform(cs, Es)
-
-    # def transform_pmm(self, model: "PMM") -> "PMM":
-    #     """
-    #     Transform the matrices in the PMM to automatically scale the data
-    #     """
-
-    #     if self.cmin is None or self.cmax is None:
-    #         raise ValueError("Scaler not fitted yet")
-    #     if self.Emin is not None:
-    #         assert self.Emin.ndim == 1, "Output scaling only supported for 1D"
-    #         assert self.Emax.ndim == 1, "Output scaling only supported for 1D"
-
-    #     n = model.n
-    #     p = model.p
-    #     A_s = model.A_s
-    #     Bs_s = model.Bs_s
-
-    #     # M(c) = A + sum_i B_i * c_i
-    #     # so for the c scale
-    #     # M_scaled(c) = A + sum_i B_i * [(c_i - mn) / (mx - mn) * (h - l) + l]
-    #     #   = [A + sum_i (l - (mn / (mx - mn))) * B_i]
-    #     #        + sum_i [B_i * (h - l) / (mx - mn)] c_i
-    #     cmin_ = self.cmin[0]
-    #     cmax_ = self.cmax[0]
-    #     clow_ = self.clow
-    #     chigh_ = self.chigh
-
-    #     A_offset = np.einsum(
-    #         "i,qijk->qjk", clow_ - cmin_ / (cmax_ - cmin_), Bs_s
-    #     )
-    #     A_s_scaled = A_s + A_offset
-
-    #     Bs_s_scaled = np.einsum(
-    #         "i,qijk->qijk", (chigh_ - clow_) / (cmax_ - cmin_), Bs_s
-    #     )
-
-    #     # for the E scale
-    #     # M(c) -> M(c) * (h - l) / (mx - mn) + l * ident(n)
-    #     # this only works if Es is Nx1
-    #     if self.Emin is not None:
-    #         Emin_ = self.Emin[0]
-    #         Emax_ = self.Emax[0]
-    #         Elow_ = self.Elow
-    #         Ehigh_ = self.Ehigh
-
-    #         A_s_scaled *= (Ehigh_ - Elow_) / (Emax_ - Emin_)
-    #         Bs_s_scaled *= (Ehigh_ - Elow_) / (Emax_ - Emin_)
-    #         A_s_scaled += Elow_ * np.eye(n)
-
-    #         # if the nonconformity scores is not None, then scale them directly
-    #         if model.nonconformity_scores is not None:
-    #             # nonconformity = |E_true - E_pred|
-    #             # so we the Elow_ offsets cancel
-    #             model._nonconformity_scores = (
-    #                 model.nonconformity_scores
-    #                 * (Ehigh_ - Elow_)
-    #                 / (Emax_ - Emin_)
-    #             )
-
-    #     # update the model
-    #     model._A_s = A_s_scaled
-    #     model._Bs_s = Bs_s_scaled
-
-    #     return model

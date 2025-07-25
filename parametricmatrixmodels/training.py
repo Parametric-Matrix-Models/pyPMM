@@ -1,13 +1,14 @@
-import jax.numpy as np
-from jax import grad, jit, lax
-import jax
-from functools import partial
+import random
 import signal
 import sys
-from time import time
-import random
-from typing import Callable
 import warnings
+from functools import partial
+from time import time
+from typing import Callable
+
+import jax
+import jax.numpy as np
+from jax import grad, jit, lax
 
 """
     Complex Adam Optimizer in fully compiled JAX.
@@ -100,7 +101,7 @@ class ProgressBar:
 
 
 def make_schedule(
-    scalar_or_schedule: float | Callable[[int], float]
+    scalar_or_schedule: float | Callable[[int], float],
 ) -> Callable[[int], float]:
     if callable(scalar_or_schedule):
         return scalar_or_schedule
@@ -294,9 +295,9 @@ def _train(
     batch_size,  # static [default should be the full dataset]
     start_epoch,  # static [default should be 0]
     num_epochs,  # static [default should be 100]
-    convergence_threshold,  # static [default should be -np.inf (no convergence)]
+    convergence_threshold,  # static [default should be -np.inf]
     early_stopping_patience,  # static [default should be 10]
-    early_stopping_tolerance,  # static [default should be -np.inf (no tolerance)],
+    early_stopping_tolerance,  # static [default should be -np.inf]
     # advanced options
     callback,  # static, jittable (rngkey, step, params) -> rngkey, params
     unroll,  # static [default should be None, for unrolling the batch loop]
@@ -545,11 +546,6 @@ def _train(
             )
 
         # Run the batch loop
-        # since num_batches and X.shape[0] are static, one branch will be
-        # completely traced out
-        if X.shape[0] % batch_size == 0:
-            # no remainder
-            upper = num_batches
 
         batch_carry = (
             shuffled_X,
@@ -746,31 +742,39 @@ def train(
         )
 
     if callback is None:
-        callback = lambda rng, step, params: (rng, params)
+
+        def callback(rng, step, params):
+            """
+            Dummy callback that does nothing.
+            """
+            return rng, params
 
     if batch_size > X.shape[0]:
         print(
-            f"Batch size {batch_size} is larger than the number of samples {X.shape[0]}. "
-            "Using the full dataset as a single batch."
+            f"Batch size {batch_size} is larger than the number of samples "
+            f"{X.shape[0]}. Using the full dataset as a single batch."
         )
         batch_size = X.shape[0]
 
     if Y is None and Y_val is not None:
         raise ValueError(
-            "If Y_val is provided, Y must also be provided for supervised training."
+            "If Y_val is provided, Y must also be provided for supervised "
+            "training."
         )
-
     if Y_unc is not None and Y is None:
         raise ValueError(
-            "If Y_unc is provided, Y must also be provided for supervised training."
+            "If Y_unc is provided, Y must also be provided for supervised"
+            " training."
         )
     if Y_val_unc is not None and Y_val is None:
         raise ValueError(
-            "If Y_val_unc is provided, Y_val must also be provided for supervised training."
+            "If Y_val_unc is provided, Y_val must also be provided for"
+            " supervised training."
         )
     if Y_unc is not None and Y_val is not None and Y_val_unc is None:
         raise ValueError(
-            "If Y_unc and Y_val are provided, Y_val_unc must also be provided for supervised training."
+            "If Y_unc and Y_val are provided, Y_val_unc must also be provided"
+            " for supervised training."
         )
 
     # if no Y data is provided, assume unsupervised training
@@ -779,17 +783,23 @@ def train(
     if Y is None:
         Y = np.zeros((X.shape[0], 1), dtype=X.dtype)
         loss_fn_ = loss_fn
-        loss_fn = lambda X, Y, params, states, rng: loss_fn_(
-            X, params, states, rng
-        )
+
+        def loss_fn(X, Y, params, states, rng):
+            """
+            Wrapper for the loss function that ignores Y.
+            """
+            return loss_fn_(X, params, states, rng)
 
     if Y_unc is None:
         # if no uncertainty in the targets is provided, assume it is 1
         Y_unc = np.ones_like(Y)
         loss_fn_ = loss_fn
-        loss_fn = lambda X, Y, Y_unc, params, states, rng: loss_fn_(
-            X, Y, params, states, rng
-        )
+
+        def loss_fn(X, Y, Y_unc, params, states, rng):
+            """
+            Wrapper for the loss function that ignores Y_unc.
+            """
+            return loss_fn_(X, Y, params, states, rng)
 
         if Y_val is not None:
             Y_val_unc = np.ones_like(Y_val)
@@ -810,18 +820,21 @@ def train(
         raise ValueError("Y_unc must have the same shape as Y.")
     if X_val.shape[0] != Y_val.shape[0]:
         raise ValueError(
-            "X_val and Y_val must have the same number of samples (first dimension)."
+            "X_val and Y_val must have the same number of samples (first"
+            " dimension)."
         )
     if Y_val_unc.shape != Y_val.shape:
         raise ValueError("Y_val_unc must have the same shape as Y_val.")
 
     if X.shape[1:] != X_val.shape[1:]:
         raise ValueError(
-            "X and X_val must have the same shape (except for the first dimension)."
+            "X and X_val must have the same shape (except for the first"
+            " dimension)."
         )
     if Y.shape[1:] != Y_val.shape[1:]:
         raise ValueError(
-            "Y and Y_val must have the same shape (except for the first dimension)."
+            "Y and Y_val must have the same shape (except for the first"
+            " dimension)."
         )
 
     # set up everything for the JAX trainer

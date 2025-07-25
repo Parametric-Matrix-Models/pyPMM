@@ -1,12 +1,15 @@
-from .BaseModule import BaseModule
-import jax.numpy as np
+from typing import Any, Callable, Dict, Optional, Tuple
+
 import jax
-from typing import Callable, Tuple, Any, Union, Optional, Dict
+import jax.numpy as np
+
+from .basemodule import BaseModule
 
 
-class LinearNN(BaseModule):
+class NonnegativeLinearNN(BaseModule):
     """
-    Module that implements a single linear NN layer
+    Module that implements a single linear NN layer with non-negative weights
+    and biases.
     """
 
     def __init__(
@@ -53,12 +56,25 @@ class LinearNN(BaseModule):
         else:
             self.p = None
 
+        # ensure that real is True
+        if not real:
+            raise NotImplementedError(
+                "Complex-valued weights and biases are not supported in this "
+                "module."
+            )
+
+        # ensure that W and b are real if provided
+        if real and W is not None and not np.isrealobj(W):
+            raise ValueError("W must be real-valued for real weights")
+        if real and b is not None and not np.isrealobj(b):
+            raise ValueError("b must be real-valued for real biases")
+
     def name(self) -> str:
         """
         Returns the name of the module
         """
 
-        return f"LinearNN (k={self.k}, real={self.real})"
+        return f"NonnegativeLinearNN (k={self.k}, real={self.real})"
 
     def is_ready(self) -> bool:
         return (
@@ -100,8 +116,10 @@ class LinearNN(BaseModule):
 
         The training flag will be traced out, so it doesn't need to be jittable
         """
+        # nonnegativity is ensured by taking the square of the weights and
+        # biases
         return lambda params, input_NF, training, state, rng: (
-            input_NF @ params[0] + params[1][None, :],
+            input_NF @ (params[0] ** 2) + (params[1] ** 2)[None, :],
             state,  # state is not used in this module, return it unchanged
         )
 
@@ -231,7 +249,7 @@ class LinearNN(BaseModule):
                 "Cannot set hyperparameters after the module has parameters"
             )
 
-        super(LinearNN, self).set_hyperparameters(hyperparams)
+        super(NonnegativeLinearNN, self).set_hyperparameters(hyperparams)
 
     def get_params(self) -> Tuple[np.ndarray, ...]:
         """

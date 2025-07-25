@@ -1,8 +1,8 @@
-import jax
+from typing import Any, Callable, Dict, Optional, Tuple
+
 import jax.numpy as np
-from jax import jit, vmap, lax
-from typing import Callable, Tuple, Any, Union, Optional, Dict
-from .BaseModule import BaseModule
+
+from .basemodule import BaseModule
 
 
 class Comment(BaseModule):

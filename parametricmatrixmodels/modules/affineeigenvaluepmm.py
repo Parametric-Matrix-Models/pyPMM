@@ -1,8 +1,10 @@
-from .BaseModule import BaseModule
-import jax.numpy as np
+from typing import Any, Callable, Dict, Optional, Tuple
+
 import jax
-from typing import Callable, Tuple, Any, Union, Optional, Dict
+import jax.numpy as np
+
 from ._affine_backing_funcs import affine_pmm_predict_func
+from .basemodule import BaseModule
 
 
 class AffineEigenvaluePMM(BaseModule):
@@ -88,7 +90,8 @@ class AffineEigenvaluePMM(BaseModule):
             "im",
         ]:
             raise ValueError(
-                f"which must be one of: 'SA', 'LA', 'SM', 'LM', 'EA', 'EM', 'IA', 'IM'. Got: {which}"
+                "which must be one of: 'SA', 'LA', 'SM', 'LM', 'EA', 'EM', "
+                f"'IA', 'IM'. Got: {which}"
             )
 
         if Ms is not None:
@@ -125,7 +128,10 @@ class AffineEigenvaluePMM(BaseModule):
         if self.k == 1 and self.which == "sa":
             return f"AffineEigenvaluePMM ({self.n}x{self.n}, ground state)"
         else:
-            return f"AffineEigenvaluePMM ({self.n}x{self.n}, k={self.k}, which={self.which.upper()})"
+            return (
+                f"AffineEigenvaluePMM ({self.n}x{self.n}, k={self.k}, "
+                f"which={self.which.upper()})"
+            )
 
     def is_ready(self) -> bool:
         return self.p is not None and self.Ms is not None

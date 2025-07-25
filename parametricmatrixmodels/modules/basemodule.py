@@ -7,10 +7,13 @@ other (optionally stateful and trainable) operations in JAX.
 Modules can be combined to create Models.
 """
 
+from typing import Any, Callable, Dict, Optional, Tuple, Union
+
 import jax
 import jax.numpy as np
-from jax import jit, vmap, lax
-from typing import Callable, Tuple, Any, Union, Optional, Dict
+from packaging.version import parse
+
+import parametricmatrixmodels as pmm
 
 
 class BaseModule(object):
@@ -32,7 +35,8 @@ class BaseModule(object):
         BaseModule is not meant to be instantiated directly.
         """
         raise NotImplementedError(
-            "BaseModule is an abstract class and cannot be instantiated directly."
+            "BaseModule is an abstract class and cannot be instantiated "
+            "directly."
         )
 
     def name(self) -> str:
@@ -57,7 +61,8 @@ class BaseModule(object):
 
     def is_ready(self) -> bool:
         """
-        Return True if the module is initialized and ready for training or inference.
+        Return True if the module is initialized and ready for training or
+        inference.
         """
         raise NotImplementedError(
             "is_ready method must be implemented in subclasses"
@@ -397,8 +402,9 @@ class BaseModule(object):
         return {
             "name": self.name(),
             "hyperparameters": self.get_hyperparameters(),
-            **{f"p{i}": p for i, p in enumerate(self.get_params())},
-            **{f"s{i}": s for i, s in enumerate(self.get_state())},
+            "params": {f"p{i}": p for i, p in enumerate(self.get_params())},
+            "state": {f"s{i}": s for i, s in enumerate(self.get_state())},
+            "package_version": pmm.__version__,
         }
 
     def deserialize(self, data: Dict[str, Any]) -> None:
@@ -417,18 +423,27 @@ class BaseModule(object):
             Dictionary containing the serialized module data.
         """
 
+        # read the version of the package this module was serialized with
+        current_version = parse(pmm.__version__)
+        package_version = parse(str(data["package_version"]))
+
+        if current_version != package_version:
+            # in the future, we will issue DeprecationWarnings or Errors if the
+            # version is unsupported
+            # or possibly handle version-specific deserialization
+            pass
+
         # set the hyperparameters
         self.set_hyperparameters(data.get("hyperparameters", {}))
 
         # if there are trainable parameters, set them
-        if "p0" in data:
-            # get the number of parameter arrays
-            num_params = len([k for k in data.keys() if k.startswith("p")])
-            params = tuple(data[f"p{i}"] for i in range(num_params))
+        params_dict = data.get("params", {})
+        params = tuple(params_dict[f"p{i}"] for i in range(len(params_dict)))
+        if len(params) > 0:
             self.set_params(params)
+
         # if there are states, set them
-        if "s0" in data:
-            # get the number of state arrays
-            num_states = len([k for k in data.keys() if k.startswith("s")])
-            state = tuple(data[f"s{i}"] for i in range(num_states))
+        state_dict = data.get("state", {})
+        state = tuple(state_dict[f"s{i}"] for i in range(len(state_dict)))
+        if len(state) > 0:
             self.set_state(state)

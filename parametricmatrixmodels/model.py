@@ -1,12 +1,16 @@
-import jax.numpy as np
-import jax
-from jax import jit, vmap, random
-from .Training import train, make_loss_fn
-from .Modules import BaseModule
-from typing import Callable, List, Optional, Tuple, Any, Dict, Union
+import random
 import sys
 import warnings
-import random
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+
+import jax
+import jax.numpy as np
+from packaging.version import parse
+
+import parametricmatrixmodels as pmm
+
+from .modules import BaseModule
+from .training import make_loss_fn, train
 
 
 class Model(object):
@@ -22,7 +26,7 @@ class Model(object):
             num_trainable_floats = "(uninitialized)"
         else:
             num_trainable_floats = (
-                f"(trainable floats: " f"{trainable_floats_num:,})"
+                f"(trainable floats: {trainable_floats_num:,})"
             )
 
         rep = (
@@ -304,7 +308,7 @@ class Model(object):
         Parameters
         ----------
             rng : Any
-                Random key to set for the model. JAX PRNGKey or an integer seed.
+                Random key to set for the model. JAX PRNGKey or an integer seed
         """
         if isinstance(rng, int):
             self.rng = jax.random.key(rng)
@@ -448,14 +452,14 @@ class Model(object):
             raise RuntimeError("Model is not ready. Call compile() first.")
 
         if self.callable is None:
-            self.callable = jit(self._get_callable())
+            self.callable = jax.jit(self._get_callable())
 
         X_ = X.astype(dtype)
 
         # make sure the dtype was converted, issue a warning if not
         if X_.dtype != dtype:
             warnings.warn(
-                f"While performing inference with model: "
+                "While performing inference with model: "
                 f"Requested dtype ({dtype}) was not successfully applied. "
                 "This is most likely due to JAX_ENABLE_X64 not being set. "
                 "See accompanying JAX warning for more details.",
@@ -589,7 +593,7 @@ class Model(object):
             initialization_seed = initialization_seed or random.randint(
                 0, 2**32 - 1
             )
-            self.compile(jax.random.key(initializatio_seed), X.shape[1:])
+            self.compile(jax.random.key(initialization_seed), X.shape[1:])
 
         # check if any of the model parameters are double precision and give a
         # warning if so
@@ -618,8 +622,8 @@ class Model(object):
             )
         if Y is not None and Y.shape[1:] != self.output_shape:
             raise ValueError(
-                f"Output shape {Y.shape[1:]} does not match model output shape "
-                f"{self.output_shape}."
+                f"Output shape {Y.shape[1:]} does not match model output "
+                f"shape {self.output_shape}."
             )
         if Y is not None and X_val is not None and Y_val is None:
             raise ValueError(
@@ -708,6 +712,7 @@ class Model(object):
             "module_names": module_names,
             "serialized_modules": serialized_modules,
             "key_data": key_data,
+            "package_version": pmm.__version__,
         }
 
     def deserialize(self, data: Dict[str, Any]) -> None:
@@ -721,6 +726,16 @@ class Model(object):
                 Dictionary containing the serialized model data.
         """
         self.reset()
+
+        # read the version of the package this model was serialized with
+        current_version = parse(pmm.__version__)
+        package_version = parse(str(data["package_version"]))
+
+        if current_version != package_version:
+            # in the future, we will issue DeprecationWarnings or Errors if the
+            # version is unsupported
+            # or possibly handle version-specific deserialization
+            pass
 
         module_typenames = data["module_typenames"]
         module_modules = data["module_modules"]

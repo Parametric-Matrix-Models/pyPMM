@@ -1,7 +1,8 @@
-import ParametricMatrixModels as PMM
-import numpy as np
-import matplotlib.pyplot as plt
 import jax.random as jr
+import matplotlib.pyplot as plt
+import numpy as np
+
+import parametricmatrixmodels as PMM
 
 """
     Example of building a two-module PMM in order to identify the LEC
@@ -112,7 +113,7 @@ plt.show()
 
 # we rescale the data using a UniformScaler so that all cs and Es are in the
 # range [-1, 1]
-scaler = PMM.Scalers.UniformScaler(clow=-1, chigh=1, Elow=-1, Ehigh=1)
+scaler = PMM.scalers.UniformScaler(clow=-1, chigh=1, Elow=-1, Ehigh=1)
 cs_train_sc, Es_train_sc = scaler.fit_transform(cs_train, Es_train)
 cs_val_sc, Es_val_sc = scaler.transform(cs_val, Es_val)
 cs_test_sc, Es_test_sc = scaler.transform(cs_test, Es_test)
@@ -121,34 +122,35 @@ cs_test_sc, Es_test_sc = scaler.transform(cs_test, Es_test)
 # since we don't know how the Hamiltonian should depend on the LECs,
 # we don't know how many features we need, so this is a hyperparameter, k.
 # of course, we know that the true model has 2 features
-k = 2
+output_size = 2
 
 # the size of the regression PMM and the size of the eigenvalue PMM need not be
 # the same, so we can set them independently
-n_regression = 5
-n_eigenvalue = 5
+matrix_size_regression = 5
+matrix_size_eigenvalue = 5
 
 # finally, we have the hyperparameters for the regression PMM, which determine
 # the number of eigenvectors to use, r, and the number of observables to use,
 # l.
-r = 3
-l = 2
+num_eig = 3
+num_secondaries = 2
 
 # we now build the full model
 
 model = PMM.Model()
 model.append_module(
-    PMM.Modules.AffineObservablePMM(
-        n=n_regression,
-        r=r,
-        l=l,
-        k=k,
+    PMM.modules.AffineObservablePMM(
+        matrix_size=matrix_size_regression,
+        num_eig=num_eig,
+        num_secondaries=num_secondaries,
+        output_size=output_size,
         init_magnitude=1e-1,
     )
 )
 model.append_module(
-    PMM.Modules.AffineEigenvaluePMM(
-        n=n_eigenvalue,
+    PMM.modules.AffineEigenvaluePMM(
+        n=matrix_size_eigenvalue,
+        k=1,
         init_magnitude=1e-2,
     )
 )
@@ -240,7 +242,7 @@ f_val = np.array([features(c) for c in cs_val])
 f_test = np.array([features(c) for c in cs_test])
 
 # unscale by fitting a scaler to the true features
-# f_scaler = PMM.Scalers.UniformScaler(clow=-1, chigh=1, Elow=-1, Ehigh=1)
+# f_scaler = PMM.scalers.UniformScaler(clow=-1, chigh=1, Elow=-1, Ehigh=1)
 # f_scaler.fit(cs_train, f_train)
 #
 # _, f_train_pred = f_scaler.inverse_transform(cs_train_sc, f_train_pred_sc)
@@ -254,7 +256,7 @@ f_test_pred = f_test_pred_sc
 fig, axes = plt.subplots(1, f_train.shape[1] + 2, figsize=(12, 6))
 
 for i in range(f_train.shape[1]):
-    for j in range(k):
+    for j in range(output_size):
         axes[i].scatter(
             f_train[:, i],
             f_train_pred[:, j],
@@ -281,7 +283,7 @@ for i in range(f_train.shape[1]):
 
 cmaps = ["Blues", "Oranges", "Greens", "Reds", "Purples", "Greys"]
 
-for j in range(k):
+for j in range(output_size):
     axes[~1].scatter(
         f_train[:, 0],
         f_train[:, 1],

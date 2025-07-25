@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm[toml]", "black", "isort", "flake8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "parametric-matrix-models"
+authors = [
+    { name = "Patrick Cook", email = "cookpat4@msu.edu" },
+]
+description = "Python package for Parametric Matrix Models"
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["PMM", "Parametric Matrix Models", "Emulation", "Machine Learning"]
+license = "GPL-3.0-or-later"
+classifiers= [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "jax",
+]
+dynamic = ["version"]
+
+[tool.setuptools_scm]
+
+[tool.black]
+line_length = 79
+preview = true
+enable_unstable_feature = ["string_processing"]
+
+[tool.isort]
+profile = "black"
+line_length = 79
+
+[tool.flake8]
+extend-ignore = [
+    "E203",  # Whitespace before ':'
+]
+per-file-ignores = [
+    "__init__.py:E402,F401", # Import not at top of file, Unused import
+    ]

@@ -1,8 +1,10 @@
-from .BaseModule import BaseModule
-from typing import Any, Callable, Dict, Optional, Tuple, Union
-import jax.numpy as np
-from ._helpers import subsets_to_string
 import sys
+from typing import Any, Callable, Dict, Optional, Tuple, Union
+
+import jax.numpy as np
+
+from ._helpers import subsets_to_string
+from .basemodule import BaseModule
 
 
 class SubsetModule(BaseModule):
@@ -90,8 +92,11 @@ class SubsetModule(BaseModule):
         subname = self.module.name()
         subset_str = subsets_to_string(self.subset)
         pend_str = "PREPEND" if self.prepend else "APPEND"
-        pass_str = "PASSTHROUGH, " if self.passthrough else ""
-        return f"SubsetModule({subset_str}, {pass_str}{pend_str}, {self.axis}, {subname})"
+        pass_str = "PASSTHROUGH" if self.passthrough else "CONSUME"
+        return (
+            f"SubsetModule({subset_str}, {pass_str}, {pend_str}, "
+            f"{self.axis}, {subname})"
+        )
 
     def is_ready(self) -> bool:
         return (
@@ -355,6 +360,13 @@ class SubsetModule(BaseModule):
             Dictionary containing the serialized module data.
         """
 
+        # call the base class serialize method to get most of the data
+        # serialized
+        serial = super(SubsetModule, self).serialize()
+
+        # then replace the few fields that weren't actually serialized:
+        # module and subset
+
         module_typename = self.module.__class__.__name__
         module_module = self.module.__module__
         module_serial = self.module.serialize()
@@ -374,20 +386,14 @@ class SubsetModule(BaseModule):
             else None
         )
 
-        return {
-            "name": self.name(),
-            "subsets": serial_subsets,
-            "prepend": self.prepend,
-            "axis": self.axis,
-            "passthrough": self.passthrough,
-            "input_shape": self.input_shape,
-            "output_shape": self.output_shape,
-            "module": {
-                "type": module_typename,
-                "module": module_module,
-                "data": module_serial,
-            },
+        serial["hyperparameters"]["subset"] = serial_subsets
+        serial["hyperparameters"]["module"] = {
+            "type": module_typename,
+            "module": module_module,
+            "data": module_serial,
         }
+
+        return serial
 
     def deserialize(self, data: Dict[str, Any]) -> None:
         """
@@ -402,7 +408,10 @@ class SubsetModule(BaseModule):
             Dictionary containing the serialized module data.
         """
 
-        subset_slices = data["subsets"]
+        # replace non-standard serialized fields with the partially
+        # deserialized values before calling the base class's deserialize
+
+        subset_slices = data["hyperparameters"]["subset"]
 
         # deserialize the subsets by converting any tuples back to slices
         if subset_slices is not None:
@@ -413,23 +422,14 @@ class SubsetModule(BaseModule):
         else:
             subset = None
 
-        prepend = data["prepend"]
-        axis = data["axis"]
-        passthrough = data["passthrough"]
-
-        module_module = data["module"]["module"]
-        module_typename = data["module"]["type"]
-        module_data = data["module"]["data"]
+        module_module = data["hyperparameters"]["module"]["module"]
+        module_typename = data["hyperparameters"]["module"]["type"]
+        module_data = data["hyperparameters"]["module"]["data"]
 
         module = getattr(sys.modules[module_module], module_typename)()
         module.deserialize(module_data)
 
-        self.set_hyperparameters(
-            {
-                "subset": subset,
-                "prepend": prepend,
-                "axis": axis,
-                "passthrough": passthrough,
-                "module": module,
-            }
-        )
+        data["hyperparameters"]["subset"] = subset
+        data["hyperparameters"]["module"] = module
+
+        super(SubsetModule, self).deserialize(data)

@@ -1,7 +1,7 @@
-import jax.numpy as np
-import jax
-from jax import jit, vmap
 from typing import Optional
+
+import jax
+import jax.numpy as np
 
 
 def commutator(
@@ -57,8 +57,7 @@ def reg_pmm_predict_func(
     gs: np.ndarray,
     r: int,
     X: np.ndarray,
-    smoothing: Optional[str] = None,  # must be traced out before JIT
-    smoothing_param: Optional[float] = None,  # must be traced out before JIT
+    smoothing: Optional[float] = None,  # must be traced out before JIT
 ) -> np.ndarray:
     """
     Parameters:
@@ -87,11 +86,11 @@ def reg_pmm_predict_func(
         sample.
     """
 
-    return vmap(
+    return jax.vmap(
         reg_pmm_predict_func_single,
-        in_axes=(None, None, None, None, None, 0, None, None),
+        in_axes=(None, None, None, None, None, 0, None),
         out_axes=0,
-    )(A, Bs, Ds, gs, r, X, smoothing, smoothing_param)
+    )(A, Bs, Ds, gs, r, X, smoothing)
 
 
 def reg_pmm_predict_func_single(
@@ -101,8 +100,7 @@ def reg_pmm_predict_func_single(
     gs: np.ndarray,
     r: int,
     X: np.ndarray,
-    smoothing: Optional[str] = None,  # must be traced out before JIT
-    smoothing_param: Optional[float] = None,  # must be traced out before JIT
+    smoothing: Optional[float] = None,  # must be traced out before JIT
 ) -> np.ndarray:
     """
     Predict function for a single instance using PMM regression. The output is
@@ -141,12 +139,6 @@ def reg_pmm_predict_func_single(
         Output predictions (q,). Each element corresponds to the prediction for
         each output class.
     """
-    if smoothing not in (None, "none", "exact", "average"):
-        raise ValueError(
-            f"Invalid smoothing type: {smoothing}. "
-            "Must be one of None, 'none', 'exact', or 'average'."
-        )
-
     # ensure Hermitian matrices
     A = (A + A.conj().T) / 2
     Bs = (Bs + Bs.conj().transpose(0, 2, 1)) / 2
@@ -155,30 +147,23 @@ def reg_pmm_predict_func_single(
 
     # handle different smoothing types
 
-    if smoothing is None or smoothing == "none":
+    if smoothing is None or smoothing == 0.0:
         M = A + np.einsum("i,ijk->jk", X.astype(Bs.dtype), Bs)
         E, V = np.linalg.eigh(M)
 
         # get the r eigenvectors with the largest magnitude eigenvalues
         idx = np.argsort(np.abs(E))[::-1][:r]
 
-    elif smoothing == "exact":
+    else:
         M = A + np.einsum("i,ijk->jk", X.astype(Bs.dtype), Bs)
         C = exact_smoothing_matrix(A, Bs)
 
-        E, V = np.linalg.eigh(M + smoothing_param * C)
+        E, V = np.linalg.eigh(M + smoothing * C)
 
         # when smoothing we have to sort algebraically, not by magnitude
         # can use either end of the spectrum, so we take the largest r
         idx = np.argsort(E)[::-1][:r]
 
-    elif smoothing == "average":
-        raise NotImplementedError("Average smoothing is not implemented yet.")
-    else:
-        raise ValueError(
-            f"Invalid smoothing type: {smoothing}. "
-            "Must be one of None, 'none', 'exact', or 'average'."
-        )
     V = V[:, idx]
 
     # Z will be (q,) the output for each class
@@ -204,8 +189,7 @@ def reg_pmm_predict_func_legacy(
     Ds: np.ndarray,
     gs: np.ndarray,
     X: np.ndarray,
-    smoothing: Optional[str] = None,  # must be traced out before JIT
-    smoothing_param: Optional[float] = None,  # must be traced out before JIT
+    smoothing: Optional[float] = None,  # must be traced out before JIT
 ) -> np.ndarray:
     """
     Parameters:
@@ -217,7 +201,8 @@ def reg_pmm_predict_func_legacy(
     Ds : np.ndarray
         Array of secondary matrices (q, r, r, n, n), where q is the number of
         outputs and d is the number of secondary matrices.
-        Each Ds[i, j] must be Hermitian and Ds[:, i, j, :, :] = Ds[:, j, i, :, :].
+        Each Ds[i, j] must be Hermitian and
+        Ds[:, i, j, :, :] = Ds[:, j, i, :, :].
     gs : np.ndarray
         Array of bias terms (q,). Where q is the number of outputs Must be
         real-valued.
@@ -234,11 +219,18 @@ def reg_pmm_predict_func_legacy(
         sample.
     """
 
-    return vmap(
+    return jax.vmap(
         reg_pmm_predict_func_single_legacy,
-        in_axes=(None, None, None, None, 0, None, None),
+        in_axes=(
+            None,
+            None,
+            None,
+            None,
+            0,
+            None,
+        ),
         out_axes=0,
-    )(A, Bs, Ds, gs, X, smoothing, smoothing_param)
+    )(A, Bs, Ds, gs, X, smoothing)
 
 
 def reg_pmm_predict_func_single_legacy(
@@ -247,8 +239,7 @@ def reg_pmm_predict_func_single_legacy(
     Ds: np.ndarray,
     gs: np.ndarray,
     X: np.ndarray,
-    smoothing: Optional[str] = None,  # must be traced out before JIT
-    smoothing_param: Optional[float] = None,  # must be traced out before JIT
+    smoothing: Optional[float] = None,  # must be traced out before JIT
 ) -> np.ndarray:
     """
     Predict function for a single instance using PMM regression. The output is
@@ -273,7 +264,8 @@ def reg_pmm_predict_func_single_legacy(
     Ds : np.ndarray
         Array of secondary matrices (q, r, r, n, n), where q is the number of
         outputs and d is the number of secondary matrices.
-        Each Ds[i, j] must be Hermitian and Ds[:, i, j, :, :] = Ds[:, j, i, :, :].
+        Each Ds[i, j] must be Hermitian and
+        Ds[:, i, j, :, :] = Ds[:, j, i, :, :].
     gs : np.ndarray
         Array of bias terms (q,). Where q is the number of outputs Must be
         real-valued.
@@ -287,11 +279,6 @@ def reg_pmm_predict_func_single_legacy(
         Output predictions (q,). Each element corresponds to the prediction for
         each output class.
     """
-    if smoothing not in (None, "none", "exact", "average"):
-        raise ValueError(
-            f"Invalid smoothing type: {smoothing}. "
-            "Must be one of None, 'none', 'exact', or 'average'."
-        )
 
     # ensure Hermitian matrices
     A = (A + A.conj().T) / 2
@@ -303,30 +290,23 @@ def reg_pmm_predict_func_single_legacy(
 
     # handle different smoothing types
 
-    if smoothing is None or smoothing == "none":
+    if smoothing is None or smoothing == 0.0:
         M = A + np.einsum("i,ijk->jk", X.astype(Bs.dtype), Bs)
         E, V = np.linalg.eigh(M)
 
         # get the r eigenvectors with the largest magnitude eigenvalues
         idx = np.argsort(np.abs(E))[::-1][:r]
 
-    elif smoothing == "exact":
+    else:
         M = A + np.einsum("i,ijk->jk", X.astype(Bs.dtype), Bs)
         C = exact_smoothing_matrix(A, Bs)
 
-        E, V = np.linalg.eigh(M + smoothing_param * C)
+        E, V = np.linalg.eigh(M + smoothing * C)
 
         # when smoothing we have to sort algebraically, not by magnitude
         # can use either end of the spectrum, so we take the largest r
         idx = np.argsort(E)[::-1][:r]
 
-    elif smoothing == "average":
-        raise NotImplementedError("Average smoothing is not implemented yet.")
-    else:
-        raise ValueError(
-            f"Invalid smoothing type: {smoothing}. "
-            "Must be one of None, 'none', 'exact', or 'average'."
-        )
     V = V[:, idx]
 
     # Z will be (q,) the output for each class

@@ -1,10 +1,11 @@
-from .BaseModule import BaseModule
-import jax.numpy as np
-import jax
-from typing import Callable, Tuple, Any, Union, Optional, Dict
-from inspect import signature
-import dill
 import base64
+from inspect import signature
+from typing import Any, Callable, Dict, Optional, Tuple, Union
+
+import dill
+import jax.numpy as np
+
+from .basemodule import BaseModule
 
 
 class Func(BaseModule):
@@ -159,7 +160,8 @@ class Func(BaseModule):
             self._orig_f = f
             if len(sig.parameters) < 1 or len(sig.parameters) > 3:
                 raise ValueError(
-                    f"Function f ({fname if fname is not None else f.__name__}) "
+                    "Function f "
+                    f"({fname if fname is not None else f.__name__}) "
                     "must take either one, two, or three arguments: "
                     "input features, state, and a JAX rng key."
                 )
@@ -189,7 +191,8 @@ class Func(BaseModule):
                 self.f.__name__ = f.__name__
             else:
                 raise ValueError(
-                    f"Function f ({fname if fname is not None else f.__name__}) "
+                    "Function f "
+                    f"({fname if fname is not None else f.__name__}) "
                     "must take either one, two, three, or four "
                     "arguments: input features, state, and a JAX rng key."
                 )

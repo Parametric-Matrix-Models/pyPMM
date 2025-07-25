@@ -47,5 +47,5 @@ if __name__ == "__main__":
     ]
 
     for case in test_cases:
-        result = slice_to_string(case)
+        result = subsets_to_string(case)
         print(f"{case} -> {result}")
