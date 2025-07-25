@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "setuptools_scm[toml]", "black", "isort", "flake8"]
+requires = ["setuptools", "setuptools_scm[toml]", "black", "isort", "flake8", "flake8-pyproject"]
 build-backend = "setuptools.build_meta"
 
 [project]
