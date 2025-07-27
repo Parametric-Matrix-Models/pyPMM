@@ -3,6 +3,7 @@ from inspect import signature
 from typing import Any, Callable, Dict, Optional, Tuple, Union
 
 import dill
+import jax
 import jax.numpy as np
 
 from .basemodule import BaseModule
@@ -101,6 +102,13 @@ class Func(BaseModule):
         fname : Optional[str]
             Name of the function. If not provided, the function's Pythonic name
             will be used.
+
+        params : Optional[Tuple[np.ndarray, ...]]
+            Initial trainable parameters of the module. This can be used to
+            store any tuple of numpy arrays that the function might need to
+            maintain state across calls. If not provided, an empty tuple will
+            be used. If the function requires trainable parameters, their
+            initial values must be provided here.
 
         state : Optional[Tuple[np.ndarray, ...]]
             Initial state of the module. This can be used to store any tuple of
@@ -328,76 +336,8 @@ class Func(BaseModule):
             Shape of the input data, e.g. (num_features,).
         """
 
-        # validate output signature and get output shape
-        # easiest way to do this is to call the function with dummy data
         self.input_shape = input_shape
-        dummy_input = np.ones(input_shape, dtype=np.float32)
-        # add batch dimension
-        dummy_input = dummy_input[None, :]  # shape (1, num_features)
-
-        # the Func module must already have params initialized
-        dummy_output_and_state = self.f(
-            self.params, dummy_input, self.state, rng
-        )
-
-        if (
-            not isinstance(dummy_output_and_state, tuple)
-            or len(dummy_output_and_state) != 2
-        ):
-            # give more meaningful error message based on what the original
-            # function signature was
-            if len(self._orig_signature.parameters) == 1:
-                raise ValueError(
-                    f"Function f ({self.fname}) must return a single output "
-                    "array when its "
-                    "signature has only one argument (input features)."
-                )
-            elif len(self._orig_signature.parameters) == 2:
-                raise ValueError(
-                    f"Function f ({self.fname}) must return a single output "
-                    "array when its "
-                    "signature has two arguments (trainable parameters and "
-                    "input features)."
-                )
-            elif (
-                len(self._orig_signature.parameters) == 3
-                or len(self._orig_signature.parameters) == 4
-            ):
-                raise ValueError(
-                    f"Function f ({self.fname}) must return a tuple of output "
-                    "array and state "
-                    "when its signature has three or four arguments "
-                    "(trainable parameters, input features, state, [rng key])."
-                )
-
-        dummy_output, dummy_state = dummy_output_and_state
-
-        if not isinstance(dummy_output, np.ndarray):
-            raise ValueError(
-                f"Function f ({self.fname}) must return an output array as "
-                "the first output, but got "
-                f"{type(dummy_output).__name__} instead."
-            )
-        if not isinstance(dummy_state, tuple) or not all(
-            isinstance(s, np.ndarray) for s in dummy_state
-        ):
-            raise ValueError(
-                f"Function f ({self.fname}) must return a state tuple as the "
-                "second output, but got "
-                f"{type(dummy_state).__name__} instead."
-            )
-
-        # ensure the output shape is at least 2D (i.e. it has a batch
-        # dimension)
-        if len(dummy_output.shape) < 2:
-            raise ValueError(
-                f"Function f ({self.fname}) must return an output array with "
-                "at least 2 dimensions (batch dimension and features), but "
-                f"got {dummy_output.shape} instead."
-            )
-
-        # set the output shape
-        self.output_shape = dummy_output.shape[1:]  # exclude batch dimension
+        self.output_shape = self.get_output_shape(input_shape)
 
     def get_output_shape(
         self, input_shape: Tuple[int, ...]
@@ -415,9 +355,75 @@ class Func(BaseModule):
             Shape of the output data, e.g. (num_output_features,).
         """
         if not self.is_ready():
-            raise ValueError(
-                "Module is not compiled yet. Call compile() first."
+            # compute the output shape if the module is not ready
+            # validate output signature and get output shape
+            # easiest way to do this is to call the function with dummy data
+            dummy_input = np.ones(input_shape, dtype=np.float32)
+            # add batch dimension
+            dummy_input = dummy_input[None, :]  # shape (1, num_features)
+
+            # the Func module must already have params initialized
+            dummy_output_and_state = self.f(
+                self.params, dummy_input, self.state, jax.random.key(0)
             )
+
+            if (
+                not isinstance(dummy_output_and_state, tuple)
+                or len(dummy_output_and_state) != 2
+            ):
+                # give more meaningful error message based on what the original
+                # function signature was
+                if len(self._orig_signature.parameters) == 1:
+                    raise ValueError(
+                        f"Function f ({self.fname}) must return a single"
+                        " output array when its signature has only one"
+                        " argument (input features)."
+                    )
+                elif len(self._orig_signature.parameters) == 2:
+                    raise ValueError(
+                        f"Function f ({self.fname}) must return a single"
+                        " output array when its signature has two arguments"
+                        " (trainable parameters and input features)."
+                    )
+                elif (
+                    len(self._orig_signature.parameters) == 3
+                    or len(self._orig_signature.parameters) == 4
+                ):
+                    raise ValueError(
+                        f"Function f ({self.fname}) must return a tuple of"
+                        " output array and state when its signature has three"
+                        " or four arguments (trainable parameters, input"
+                        " features, state, [rng key])."
+                    )
+
+            dummy_output, dummy_state = dummy_output_and_state
+
+            if not isinstance(dummy_output, np.ndarray):
+                raise ValueError(
+                    f"Function f ({self.fname}) must return an output array as"
+                    " the first output, but got"
+                    f" {type(dummy_output).__name__} instead."
+                )
+            if not isinstance(dummy_state, tuple) or not all(
+                isinstance(s, np.ndarray) for s in dummy_state
+            ):
+                raise ValueError(
+                    f"Function f ({self.fname}) must return a state tuple as"
+                    " the second output, but got"
+                    f" {type(dummy_state).__name__} instead."
+                )
+
+            # ensure the output shape is at least 2D (i.e. it has a batch
+            # dimension)
+            if len(dummy_output.shape) < 2:
+                raise ValueError(
+                    f"Function f ({self.fname}) must return an output array"
+                    " with at least 2 dimensions (batch dimension and"
+                    f" features), but got {dummy_output.shape} instead."
+                )
+
+            return dummy_output.shape[1:]
+
         if input_shape != self.input_shape:
             raise ValueError(
                 f"Input shape {input_shape} does not match "
