@@ -177,22 +177,30 @@ class Model(object):
             raise IndexError("Index out of range.")
         return self.modules[index]
 
-    def compile(self, rngkey, input_shape: Tuple[int, ...]) -> None:
+    def compile(
+        self, rngkey: Union[Any, int], input_shape: Tuple[int, ...]
+    ) -> None:
         """
         Compile the model for training by compiling each module.
 
         Parameters
         ----------
-            rngkey : Any
+            rngkey : Union[Any, int]
                 Random key for initializing the model parameters. JAX PRNGKey
+                or integer seed.
             input_shape : Tuple[int, ...]
                 Shape of the input array, excluding the batch size.
                 For example, (input_features,) for a 1D input or
                 (input_height, input_width, input_channels) for a 3D input.
         """
+
+        if isinstance(rngkey, int):
+            rngkey = jax.random.key(rngkey)
+
         self.input_shape = input_shape
         for module in self.modules:
-            module.compile(rngkey, input_shape)
+            rngkey, modrng = jax.random.split(rngkey)
+            module.compile(modrng, input_shape)
             input_shape = module.get_output_shape(input_shape)
         self.output_shape = input_shape
 
@@ -205,6 +213,29 @@ class Model(object):
         ]
 
         self.ready = True
+
+    def get_output_shape(
+        self, input_shape: Tuple[int, ...]
+    ) -> Tuple[int, ...]:
+        """
+        Get the output shape of the model given an input shape.
+
+        Parameters
+        ----------
+            input_shape : Tuple[int, ...]
+                Shape of the input array, excluding the batch size.
+                For example, (input_features,) for a 1D input or
+                (input_height, input_width, input_channels) for a 3D input.
+
+        Returns
+        -------
+            Tuple[int, ...]
+                Shape of the output array after passing through the model.
+        """
+        for module in self.modules:
+            input_shape = module.get_output_shape(input_shape)
+
+        return input_shape
 
     def get_params(self) -> Tuple[np.ndarray, ...]:
         """
@@ -452,7 +483,9 @@ class Model(object):
             raise RuntimeError("Model is not ready. Call compile() first.")
 
         if self.callable is None:
-            self.callable = jax.jit(self._get_callable())
+            self.callable = jax.jit(
+                self._get_callable(), static_argnames=["training"]
+            )
 
         X_ = X.astype(dtype)
 
@@ -569,7 +602,7 @@ class Model(object):
         X_val: Optional[np.ndarray] = None,
         Y_val: Optional[np.ndarray] = None,
         Y_val_unc: Optional[np.ndarray] = None,
-        loss_fn: str = "mse",
+        loss_fn: Union[str, Callable] = "mse",
         lr: float = 1e-3,
         batch_size: int = 32,
         num_epochs: int = 100,
@@ -633,13 +666,59 @@ class Model(object):
 
         # get callable, not jitted since the training function will
         # handle that
-        if self.callable is None:
-            self.callable = self._get_callable()
+        callable_ = self._get_callable()
 
         # make the loss function
-        loss_fn = make_loss_fn(
-            loss_fn, lambda x, p, t, s, r: self.callable(p, x, t, s, r)
-        )
+        if isinstance(loss_fn, str):
+            loss_fn_ = make_loss_fn(
+                loss_fn, lambda x, p, t, s, r: callable_(p, x, t, s, r)
+            )
+        else:
+            # if the loss function is already a callable, we wrap it with the
+            # model callable
+            # whether or not Y and Y_unc are provided changes the signature
+            # of the loss function
+            if Y is not None and Y_unc is not None:
+                # the loss function should be
+                # loss_fn(X, Y, Y_unc, Y_pred) -> err
+                def loss_fn_(X, Y, Y_unc, params, training, states, rng):
+                    Y_pred, new_states = callable_(
+                        params, X, training, states, rng
+                    )
+                    err = loss_fn(X, Y, Y_unc, Y_pred)
+                    return err, new_states
+
+            elif Y is not None and Y_unc is None:
+                # the loss function should be
+                # loss_fn(X, Y, Y_pred) -> err
+                def loss_fn_(X, Y, params, training, states, rng):
+                    Y_pred, new_states = callable_(
+                        params, X, training, states, rng
+                    )
+                    err = loss_fn(X, Y, Y_pred)
+                    return err, new_states
+
+            elif Y is None and Y_unc is None:
+                # the loss function should be
+                # loss_fn(X, pred) -> err
+                # (unsupervised training)
+                def loss_fn_(X, params, training, states, rng):
+                    pred, new_states = callable_(
+                        params, X, training, states, rng
+                    )
+                    err = loss_fn(X, pred)
+                    return err, new_states
+
+            else:
+                raise ValueError(
+                    "Invalid loss function signature. "
+                    "If Y and Y_unc are provided, the loss function should be "
+                    "loss_fn(X, Y, Y_unc, Y_pred) -> err. "
+                    "If only Y is provided, it should be "
+                    "loss_fn(X, Y, Y_pred) -> err. "
+                    "If neither are provided, it should be "
+                    "loss_fn(X, pred) -> err."
+                )
 
         # train the model
         (
@@ -652,7 +731,7 @@ class Model(object):
             init_params=self.get_params(),
             init_states=self.get_state(),
             init_rng=self.get_rng(),
-            loss_fn=loss_fn,
+            loss_fn=loss_fn_,
             X=X,
             Y=Y,
             Y_unc=Y_unc,
