@@ -246,6 +246,7 @@ def _train_step(
         Y_batch,
         Y_unc_batch,
         tuple(map(get_params, adam_states)),
+        True,  # training mode
         model_states,
         model_rng,
     )
@@ -363,6 +364,11 @@ def _train(
 
     # since JAX arrays are static sizes, num_batches will be static
     num_batches = X.shape[0] // batch_size
+    num_val_batches = X_val.shape[0] // batch_size
+    batch_remainder = X.shape[0] % batch_size
+    val_batch_remainder = X_val.shape[0] % batch_size
+
+    total_val_batches = num_val_batches + (1 if val_batch_remainder > 0 else 0)
 
     if verbose:
         killer = GracefulKiller()
@@ -370,6 +376,104 @@ def _train(
             num_batches,
             length=20,
         )
+
+    # batch the loss function for validation
+    def batched_val_loss_fn(X, Y, Y_unc, params, states, model_rng, epoch_rng):
+        def batch_val_body_fn(batch_idx, batch_carry):
+            (
+                shuffled_val_X,
+                shuffled_val_Y,
+                shuffled_val_Y_unc,
+                mean_val_loss,
+            ) = batch_carry
+
+            X_val_batch = lax.dynamic_slice_in_dim(
+                shuffled_val_X, batch_idx * batch_size, batch_size, axis=0
+            )
+            Y_val_batch = lax.dynamic_slice_in_dim(
+                shuffled_val_Y, batch_idx * batch_size, batch_size, axis=0
+            )
+            Y_unc_val_batch = lax.dynamic_slice_in_dim(
+                shuffled_val_Y_unc, batch_idx * batch_size, batch_size, axis=0
+            )
+
+            # Compute the loss for this batch
+            # do not update states or rng in validation mode
+            val_loss, _ = loss_fn(
+                X_val_batch,
+                Y_val_batch,
+                Y_unc_val_batch,
+                params,
+                False,  # validation mode
+                states,
+                model_rng,
+            )
+
+            return (
+                shuffled_val_X,
+                shuffled_val_Y,
+                shuffled_val_Y_unc,
+                mean_val_loss + val_loss / total_val_batches,
+            )
+
+        # shuffle the validation data
+        shuffled_X_val = jax.random.permutation(epoch_rng, X_val)
+        shuffled_Y_val = jax.random.permutation(epoch_rng, Y_val)
+        shuffled_Y_unc_val = jax.random.permutation(epoch_rng, Y_val_unc)
+
+        # scan over the validation batches
+        _, _, _, mean_val_loss = lax.fori_loop(
+            0,
+            num_val_batches,
+            batch_val_body_fn,
+            (
+                shuffled_X_val,
+                shuffled_Y_val,
+                shuffled_Y_unc_val,
+                0.0,  # initial mean validation loss
+            ),
+            unroll=unroll,
+        )
+
+        # deal with possible remainder
+        if val_batch_remainder > 0:
+            # handle the last batch
+            X_val_batch = lax.dynamic_slice_in_dim(
+                shuffled_X_val,
+                num_val_batches * batch_size,
+                val_batch_remainder,
+                axis=0,
+            )
+            Y_val_batch = lax.dynamic_slice_in_dim(
+                shuffled_Y_val,
+                num_val_batches * batch_size,
+                val_batch_remainder,
+                axis=0,
+            )
+            Y_unc_val_batch = lax.dynamic_slice_in_dim(
+                shuffled_Y_unc_val,
+                num_val_batches * batch_size,
+                val_batch_remainder,
+                axis=0,
+            )
+
+            # Compute the loss for this batch
+            # do not update states or rng in validation mode
+            val_loss, _ = loss_fn(
+                X_val_batch,
+                Y_val_batch,
+                Y_unc_val_batch,
+                params,
+                False,  # validation mode
+                states,
+                model_rng,
+            )
+
+            # add the last batch loss to the mean
+            mean_val_loss += val_loss / total_val_batches
+
+        # return the mean validation loss
+        return mean_val_loss
 
     def start_progress_bar_callback(epoch):
         """
@@ -562,24 +666,24 @@ def _train(
         _, _, _, adam_states, model_states, model_rng, _ = batch_carry
 
         # deal with possible remainder, again this may be traced out
-        if X.shape[0] % batch_size > 0:
+        if batch_remainder > 0:
             # handle the last batch
             X_batch = lax.dynamic_slice_in_dim(
                 shuffled_X,
                 num_batches * batch_size,
-                X.shape[0] % batch_size,
+                batch_remainder,
                 axis=0,
             )
             Y_batch = lax.dynamic_slice_in_dim(
                 shuffled_Y,
                 num_batches * batch_size,
-                X.shape[0] % batch_size,
+                batch_remainder,
                 axis=0,
             )
             Y_unc_batch = lax.dynamic_slice_in_dim(
                 shuffled_Y_unc,
                 num_batches * batch_size,
-                X.shape[0] % batch_size,
+                batch_remainder,
                 axis=0,
             )
 
@@ -597,13 +701,24 @@ def _train(
             )
 
         # Validation step
-        val_loss, _ = loss_fn(
+        # val_loss, _ = loss_fn(
+        #    X_val,
+        #    Y_val,
+        #    Y_val_unc,
+        #    tuple(map(get_params, adam_states)),
+        #    False,  # validation mode
+        #    model_states,
+        #    model_rng,
+        # )
+        batch_rng, epoch_rng = jax.random.split(batch_rng)
+        val_loss = batched_val_loss_fn(
             X_val,
             Y_val,
             Y_val_unc,
             tuple(map(get_params, adam_states)),
             model_states,
             model_rng,
+            epoch_rng,
         )
 
         # patience handling
@@ -657,13 +772,24 @@ def _train(
         )
 
     # get initial validation loss
-    val_loss, _ = loss_fn(
+    # val_loss, _ = loss_fn(
+    #    X_val,
+    #    Y_val,
+    #    Y_val_unc,
+    #    tuple(map(get_params, adam_states)),
+    #    False,  # validation mode
+    #    init_states,
+    #    init_rng,
+    # )
+    init_rng, epoch_rng = jax.random.split(init_rng)
+    val_loss = batched_val_loss_fn(
         X_val,
         Y_val,
         Y_val_unc,
         tuple(map(get_params, adam_states)),
         init_states,
         init_rng,
+        epoch_rng,
     )
 
     # Initial state for the training loop
@@ -782,24 +908,24 @@ def train(
     # and redefine the loss function to take Y as a dummy variable
     if Y is None:
         Y = np.zeros((X.shape[0], 1), dtype=X.dtype)
-        loss_fn_ = loss_fn
+        loss_fn_unsupervised = loss_fn
 
-        def loss_fn(X, Y, params, states, rng):
+        def loss_fn(X, Y, params, training, states, rng):
             """
             Wrapper for the loss function that ignores Y.
             """
-            return loss_fn_(X, params, states, rng)
+            return loss_fn_unsupervised(X, params, training, states, rng)
 
     if Y_unc is None:
         # if no uncertainty in the targets is provided, assume it is 1
         Y_unc = np.ones_like(Y)
-        loss_fn_ = loss_fn
+        loss_fn_no_unc = loss_fn
 
-        def loss_fn(X, Y, Y_unc, params, states, rng):
+        def loss_fn(X, Y, Y_unc, params, training, states, rng):
             """
             Wrapper for the loss function that ignores Y_unc.
             """
-            return loss_fn_(X, Y, params, states, rng)
+            return loss_fn_no_unc(X, Y, params, training, states, rng)
 
         if Y_val is not None:
             Y_val_unc = np.ones_like(Y_val)
@@ -810,6 +936,13 @@ def train(
         X_val = X
         Y_val = Y
         Y_val_unc = Y_unc
+
+    if X_val is not None and Y_val is None:
+        # unsupervised training with validation data
+        Y_val = np.zeros((X_val.shape[0], 1), dtype=X.dtype)
+    if X_val is not None and Y_val_unc is None:
+        # if no uncertainty in the val targets are provided, assume it is 1
+        Y_val_unc = np.ones_like(Y_val)
 
     # check sizes
     if X.shape[0] != Y.shape[0]:
@@ -927,40 +1060,40 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
     """
     if fn_name == "mse":
 
-        def loss_fn(X, Y, params, states, rng):
-            Y_pred, new_states = model_fn(X, params, True, states, rng)
+        def loss_fn(X, Y, params, training, states, rng):
+            Y_pred, new_states = model_fn(X, params, training, states, rng)
             return np.mean(np.abs(Y_pred - Y) ** 2), new_states
 
     elif fn_name == "mae":
 
-        def loss_fn(X, Y, params, states, rng):
-            Y_pred, new_states = model_fn(X, params, True, states, rng)
+        def loss_fn(X, Y, params, training, states, rng):
+            Y_pred, new_states = model_fn(X, params, training, states, rng)
             return np.mean(np.abs(Y_pred - Y)), new_states
 
     elif fn_name == "mse_unc":
         # MSE with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params, states, rng):
-            Y_pred, new_states = model_fn(X, params, True, states, rng)
+        def loss_fn(X, Y, Y_unc, params, training, states, rng):
+            Y_pred, new_states = model_fn(X, params, training, states, rng)
             # Y_unc is assumed to be the uncertainty in the targets
             return np.mean(np.abs((Y_pred - Y) / Y_unc) ** 2), new_states
 
     elif fn_name == "mae_unc":
         # MAE with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params, states, rng):
-            Y_pred, new_states = model_fn(X, params, True, states, rng)
+        def loss_fn(X, Y, Y_unc, params, training, states, rng):
+            Y_pred, new_states = model_fn(X, params, training, states, rng)
             # Y_unc is assumed to be the uncertainty in the targets
             return np.mean(np.abs((Y_pred - Y) / Y_unc)), new_states
 
     elif fn_name == "mre":
         # Mean relative error
-        def loss_fn(X, Y, params, states, rng):
-            Y_pred, new_states = model_fn(X, params, True, states, rng)
+        def loss_fn(X, Y, params, training, states, rng):
+            Y_pred, new_states = model_fn(X, params, training, states, rng)
             return np.mean(np.abs((Y_pred - Y) / (Y + 1e-4))), new_states
 
     elif fn_name == "mre_unc":
         # Mean relative error with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params, states, rng):
-            Y_pred, new_states = model_fn(X, params, True, states, rng)
+        def loss_fn(X, Y, Y_unc, params, training, states, rng):
+            Y_pred, new_states = model_fn(X, params, training, states, rng)
             return (
                 np.mean(np.abs((Y_pred - Y) / (Y + 1e-4) / Y_unc)),
                 new_states,
@@ -968,8 +1101,8 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
 
     elif fn_name == "mrd":
         # mean relative difference
-        def loss_fn(X, Y, params, states, rng):
-            Y_pred, new_states = model_fn(X, params, True, states, rng)
+        def loss_fn(X, Y, params, training, states, rng):
+            Y_pred, new_states = model_fn(X, params, training, states, rng)
             return (
                 np.mean(np.abs((Y_pred - Y) / (2.0 * (Y + Y_pred) + 1e-4))),
                 new_states,
@@ -977,8 +1110,8 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
 
     elif fn_name == "mrd_unc":
         # mean relative difference with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params, states, rng):
-            Y_pred, new_states = model_fn(X, params, True, states, rng)
+        def loss_fn(X, Y, Y_unc, params, training, states, rng):
+            Y_pred, new_states = model_fn(X, params, training, states, rng)
             return (
                 np.mean(
                     np.abs(
@@ -987,6 +1120,33 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
                 ),
                 new_states,
             )
+
+    elif fn_name == "mse_unsupervised":
+
+        def loss_fn(X, params, training, states, rng):
+            """
+            Mean squared error loss function for unsupervised training.
+            """
+            X_pred, new_states = model_fn(X, params, training, states, rng)
+            return np.mean(np.abs(X_pred - X) ** 2), new_states
+
+    elif fn_name == "mae_unsupervised":
+
+        def loss_fn(X, params, training, states, rng):
+            """
+            Mean absolute error loss function for unsupervised training.
+            """
+            X_pred, new_states = model_fn(X, params, training, states, rng)
+            return np.mean(np.abs(X_pred - X)), new_states
+
+    elif fn_name == "mre_unsupervised":
+
+        def loss_fn(X, params, training, states, rng):
+            """
+            Mean relative error loss function for unsupervised training.
+            """
+            X_pred, new_states = model_fn(X, params, training, states, rng)
+            return np.mean(np.abs((X_pred - X) / (X + 1e-4))), new_states
 
     else:
         raise ValueError(f"Unknown loss function: {fn_name}")
