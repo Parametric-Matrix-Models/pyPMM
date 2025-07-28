@@ -22,6 +22,10 @@ class Model(object):
 
         trainable_floats_num = self.get_num_trainable_floats()
 
+        # get number of modules in order to reserve whitespace
+        num_modules = len(self.modules)
+        mod_idx_width = len(str(num_modules - 1))
+
         if trainable_floats_num is None:
             num_trainable_floats = "(uninitialized)"
         else:
@@ -40,7 +44,7 @@ class Model(object):
                 module.get_output_shape(input_shape) if input_shape else None
             )
             comment = module.name().startswith("#")
-            rep += f"\nModule {i}: {module}" + (
+            rep += f"\n{i:>{mod_idx_width}}: {module}" + (
                 f" -> {input_shape}" if input_shape and not comment else ""
             )
         return rep
@@ -159,7 +163,9 @@ class Model(object):
         self.reset()
         return module
 
-    def __getitem__(self, index: int) -> BaseModule:
+    def __getitem__(
+        self, key: Union[int, np.ndarray, slice]
+    ) -> Union[List[BaseModule], BaseModule]:
         """
         Get the module at the given index.
 
@@ -173,12 +179,42 @@ class Model(object):
             BaseModule
                 The module at the specified index.
         """
-        if index < 0 or index >= len(self.modules):
-            raise IndexError("Index out of range.")
-        return self.modules[index]
+        if isinstance(key, np.ndarray):
+            if key.ndim > 1:
+                raise ValueError(
+                    "Index array must be 1D. Use a boolean mask or a 1D array."
+                )
+            # the key can either be an index array or a boolean mask
+            if key.dtype == bool:
+                if len(key) != len(self.modules):
+                    raise ValueError(
+                        "Boolean mask length must match the number of modules."
+                    )
+                indices = np.where(key)[0]
+                return [self.modules[i] for i in indices]
+            elif key.dtype == int:
+                indices = key.flatten()
+                return [self.modules[i] for i in indices]
+            else:
+                raise ValueError(
+                    "Index array must be of type int or bool. "
+                    f"Got {key.dtype}."
+                )
+        elif isinstance(key, slice):
+            # return a slice of the modules
+            return self.modules[key]
+        elif isinstance(key, int):
+            if key < 0 or key >= len(self.modules):
+                raise IndexError("Index out of range.")
+            return self.modules[key]
+        else:
+            raise TypeError(
+                "Index must be an integer, a slice, or a 1D numpy array. "
+                f"Got {type(key)}."
+            )
 
     def compile(
-        self, rngkey: Union[Any, int], input_shape: Tuple[int, ...]
+        self, rngkey: Optional[Union[Any, int]], input_shape: Tuple[int, ...]
     ) -> None:
         """
         Compile the model for training by compiling each module.
@@ -193,6 +229,9 @@ class Model(object):
                 For example, (input_features,) for a 1D input or
                 (input_height, input_width, input_channels) for a 3D input.
         """
+
+        if rngkey is None:
+            rngkey = random.randint(0, 2**32 - 1)
 
         if isinstance(rngkey, int):
             rngkey = jax.random.key(rngkey)
