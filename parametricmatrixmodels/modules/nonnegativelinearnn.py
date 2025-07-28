@@ -74,7 +74,7 @@ class NonnegativeLinearNN(BaseModule):
         Returns the name of the module
         """
 
-        return f"NonnegativeLinearNN (k={self.k}, real={self.real})"
+        return f"NonnegativeLinearNN(k={self.k}, real={self.real})"
 
     def is_ready(self) -> bool:
         return (

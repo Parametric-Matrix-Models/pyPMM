@@ -60,7 +60,7 @@ class LinearNN(BaseModule):
         Returns the name of the module
         """
 
-        return f"LinearNN (k={self.k}, real={self.real})"
+        return f"LinearNN(k={self.k}, real={self.real})"
 
     def is_ready(self) -> bool:
         return (
