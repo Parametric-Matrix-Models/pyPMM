@@ -16,12 +16,6 @@ class Comment(BaseModule):
         """
         return f"# {self.comment}" if self.comment else "#"
 
-    def __repr__(self) -> str:
-        """
-        Returns a string representation of the module
-        """
-        return f"{self.name()}"
-
     def is_ready(self) -> bool:
         return True
 
@@ -64,50 +58,6 @@ class Comment(BaseModule):
         return lambda params, input_NF, training, state, rng: (
             input_NF,  # output is the same as input
             state,  # state is unchanged
-        )
-
-    def __call__(
-        self,
-        input_NF: np.ndarray,
-        training: bool = False,
-        state: Tuple[np.ndarray, ...] = (),
-        rng: Any = None,
-    ) -> Tuple[np.ndarray, Tuple[np.ndarray, ...]]:
-        """
-        Call the module with the current parameters and given input, state, and
-        rng.
-
-        Parameters
-        ----------
-        input_NF : np.ndarray
-            Input array of shape (num_samples, num_features).
-        training : bool, optional
-            Whether the module is in training mode, by default False.
-        state : Tuple[np.ndarray, ...], optional
-            State of the module, by default ().
-        rng : Any, optional
-            JAX random key, by default None.
-
-        Returns
-        -------
-        Tuple[np.ndarray, Tuple[np.ndarray, ...]]
-            Output array of shape (num_samples, num_output_features) and new
-            state.
-        """
-        if not self.is_ready():
-            raise ValueError("Module is not ready, call compile() first")
-
-        # get the callable
-        func = self._get_callable()
-
-        # call the function with the current parameters, input, training flag,
-        # state, and rng
-        return func(
-            self.get_params(),
-            input_NF,
-            training,
-            state,
-            rng,
         )
 
     def compile(self, rng: Any, input_shape: Tuple[int, ...]) -> None:
