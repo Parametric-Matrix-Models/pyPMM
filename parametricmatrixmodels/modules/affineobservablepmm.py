@@ -181,7 +181,7 @@ class AffineObservablePMM(BaseModule):
         """
 
         return (
-            f"AffineObservablePMM ({self.matrix_size}x{self.matrix_size},"
+            f"AffineObservablePMM({self.matrix_size}x{self.matrix_size},"
             f" num_eig={self.num_eig}, num_secondaries={self.num_secondaries},"
             f" output_size={self.output_size}, smoothing={self.smoothing})"
         )

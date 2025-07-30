@@ -77,6 +77,12 @@ class SubsetModule(BaseModule):
             the output of the module. If False, the unchanged input data will
             be dropped. Defaults to False.
         """
+        if subset is not None and not isinstance(subset, tuple):
+            raise TypeError(
+                "Subset must be a tuple of slices or index arrays, "
+                f"not {type(subset)}"
+            )
+
         self.subset = subset
         self.module = module
         self.prepend = prepend
@@ -95,7 +101,7 @@ class SubsetModule(BaseModule):
         pass_str = "PASSTHROUGH" if self.passthrough else "CONSUME"
         return (
             f"SubsetModule({subset_str}, {pass_str}, {pend_str}, "
-            f"{self.axis}, {subname})"
+            f"axis={self.axis}, {subname})"
         )
 
     def is_ready(self) -> bool:

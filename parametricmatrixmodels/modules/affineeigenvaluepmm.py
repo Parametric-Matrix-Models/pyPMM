@@ -126,10 +126,10 @@ class AffineEigenvaluePMM(BaseModule):
         """
 
         if self.k == 1 and self.which == "sa":
-            return f"AffineEigenvaluePMM ({self.n}x{self.n}, ground state)"
+            return f"AffineEigenvaluePMM({self.n}x{self.n}, ground state)"
         else:
             return (
-                f"AffineEigenvaluePMM ({self.n}x{self.n}, k={self.k}, "
+                f"AffineEigenvaluePMM({self.n}x{self.n}, k={self.k}, "
                 f"which={self.which.upper()})"
             )
 
