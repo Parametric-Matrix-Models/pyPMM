@@ -42,7 +42,6 @@ funcs = {
     "Identity": "jax.nn.identity",
     "Softmax": "jax.nn.softmax",
     "LogSoftmax": "jax.nn.log_softmax",
-    "Tanh": "jax.numpy.tanh",
     "LogSumExp": "jax.nn.logsumexp",
     "Standardize": "jax.nn.standardize",
     "OneHot": "jax.nn.one_hot",
