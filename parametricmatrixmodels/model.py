@@ -5,6 +5,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import jax
 import jax.numpy as np
+import numpy as onp
 from packaging.version import parse
 
 import parametricmatrixmodels as pmm
@@ -214,7 +215,10 @@ class Model(object):
             )
 
     def compile(
-        self, rngkey: Optional[Union[Any, int]], input_shape: Tuple[int, ...]
+        self,
+        rngkey: Optional[Union[Any, int]],
+        input_shape: Tuple[int, ...],
+        verbose: bool = False,
     ) -> None:
         """
         Compile the model for training by compiling each module.
@@ -228,6 +232,8 @@ class Model(object):
                 Shape of the input array, excluding the batch size.
                 For example, (input_features,) for a 1D input or
                 (input_height, input_width, input_channels) for a 3D input.
+            verbose : bool, optional
+                Print debug information during compilation. Default is False.
         """
 
         if rngkey is None:
@@ -236,11 +242,19 @@ class Model(object):
         if isinstance(rngkey, int):
             rngkey = jax.random.key(rngkey)
 
+        if verbose:
+            print(
+                f"Compiling model with input shape {input_shape} and "
+                f"{len(self.modules)} modules."
+            )
+
         self.input_shape = input_shape
-        for module in self.modules:
+        for i, module in enumerate(self.modules):
             rngkey, modrng = jax.random.split(rngkey)
             module.compile(modrng, input_shape)
             input_shape = module.get_output_shape(input_shape)
+            if verbose:
+                print(f"({i}) {module.name()} output shape: {input_shape}")
         self.output_shape = input_shape
 
         # get number of parameter arrays for each module
@@ -893,9 +907,27 @@ class Model(object):
         filename = filename if filename.endswith(".npz") else filename + ".npz"
         np.savez(filename, **data)
 
+    def save_compressed(self, filename: str) -> None:
+        """
+        Save the model to a compressed file.
+
+        Parameters
+        ----------
+            filename : str
+                Name of the file to save the model to.
+        """
+        # if everything serializes correctly, we can save the model with just
+        # savez_compressed
+        data = self.serialize()
+
+        filename = filename if filename.endswith(".npz") else filename + ".npz"
+
+        # jax.numpy doesn't have savez_compressed, so we use numpy
+        onp.savez_compressed(filename, **data)
+
     def load(self, filename: str) -> None:
         """
-        Load the model from a file.
+        Load the model from a file. Supports both compressed and uncompressed
 
         Parameters
         ----------
@@ -903,6 +935,7 @@ class Model(object):
                 Name of the file to load the model from.
         """
         filename = filename if filename.endswith(".npz") else filename + ".npz"
+        # jax numpy load supports both compressed and uncompressed npz files
         data = np.load(filename, allow_pickle=True)
 
         # deserialize the model
