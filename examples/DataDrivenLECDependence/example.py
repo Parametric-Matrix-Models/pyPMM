@@ -280,6 +280,8 @@ for i in range(f_train.shape[1]):
             marker="^",
             color=f"C{j}",
         )
+    axes[i].set_xlabel(f"Feature {i + 1}")
+    axes[i].set_ylabel("Predicted Feature Value (Arb.)")
 
 cmaps = ["Blues", "Oranges", "Greens", "Reds", "Purples", "Greys"]
 
@@ -288,7 +290,7 @@ for j in range(output_size):
         f_train[:, 0],
         f_train[:, 1],
         c=f_train_pred[:, j],
-        label=f"Train Feature {j + 1}",
+        label=f"Predicted Train Feature {j + 1}",
         alpha=0.5,
         cmap=cmaps[j],
     )
@@ -296,7 +298,7 @@ for j in range(output_size):
         f_val[:, 0],
         f_val[:, 1],
         c=f_val_pred[:, j],
-        label=f"Validation Feature {j + 1}",
+        label=f"Predicted Validation Feature {j + 1}",
         alpha=0.5,
         marker="x",
         cmap=cmaps[j],
@@ -305,7 +307,7 @@ for j in range(output_size):
         f_test[:, 0],
         f_test[:, 1],
         c=f_test_pred[:, j],
-        label=f"Test Feature {j + 1}",
+        label=f"Predicted Test Feature {j + 1}",
         alpha=0.5,
         marker="^",
         cmap=cmaps[j],
@@ -314,7 +316,7 @@ for j in range(output_size):
         cs_train[:, 0],
         cs_train[:, 1],
         c=f_train_pred[:, j],
-        label=f"Train Feature {j + 1}",
+        label=f"Predicted Train Feature {j + 1}",
         alpha=0.5,
         cmap=cmaps[j],
     )
@@ -322,7 +324,7 @@ for j in range(output_size):
         cs_val[:, 0],
         cs_val[:, 1],
         c=f_val_pred[:, j],
-        label=f"Validation Feature {j + 1}",
+        label=f"Predicted Validation Feature {j + 1}",
         alpha=0.5,
         marker="x",
         cmap=cmaps[j],
@@ -331,10 +333,17 @@ for j in range(output_size):
         cs_test[:, 0],
         cs_test[:, 1],
         c=f_test_pred[:, j],
-        label=f"Test Feature {j + 1}",
+        label=f"Predicted Test Feature {j + 1}",
         alpha=0.5,
         marker="^",
         cmap=cmaps[j],
     )
+axes[~1].set_xlabel("Feature 1")
+axes[~1].set_ylabel("Feature 2")
+axes[~0].set_xlabel("c[0]")
+axes[~0].set_ylabel("c[1]")
+
+for ax in axes:
+    ax.legend()
 
 plt.show()
