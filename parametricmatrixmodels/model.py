@@ -585,12 +585,12 @@ class Model(object):
             prec : Union[np.dtype, str, int]
                 Precision to set for the model parameters and states.
                 Valid options are:
-                    [for 32-bit precision (all options are equivalent)]
-                    - np.float32, np.complex64, "float32", "complex64"
-                    - "single", "f32", "c64", 32
-                    [for 64-bit precision (all options are equivalent)]
-                    - np.float64, np.complex128, "float64", "complex128"
-                    - "double", "f64", "c128", 64
+                [for 32-bit precision (all options are equivalent)]
+                - np.float32, np.complex64, "float32", "complex64"
+                - "single", "f32", "c64", 32
+                [for 64-bit precision (all options are equivalent)]
+                - np.float64, np.complex128, "float64", "complex128"
+                - "double", "f64", "c128", 64
         """
         if not self.ready:
             raise RuntimeError("Model is not ready. Call compile() first.")
