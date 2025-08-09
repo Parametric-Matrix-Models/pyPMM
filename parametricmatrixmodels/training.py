@@ -267,6 +267,7 @@ def _train_step(
         "loss_fn",
         "grad_loss_fn",
         "batch_size",
+        "val_batch_size",
         "start_epoch",
         "num_epochs",
         "convergence_threshold",
@@ -294,6 +295,7 @@ def _train(
     loss_fn,  # static, jittable
     grad_loss_fn,  # static, jittable
     batch_size,  # static [default should be the full dataset]
+    val_batch_size,  # static [default should be the full validation dataset]
     start_epoch,  # static [default should be 0]
     num_epochs,  # static [default should be 100]
     convergence_threshold,  # static [default should be -np.inf]
@@ -335,6 +337,8 @@ def _train(
         parameters.
     batch_size : int
         Size of the training batches.
+    val_batch_size : int
+        Size of the validation batches.
     start_epoch : int
         Epoch to start training from. This is useful for resuming training.
     num_epochs : int
@@ -364,9 +368,9 @@ def _train(
 
     # since JAX arrays are static sizes, num_batches will be static
     num_batches = X.shape[0] // batch_size
-    num_val_batches = X_val.shape[0] // batch_size
+    num_val_batches = X_val.shape[0] // val_batch_size
     batch_remainder = X.shape[0] % batch_size
-    val_batch_remainder = X_val.shape[0] % batch_size
+    val_batch_remainder = X_val.shape[0] % val_batch_size
 
     total_val_batches = num_val_batches + (1 if val_batch_remainder > 0 else 0)
 
@@ -388,13 +392,22 @@ def _train(
             ) = batch_carry
 
             X_val_batch = lax.dynamic_slice_in_dim(
-                shuffled_val_X, batch_idx * batch_size, batch_size, axis=0
+                shuffled_val_X,
+                batch_idx * val_batch_size,
+                val_batch_size,
+                axis=0,
             )
             Y_val_batch = lax.dynamic_slice_in_dim(
-                shuffled_val_Y, batch_idx * batch_size, batch_size, axis=0
+                shuffled_val_Y,
+                batch_idx * val_batch_size,
+                val_batch_size,
+                axis=0,
             )
             Y_unc_val_batch = lax.dynamic_slice_in_dim(
-                shuffled_val_Y_unc, batch_idx * batch_size, batch_size, axis=0
+                shuffled_val_Y_unc,
+                batch_idx * val_batch_size,
+                val_batch_size,
+                axis=0,
             )
 
             # Compute the loss for this batch
@@ -440,19 +453,19 @@ def _train(
             # handle the last batch
             X_val_batch = lax.dynamic_slice_in_dim(
                 shuffled_X_val,
-                num_val_batches * batch_size,
+                num_val_batches * val_batch_size,
                 val_batch_remainder,
                 axis=0,
             )
             Y_val_batch = lax.dynamic_slice_in_dim(
                 shuffled_Y_val,
-                num_val_batches * batch_size,
+                num_val_batches * val_batch_size,
                 val_batch_remainder,
                 axis=0,
             )
             Y_unc_val_batch = lax.dynamic_slice_in_dim(
                 shuffled_Y_unc_val,
-                num_val_batches * batch_size,
+                num_val_batches * val_batch_size,
                 val_batch_remainder,
                 axis=0,
             )
@@ -1008,6 +1021,18 @@ def train(
 
     adam_states = tuple(map(init_fn, init_params))
 
+    # make sure the validation batch size isn't larger than the validation set
+    if X_val.shape[0] < batch_size:
+        val_batch_size = X_val.shape[0]
+        warnings.warn(
+            f"Validation batch size {batch_size} is larger than the number of"
+            f" validation samples {X_val.shape[0]}. Using the full validation"
+            " dataset as a single batch.",
+            UserWarning,
+        )
+    else:
+        val_batch_size = batch_size
+
     # train
     final_adam_states, final_model_states, final_model_rng, final_epoch = (
         _train(
@@ -1027,6 +1052,7 @@ def train(
             loss_fn,
             grad_loss_fn,
             batch_size=batch_size,
+            val_batch_size=val_batch_size,
             start_epoch=0,  # always start from 0
             num_epochs=num_epochs,
             convergence_threshold=convergence_threshold,
