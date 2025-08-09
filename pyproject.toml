@@ -9,7 +9,7 @@ authors = [
 ]
 description = "Python package for Parametric Matrix Models"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 keywords = ["PMM", "Parametric Matrix Models", "Emulation", "Machine Learning"]
 license = "GPL-3.0-or-later"
 classifiers= [
@@ -21,8 +21,34 @@ classifiers= [
 ]
 dependencies = [
     "jax",
+    "dill",
 ]
 dynamic = ["version"]
+
+[project.optional-dependencies]
+cuda = [
+    "jax[cuda]",
+]
+rocm = [
+    "jax[rocm]",
+]
+examples = [
+    "matplotlib",
+]
+docs = [
+    "sphinx",
+    "numpydoc",
+    "pydata-sphinx-theme",
+    "sphinx-copybutton",
+    "sphinx-design",
+    "sphinxcontrib-bibtex",
+    "sphinx-autodoc-typehints",
+    "matplotlib",
+    "scipy",
+]
+
+[project.urls]
+Homepage = "https://github.com/Parametric-Matrix-Models"
 
 [tool.setuptools_scm]
 
