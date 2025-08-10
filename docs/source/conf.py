@@ -19,7 +19,7 @@ author = "Patrick Cook"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = []
+html_title = "Parametric Matrix Models"
 
 templates_path = ["_templates"]
 exclude_patterns = []
@@ -45,6 +45,13 @@ autodoc_default_options = {
     "special-members": "__init__",
 }
 
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
+    "jax": ("https://docs.jax.dev/en/latest/", None),
+}
+
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -52,3 +59,18 @@ autodoc_default_options = {
 html_theme = "pydata_sphinx_theme"
 html_context = {"default_mode": "auto"}
 html_static_path = ["_static"]
+
+html_favicon = "_static/favicon.ico"
+
+html_theme_options = {
+    "logo": {
+        "text": "PMM",
+        "image_light": "_static/pmmlogo.svg",
+        "image_dark": "_static/pmmlogo.svg",
+    },
+    "collapse_navigation": False,
+    "show_version_warning_banner": True,
+    "github_url": "https://github.com/Parametric-Matrix-Models",
+    "show_toc_level": 2,
+    "navigation_depth": 4,
+}

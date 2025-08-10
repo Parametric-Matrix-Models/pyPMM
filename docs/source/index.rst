@@ -1,8 +1,19 @@
-Parametric Matrix Models documentation
-======================================
+.. module: parametricmatrixmodels
+
+.. _reference:
+
+##################################
+Parametric Matrix Models reference
+##################################
+
+:Release: |version|
+:Date: |today|
+
+API Reference
+=============
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-   api
+   model
+   modules

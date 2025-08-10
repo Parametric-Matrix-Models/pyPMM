@@ -1,9 +1,7 @@
 """
 Base module for JAX-based PMM models
-
 The base module can be used to implement various PMM models, NN models, and
 other (optionally stateful and trainable) operations in JAX.
-
 Modules can be combined to create Models.
 """
 
@@ -18,21 +16,23 @@ import parametricmatrixmodels as pmm
 
 class BaseModule(object):
     """
-    Base class for all Modules
+    Base class for all Modules. Custom modules should inherit from this class.
     """
 
     def __init__(self) -> None:
         """
-        All modules MUST be able to be initialized without any parameters in
+        BaseModule constructor, must be overridden by subclasses.
+
+        All modules **must** be able to be initialized without any arguments in
         order for Model saving and loading to work correctly.
 
-        __init__ can take optional parameters, but all aspects of the module
-        must be able to be set by `set_hyperparameters`, `set_params`, and
-        `set_state`.
+        ``__init__`` can take optional parameters, but all aspects of the
+        module must be able to be set by ``set_hyperparameters``,
+        ``set_params``, and ``set_state``.
 
-        Always raises NotImplementedError when called.
+        Always raises ``NotImplementedError`` when called on ``BaseModule`` s.
 
-        BaseModule is not meant to be instantiated directly.
+        ``BaseModule`` is not meant to be instantiated directly.
         """
         raise NotImplementedError(
             "BaseModule is an abstract class and cannot be instantiated "
@@ -41,13 +41,26 @@ class BaseModule(object):
 
     def name(self) -> str:
         """
-        Returns the name of the module
+        Returns the name of the module, unless overridden, this is the class
+        name.
+
+        Returns
+        -------
+        str
+            Name of the module.
         """
         return self.__class__.__name__
 
     def __repr__(self) -> str:
         """
-        Returns a string representation of the module
+        Returns a string representation of the module. Unless overridden,
+        this includes the module name, number of trainable floats (if any),
+        and whether the module is initialized (ready) or not.
+
+        Returns
+        -------
+        str
+            String representation of the module.
         """
 
         param_count = self.get_num_trainable_floats()
@@ -63,6 +76,16 @@ class BaseModule(object):
         """
         Return True if the module is initialized and ready for training or
         inference.
+
+        Returns
+        -------
+        bool
+            True if the module is ready, False otherwise.
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented in the subclass.
         """
         raise NotImplementedError(
             "is_ready method must be implemented in subclasses"
@@ -73,6 +96,17 @@ class BaseModule(object):
         Returns the number of trainable floats in the module.
         If the module does not have trainable parameters, returns 0.
         If the module is not ready, returns None.
+
+        Returns
+        -------
+        Optional[int]
+            Number of trainable floats in the module, or None if the module
+            is not ready.
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented in the subclass.
         """
         raise NotImplementedError(
             "get_num_trainable_floats method must be implemented in subclasses"
@@ -91,25 +125,57 @@ class BaseModule(object):
         Tuple[np.ndarray, Tuple[np.ndarray, ...]],
     ]:
         """
-        This method must return a jax-jittable and jax-gradable callable in the
-        form of
-        ```
-        (
-            params: Tuple[np.ndarray, ...],
-            input_NF: np.ndarray[num_samples, num_features],
-            training: bool,
-            state: Tuple[np.ndarray, ...],
-            rng: key<fry>
-        ) -> (
-                output_NF: np.ndarray[num_samples, num_output_features],
-                new_state: Tuple[np.ndarray, ...]
-            )
-        ```
+        Returns a `jax.jit`-able and `jax.grad`-able callable that represents
+        the module's forward pass.
+
+        This method must be implemented by all subclasses and must return a
+        jax-jittable and jax-gradable callable in the form of
+
+        .. code-block:: python
+
+            module_callable(
+                params: Tuple[np.ndarray, ...],
+                input_NF: np.ndarray[num_samples, num_features],
+                training: bool,
+                state: Tuple[np.ndarray, ...],
+                rng: Any
+            ) -> (
+                    output_NF: np.ndarray[num_samples, num_output_features],
+                    new_state: Tuple[np.ndarray, ...]
+                )
+
         That is, all hyperparameters are traced out and the callable depends
-        explicitly only on a Tuple of parameter numpy arrays, the input array,
-        the training flag, a state Tuple of numpy arrays, and a JAX rng key.
+        explicitly only on a Tuple of parameter jax.numpy arrays, the input
+        array, the training flag, a state Tuple of numpy arrays, and a JAX rng
+        key.
 
         The training flag will be traced out, so it doesn't need to be jittable
+
+        Returns
+        -------
+        : Callable[ \
+            [ \
+                Tuple[np.ndarray, ...], \
+                np.ndarray, \
+                bool, \
+                Tuple[np.ndarray, ...], \
+                Any \
+            ], \
+            Tuple[np.ndarray, Tuple[np.ndarray, ...]], \
+        ]
+            A callable that takes the module's parameters, input data,
+            training flag, state, and rng key and returns the output data and
+            new state.
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented in the subclass.
+
+        See Also
+        --------
+        BaseModule.__call__ : Calls the module with the current parameters and
+            given input, state, and rng.
         """
         raise NotImplementedError(
             "_get_callable method must be implemented in subclasses"
@@ -142,6 +208,17 @@ class BaseModule(object):
         Tuple[np.ndarray, Tuple[np.ndarray, ...]]
             Output array of shape (num_samples, num_output_features) and new
             state.
+
+        Raises
+        ------
+        ValueError
+            If the module is not ready (i.e., `compile()` has not been called).
+
+        See Also
+        --------
+        BaseModule._get_callable : Returns a callable that can be used to
+            compute the output and new state given the parameters, input,
+            training flag, state, and rng.
         """
         if not self.is_ready():
             raise ValueError("Module is not ready, call compile() first")
@@ -173,12 +250,20 @@ class BaseModule(object):
 
         The rng key is used to initialize random parameters, if needed.
 
+        This is **not** used to trace or jit the module's callable, that is
+        done automatically later.
+
         Parameters
         ----------
         rng : Any
             JAX random key.
         input_shape : Tuple[int, ...]
             Shape of the input data, e.g. (num_features,).
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented in the subclass.
         """
         raise NotImplementedError(
             "compile method must be implemented in subclasses"
@@ -196,8 +281,14 @@ class BaseModule(object):
             Shape of the input data, e.g. (num_features,).
 
         Returns
+        -------
         Tuple[int, ...]
             Shape of the output data, e.g. (num_output_features,).
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented in the subclass.
         """
         raise NotImplementedError(
             "get_output_shape method must be implemented in subclasses"
@@ -233,6 +324,11 @@ class BaseModule(object):
         ----------
         hyperparameters : Dict[str, Any]
             Dictionary containing the hyperparameters to set.
+
+        Raises
+        ------
+        TypeError
+            If hyperparameters is not a dictionary.
         """
         if not isinstance(hyperparameters, dict):
             raise TypeError(
@@ -250,6 +346,11 @@ class BaseModule(object):
         -------
         Tuple[np.ndarray, ...]
             Tuple of numpy arrays representing the module's parameters.
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented in the subclass.
         """
         raise NotImplementedError(
             "get_params method must be implemented in subclasses"
@@ -257,12 +358,17 @@ class BaseModule(object):
 
     def set_params(self, params: Tuple[np.ndarray, ...]) -> None:
         """
-        Set the parameters of the module.
+        Set the trainable parameters of the module.
 
         Parameters
         ----------
         params : Tuple[np.ndarray, ...]
             Tuple of numpy arrays representing the new parameters.
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented in the subclass.
         """
         raise NotImplementedError(
             "set_params method must be implemented in subclasses"
@@ -308,12 +414,25 @@ class BaseModule(object):
             prec : Union[np.dtype, str, int]
                 Precision to set for the module parameters.
                 Valid options are:
-                    [for 32-bit precision (all options are equivalent)]
-                    - np.float32, np.complex64, "float32", "complex64"
-                    - "single", "f32", "c64", 32
-                    [for 64-bit precision (all options are equivalent)]
-                    - np.float64, np.complex128, "float64", "complex128"
-                    - "double", "f64", "c128", 64
+                *For 32-bit precision (all options are equivalent)*
+                ``np.float32``, ``np.complex64``, ``"float32"``,
+                ``"complex64"``, ``"single"``, ``"f32"``, ``"c64"``, ``32``
+                *For 64-bit precision (all options are equivalent)*
+                ``np.float64``, ``np.complex128``, ``"float64"``,
+                ``"complex128"``, ``"double"``, ``"f64"``, ``"c128"``, ``64``
+
+        Raises
+        ------
+        ValueError
+            If the precision is invalid or if 64-bit precision is requested
+            but JAX_ENABLE_X64 is not set.
+        RuntimeError
+            If the module is not ready (i.e., `compile()` has not been called).
+
+        See Also
+        --------
+        BaseModule.astype : Convenience wrapper to set_precision using the
+            dtype argument, returns self.
         """
         if not self.is_ready():
             raise RuntimeError("Module is not ready. Call compile() first.")
@@ -375,6 +494,36 @@ class BaseModule(object):
         """
         Convenience wrapper to set_precision using the dtype argument, returns
         self.
+
+        Parameters
+        ----------
+        dtype : Union[np.dtype, str]
+            Precision to set for the module parameters.
+            Valid options are:
+            *For 32-bit precision (all options are equivalent)*
+            ``np.float32``, ``np.complex64``, ``"float32"``,
+            ``"complex64"``, ``"single"``, ``"f32"``, ``"c64"``, ``32``
+            *For 64-bit precision (all options are equivalent)*
+            ``np.float64``, ``np.complex128``, ``"float64"``,
+            ``"complex128"``, ``"double"``, ``"f64"``, ``"c128"``, ``64``
+
+        Returns
+        -------
+        BaseModule
+            The module itself, with updated precision.
+
+        Raises
+        ------
+        ValueError
+            If the precision is invalid or if 64-bit precision is requested
+            but JAX_ENABLE_X64 is not set.
+        RuntimeError
+            If the module is not ready (i.e., `compile()` has not been called).
+
+        See Also
+        --------
+        BaseModule.set_precision : Sets the precision of the module parameters
+            and state.
         """
         self.set_precision(dtype)
         return self

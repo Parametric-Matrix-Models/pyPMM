@@ -4,6 +4,15 @@ from .activationbase import ActivationBase
 
 
 class ReLU(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.relu``.
+
+    See Also
+    --------
+
+    jax.nn.relu : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -15,6 +24,15 @@ class ReLU(ActivationBase):
 
 
 class ReLU6(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.relu6``.
+
+    See Also
+    --------
+
+    jax.nn.relu6 : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -26,6 +44,15 @@ class ReLU6(ActivationBase):
 
 
 class Sigmoid(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.sigmoid``.
+
+    See Also
+    --------
+
+    jax.nn.sigmoid : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -37,6 +64,15 @@ class Sigmoid(ActivationBase):
 
 
 class Softplus(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.softplus``.
+
+    See Also
+    --------
+
+    jax.nn.softplus : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -48,6 +84,15 @@ class Softplus(ActivationBase):
 
 
 class SparsePlus(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.sparse_plus``.
+
+    See Also
+    --------
+
+    jax.nn.sparse_plus : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -59,6 +104,15 @@ class SparsePlus(ActivationBase):
 
 
 class SparseSigmoid(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.sparse_sigmoid``.
+
+    See Also
+    --------
+
+    jax.nn.sparse_sigmoid : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -70,6 +124,15 @@ class SparseSigmoid(ActivationBase):
 
 
 class SoftSign(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.soft_sign``.
+
+    See Also
+    --------
+
+    jax.nn.soft_sign : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -81,6 +144,15 @@ class SoftSign(ActivationBase):
 
 
 class SiLU(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.silu``.
+
+    See Also
+    --------
+
+    jax.nn.silu : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -92,6 +164,15 @@ class SiLU(ActivationBase):
 
 
 class Swish(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.swish``.
+
+    See Also
+    --------
+
+    jax.nn.swish : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -103,6 +184,15 @@ class Swish(ActivationBase):
 
 
 class LogSigmoid(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.log_sigmoid``.
+
+    See Also
+    --------
+
+    jax.nn.log_sigmoid : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -114,6 +204,15 @@ class LogSigmoid(ActivationBase):
 
 
 class LeakyReLU(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.leaky_relu``.
+
+    See Also
+    --------
+
+    jax.nn.leaky_relu : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -125,6 +224,15 @@ class LeakyReLU(ActivationBase):
 
 
 class HardSigmoid(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.hard_sigmoid``.
+
+    See Also
+    --------
+
+    jax.nn.hard_sigmoid : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -136,6 +244,15 @@ class HardSigmoid(ActivationBase):
 
 
 class HardSiLU(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.hard_silu``.
+
+    See Also
+    --------
+
+    jax.nn.hard_silu : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -147,6 +264,15 @@ class HardSiLU(ActivationBase):
 
 
 class HardSwish(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.hard_swish``.
+
+    See Also
+    --------
+
+    jax.nn.hard_swish : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -158,6 +284,15 @@ class HardSwish(ActivationBase):
 
 
 class HardTanh(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.hard_tanh``.
+
+    See Also
+    --------
+
+    jax.nn.hard_tanh : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -169,6 +304,15 @@ class HardTanh(ActivationBase):
 
 
 class ELU(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.elu``.
+
+    See Also
+    --------
+
+    jax.nn.elu : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -180,6 +324,15 @@ class ELU(ActivationBase):
 
 
 class CELU(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.celu``.
+
+    See Also
+    --------
+
+    jax.nn.celu : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -191,6 +344,15 @@ class CELU(ActivationBase):
 
 
 class SELU(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.selu``.
+
+    See Also
+    --------
+
+    jax.nn.selu : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -202,6 +364,15 @@ class SELU(ActivationBase):
 
 
 class GELU(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.gelu``.
+
+    See Also
+    --------
+
+    jax.nn.gelu : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -213,6 +384,15 @@ class GELU(ActivationBase):
 
 
 class GLU(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.glu``.
+
+    See Also
+    --------
+
+    jax.nn.glu : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -224,6 +404,15 @@ class GLU(ActivationBase):
 
 
 class SquarePlus(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.squareplus``.
+
+    See Also
+    --------
+
+    jax.nn.squareplus : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -235,6 +424,15 @@ class SquarePlus(ActivationBase):
 
 
 class Mish(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.mish``.
+
+    See Also
+    --------
+
+    jax.nn.mish : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -246,6 +444,15 @@ class Mish(ActivationBase):
 
 
 class Identity(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.identity``.
+
+    See Also
+    --------
+
+    jax.nn.identity : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -257,6 +464,15 @@ class Identity(ActivationBase):
 
 
 class Softmax(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.softmax``.
+
+    See Also
+    --------
+
+    jax.nn.softmax : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -268,6 +484,15 @@ class Softmax(ActivationBase):
 
 
 class LogSoftmax(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.log_softmax``.
+
+    See Also
+    --------
+
+    jax.nn.log_softmax : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -278,18 +503,16 @@ class LogSoftmax(ActivationBase):
         return jax.nn.log_softmax(x, *self.args, **self.kwargs)
 
 
-class Tanh(ActivationBase):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def name(self) -> str:
-        return "Tanh"
-
-    def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
-        return jax.numpy.tanh(x, *self.args, **self.kwargs)
-
-
 class LogSumExp(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.logsumexp``.
+
+    See Also
+    --------
+
+    jax.nn.logsumexp : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -301,6 +524,15 @@ class LogSumExp(ActivationBase):
 
 
 class Standardize(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.standardize``.
+
+    See Also
+    --------
+
+    jax.nn.standardize : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -312,6 +544,15 @@ class Standardize(ActivationBase):
 
 
 class OneHot(ActivationBase):
+    """
+    Elementwise activation function for ``jax.nn.one_hot``.
+
+    See Also
+    --------
+
+    jax.nn.one_hot : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -323,6 +564,15 @@ class OneHot(ActivationBase):
 
 
 class Abs(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.abs``.
+
+    See Also
+    --------
+
+    jax.numpy.abs : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -334,6 +584,15 @@ class Abs(ActivationBase):
 
 
 class Absolute(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.absolute``.
+
+    See Also
+    --------
+
+    jax.numpy.absolute : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -345,6 +604,15 @@ class Absolute(ActivationBase):
 
 
 class ACos(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.acos``.
+
+    See Also
+    --------
+
+    jax.numpy.acos : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -356,6 +624,15 @@ class ACos(ActivationBase):
 
 
 class ACosh(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.acosh``.
+
+    See Also
+    --------
+
+    jax.numpy.acosh : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -367,6 +644,15 @@ class ACosh(ActivationBase):
 
 
 class AMax(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.amax``.
+
+    See Also
+    --------
+
+    jax.numpy.amax : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -378,6 +664,15 @@ class AMax(ActivationBase):
 
 
 class AMin(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.amin``.
+
+    See Also
+    --------
+
+    jax.numpy.amin : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -389,6 +684,15 @@ class AMin(ActivationBase):
 
 
 class Angle(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.angle``.
+
+    See Also
+    --------
+
+    jax.numpy.angle : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -400,6 +704,15 @@ class Angle(ActivationBase):
 
 
 class ArcCos(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.arccos``.
+
+    See Also
+    --------
+
+    jax.numpy.arccos : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -411,6 +724,15 @@ class ArcCos(ActivationBase):
 
 
 class ArcCosh(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.arccosh``.
+
+    See Also
+    --------
+
+    jax.numpy.arccosh : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -422,6 +744,15 @@ class ArcCosh(ActivationBase):
 
 
 class ArcSin(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.arcsin``.
+
+    See Also
+    --------
+
+    jax.numpy.arcsin : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -433,6 +764,15 @@ class ArcSin(ActivationBase):
 
 
 class ArcSinh(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.arcsinh``.
+
+    See Also
+    --------
+
+    jax.numpy.arcsinh : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -444,6 +784,15 @@ class ArcSinh(ActivationBase):
 
 
 class ArcTan(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.arctan``.
+
+    See Also
+    --------
+
+    jax.numpy.arctan : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -455,6 +804,15 @@ class ArcTan(ActivationBase):
 
 
 class ArcTan2(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.arctan2``.
+
+    See Also
+    --------
+
+    jax.numpy.arctan2 : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -466,6 +824,15 @@ class ArcTan2(ActivationBase):
 
 
 class ArcTanh(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.arctanh``.
+
+    See Also
+    --------
+
+    jax.numpy.arctanh : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -477,6 +844,15 @@ class ArcTanh(ActivationBase):
 
 
 class ASin(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.asin``.
+
+    See Also
+    --------
+
+    jax.numpy.asin : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -488,6 +864,15 @@ class ASin(ActivationBase):
 
 
 class ASinh(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.asinh``.
+
+    See Also
+    --------
+
+    jax.numpy.asinh : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -499,6 +884,15 @@ class ASinh(ActivationBase):
 
 
 class ATan(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.atan``.
+
+    See Also
+    --------
+
+    jax.numpy.atan : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -510,6 +904,15 @@ class ATan(ActivationBase):
 
 
 class ATanh(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.atanh``.
+
+    See Also
+    --------
+
+    jax.numpy.atanh : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -521,6 +924,15 @@ class ATanh(ActivationBase):
 
 
 class Cbrt(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.cbrt``.
+
+    See Also
+    --------
+
+    jax.numpy.cbrt : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -532,6 +944,15 @@ class Cbrt(ActivationBase):
 
 
 class Ceil(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.ceil``.
+
+    See Also
+    --------
+
+    jax.numpy.ceil : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -543,6 +964,15 @@ class Ceil(ActivationBase):
 
 
 class Clip(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.clip``.
+
+    See Also
+    --------
+
+    jax.numpy.clip : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -554,6 +984,15 @@ class Clip(ActivationBase):
 
 
 class Conj(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.conj``.
+
+    See Also
+    --------
+
+    jax.numpy.conj : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -565,6 +1004,15 @@ class Conj(ActivationBase):
 
 
 class Conjugate(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.conjugate``.
+
+    See Also
+    --------
+
+    jax.numpy.conjugate : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -576,6 +1024,15 @@ class Conjugate(ActivationBase):
 
 
 class Cos(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.cos``.
+
+    See Also
+    --------
+
+    jax.numpy.cos : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -587,6 +1044,15 @@ class Cos(ActivationBase):
 
 
 class Cosh(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.cosh``.
+
+    See Also
+    --------
+
+    jax.numpy.cosh : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -598,6 +1064,15 @@ class Cosh(ActivationBase):
 
 
 class Deg2Rad(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.deg2rad``.
+
+    See Also
+    --------
+
+    jax.numpy.deg2rad : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -609,6 +1084,15 @@ class Deg2Rad(ActivationBase):
 
 
 class Degrees(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.degrees``.
+
+    See Also
+    --------
+
+    jax.numpy.degrees : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -620,6 +1104,15 @@ class Degrees(ActivationBase):
 
 
 class Exp(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.exp``.
+
+    See Also
+    --------
+
+    jax.numpy.exp : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -631,6 +1124,15 @@ class Exp(ActivationBase):
 
 
 class Exp2(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.exp2``.
+
+    See Also
+    --------
+
+    jax.numpy.exp2 : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -642,6 +1144,15 @@ class Exp2(ActivationBase):
 
 
 class Expm1(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.expm1``.
+
+    See Also
+    --------
+
+    jax.numpy.expm1 : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -653,6 +1164,15 @@ class Expm1(ActivationBase):
 
 
 class FAbs(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.fabs``.
+
+    See Also
+    --------
+
+    jax.numpy.fabs : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -664,6 +1184,15 @@ class FAbs(ActivationBase):
 
 
 class Fix(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.fix``.
+
+    See Also
+    --------
+
+    jax.numpy.fix : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -675,6 +1204,15 @@ class Fix(ActivationBase):
 
 
 class FloatPower(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.float_power``.
+
+    See Also
+    --------
+
+    jax.numpy.float_power : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -686,6 +1224,15 @@ class FloatPower(ActivationBase):
 
 
 class Floor(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.floor``.
+
+    See Also
+    --------
+
+    jax.numpy.floor : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -697,6 +1244,15 @@ class Floor(ActivationBase):
 
 
 class FloorDivide(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.floor_divide``.
+
+    See Also
+    --------
+
+    jax.numpy.floor_divide : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -708,6 +1264,15 @@ class FloorDivide(ActivationBase):
 
 
 class FrExp(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.frexp``.
+
+    See Also
+    --------
+
+    jax.numpy.frexp : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -719,6 +1284,15 @@ class FrExp(ActivationBase):
 
 
 class I0(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.i0``.
+
+    See Also
+    --------
+
+    jax.numpy.i0 : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -730,6 +1304,15 @@ class I0(ActivationBase):
 
 
 class Imag(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.imag``.
+
+    See Also
+    --------
+
+    jax.numpy.imag : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -741,6 +1324,15 @@ class Imag(ActivationBase):
 
 
 class Invert(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.invert``.
+
+    See Also
+    --------
+
+    jax.numpy.invert : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -752,6 +1344,15 @@ class Invert(ActivationBase):
 
 
 class LDExp(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.ldexp``.
+
+    See Also
+    --------
+
+    jax.numpy.ldexp : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -763,6 +1364,15 @@ class LDExp(ActivationBase):
 
 
 class Log(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.log``.
+
+    See Also
+    --------
+
+    jax.numpy.log : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -774,6 +1384,15 @@ class Log(ActivationBase):
 
 
 class Log10(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.log10``.
+
+    See Also
+    --------
+
+    jax.numpy.log10 : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -785,6 +1404,15 @@ class Log10(ActivationBase):
 
 
 class Log1p(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.log1p``.
+
+    See Also
+    --------
+
+    jax.numpy.log1p : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -796,6 +1424,15 @@ class Log1p(ActivationBase):
 
 
 class Log2(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.log2``.
+
+    See Also
+    --------
+
+    jax.numpy.log2 : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -807,6 +1444,15 @@ class Log2(ActivationBase):
 
 
 class NaNToNum(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.nan_to_num``.
+
+    See Also
+    --------
+
+    jax.numpy.nan_to_num : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -818,6 +1464,15 @@ class NaNToNum(ActivationBase):
 
 
 class NanToNum(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.nan_to_num``.
+
+    See Also
+    --------
+
+    jax.numpy.nan_to_num : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -829,6 +1484,15 @@ class NanToNum(ActivationBase):
 
 
 class NextAfter(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.nextafter``.
+
+    See Also
+    --------
+
+    jax.numpy.nextafter : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -840,6 +1504,15 @@ class NextAfter(ActivationBase):
 
 
 class Packbits(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.packbits``.
+
+    See Also
+    --------
+
+    jax.numpy.packbits : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -851,6 +1524,15 @@ class Packbits(ActivationBase):
 
 
 class Piecewise(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.piecewise``.
+
+    See Also
+    --------
+
+    jax.numpy.piecewise : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -862,6 +1544,15 @@ class Piecewise(ActivationBase):
 
 
 class Positive(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.positive``.
+
+    See Also
+    --------
+
+    jax.numpy.positive : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -873,6 +1564,15 @@ class Positive(ActivationBase):
 
 
 class Pow(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.pow``.
+
+    See Also
+    --------
+
+    jax.numpy.pow : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -884,6 +1584,15 @@ class Pow(ActivationBase):
 
 
 class Power(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.power``.
+
+    See Also
+    --------
+
+    jax.numpy.power : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -895,6 +1604,15 @@ class Power(ActivationBase):
 
 
 class Rad2Deg(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.rad2deg``.
+
+    See Also
+    --------
+
+    jax.numpy.rad2deg : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -906,6 +1624,15 @@ class Rad2Deg(ActivationBase):
 
 
 class Radians(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.radians``.
+
+    See Also
+    --------
+
+    jax.numpy.radians : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -917,6 +1644,15 @@ class Radians(ActivationBase):
 
 
 class Real(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.real``.
+
+    See Also
+    --------
+
+    jax.numpy.real : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -928,6 +1664,15 @@ class Real(ActivationBase):
 
 
 class Reciprocal(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.reciprocal``.
+
+    See Also
+    --------
+
+    jax.numpy.reciprocal : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -939,6 +1684,15 @@ class Reciprocal(ActivationBase):
 
 
 class RInt(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.rint``.
+
+    See Also
+    --------
+
+    jax.numpy.rint : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -950,6 +1704,15 @@ class RInt(ActivationBase):
 
 
 class Round(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.round``.
+
+    See Also
+    --------
+
+    jax.numpy.round : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -961,6 +1724,15 @@ class Round(ActivationBase):
 
 
 class Sign(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.sign``.
+
+    See Also
+    --------
+
+    jax.numpy.sign : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -972,6 +1744,15 @@ class Sign(ActivationBase):
 
 
 class Signbit(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.signbit``.
+
+    See Also
+    --------
+
+    jax.numpy.signbit : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -983,6 +1764,15 @@ class Signbit(ActivationBase):
 
 
 class Sin(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.sin``.
+
+    See Also
+    --------
+
+    jax.numpy.sin : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -994,6 +1784,15 @@ class Sin(ActivationBase):
 
 
 class Sinc(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.sinc``.
+
+    See Also
+    --------
+
+    jax.numpy.sinc : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -1005,6 +1804,15 @@ class Sinc(ActivationBase):
 
 
 class Sinh(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.sinh``.
+
+    See Also
+    --------
+
+    jax.numpy.sinh : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -1016,6 +1824,15 @@ class Sinh(ActivationBase):
 
 
 class Sqrt(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.sqrt``.
+
+    See Also
+    --------
+
+    jax.numpy.sqrt : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -1027,6 +1844,15 @@ class Sqrt(ActivationBase):
 
 
 class Square(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.square``.
+
+    See Also
+    --------
+
+    jax.numpy.square : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -1038,6 +1864,15 @@ class Square(ActivationBase):
 
 
 class Tan(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.tan``.
+
+    See Also
+    --------
+
+    jax.numpy.tan : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -1048,7 +1883,36 @@ class Tan(ActivationBase):
         return jax.numpy.tan(x, *self.args, **self.kwargs)
 
 
+class Tanh(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.tanh``.
+
+    See Also
+    --------
+
+    jax.numpy.tanh : The function used for the elementwise activation.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def name(self) -> str:
+        return "Tanh"
+
+    def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
+        return jax.numpy.tanh(x, *self.args, **self.kwargs)
+
+
 class Trunc(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.trunc``.
+
+    See Also
+    --------
+
+    jax.numpy.trunc : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -1060,6 +1924,15 @@ class Trunc(ActivationBase):
 
 
 class Unpackbits(ActivationBase):
+    """
+    Elementwise activation function for ``jax.numpy.unpackbits``.
+
+    See Also
+    --------
+
+    jax.numpy.unpackbits : The function used for the elementwise activation.
+    """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

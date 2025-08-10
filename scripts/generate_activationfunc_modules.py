@@ -139,6 +139,13 @@ def create_module(name: str, func: str) -> str:
     """
     return f"""
 class {name}(ActivationBase):
+    \"\"\"
+    Elementwise activation function for ``{func}``.
+
+    See Also
+    --------
+    {func} : The function used for the elementwise activation.
+    \"\"\"
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

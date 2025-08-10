@@ -13,7 +13,7 @@ class ActivationBase(BaseModule):
 
     def __init__(self, *args, **kwargs):
         """
-        Initialize the activation function module.
+        Initialize the elementwise activation function module.
 
         Parameters
         ----------
