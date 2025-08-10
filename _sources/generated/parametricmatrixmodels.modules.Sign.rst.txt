@@ -1,0 +1,35 @@
+﻿Sign
+====
+
+``parametricmatrixmodels.modules.Sign``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Sign
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Sign.__init__
+         ~Sign.astype
+         ~Sign.compile
+         ~Sign.deserialize
+         ~Sign.func
+         ~Sign.get_hyperparameters
+         ~Sign.get_num_trainable_floats
+         ~Sign.get_output_shape
+         ~Sign.get_params
+         ~Sign.get_state
+         ~Sign.is_ready
+         ~Sign.name
+         ~Sign.serialize
+         ~Sign.set_hyperparameters
+         ~Sign.set_params
+         ~Sign.set_precision
+         ~Sign.set_state
+
+   .. autosummary::
+
+      

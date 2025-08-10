@@ -1,0 +1,35 @@
+﻿Abs
+===
+
+``parametricmatrixmodels.modules.Abs``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Abs
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Abs.__init__
+         ~Abs.astype
+         ~Abs.compile
+         ~Abs.deserialize
+         ~Abs.func
+         ~Abs.get_hyperparameters
+         ~Abs.get_num_trainable_floats
+         ~Abs.get_output_shape
+         ~Abs.get_params
+         ~Abs.get_state
+         ~Abs.is_ready
+         ~Abs.name
+         ~Abs.serialize
+         ~Abs.set_hyperparameters
+         ~Abs.set_params
+         ~Abs.set_precision
+         ~Abs.set_state
+
+   .. autosummary::
+
+      

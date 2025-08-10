@@ -1,0 +1,35 @@
+﻿Swish
+=====
+
+``parametricmatrixmodels.modules.Swish``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Swish
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Swish.__init__
+         ~Swish.astype
+         ~Swish.compile
+         ~Swish.deserialize
+         ~Swish.func
+         ~Swish.get_hyperparameters
+         ~Swish.get_num_trainable_floats
+         ~Swish.get_output_shape
+         ~Swish.get_params
+         ~Swish.get_state
+         ~Swish.is_ready
+         ~Swish.name
+         ~Swish.serialize
+         ~Swish.set_hyperparameters
+         ~Swish.set_params
+         ~Swish.set_precision
+         ~Swish.set_state
+
+   .. autosummary::
+
+      

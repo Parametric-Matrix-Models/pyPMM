@@ -1,0 +1,1038 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>OneHot &#8212; Parametric Matrix Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/parametricmatrixmodels.modules.OneHot';</script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Abs" href="parametricmatrixmodels.modules.Abs.html" />
+    <link rel="prev" title="Standardize" href="parametricmatrixmodels.modules.Standardize.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/pmmlogo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/pmmlogo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PMM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../model.html">
+    Model
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../model.html">
+    Model
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../basemodule.html"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../pmms.html">PMM Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AffineHermitianMatrix.html">AffineHermitianMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Eigenvalues.html">Eigenvalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AffineEigenvaluePMM.html">AffineEigenvaluePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AEPMM.html">AEPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AffineObservablePMM.html">AffineObservablePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AOPMM.html">AOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LegacyAffineObservablePMM.html">LegacyAffineObservablePMM</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../nns.html">Neural Network Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LinearNN.html">LinearNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.NonnegativeLinearNN.html">NonnegativeLinearNN</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../activations.html">Elementwise and Activation Function Modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ReLU.html">ReLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ReLU6.html">ReLU6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Sigmoid.html">Sigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Softplus.html">Softplus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.SparsePlus.html">SparsePlus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.SparseSigmoid.html">SparseSigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.SoftSign.html">SoftSign</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.SiLU.html">SiLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Swish.html">Swish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LogSigmoid.html">LogSigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LeakyReLU.html">LeakyReLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.HardSigmoid.html">HardSigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.HardSiLU.html">HardSiLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.HardSwish.html">HardSwish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.HardTanh.html">HardTanh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ELU.html">ELU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.CELU.html">CELU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.SELU.html">SELU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.GELU.html">GELU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.GLU.html">GLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.SquarePlus.html">SquarePlus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Mish.html">Mish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Identity.html">Identity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Softmax.html">Softmax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LogSoftmax.html">LogSoftmax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LogSumExp.html">LogSumExp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Standardize.html">Standardize</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">OneHot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Abs.html">Abs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Absolute.html">Absolute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ACos.html">ACos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ACosh.html">ACosh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AMax.html">AMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AMin.html">AMin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Angle.html">Angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ArcCos.html">ArcCos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ArcCosh.html">ArcCosh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ArcSin.html">ArcSin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ArcSinh.html">ArcSinh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ArcTan.html">ArcTan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ArcTan2.html">ArcTan2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ArcTanh.html">ArcTanh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ASin.html">ASin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ASinh.html">ASinh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ATan.html">ATan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ATanh.html">ATanh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Cbrt.html">Cbrt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Ceil.html">Ceil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Clip.html">Clip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Conj.html">Conj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Conjugate.html">Conjugate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Cos.html">Cos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Cosh.html">Cosh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Deg2Rad.html">Deg2Rad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Degrees.html">Degrees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Exp.html">Exp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Exp2.html">Exp2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Expm1.html">Expm1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.FAbs.html">FAbs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Fix.html">Fix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.FloatPower.html">FloatPower</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Floor.html">Floor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.FloorDivide.html">FloorDivide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.FrExp.html">FrExp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.I0.html">I0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Imag.html">Imag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Invert.html">Invert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LDExp.html">LDExp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Log.html">Log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Log10.html">Log10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Log1p.html">Log1p</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Log2.html">Log2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.NaNToNum.html">NaNToNum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.NanToNum.html">NanToNum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.NextAfter.html">NextAfter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Packbits.html">Packbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Piecewise.html">Piecewise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Positive.html">Positive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Pow.html">Pow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Power.html">Power</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Rad2Deg.html">Rad2Deg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Radians.html">Radians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Real.html">Real</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Reciprocal.html">Reciprocal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.RInt.html">RInt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Round.html">Round</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Sign.html">Sign</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Signbit.html">Signbit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Sin.html">Sin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Sinc.html">Sinc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Sinh.html">Sinh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Sqrt.html">Sqrt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Square.html">Square</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Tan.html">Tan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Tanh.html">Tanh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Trunc.html">Trunc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Unpackbits.html">Unpackbits</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../utils.html">Utility and Meta Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Flatten.html">Flatten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Reshape.html">Reshape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Func.html">Func</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.SubsetModule.html">SubsetModule</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../modules.html" class="nav-link">Modules</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../activations.html" class="nav-link">Elementwise and Activation Function Modules</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">OneHot</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="onehot">
+<h1>OneHot<a class="headerlink" href="#onehot" title="Link to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">parametricmatrixmodels.modules.OneHot</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OneHot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/_autogenerated_activationfuncs.html#OneHot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ActivationBase</span></code></p>
+<p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.one_hot</span></code>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.nn.one_hot.html#jax.nn.one_hot" title="(in JAX)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jax.nn.one_hot</span></code></a></dt><dd><p>The function used for the elementwise activation.</p>
+</dd>
+</dl>
+</div>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.__init__" title="parametricmatrixmodels.modules.OneHot.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a></p></td>
+<td><p>Initialize the elementwise activation function module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.astype" title="parametricmatrixmodels.modules.OneHot.astype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">astype</span></code></a></p></td>
+<td><p>Convenience wrapper to set_precision using the dtype argument, returns self.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.compile" title="parametricmatrixmodels.modules.OneHot.compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></a></p></td>
+<td><p>Compile the activation function module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.deserialize" title="parametricmatrixmodels.modules.OneHot.deserialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deserialize</span></code></a></p></td>
+<td><p>Deserialize the module from a dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.func" title="parametricmatrixmodels.modules.OneHot.func"><code class="xref py py-obj docutils literal notranslate"><span class="pre">func</span></code></a></p></td>
+<td><p>Apply the activation function to the input array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.get_hyperparameters" title="parametricmatrixmodels.modules.OneHot.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a></p></td>
+<td><p>Get the hyperparameters of the activation function module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.get_num_trainable_floats" title="parametricmatrixmodels.modules.OneHot.get_num_trainable_floats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_num_trainable_floats</span></code></a></p></td>
+<td><p>Get the number of trainable floats in the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.get_output_shape" title="parametricmatrixmodels.modules.OneHot.get_output_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape</span></code></a></p></td>
+<td><p>Get the output shape of the activation function given the input shape.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.get_params" title="parametricmatrixmodels.modules.OneHot.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a></p></td>
+<td><p>Get the parameters of the activation function module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.get_state" title="parametricmatrixmodels.modules.OneHot.get_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state</span></code></a></p></td>
+<td><p>Get the current state of the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.is_ready" title="parametricmatrixmodels.modules.OneHot.is_ready"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_ready</span></code></a></p></td>
+<td><p>Check if the module is ready to be used.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.name" title="parametricmatrixmodels.modules.OneHot.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p>Returns the name of the module, unless overridden, this is the class name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.serialize" title="parametricmatrixmodels.modules.OneHot.serialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize</span></code></a></p></td>
+<td><p>Serialize the module to a dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.set_hyperparameters" title="parametricmatrixmodels.modules.OneHot.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a></p></td>
+<td><p>Set the hyperparameters of the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.set_params" title="parametricmatrixmodels.modules.OneHot.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a></p></td>
+<td><p>Set the trainable parameters of the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.set_precision" title="parametricmatrixmodels.modules.OneHot.set_precision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_precision</span></code></a></p></td>
+<td><p>Set the precision of the module parameters and state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.set_state" title="parametricmatrixmodels.modules.OneHot.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a></p></td>
+<td><p>Set the state of the module.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/_autogenerated_activationfuncs.html#OneHot.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Initialize the elementwise activation function module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> – Positional arguments for the activation function, starts with the
+second argument, as the first is the input array.</p></li>
+<li><p><strong>kwargs</strong> – Keyword arguments for the activation function.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot._get_callable">
+<span class="sig-name descname"><span class="pre">_get_callable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot._get_callable" title="Link to this definition">#</a></dt>
+<dd><p>Get the callable for the activation function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>], <a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]]]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The activation function callable in the form the PMM library
+expects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.astype">
+<span class="sig-name descname"><span class="pre">astype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.astype" title="Link to this definition">#</a></dt>
+<dd><p>Convenience wrapper to set_precision using the dtype argument, returns
+self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dtype</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Precision to set for the module parameters.
+Valid options are:
+<em>For 32-bit precision (all options are equivalent)</em>
+<code class="docutils literal notranslate"><span class="pre">np.float32</span></code>, <code class="docutils literal notranslate"><span class="pre">np.complex64</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;float32&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;complex64&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;single&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;f32&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;c64&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">32</span></code>
+<em>For 64-bit precision (all options are equivalent)</em>
+<code class="docutils literal notranslate"><span class="pre">np.float64</span></code>, <code class="docutils literal notranslate"><span class="pre">np.complex128</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;float64&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;complex128&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;double&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;f64&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;c128&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">64</span></code></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>BaseModule</em> – The module itself, with updated precision.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If the precision is invalid or if 64-bit precision is requested
+    but <code class="docutils literal notranslate"><span class="pre">JAX_ENABLE_X64</span></code> is not set.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><strong>RuntimeError</strong></a> – If the module is not ready (i.e., <cite>compile()</cite> has not been called).</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.set_precision" title="parametricmatrixmodels.modules.OneHot.set_precision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_precision</span></code></a></dt><dd><p>Sets the precision of the module parameters and state.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.compile" title="Link to this definition">#</a></dt>
+<dd><p>Compile the activation function module. This method is a no-op for
+activation functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rng</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a></span>) – Random number generator state.</p></li>
+<li><p><strong>input_shape</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]</span>) – Shape of the input array.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.deserialize">
+<span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.deserialize" title="Link to this definition">#</a></dt>
+<dd><p>Deserialize the module from a dictionary.</p>
+<p>This method should set the module’s parameters and state based on the
+provided dictionary.</p>
+<p>The default implementation expects the dictionary to contain
+the module’s name, trainable parameters, and state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span>) – Dictionary containing the serialized module data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.func">
+<span class="sig-name descname"><span class="pre">func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/_autogenerated_activationfuncs.html#OneHot.func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.func" title="Link to this definition">#</a></dt>
+<dd><p>Apply the activation function to the input array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a></span>) – Input array to the activation function.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Output array after applying the activation function.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.get_hyperparameters">
+<span class="sig-name descname"><span class="pre">get_hyperparameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.get_hyperparameters" title="Link to this definition">#</a></dt>
+<dd><p>Get the hyperparameters of the activation function module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Hyperparameters of the activation function.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.get_num_trainable_floats">
+<span class="sig-name descname"><span class="pre">get_num_trainable_floats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.get_num_trainable_floats" title="Link to this definition">#</a></dt>
+<dd><p>Get the number of trainable floats in the module. Activation functions
+do not have trainable parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Always returns 0.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.get_output_shape">
+<span class="sig-name descname"><span class="pre">get_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.get_output_shape" title="Link to this definition">#</a></dt>
+<dd><p>Get the output shape of the activation function given the input shape.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input_shape</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]</span>) – Shape of the input array.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Output shape after applying the activation function.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.get_params" title="Link to this definition">#</a></dt>
+<dd><p>Get the parameters of the activation function module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An empty tuple, as activation functions do not have parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.get_state">
+<span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.get_state" title="Link to this definition">#</a></dt>
+<dd><p>Get the current state of the module.</p>
+<p>States are used to store “memory” or other information that is not
+passed between modules, is not trainable, but may be updated during
+either training or inference. e.g. batch normalization state.</p>
+<p>The state is optional, in which case this method should return the
+empty tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple of numpy arrays representing the module’s state.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.is_ready">
+<span class="sig-name descname"><span class="pre">is_ready</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.is_ready" title="Link to this definition">#</a></dt>
+<dd><p>Check if the module is ready to be used. Activation functions are
+always ready.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Always returns True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/_autogenerated_activationfuncs.html#OneHot.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.name" title="Link to this definition">#</a></dt>
+<dd><p>Returns the name of the module, unless overridden, this is the class
+name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Name of the module.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.serialize">
+<span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.serialize" title="Link to this definition">#</a></dt>
+<dd><p>Serialize the module to a dictionary.</p>
+<p>This method should return a dictionary representation of the module,
+including its parameters and state.</p>
+<p>The default implementation serializes the module’s name,
+hyperparameters, trainable parameters, and state via a simple
+dictionary.</p>
+<p>This only works if the module’s hyperparameters are auto-serializable.
+This includes basic types as well as numpy arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary containing the serialized module data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.set_hyperparameters">
+<span class="sig-name descname"><span class="pre">set_hyperparameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hyperparameters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.set_hyperparameters" title="Link to this definition">#</a></dt>
+<dd><p>Set the hyperparameters of the module.</p>
+<p>Hyperparameters are used to configure the module and are not trainable.
+They can be set via this method.</p>
+<p>The default implementation uses setattr to set the hyperparameters as
+attributes of the class instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hyperparameters</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span>) – Dictionary containing the hyperparameters to set.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If hyperparameters is not a dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.set_params" title="Link to this definition">#</a></dt>
+<dd><p>Set the trainable parameters of the module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>params</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]</span>) – Tuple of numpy arrays representing the new parameters.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.13)"><strong>NotImplementedError</strong></a> – If the method is not implemented in the subclass.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.set_precision">
+<span class="sig-name descname"><span class="pre">set_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.set_precision" title="Link to this definition">#</a></dt>
+<dd><p>Set the precision of the module parameters and state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prec</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Precision to set for the module parameters.
+Valid options are:
+<em>For 32-bit precision (all options are equivalent)</em>
+<code class="docutils literal notranslate"><span class="pre">np.float32</span></code>, <code class="docutils literal notranslate"><span class="pre">np.complex64</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;float32&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;complex64&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;single&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;f32&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;c64&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">32</span></code>.
+<em>For 64-bit precision (all options are equivalent)</em>
+<code class="docutils literal notranslate"><span class="pre">np.float64</span></code>, <code class="docutils literal notranslate"><span class="pre">np.complex128</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;float64&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;complex128&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;double&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;f64&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;c128&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">64</span></code>.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If the precision is invalid or if 64-bit precision is requested
+    but <code class="docutils literal notranslate"><span class="pre">JAX_ENABLE_X64</span></code> is not set.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><strong>RuntimeError</strong></a> – If the module is not ready (i.e., <cite>compile()</cite> has not been called).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#parametricmatrixmodels.modules.OneHot.astype" title="parametricmatrixmodels.modules.OneHot.astype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">astype</span></code></a></dt><dd><p>Convenience wrapper to set_precision using the dtype argument, returns self.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.OneHot.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.OneHot.set_state" title="Link to this definition">#</a></dt>
+<dd><p>Set the state of the module.</p>
+<p>This method is optional.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]</span>) – Tuple of numpy arrays representing the new state.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="parametricmatrixmodels.modules.Standardize.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Standardize</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="parametricmatrixmodels.modules.Abs.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Abs</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot"><code class="docutils literal notranslate"><span class="pre">OneHot</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.__init__"><code class="docutils literal notranslate"><span class="pre">OneHot.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot._get_callable"><code class="docutils literal notranslate"><span class="pre">OneHot._get_callable()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.astype"><code class="docutils literal notranslate"><span class="pre">OneHot.astype()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.compile"><code class="docutils literal notranslate"><span class="pre">OneHot.compile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.deserialize"><code class="docutils literal notranslate"><span class="pre">OneHot.deserialize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.func"><code class="docutils literal notranslate"><span class="pre">OneHot.func()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.get_hyperparameters"><code class="docutils literal notranslate"><span class="pre">OneHot.get_hyperparameters()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.get_num_trainable_floats"><code class="docutils literal notranslate"><span class="pre">OneHot.get_num_trainable_floats()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.get_output_shape"><code class="docutils literal notranslate"><span class="pre">OneHot.get_output_shape()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.get_params"><code class="docutils literal notranslate"><span class="pre">OneHot.get_params()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.get_state"><code class="docutils literal notranslate"><span class="pre">OneHot.get_state()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.is_ready"><code class="docutils literal notranslate"><span class="pre">OneHot.is_ready()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.name"><code class="docutils literal notranslate"><span class="pre">OneHot.name()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.serialize"><code class="docutils literal notranslate"><span class="pre">OneHot.serialize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.set_hyperparameters"><code class="docutils literal notranslate"><span class="pre">OneHot.set_hyperparameters()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.set_params"><code class="docutils literal notranslate"><span class="pre">OneHot.set_params()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.set_precision"><code class="docutils literal notranslate"><span class="pre">OneHot.set_precision()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.OneHot.set_state"><code class="docutils literal notranslate"><span class="pre">OneHot.set_state()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/generated/parametricmatrixmodels.modules.OneHot.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Patrick Cook.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

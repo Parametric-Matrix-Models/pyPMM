@@ -1,0 +1,35 @@
+﻿Softmax
+=======
+
+``parametricmatrixmodels.modules.Softmax``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Softmax
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Softmax.__init__
+         ~Softmax.astype
+         ~Softmax.compile
+         ~Softmax.deserialize
+         ~Softmax.func
+         ~Softmax.get_hyperparameters
+         ~Softmax.get_num_trainable_floats
+         ~Softmax.get_output_shape
+         ~Softmax.get_params
+         ~Softmax.get_state
+         ~Softmax.is_ready
+         ~Softmax.name
+         ~Softmax.serialize
+         ~Softmax.set_hyperparameters
+         ~Softmax.set_params
+         ~Softmax.set_precision
+         ~Softmax.set_state
+
+   .. autosummary::
+
+      

@@ -1,0 +1,35 @@
+﻿Expm1
+=====
+
+``parametricmatrixmodels.modules.Expm1``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Expm1
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Expm1.__init__
+         ~Expm1.astype
+         ~Expm1.compile
+         ~Expm1.deserialize
+         ~Expm1.func
+         ~Expm1.get_hyperparameters
+         ~Expm1.get_num_trainable_floats
+         ~Expm1.get_output_shape
+         ~Expm1.get_params
+         ~Expm1.get_state
+         ~Expm1.is_ready
+         ~Expm1.name
+         ~Expm1.serialize
+         ~Expm1.set_hyperparameters
+         ~Expm1.set_params
+         ~Expm1.set_precision
+         ~Expm1.set_state
+
+   .. autosummary::
+
+      

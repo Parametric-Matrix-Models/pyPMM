@@ -1,0 +1,35 @@
+﻿ATanh
+=====
+
+``parametricmatrixmodels.modules.ATanh``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: ATanh
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~ATanh.__init__
+         ~ATanh.astype
+         ~ATanh.compile
+         ~ATanh.deserialize
+         ~ATanh.func
+         ~ATanh.get_hyperparameters
+         ~ATanh.get_num_trainable_floats
+         ~ATanh.get_output_shape
+         ~ATanh.get_params
+         ~ATanh.get_state
+         ~ATanh.is_ready
+         ~ATanh.name
+         ~ATanh.serialize
+         ~ATanh.set_hyperparameters
+         ~ATanh.set_params
+         ~ATanh.set_precision
+         ~ATanh.set_state
+
+   .. autosummary::
+
+      

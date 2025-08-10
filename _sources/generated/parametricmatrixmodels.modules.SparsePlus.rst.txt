@@ -1,0 +1,35 @@
+﻿SparsePlus
+==========
+
+``parametricmatrixmodels.modules.SparsePlus``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: SparsePlus
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~SparsePlus.__init__
+         ~SparsePlus.astype
+         ~SparsePlus.compile
+         ~SparsePlus.deserialize
+         ~SparsePlus.func
+         ~SparsePlus.get_hyperparameters
+         ~SparsePlus.get_num_trainable_floats
+         ~SparsePlus.get_output_shape
+         ~SparsePlus.get_params
+         ~SparsePlus.get_state
+         ~SparsePlus.is_ready
+         ~SparsePlus.name
+         ~SparsePlus.serialize
+         ~SparsePlus.set_hyperparameters
+         ~SparsePlus.set_params
+         ~SparsePlus.set_precision
+         ~SparsePlus.set_state
+
+   .. autosummary::
+
+      

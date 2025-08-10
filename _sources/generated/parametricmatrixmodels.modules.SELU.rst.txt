@@ -1,0 +1,35 @@
+﻿SELU
+====
+
+``parametricmatrixmodels.modules.SELU``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: SELU
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~SELU.__init__
+         ~SELU.astype
+         ~SELU.compile
+         ~SELU.deserialize
+         ~SELU.func
+         ~SELU.get_hyperparameters
+         ~SELU.get_num_trainable_floats
+         ~SELU.get_output_shape
+         ~SELU.get_params
+         ~SELU.get_state
+         ~SELU.is_ready
+         ~SELU.name
+         ~SELU.serialize
+         ~SELU.set_hyperparameters
+         ~SELU.set_params
+         ~SELU.set_precision
+         ~SELU.set_state
+
+   .. autosummary::
+
+      

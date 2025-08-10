@@ -1,0 +1,35 @@
+﻿Degrees
+=======
+
+``parametricmatrixmodels.modules.Degrees``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Degrees
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Degrees.__init__
+         ~Degrees.astype
+         ~Degrees.compile
+         ~Degrees.deserialize
+         ~Degrees.func
+         ~Degrees.get_hyperparameters
+         ~Degrees.get_num_trainable_floats
+         ~Degrees.get_output_shape
+         ~Degrees.get_params
+         ~Degrees.get_state
+         ~Degrees.is_ready
+         ~Degrees.name
+         ~Degrees.serialize
+         ~Degrees.set_hyperparameters
+         ~Degrees.set_params
+         ~Degrees.set_precision
+         ~Degrees.set_state
+
+   .. autosummary::
+
+      

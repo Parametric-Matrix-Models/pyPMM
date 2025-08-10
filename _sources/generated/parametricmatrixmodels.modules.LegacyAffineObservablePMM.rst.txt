@@ -1,0 +1,34 @@
+﻿LegacyAffineObservablePMM
+=========================
+
+``parametricmatrixmodels.modules.LegacyAffineObservablePMM``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: LegacyAffineObservablePMM
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~LegacyAffineObservablePMM.__init__
+         ~LegacyAffineObservablePMM.astype
+         ~LegacyAffineObservablePMM.compile
+         ~LegacyAffineObservablePMM.deserialize
+         ~LegacyAffineObservablePMM.get_hyperparameters
+         ~LegacyAffineObservablePMM.get_num_trainable_floats
+         ~LegacyAffineObservablePMM.get_output_shape
+         ~LegacyAffineObservablePMM.get_params
+         ~LegacyAffineObservablePMM.get_state
+         ~LegacyAffineObservablePMM.is_ready
+         ~LegacyAffineObservablePMM.name
+         ~LegacyAffineObservablePMM.serialize
+         ~LegacyAffineObservablePMM.set_hyperparameters
+         ~LegacyAffineObservablePMM.set_params
+         ~LegacyAffineObservablePMM.set_precision
+         ~LegacyAffineObservablePMM.set_state
+
+   .. autosummary::
+
+      

@@ -1,0 +1,35 @@
+﻿Trunc
+=====
+
+``parametricmatrixmodels.modules.Trunc``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Trunc
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Trunc.__init__
+         ~Trunc.astype
+         ~Trunc.compile
+         ~Trunc.deserialize
+         ~Trunc.func
+         ~Trunc.get_hyperparameters
+         ~Trunc.get_num_trainable_floats
+         ~Trunc.get_output_shape
+         ~Trunc.get_params
+         ~Trunc.get_state
+         ~Trunc.is_ready
+         ~Trunc.name
+         ~Trunc.serialize
+         ~Trunc.set_hyperparameters
+         ~Trunc.set_params
+         ~Trunc.set_precision
+         ~Trunc.set_state
+
+   .. autosummary::
+
+      

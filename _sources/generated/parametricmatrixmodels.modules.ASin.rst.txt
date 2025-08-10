@@ -1,0 +1,35 @@
+﻿ASin
+====
+
+``parametricmatrixmodels.modules.ASin``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: ASin
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~ASin.__init__
+         ~ASin.astype
+         ~ASin.compile
+         ~ASin.deserialize
+         ~ASin.func
+         ~ASin.get_hyperparameters
+         ~ASin.get_num_trainable_floats
+         ~ASin.get_output_shape
+         ~ASin.get_params
+         ~ASin.get_state
+         ~ASin.is_ready
+         ~ASin.name
+         ~ASin.serialize
+         ~ASin.set_hyperparameters
+         ~ASin.set_params
+         ~ASin.set_precision
+         ~ASin.set_state
+
+   .. autosummary::
+
+      

@@ -1,0 +1,35 @@
+﻿Absolute
+========
+
+``parametricmatrixmodels.modules.Absolute``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Absolute
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Absolute.__init__
+         ~Absolute.astype
+         ~Absolute.compile
+         ~Absolute.deserialize
+         ~Absolute.func
+         ~Absolute.get_hyperparameters
+         ~Absolute.get_num_trainable_floats
+         ~Absolute.get_output_shape
+         ~Absolute.get_params
+         ~Absolute.get_state
+         ~Absolute.is_ready
+         ~Absolute.name
+         ~Absolute.serialize
+         ~Absolute.set_hyperparameters
+         ~Absolute.set_params
+         ~Absolute.set_precision
+         ~Absolute.set_state
+
+   .. autosummary::
+
+      

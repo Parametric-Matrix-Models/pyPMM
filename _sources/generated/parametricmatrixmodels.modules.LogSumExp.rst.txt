@@ -1,0 +1,35 @@
+﻿LogSumExp
+=========
+
+``parametricmatrixmodels.modules.LogSumExp``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: LogSumExp
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~LogSumExp.__init__
+         ~LogSumExp.astype
+         ~LogSumExp.compile
+         ~LogSumExp.deserialize
+         ~LogSumExp.func
+         ~LogSumExp.get_hyperparameters
+         ~LogSumExp.get_num_trainable_floats
+         ~LogSumExp.get_output_shape
+         ~LogSumExp.get_params
+         ~LogSumExp.get_state
+         ~LogSumExp.is_ready
+         ~LogSumExp.name
+         ~LogSumExp.serialize
+         ~LogSumExp.set_hyperparameters
+         ~LogSumExp.set_params
+         ~LogSumExp.set_precision
+         ~LogSumExp.set_state
+
+   .. autosummary::
+
+      

@@ -1,0 +1,35 @@
+﻿SiLU
+====
+
+``parametricmatrixmodels.modules.SiLU``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: SiLU
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~SiLU.__init__
+         ~SiLU.astype
+         ~SiLU.compile
+         ~SiLU.deserialize
+         ~SiLU.func
+         ~SiLU.get_hyperparameters
+         ~SiLU.get_num_trainable_floats
+         ~SiLU.get_output_shape
+         ~SiLU.get_params
+         ~SiLU.get_state
+         ~SiLU.is_ready
+         ~SiLU.name
+         ~SiLU.serialize
+         ~SiLU.set_hyperparameters
+         ~SiLU.set_params
+         ~SiLU.set_precision
+         ~SiLU.set_state
+
+   .. autosummary::
+
+      

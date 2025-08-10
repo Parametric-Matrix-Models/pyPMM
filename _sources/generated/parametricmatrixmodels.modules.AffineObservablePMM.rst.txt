@@ -1,0 +1,34 @@
+﻿AffineObservablePMM
+===================
+
+``parametricmatrixmodels.modules.AffineObservablePMM``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: AffineObservablePMM
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~AffineObservablePMM.__init__
+         ~AffineObservablePMM.astype
+         ~AffineObservablePMM.compile
+         ~AffineObservablePMM.deserialize
+         ~AffineObservablePMM.get_hyperparameters
+         ~AffineObservablePMM.get_num_trainable_floats
+         ~AffineObservablePMM.get_output_shape
+         ~AffineObservablePMM.get_params
+         ~AffineObservablePMM.get_state
+         ~AffineObservablePMM.is_ready
+         ~AffineObservablePMM.name
+         ~AffineObservablePMM.serialize
+         ~AffineObservablePMM.set_hyperparameters
+         ~AffineObservablePMM.set_params
+         ~AffineObservablePMM.set_precision
+         ~AffineObservablePMM.set_state
+
+   .. autosummary::
+
+      

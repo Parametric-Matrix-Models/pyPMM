@@ -1,0 +1,35 @@
+﻿Exp2
+====
+
+``parametricmatrixmodels.modules.Exp2``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Exp2
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Exp2.__init__
+         ~Exp2.astype
+         ~Exp2.compile
+         ~Exp2.deserialize
+         ~Exp2.func
+         ~Exp2.get_hyperparameters
+         ~Exp2.get_num_trainable_floats
+         ~Exp2.get_output_shape
+         ~Exp2.get_params
+         ~Exp2.get_state
+         ~Exp2.is_ready
+         ~Exp2.name
+         ~Exp2.serialize
+         ~Exp2.set_hyperparameters
+         ~Exp2.set_params
+         ~Exp2.set_precision
+         ~Exp2.set_state
+
+   .. autosummary::
+
+      

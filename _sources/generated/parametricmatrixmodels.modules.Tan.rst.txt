@@ -1,0 +1,35 @@
+﻿Tan
+===
+
+``parametricmatrixmodels.modules.Tan``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Tan
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Tan.__init__
+         ~Tan.astype
+         ~Tan.compile
+         ~Tan.deserialize
+         ~Tan.func
+         ~Tan.get_hyperparameters
+         ~Tan.get_num_trainable_floats
+         ~Tan.get_output_shape
+         ~Tan.get_params
+         ~Tan.get_state
+         ~Tan.is_ready
+         ~Tan.name
+         ~Tan.serialize
+         ~Tan.set_hyperparameters
+         ~Tan.set_params
+         ~Tan.set_precision
+         ~Tan.set_state
+
+   .. autosummary::
+
+      

@@ -1,0 +1,34 @@
+﻿Reshape
+=======
+
+``parametricmatrixmodels.modules.Reshape``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Reshape
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Reshape.__init__
+         ~Reshape.astype
+         ~Reshape.compile
+         ~Reshape.deserialize
+         ~Reshape.get_hyperparameters
+         ~Reshape.get_num_trainable_floats
+         ~Reshape.get_output_shape
+         ~Reshape.get_params
+         ~Reshape.get_state
+         ~Reshape.is_ready
+         ~Reshape.name
+         ~Reshape.serialize
+         ~Reshape.set_hyperparameters
+         ~Reshape.set_params
+         ~Reshape.set_precision
+         ~Reshape.set_state
+
+   .. autosummary::
+
+      

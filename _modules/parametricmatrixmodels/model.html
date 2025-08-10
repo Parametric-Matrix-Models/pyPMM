@@ -1,0 +1,1461 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>parametricmatrixmodels.model &#8212; Parametric Matrix Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/model';</script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/pmmlogo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/pmmlogo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PMM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../model.html">
+    Model
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../model.html">
+    Model
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">parametricmatrixmodels.model</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for parametricmatrixmodels.model</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">onp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packaging.version</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">parametricmatrixmodels</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pmm</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_loss_fn</span><span class="p">,</span> <span class="n">train</span>
+
+
+<div class="viewcode-block" id="Model">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Model</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Model class built from a list of modules.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+        <span class="n">trainable_floats_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_num_trainable_floats</span><span class="p">()</span>
+
+        <span class="c1"># get number of modules in order to reserve whitespace</span>
+        <span class="n">num_modules</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">)</span>
+        <span class="n">mod_idx_width</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num_modules</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">trainable_floats_num</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">num_trainable_floats</span> <span class="o">=</span> <span class="s2">&quot;(uninitialized)&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">num_trainable_floats</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;(trainable floats: </span><span class="si">{</span><span class="n">trainable_floats_num</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">rep</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Model(input_shape=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">, &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;output_shape=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="si">}</span><span class="s2">, ready=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ready</span><span class="si">}</span><span class="s2">) &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num_trainable_floats</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="n">input_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">):</span>
+            <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">module</span><span class="o">.</span><span class="n">get_output_shape</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span> <span class="k">if</span> <span class="n">input_shape</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">)</span>
+            <span class="n">comment</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">)</span>
+            <span class="n">rep</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">&gt;</span><span class="si">{</span><span class="n">mod_idx_width</span><span class="si">}}</span><span class="s2">: </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot; -&gt; </span><span class="si">{</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">input_shape</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">comment</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">rep</span>
+
+<div class="viewcode-block" id="Model.__init__">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">modules</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BaseModule</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the model with the input shape and a list of modules.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            modules : List[BaseModule], optional</span>
+<span class="sd">                List of modules to initialize the model with. Default is an</span>
+<span class="sd">                empty list.</span>
+<span class="sd">            rng : Any, optional</span>
+<span class="sd">                Initial random key for the model. Default is None. If None, a</span>
+<span class="sd">                new random key will be generated using JAX&#39;s random.PRNGKey. If</span>
+<span class="sd">                an integer is provided, it will be used as the seed to create</span>
+<span class="sd">                the key.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span> <span class="o">=</span> <span class="n">modules</span>
+        <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Model.get_num_trainable_floats">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.get_num_trainable_floats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_num_trainable_floats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="n">num_trainable_floats</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">get_num_trainable_floats</span><span class="p">()</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="kc">None</span> <span class="ow">in</span> <span class="n">num_trainable_floats</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">num_trainable_floats</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Model.reset">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.reset">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ready</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameter_counts</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_counts</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">callable</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Model.append_module">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.append_module">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Append a module to the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            module : BaseModule</span>
+<span class="sd">                Module to append to the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Model.prepend_module">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.prepend_module">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepend_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepend a module to the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            module : BaseModule</span>
+<span class="sd">                Module to prepend to the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Model.insert_module">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.insert_module">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">insert_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Insert a module at the given index in the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            module : BaseModule</span>
+<span class="sd">                Module to insert into the model.</span>
+<span class="sd">            index : int</span>
+<span class="sd">                Index at which to insert the module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">module</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+
+    <span class="n">add</span> <span class="o">=</span> <span class="n">append_module</span>
+    <span class="n">put</span> <span class="o">=</span> <span class="n">prepend_module</span>
+    <span class="n">insert</span> <span class="o">=</span> <span class="n">insert_module</span>
+
+<div class="viewcode-block" id="Model.remove_module">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.remove_module">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove a module from the model at the given index.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            index : int</span>
+<span class="sd">                Index of the module to remove.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">index</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">&quot;Index out of range.&quot;</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Model.pop_module">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.pop_module">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pop_module</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseModule</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Pop the last module from the model.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            BaseModule</span>
+<span class="sd">                The last module in the model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">&quot;No modules to pop.&quot;</span><span class="p">)</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">module</span></div>
+
+
+<div class="viewcode-block" id="Model.__getitem__">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.__getitem__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">slice</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">BaseModule</span><span class="p">],</span> <span class="n">BaseModule</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the module at the given index.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            index : int</span>
+<span class="sd">                Index of the module to retrieve.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            BaseModule</span>
+<span class="sd">                The module at the specified index.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Index array must be 1D. Use a boolean mask or a 1D array.&quot;</span>
+                <span class="p">)</span>
+            <span class="c1"># the key can either be an index array or a boolean mask</span>
+            <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;Boolean mask length must match the number of modules.&quot;</span>
+                    <span class="p">)</span>
+                <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">key</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">key</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+                <span class="n">indices</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+                <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Index array must be of type int or bool. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Got </span><span class="si">{</span><span class="n">key</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
+            <span class="c1"># return a slice of the modules</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">key</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">&quot;Index out of range.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;Index must be an integer, a slice, or a 1D numpy array. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Model.compile">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.compile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">rngkey</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
+        <span class="n">input_shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compile the model for training by compiling each module.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            rngkey : Union[Any, int]</span>
+<span class="sd">                Random key for initializing the model parameters. JAX PRNGKey</span>
+<span class="sd">                or integer seed.</span>
+<span class="sd">            input_shape : Tuple[int, ...]</span>
+<span class="sd">                Shape of the input array, excluding the batch size.</span>
+<span class="sd">                For example, (input_features,) for a 1D input or</span>
+<span class="sd">                (input_height, input_width, input_channels) for a 3D input.</span>
+<span class="sd">            verbose : bool, optional</span>
+<span class="sd">                Print debug information during compilation. Default is False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">rngkey</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rngkey</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rngkey</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">rngkey</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">rngkey</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Compiling model with input shape </span><span class="si">{</span><span class="n">input_shape</span><span class="si">}</span><span class="s2"> and &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">)</span><span class="si">}</span><span class="s2"> modules.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="n">input_shape</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">module</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">):</span>
+            <span class="n">rngkey</span><span class="p">,</span> <span class="n">modrng</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rngkey</span><span class="p">)</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">modrng</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+            <span class="n">input_shape</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">get_output_shape</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">) </span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s2"> output shape: </span><span class="si">{</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span> <span class="o">=</span> <span class="n">input_shape</span>
+
+        <span class="c1"># get number of parameter arrays for each module</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameter_counts</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">get_params</span><span class="p">())</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_counts</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">get_state</span><span class="p">())</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span>
+        <span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ready</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="Model.get_output_shape">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.get_output_shape">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the output shape of the model given an input shape.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            input_shape : Tuple[int, ...]</span>
+<span class="sd">                Shape of the input array, excluding the batch size.</span>
+<span class="sd">                For example, (input_features,) for a 1D input or</span>
+<span class="sd">                (input_height, input_width, input_channels) for a 3D input.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Tuple[int, ...]</span>
+<span class="sd">                Shape of the output array after passing through the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+            <span class="n">input_shape</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">get_output_shape</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">input_shape</span></div>
+
+
+<div class="viewcode-block" id="Model.get_params">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.get_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the parameters of the model as a Tuple of numpy arrays.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Tuple[np.ndarray, ...]</span>
+<span class="sd">                numpy arrays representing the parameters of the model. The</span>
+<span class="sd">                order of the parameters should match the order in</span>
+<span class="sd">                which they are used in the _get_callable method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ready</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model is not ready. Call compile() first.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># parameter tuple must be flat</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">param</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Model.set_params">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.set_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the parameters of the model from a Tuple of numpy arrays.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            params: Tuple[np.ndarray, ...]</span>
+<span class="sd">                numpy arrays representing the parameters of the model. The</span>
+<span class="sd">                order of the parameters should match the order in which</span>
+<span class="sd">                they are used in the _get_callable method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ready</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model is not ready. Call compile() first.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_counts</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_counts</span><span class="p">)</span><span class="si">}</span><span class="s2"> parameters, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># set parameters for each module</span>
+        <span class="n">param_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">get_params</span><span class="p">())</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="n">param_index</span> <span class="p">:</span> <span class="n">param_index</span> <span class="o">+</span> <span class="n">count</span><span class="p">])</span>
+            <span class="n">param_index</span> <span class="o">+=</span> <span class="n">count</span></div>
+
+
+<div class="viewcode-block" id="Model.get_state">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.get_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the state of the model as a Tuple of numpy arrays.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Tuple[np.ndarray, ...]</span>
+<span class="sd">                numpy arrays representing the state of the model. The order of</span>
+<span class="sd">                the states should match the order in which they are used in</span>
+<span class="sd">                the _get_callable method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ready</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model is not ready. Call compile() first.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># state tuple must be flat</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span>
+            <span class="n">state</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span> <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Model.set_state">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.set_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the state of the model from a Tuple of numpy arrays.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            state: Tuple[np.ndarray, ...]</span>
+<span class="sd">                numpy arrays representing the state of the model. The order of</span>
+<span class="sd">                the states should match the order in which they are used in</span>
+<span class="sd">                the _get_callable method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ready</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model is not ready. Call compile() first.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_counts</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Expected </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_counts</span><span class="p">)</span><span class="si">}</span><span class="s2"> states, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="p">)</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># set state for each module</span>
+        <span class="n">state_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">module</span><span class="o">.</span><span class="n">get_state</span><span class="p">())</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">state_index</span> <span class="p">:</span> <span class="n">state_index</span> <span class="o">+</span> <span class="n">count</span><span class="p">])</span>
+            <span class="n">state_index</span> <span class="o">+=</span> <span class="n">count</span></div>
+
+
+<div class="viewcode-block" id="Model.get_rng">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.get_rng">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_rng</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span></div>
+
+
+<div class="viewcode-block" id="Model.set_rng">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.set_rng">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_rng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the random key for the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            rng : Any</span>
+<span class="sd">                Random key to set for the model. JAX PRNGKey or an integer seed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span></div>
+
+
+<div class="viewcode-block" id="Model._get_callable">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model._get_callable">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span>
+        <span class="p">[</span>
+            <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="nb">bool</span><span class="p">,</span>
+            <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+            <span class="n">Any</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
+    <span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method must return a jax-jittable and jax-gradable callable in the</span>
+<span class="sd">        form of</span>
+<span class="sd">        ```</span>
+<span class="sd">        (</span>
+<span class="sd">            params: Tuple[np.ndarray, ...],</span>
+<span class="sd">            input_NF: np.ndarray[num_samples, num_features],</span>
+<span class="sd">            training: bool,</span>
+<span class="sd">            state: Tuple[np.ndarray, ...],</span>
+<span class="sd">            rng: key&lt;fry&gt;</span>
+<span class="sd">        ) -&gt; (</span>
+<span class="sd">                output_NF: np.ndarray[num_samples, num_output_features],</span>
+<span class="sd">                new_state: Tuple[np.ndarray, ...]</span>
+<span class="sd">            )</span>
+<span class="sd">        ```</span>
+<span class="sd">        That is, all hyperparameters are traced out and the callable depends</span>
+<span class="sd">        explicitly only on a Tuple of parameter numpy arrays, the input array,</span>
+<span class="sd">        the training flag, a state Tuple of numpy arrays, and a JAX rng key.</span>
+
+<span class="sd">        The training flag will be traced out, so it doesn&#39;t need to be jittable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ready</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model is not ready. Call compile() first.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># get the callables for each module</span>
+        <span class="n">module_callables</span> <span class="o">=</span> <span class="p">[</span><span class="n">module</span><span class="o">.</span><span class="n">_get_callable</span><span class="p">()</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">]</span>
+
+        <span class="c1"># parameter tuple must be flattened, so we&#39;ll need to iterate over the</span>
+        <span class="c1"># parameter counts</span>
+        <span class="c1"># state tuple must also be flattened, so we&#39;ll need to iterate over the</span>
+        <span class="c1"># state counts</span>
+        <span class="c1"># jax will unroll this loop</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">model_callable</span><span class="p">(</span>
+            <span class="n">params</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+            <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">states</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
+            <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># absolutely not optonal</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+            <span class="n">param_index</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">state_index</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># split rng key into a key for each module</span>
+            <span class="n">rngs</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">param_count</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameter_counts</span><span class="p">):</span>
+                <span class="n">state_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_counts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+                <span class="n">module_params</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+                    <span class="n">params</span><span class="p">[</span><span class="n">param_index</span> <span class="p">:</span> <span class="n">param_index</span> <span class="o">+</span> <span class="n">param_count</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="n">module_states</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+                    <span class="n">states</span><span class="p">[</span><span class="n">state_index</span> <span class="p">:</span> <span class="n">state_index</span> <span class="o">+</span> <span class="n">state_count</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="n">module_rng</span> <span class="o">=</span> <span class="n">rngs</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+                <span class="n">X</span><span class="p">,</span> <span class="n">new_module_states</span> <span class="o">=</span> <span class="n">module_callables</span><span class="p">[</span><span class="n">idx</span><span class="p">](</span>
+                    <span class="n">module_params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">module_states</span><span class="p">,</span> <span class="n">module_rng</span>
+                <span class="p">)</span>
+                <span class="c1"># update the states</span>
+                <span class="n">states</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">states</span><span class="p">[:</span><span class="n">state_index</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="n">new_module_states</span>
+                    <span class="o">+</span> <span class="n">states</span><span class="p">[</span><span class="n">state_index</span> <span class="o">+</span> <span class="n">state_count</span> <span class="p">:]</span>
+                <span class="p">)</span>
+
+                <span class="c1"># increment indices</span>
+                <span class="n">param_index</span> <span class="o">+=</span> <span class="n">param_count</span>
+                <span class="n">state_index</span> <span class="o">+=</span> <span class="n">state_count</span>
+
+            <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">states</span>
+
+        <span class="k">return</span> <span class="n">model_callable</span></div>
+
+
+<div class="viewcode-block" id="Model.__call__">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.__call__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+        <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">return_state</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">update_state</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call the model with the input array.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            X : np.ndarray</span>
+<span class="sd">                Input array of shape (batch_size, &lt;input feature axes&gt;).</span>
+<span class="sd">                For example, (batch_size, input_features) for a 1D input or</span>
+<span class="sd">                (batch_size, input_height, input_width, input_channels) for a</span>
+<span class="sd">                3D input.</span>
+<span class="sd">            dtype : Optional[Any], optional</span>
+<span class="sd">                Data type of the output array. Default is jax.numpy.float64.</span>
+<span class="sd">                It is strongly recommended to perform training in single</span>
+<span class="sd">                precision (float32 and complex64) and inference with double</span>
+<span class="sd">                precision inputs (float64, the default here) with single</span>
+<span class="sd">                precision weights.</span>
+<span class="sd">            rng : Any, optional</span>
+<span class="sd">                JAX random key for stochastic modules. Default is None.</span>
+<span class="sd">                If None, the saved rng key will be used if it exists, which</span>
+<span class="sd">                would be the final rng key from the last training run. If an</span>
+<span class="sd">                integer is provided, it will be used as the seed to create a</span>
+<span class="sd">                new JAX random key.</span>
+<span class="sd">            return_state : bool, optional</span>
+<span class="sd">                If True, the model will return the state of the model after</span>
+<span class="sd">                evaluation. Default is False.</span>
+<span class="sd">            update_state : bool, optional</span>
+<span class="sd">                If True, the model will update the state of the model after</span>
+<span class="sd">                evaluation. Default is False.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            np.ndarray</span>
+<span class="sd">                Output array of shape (batch_size, &lt;output feature axes&gt;).</span>
+<span class="sd">                For example, (batch_size, output_features) for a 1D output or</span>
+<span class="sd">                (batch_size, output_height, output_width, output_channels) for</span>
+<span class="sd">                a 3D output.</span>
+<span class="sd">            Tuple[np.ndarray, ...], optional</span>
+<span class="sd">                If return_state is True, the model will also return the state</span>
+<span class="sd">                of the model as a Tuple of numpy arrays. The order of the</span>
+<span class="sd">                states will match the order in which they are used in the</span>
+<span class="sd">                _get_callable method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ready</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model is not ready. Call compile() first.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">callable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callable</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_get_callable</span><span class="p">(),</span> <span class="n">static_argnames</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;training&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+        <span class="n">X_</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+
+        <span class="c1"># make sure the dtype was converted, issue a warning if not</span>
+        <span class="k">if</span> <span class="n">X_</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">dtype</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;While performing inference with model: &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Requested dtype (</span><span class="si">{</span><span class="n">dtype</span><span class="si">}</span><span class="s2">) was not successfully applied. &quot;</span>
+                <span class="s2">&quot;This is most likely due to JAX_ENABLE_X64 not being set. &quot;</span>
+                <span class="s2">&quot;See accompanying JAX warning for more details.&quot;</span><span class="p">,</span>
+                <span class="ne">UserWarning</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rng</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_rng</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">rng</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
+
+        <span class="n">out</span><span class="p">,</span> <span class="n">new_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">callable</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">(),</span> <span class="n">X_</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">(),</span> <span class="n">rng</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">update_state</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;update_state is True. This is an uncommon use case, make &quot;</span>
+                <span class="s2">&quot;sure you know what you are doing.&quot;</span><span class="p">,</span>
+                <span class="ne">UserWarning</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">new_state</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">return_state</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">out</span><span class="p">,</span> <span class="n">new_state</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">out</span></div>
+
+
+    <span class="c1"># alias for __call__ method</span>
+    <span class="n">predict</span> <span class="o">=</span> <span class="fm">__call__</span>
+
+<div class="viewcode-block" id="Model.set_precision">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.set_precision">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_precision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prec</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the precision of the model parameters and states.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            prec : Union[np.dtype, str, int]</span>
+<span class="sd">                Precision to set for the model parameters and states.</span>
+<span class="sd">                Valid options are:</span>
+<span class="sd">                [for 32-bit precision (all options are equivalent)]</span>
+<span class="sd">                - np.float32, np.complex64, &quot;float32&quot;, &quot;complex64&quot;</span>
+<span class="sd">                - &quot;single&quot;, &quot;f32&quot;, &quot;c64&quot;, 32</span>
+<span class="sd">                [for 64-bit precision (all options are equivalent)]</span>
+<span class="sd">                - np.float64, np.complex128, &quot;float64&quot;, &quot;complex128&quot;</span>
+<span class="sd">                - &quot;double&quot;, &quot;f64&quot;, &quot;c128&quot;, 64</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ready</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model is not ready. Call compile() first.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># convert precision to 32 or 64</span>
+        <span class="k">if</span> <span class="n">prec</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
+            <span class="s2">&quot;float32&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;complex64&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;single&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;f32&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;c64&quot;</span><span class="p">,</span>
+            <span class="mi">32</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="n">prec</span> <span class="o">=</span> <span class="mi">32</span>
+        <span class="k">elif</span> <span class="n">prec</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
+            <span class="s2">&quot;float64&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;complex128&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;double&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;f64&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;c128&quot;</span><span class="p">,</span>
+            <span class="mi">64</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="n">prec</span> <span class="o">=</span> <span class="mi">64</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Invalid precision. Valid options are:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;[for 32-bit precision] np.float32, np.complex64, &#39;float32&#39;, &quot;</span>
+                <span class="s2">&quot;&#39;complex64&#39;, &#39;single&#39;, &#39;f32&#39;, &#39;c64&#39;, 32;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;[for 64-bit precision] np.float64, np.complex128, &#39;float64&#39;, &quot;</span>
+                <span class="s2">&quot;&#39;complex128&#39;, &#39;double&#39;, &#39;f64&#39;, &#39;c128&#39;, 64.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># check if dtype is supported</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;jax_enable_x64&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">prec</span> <span class="o">==</span> <span class="mi">64</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;JAX_ENABLE_X64 is not set. &quot;</span>
+                <span class="s2">&quot;Please set it to True to use double precision float64 or &quot;</span>
+                <span class="s2">&quot;complex128 data types.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">set_precision</span><span class="p">(</span><span class="n">prec</span><span class="p">)</span></div>
+
+
+    <span class="c1"># alias for set_precision method that returns self</span>
+<div class="viewcode-block" id="Model.astype">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.astype">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">astype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Model&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convenience wrapper to set_precision using the dtype argument, returns</span>
+<span class="sd">        self.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_precision</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="Model.train">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.train">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">Y</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">Y_unc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">X_val</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">Y_val</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">Y_val_unc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">loss_fn</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mse&quot;</span><span class="p">,</span>
+        <span class="n">lr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="n">num_epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">convergence_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">,</span>
+        <span class="n">early_stopping_patience</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">early_stopping_tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="p">,</span>
+        <span class="c1"># advanced options</span>
+        <span class="n">initialization_seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">callback</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">unroll</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">batch_seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">b1</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>
+        <span class="n">b2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.999</span><span class="p">,</span>
+        <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">,</span>
+        <span class="n">clip</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e3</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="c1"># check if the model is ready</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ready</span><span class="p">:</span>
+            <span class="n">initialization_seed</span> <span class="o">=</span> <span class="n">initialization_seed</span> <span class="ow">or</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span>
+                <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">initialization_seed</span><span class="p">),</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+        <span class="c1"># check if any of the model parameters are double precision and give a</span>
+        <span class="c1"># warning if so</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">param</span><span class="p">)</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">param</span><span class="p">)</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+        <span class="p">):</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Some parameters are double precision. &quot;</span>
+                <span class="s2">&quot;This may lead to significantly slower training on certain &quot;</span>
+                <span class="s2">&quot;backends. It is strongly recommended to use single precision &quot;</span>
+                <span class="s2">&quot;(float32/complex64) parameters for training. Set the &quot;</span>
+                <span class="s2">&quot;precision of the model with Model.set_precision.&quot;</span><span class="p">,</span>
+                <span class="ne">UserWarning</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># check dimensions</span>
+        <span class="n">input_shape</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="n">input_shape</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Input shape </span><span class="si">{</span><span class="n">input_shape</span><span class="si">}</span><span class="s2"> does not match model input shape &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">Y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Output shape </span><span class="si">{</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="si">}</span><span class="s2"> does not match model output &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;shape </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">Y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">X_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Y_val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Validation data Y_val must be provided if validation input &quot;</span>
+                <span class="s2">&quot;X_val is provided for supervised training.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># get callable, not jitted since the training function will</span>
+        <span class="c1"># handle that</span>
+        <span class="n">callable_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_callable</span><span class="p">()</span>
+
+        <span class="c1"># make the loss function</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loss_fn</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">loss_fn_</span> <span class="o">=</span> <span class="n">make_loss_fn</span><span class="p">(</span>
+                <span class="n">loss_fn</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">callable_</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># if the loss function is already a callable, we wrap it with the</span>
+            <span class="c1"># model callable</span>
+            <span class="c1"># whether or not Y and Y_unc are provided changes the signature</span>
+            <span class="c1"># of the loss function</span>
+            <span class="k">if</span> <span class="n">Y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Y_unc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># the loss function should be</span>
+                <span class="c1"># loss_fn(X, Y, Y_unc, Y_pred) -&gt; err</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">loss_fn_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Y_unc</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
+                    <span class="n">Y_pred</span><span class="p">,</span> <span class="n">new_states</span> <span class="o">=</span> <span class="n">callable_</span><span class="p">(</span>
+                        <span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span>
+                    <span class="p">)</span>
+                    <span class="n">err</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Y_unc</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">err</span><span class="p">,</span> <span class="n">new_states</span>
+
+            <span class="k">elif</span> <span class="n">Y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Y_unc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># the loss function should be</span>
+                <span class="c1"># loss_fn(X, Y, Y_pred) -&gt; err</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">loss_fn_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
+                    <span class="n">Y_pred</span><span class="p">,</span> <span class="n">new_states</span> <span class="o">=</span> <span class="n">callable_</span><span class="p">(</span>
+                        <span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span>
+                    <span class="p">)</span>
+                    <span class="n">err</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">err</span><span class="p">,</span> <span class="n">new_states</span>
+
+            <span class="k">elif</span> <span class="n">Y</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Y_unc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># the loss function should be</span>
+                <span class="c1"># loss_fn(X, pred) -&gt; err</span>
+                <span class="c1"># (unsupervised training)</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">loss_fn_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
+                    <span class="n">pred</span><span class="p">,</span> <span class="n">new_states</span> <span class="o">=</span> <span class="n">callable_</span><span class="p">(</span>
+                        <span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span>
+                    <span class="p">)</span>
+                    <span class="n">err</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">err</span><span class="p">,</span> <span class="n">new_states</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Invalid loss function signature. &quot;</span>
+                    <span class="s2">&quot;If Y and Y_unc are provided, the loss function should be &quot;</span>
+                    <span class="s2">&quot;loss_fn(X, Y, Y_unc, Y_pred) -&gt; err. &quot;</span>
+                    <span class="s2">&quot;If only Y is provided, it should be &quot;</span>
+                    <span class="s2">&quot;loss_fn(X, Y, Y_pred) -&gt; err. &quot;</span>
+                    <span class="s2">&quot;If neither are provided, it should be &quot;</span>
+                    <span class="s2">&quot;loss_fn(X, pred) -&gt; err.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># train the model</span>
+        <span class="p">(</span>
+            <span class="n">final_params</span><span class="p">,</span>
+            <span class="n">final_model_states</span><span class="p">,</span>
+            <span class="n">final_model_rng</span><span class="p">,</span>
+            <span class="n">final_epoch</span><span class="p">,</span>
+            <span class="n">final_adam_states</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span>
+            <span class="n">init_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">(),</span>
+            <span class="n">init_states</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">(),</span>
+            <span class="n">init_rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_rng</span><span class="p">(),</span>
+            <span class="n">loss_fn</span><span class="o">=</span><span class="n">loss_fn_</span><span class="p">,</span>
+            <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
+            <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span>
+            <span class="n">Y_unc</span><span class="o">=</span><span class="n">Y_unc</span><span class="p">,</span>
+            <span class="n">X_val</span><span class="o">=</span><span class="n">X_val</span><span class="p">,</span>
+            <span class="n">Y_val</span><span class="o">=</span><span class="n">Y_val</span><span class="p">,</span>
+            <span class="n">Y_val_unc</span><span class="o">=</span><span class="n">Y_val_unc</span><span class="p">,</span>
+            <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">num_epochs</span><span class="o">=</span><span class="n">num_epochs</span><span class="p">,</span>
+            <span class="n">convergence_threshold</span><span class="o">=</span><span class="n">convergence_threshold</span><span class="p">,</span>
+            <span class="n">early_stopping_patience</span><span class="o">=</span><span class="n">early_stopping_patience</span><span class="p">,</span>
+            <span class="n">early_stopping_tolerance</span><span class="o">=</span><span class="n">early_stopping_tolerance</span><span class="p">,</span>
+            <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
+            <span class="n">unroll</span><span class="o">=</span><span class="n">unroll</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+            <span class="n">batch_seed</span><span class="o">=</span><span class="n">batch_seed</span><span class="p">,</span>
+            <span class="n">b1</span><span class="o">=</span><span class="n">b1</span><span class="p">,</span>
+            <span class="n">b2</span><span class="o">=</span><span class="n">b2</span><span class="p">,</span>
+            <span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span>
+            <span class="n">clip</span><span class="o">=</span><span class="n">clip</span><span class="p">,</span>
+            <span class="n">real</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># set the final parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">final_params</span><span class="p">)</span>
+        <span class="c1"># set the final state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">final_model_states</span><span class="p">)</span>
+        <span class="c1"># set the final rng</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_rng</span><span class="p">(</span><span class="n">final_model_rng</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Model.serialize">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.serialize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Serialize the model to a dictionary. This is done by serializing the</span>
+<span class="sd">        model&#39;s parameters/metadata and then serializing each module.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Dict[str, Union[Any, Dict[str, Any]]]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">module_fulltypenames</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">module</span><span class="p">))</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">]</span>
+        <span class="n">module_typenames</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">module</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span>
+        <span class="p">]</span>
+        <span class="n">module_modules</span> <span class="o">=</span> <span class="p">[</span><span class="n">module</span><span class="o">.</span><span class="vm">__module__</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">]</span>
+        <span class="n">module_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="p">()</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">]</span>
+
+        <span class="n">serialized_modules</span> <span class="o">=</span> <span class="p">[</span><span class="n">module</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">]</span>
+
+        <span class="c1"># serialize rng key</span>
+        <span class="n">key_data</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">key_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_rng</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;module_typenames&quot;</span><span class="p">:</span> <span class="n">module_typenames</span><span class="p">,</span>
+            <span class="s2">&quot;module_modules&quot;</span><span class="p">:</span> <span class="n">module_modules</span><span class="p">,</span>
+            <span class="s2">&quot;module_fulltypenames&quot;</span><span class="p">:</span> <span class="n">module_fulltypenames</span><span class="p">,</span>
+            <span class="s2">&quot;module_names&quot;</span><span class="p">:</span> <span class="n">module_names</span><span class="p">,</span>
+            <span class="s2">&quot;serialized_modules&quot;</span><span class="p">:</span> <span class="n">serialized_modules</span><span class="p">,</span>
+            <span class="s2">&quot;key_data&quot;</span><span class="p">:</span> <span class="n">key_data</span><span class="p">,</span>
+            <span class="s2">&quot;package_version&quot;</span><span class="p">:</span> <span class="n">pmm</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="Model.deserialize">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.deserialize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deserialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deserialize the model from a dictionary. This is done by deserializing</span>
+<span class="sd">        the model&#39;s parameters/metadata and then deserializing each module.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            data : Dict[str, Any]</span>
+<span class="sd">                Dictionary containing the serialized model data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+        <span class="c1"># read the version of the package this model was serialized with</span>
+        <span class="n">current_version</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">pmm</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+        <span class="n">package_version</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;package_version&quot;</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="n">current_version</span> <span class="o">!=</span> <span class="n">package_version</span><span class="p">:</span>
+            <span class="c1"># in the future, we will issue DeprecationWarnings or Errors if the</span>
+            <span class="c1"># version is unsupported</span>
+            <span class="c1"># or possibly handle version-specific deserialization</span>
+            <span class="k">pass</span>
+
+        <span class="n">module_typenames</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;module_typenames&quot;</span><span class="p">]</span>
+        <span class="n">module_modules</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;module_modules&quot;</span><span class="p">]</span>
+
+        <span class="c1"># initialize the modules</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module_module</span><span class="p">],</span> <span class="n">module_typename</span><span class="p">)()</span>
+            <span class="k">for</span> <span class="n">module_typename</span><span class="p">,</span> <span class="n">module_module</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="n">module_typenames</span><span class="p">,</span> <span class="n">module_modules</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="c1"># deserialize the modules</span>
+        <span class="k">for</span> <span class="n">module</span><span class="p">,</span> <span class="n">serialized_module</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;serialized_modules&quot;</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">serialized_module</span><span class="p">)</span>
+
+        <span class="c1"># deserialize the rng key</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">wrap_key_data</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;key_data&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_rng</span><span class="p">(</span><span class="n">key</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Model.save">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.save">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save the model to a file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            filename : str</span>
+<span class="sd">                Name of the file to save the model to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># if everything serializes correctly, we can save the model with just</span>
+        <span class="c1"># savez</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
+
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span> <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.npz&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.npz&quot;</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Model.save_compressed">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.save_compressed">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_compressed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Save the model to a compressed file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            filename : str</span>
+<span class="sd">                Name of the file to save the model to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if everything serializes correctly, we can save the model with just</span>
+        <span class="c1"># savez_compressed</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
+
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span> <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.npz&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.npz&quot;</span>
+
+        <span class="c1"># jax.numpy doesn&#39;t have savez_compressed, so we use numpy</span>
+        <span class="n">onp</span><span class="o">.</span><span class="n">savez_compressed</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Model.load">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.load">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load the model from a file. Supports both compressed and uncompressed</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            filename : str</span>
+<span class="sd">                Name of the file to load the model from.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span> <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.npz&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot;.npz&quot;</span>
+        <span class="c1"># jax numpy load supports both compressed and uncompressed npz files</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">allow_pickle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># deserialize the model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Model.from_file">
+<a class="viewcode-back" href="../../model.html#parametricmatrixmodels.Model.from_file">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Model&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load a model from a file and return an instance of the Model class.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            filename : str</span>
+<span class="sd">                Name of the file to load the model from.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Model</span>
+<span class="sd">                An instance of the Model class with the loaded parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Patrick Cook.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

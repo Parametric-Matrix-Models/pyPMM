@@ -1,0 +1,35 @@
+﻿Piecewise
+=========
+
+``parametricmatrixmodels.modules.Piecewise``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Piecewise
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Piecewise.__init__
+         ~Piecewise.astype
+         ~Piecewise.compile
+         ~Piecewise.deserialize
+         ~Piecewise.func
+         ~Piecewise.get_hyperparameters
+         ~Piecewise.get_num_trainable_floats
+         ~Piecewise.get_output_shape
+         ~Piecewise.get_params
+         ~Piecewise.get_state
+         ~Piecewise.is_ready
+         ~Piecewise.name
+         ~Piecewise.serialize
+         ~Piecewise.set_hyperparameters
+         ~Piecewise.set_params
+         ~Piecewise.set_precision
+         ~Piecewise.set_state
+
+   .. autosummary::
+
+      

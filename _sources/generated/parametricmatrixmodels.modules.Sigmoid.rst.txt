@@ -1,0 +1,35 @@
+﻿Sigmoid
+=======
+
+``parametricmatrixmodels.modules.Sigmoid``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Sigmoid
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Sigmoid.__init__
+         ~Sigmoid.astype
+         ~Sigmoid.compile
+         ~Sigmoid.deserialize
+         ~Sigmoid.func
+         ~Sigmoid.get_hyperparameters
+         ~Sigmoid.get_num_trainable_floats
+         ~Sigmoid.get_output_shape
+         ~Sigmoid.get_params
+         ~Sigmoid.get_state
+         ~Sigmoid.is_ready
+         ~Sigmoid.name
+         ~Sigmoid.serialize
+         ~Sigmoid.set_hyperparameters
+         ~Sigmoid.set_params
+         ~Sigmoid.set_precision
+         ~Sigmoid.set_state
+
+   .. autosummary::
+
+      

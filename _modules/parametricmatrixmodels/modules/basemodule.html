@@ -1,0 +1,1054 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>parametricmatrixmodels.modules.basemodule &#8212; Parametric Matrix Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/modules/basemodule';</script>
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/pmmlogo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../../_static/pmmlogo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PMM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../model.html">
+    Model
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../model.html">
+    Model
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">parametricmatrixmodels.modules.basemodule</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for parametricmatrixmodels.modules.basemodule</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Base module for JAX-based PMM models</span>
+<span class="sd">The base module can be used to implement various PMM models, NN models, and</span>
+<span class="sd">other (optionally stateful and trainable) operations in JAX.</span>
+<span class="sd">Modules can be combined to create Models.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packaging.version</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">parametricmatrixmodels</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pmm</span>
+
+
+<div class="viewcode-block" id="BaseModule">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseModule</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for all Modules. Custom modules should inherit from this class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseModule.__init__">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        BaseModule constructor, must be overridden by subclasses.</span>
+
+<span class="sd">        All modules **must** be able to be initialized without any arguments in</span>
+<span class="sd">        order for Model saving and loading to work correctly.</span>
+
+<span class="sd">        ``__init__`` can take optional parameters, but all aspects of the</span>
+<span class="sd">        module must be able to be set by ``set_hyperparameters``,</span>
+<span class="sd">        ``set_params``, and ``set_state``.</span>
+
+<span class="sd">        Always raises ``NotImplementedError`` when called on ``BaseModule`` s.</span>
+
+<span class="sd">        ``BaseModule`` is not meant to be instantiated directly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;BaseModule is an abstract class and cannot be instantiated &quot;</span>
+            <span class="s2">&quot;directly.&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.name">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the name of the module, unless overridden, this is the class</span>
+<span class="sd">        name.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Name of the module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.__repr__">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.__repr__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a string representation of the module. Unless overridden,</span>
+<span class="sd">        this includes the module name, number of trainable floats (if any),</span>
+<span class="sd">        and whether the module is initialized (ready) or not.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            String representation of the module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">param_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_num_trainable_floats</span><span class="p">()</span>
+        <span class="n">ready</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">param_count</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ready</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s2"> (trainable floats: </span><span class="si">{</span><span class="n">param_count</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">ready</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s2"> (uninitialized)&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.is_ready">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.is_ready">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return True if the module is initialized and ready for training or</span>
+<span class="sd">        inference.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            ``True`` if the module is ready, ``False`` otherwise.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented in the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;is_ready method must be implemented in subclasses&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.get_num_trainable_floats">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.get_num_trainable_floats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_num_trainable_floats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the number of trainable floats in the module.</span>
+<span class="sd">        If the module does not have trainable parameters, returns 0.</span>
+<span class="sd">        If the module is not ready, returns None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Number of trainable floats in the module, or None if the module</span>
+<span class="sd">            is not ready.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented in the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;get_num_trainable_floats method must be implemented in subclasses&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModule._get_callable">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule._get_callable">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span>
+        <span class="p">[</span>
+            <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="nb">bool</span><span class="p">,</span>
+            <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+            <span class="n">Any</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
+    <span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a ``jax.jit``-able and ``jax.grad``-able callable that</span>
+<span class="sd">        represents the module&#39;s forward pass.</span>
+
+<span class="sd">        This method must be implemented by all subclasses and must return a</span>
+<span class="sd">        ``jax-jit``-able and ``jax-grad``-able callable in the form of</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            module_callable(</span>
+<span class="sd">                params: tuple[np.ndarray, ...],</span>
+<span class="sd">                input_NF: np.ndarray[num_samples, num_features],</span>
+<span class="sd">                training: bool,</span>
+<span class="sd">                state: tuple[np.ndarray, ...],</span>
+<span class="sd">                rng: Any</span>
+<span class="sd">            ) -&gt; (</span>
+<span class="sd">                    output_NF: np.ndarray[num_samples, num_output_features],</span>
+<span class="sd">                    new_state: tuple[np.ndarray, ...]</span>
+<span class="sd">                )</span>
+
+<span class="sd">        That is, all hyperparameters are traced out and the callable depends</span>
+<span class="sd">        explicitly only on a ``tuple`` of parameter ``jax.numpy`` arrays,</span>
+<span class="sd">        the input array, the training flag, a state ``tuple`` of ``jax.numpy``</span>
+<span class="sd">        arrays, and a JAX rng key.</span>
+
+<span class="sd">        The training flag will be traced out, so it doesn&#39;t need to be jittable</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            A callable that takes the module&#39;s parameters, input data,</span>
+<span class="sd">            training flag, state, and rng key and returns the output data and</span>
+<span class="sd">            new state.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented in the subclass.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        __call__ : Calls the module with the current parameters and</span>
+<span class="sd">            given input, state, and rng.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;_get_callable method must be implemented in subclasses&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.__call__">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.__call__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_NF</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">state</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
+        <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Call the module with the current parameters and given input, state, and</span>
+<span class="sd">        rng.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        input_NF</span>
+<span class="sd">            Input array of shape (num_samples, num_features).</span>
+<span class="sd">        training</span>
+<span class="sd">            Whether the module is in training mode, by default False.</span>
+<span class="sd">        state</span>
+<span class="sd">            State of the module, by default ``()``.</span>
+<span class="sd">        rng</span>
+<span class="sd">            JAX random key, by default None.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Output array of shape (num_samples, num_output_features) and new</span>
+<span class="sd">            state.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the module is not ready (i.e., `compile()` has not been called).</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        _get_callable : Returns a callable that can be used to</span>
+<span class="sd">            compute the output and new state given the parameters, input,</span>
+<span class="sd">            training flag, state, and rng.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Module is not ready, call compile() first&quot;</span><span class="p">)</span>
+
+        <span class="c1"># get the callable</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_callable</span><span class="p">()</span>
+
+        <span class="c1"># call the function with the current parameters, input, training flag,</span>
+        <span class="c1"># state, and rng</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">(),</span>
+            <span class="n">input_NF</span><span class="p">,</span>
+            <span class="n">training</span><span class="p">,</span>
+            <span class="n">state</span><span class="p">,</span>
+            <span class="n">rng</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.compile">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.compile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compile the module to be used with the given input shape.</span>
+
+<span class="sd">        This method should initialize the module&#39;s parameters and state based</span>
+<span class="sd">        on the input shape and random key.</span>
+
+<span class="sd">        This is needed since Models are built before the input data is given,</span>
+<span class="sd">        so before training or inference can be done, the module needs to be</span>
+<span class="sd">        compiled and each Module passes its output shape to the next Module&#39;s</span>
+<span class="sd">        compile method.</span>
+
+<span class="sd">        The rng key is used to initialize random parameters, if needed.</span>
+
+<span class="sd">        This is **not** used to trace or jit the module&#39;s callable, that is</span>
+<span class="sd">        done automatically later.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        rng</span>
+<span class="sd">            JAX random key.</span>
+<span class="sd">        input_shape</span>
+<span class="sd">            Shape of the input data, e.g. ``(num_features,)``.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented in the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;compile method must be implemented in subclasses&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.get_output_shape">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.get_output_shape">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the output shape of the module given the input shape.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        input_shape</span>
+<span class="sd">            Shape of the input data, e.g. ``(num_features,)``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Shape of the output data, e.g. ``(num_output_features,)``.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented in the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;get_output_shape method must be implemented in subclasses&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.get_hyperparameters">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.get_hyperparameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the hyperparameters of the module.</span>
+
+<span class="sd">        Hyperparameters are used to configure the module and are not trainable.</span>
+<span class="sd">        They can be set via `set_hyperparameters`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Dictionary containing the hyperparameters of the module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;get_hyperparameters method must be implemented in subclasses&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.set_hyperparameters">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.set_hyperparameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the hyperparameters of the module.</span>
+
+<span class="sd">        Hyperparameters are used to configure the module and are not trainable.</span>
+<span class="sd">        They can be set via this method.</span>
+
+<span class="sd">        The default implementation uses setattr to set the hyperparameters as</span>
+<span class="sd">        attributes of the class instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        hyperparameters</span>
+<span class="sd">            Dictionary containing the hyperparameters to set.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            If hyperparameters is not a dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;Hyperparameters must be provided as a dictionary.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.get_params">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.get_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the current trainable parameters of the module. If the module has</span>
+<span class="sd">        no trainable parameters, this method should return an empty tuple.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Tuple of numpy arrays representing the module&#39;s parameters.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented in the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;get_params method must be implemented in subclasses&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.set_params">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.set_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the trainable parameters of the module.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        params</span>
+<span class="sd">            Tuple of numpy arrays representing the new parameters.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            If the method is not implemented in the subclass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;set_params method must be implemented in subclasses&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.get_state">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.get_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the current state of the module.</span>
+
+<span class="sd">        States are used to store &quot;memory&quot; or other information that is not</span>
+<span class="sd">        passed between modules, is not trainable, but may be updated during</span>
+<span class="sd">        either training or inference. e.g. batch normalization state.</span>
+
+<span class="sd">        The state is optional, in which case this method should return the</span>
+<span class="sd">        empty tuple.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Tuple of numpy arrays representing the module&#39;s state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.set_state">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.set_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the state of the module.</span>
+
+<span class="sd">        This method is optional.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        state</span>
+<span class="sd">            Tuple of numpy arrays representing the new state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.set_precision">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.set_precision">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_precision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prec</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the precision of the module parameters and state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            prec</span>
+<span class="sd">                Precision to set for the module parameters.</span>
+<span class="sd">                Valid options are:</span>
+<span class="sd">                *For 32-bit precision (all options are equivalent)*</span>
+<span class="sd">                ``np.float32``, ``np.complex64``, ``&quot;float32&quot;``,</span>
+<span class="sd">                ``&quot;complex64&quot;``, ``&quot;single&quot;``, ``&quot;f32&quot;``, ``&quot;c64&quot;``, ``32``.</span>
+<span class="sd">                *For 64-bit precision (all options are equivalent)*</span>
+<span class="sd">                ``np.float64``, ``np.complex128``, ``&quot;float64&quot;``,</span>
+<span class="sd">                ``&quot;complex128&quot;``, ``&quot;double&quot;``, ``&quot;f64&quot;``, ``&quot;c128&quot;``, ``64``.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the precision is invalid or if 64-bit precision is requested</span>
+<span class="sd">            but ``JAX_ENABLE_X64`` is not set.</span>
+<span class="sd">        RuntimeError</span>
+<span class="sd">            If the module is not ready (i.e., `compile()` has not been called).</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        astype</span>
+<span class="sd">            Convenience wrapper to set_precision using the dtype argument,</span>
+<span class="sd">            returns self.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Module is not ready. Call compile() first.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># convert precision to 32 or 64</span>
+        <span class="k">if</span> <span class="n">prec</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
+            <span class="s2">&quot;float32&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;complex64&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;single&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;f32&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;c64&quot;</span><span class="p">,</span>
+            <span class="mi">32</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="n">prec</span> <span class="o">=</span> <span class="mi">32</span>
+        <span class="k">elif</span> <span class="n">prec</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
+            <span class="s2">&quot;float64&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;complex128&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;double&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;f64&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;c128&quot;</span><span class="p">,</span>
+            <span class="mi">64</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="n">prec</span> <span class="o">=</span> <span class="mi">64</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Invalid precision. Valid options are:</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;[for 32-bit precision] np.float32, np.complex64, &#39;float32&#39;, &quot;</span>
+                <span class="s2">&quot;&#39;complex64&#39;, &#39;single&#39;, &#39;f32&#39;, &#39;c64&#39;, 32;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;[for 64-bit precision] np.float64, np.complex128, &#39;float64&#39;, &quot;</span>
+                <span class="s2">&quot;&#39;complex128&#39;, &#39;double&#39;, &#39;f64&#39;, &#39;c128&#39;, 64.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># check if dtype is supported</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;jax_enable_x64&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">prec</span> <span class="o">==</span> <span class="mi">64</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;JAX_ENABLE_X64 is not set. &quot;</span>
+                <span class="s2">&quot;Please set it to True to use double precision float64 or &quot;</span>
+                <span class="s2">&quot;complex128 data types.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">set_param_prec</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Set the precision of a single parameter array, choosing real or</span>
+<span class="sd">            complex precision based on the original dtype.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span> <span class="k">if</span> <span class="n">prec</span> <span class="o">==</span> <span class="mi">32</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="k">if</span> <span class="n">prec</span> <span class="o">==</span> <span class="mi">32</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">set_param_prec</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">set_param_prec</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">()))</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.astype">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.astype">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">astype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">dtype</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BaseModule&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convenience wrapper to set_precision using the dtype argument, returns</span>
+<span class="sd">        self.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dtype</span>
+<span class="sd">            Precision to set for the module parameters.</span>
+<span class="sd">            Valid options are:</span>
+<span class="sd">            *For 32-bit precision (all options are equivalent)*</span>
+<span class="sd">            ``np.float32``, ``np.complex64``, ``&quot;float32&quot;``,</span>
+<span class="sd">            ``&quot;complex64&quot;``, ``&quot;single&quot;``, ``&quot;f32&quot;``, ``&quot;c64&quot;``, ``32``</span>
+<span class="sd">            *For 64-bit precision (all options are equivalent)*</span>
+<span class="sd">            ``np.float64``, ``np.complex128``, ``&quot;float64&quot;``,</span>
+<span class="sd">            ``&quot;complex128&quot;``, ``&quot;double&quot;``, ``&quot;f64&quot;``, ``&quot;c128&quot;``, ``64``</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BaseModule</span>
+<span class="sd">            The module itself, with updated precision.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the precision is invalid or if 64-bit precision is requested</span>
+<span class="sd">            but ``JAX_ENABLE_X64`` is not set.</span>
+<span class="sd">        RuntimeError</span>
+<span class="sd">            If the module is not ready (i.e., `compile()` has not been called).</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        set_precision</span>
+<span class="sd">            Sets the precision of the module parameters and state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_precision</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.serialize">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.serialize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Serialize the module to a dictionary.</span>
+
+<span class="sd">        This method should return a dictionary representation of the module,</span>
+<span class="sd">        including its parameters and state.</span>
+
+<span class="sd">        The default implementation serializes the module&#39;s name,</span>
+<span class="sd">        hyperparameters, trainable parameters, and state via a simple</span>
+<span class="sd">        dictionary.</span>
+
+<span class="sd">        This only works if the module&#39;s hyperparameters are auto-serializable.</span>
+<span class="sd">        This includes basic types as well as numpy arrays.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Dictionary containing the serialized module data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span>
+            <span class="s2">&quot;hyperparameters&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">(),</span>
+            <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;p</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">p</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">())},</span>
+            <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;s</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">s</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">())},</span>
+            <span class="s2">&quot;package_version&quot;</span><span class="p">:</span> <span class="n">pmm</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.deserialize">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.deserialize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deserialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deserialize the module from a dictionary.</span>
+
+<span class="sd">        This method should set the module&#39;s parameters and state based on the</span>
+<span class="sd">        provided dictionary.</span>
+
+<span class="sd">        The default implementation expects the dictionary to contain</span>
+<span class="sd">        the module&#39;s name, trainable parameters, and state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data</span>
+<span class="sd">            Dictionary containing the serialized module data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># read the version of the package this module was serialized with</span>
+        <span class="n">current_version</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">pmm</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+        <span class="n">package_version</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;package_version&quot;</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="n">current_version</span> <span class="o">!=</span> <span class="n">package_version</span><span class="p">:</span>
+            <span class="c1"># in the future, we will issue DeprecationWarnings or Errors if the</span>
+            <span class="c1"># version is unsupported</span>
+            <span class="c1"># or possibly handle version-specific deserialization</span>
+            <span class="k">pass</span>
+
+        <span class="c1"># set the hyperparameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hyperparameters&quot;</span><span class="p">,</span> <span class="p">{}))</span>
+
+        <span class="c1"># if there are trainable parameters, set them</span>
+        <span class="n">params_dict</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;params&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;p</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">params_dict</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+
+        <span class="c1"># if there are states, set them</span>
+        <span class="n">state_dict</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">state_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;s</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">state_dict</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">state</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Patrick Cook.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

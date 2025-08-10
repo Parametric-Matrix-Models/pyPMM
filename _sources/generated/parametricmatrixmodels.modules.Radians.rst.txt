@@ -1,0 +1,35 @@
+﻿Radians
+=======
+
+``parametricmatrixmodels.modules.Radians``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Radians
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Radians.__init__
+         ~Radians.astype
+         ~Radians.compile
+         ~Radians.deserialize
+         ~Radians.func
+         ~Radians.get_hyperparameters
+         ~Radians.get_num_trainable_floats
+         ~Radians.get_output_shape
+         ~Radians.get_params
+         ~Radians.get_state
+         ~Radians.is_ready
+         ~Radians.name
+         ~Radians.serialize
+         ~Radians.set_hyperparameters
+         ~Radians.set_params
+         ~Radians.set_precision
+         ~Radians.set_state
+
+   .. autosummary::
+
+      

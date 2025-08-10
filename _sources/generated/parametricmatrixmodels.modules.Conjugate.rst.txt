@@ -1,0 +1,35 @@
+﻿Conjugate
+=========
+
+``parametricmatrixmodels.modules.Conjugate``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Conjugate
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Conjugate.__init__
+         ~Conjugate.astype
+         ~Conjugate.compile
+         ~Conjugate.deserialize
+         ~Conjugate.func
+         ~Conjugate.get_hyperparameters
+         ~Conjugate.get_num_trainable_floats
+         ~Conjugate.get_output_shape
+         ~Conjugate.get_params
+         ~Conjugate.get_state
+         ~Conjugate.is_ready
+         ~Conjugate.name
+         ~Conjugate.serialize
+         ~Conjugate.set_hyperparameters
+         ~Conjugate.set_params
+         ~Conjugate.set_precision
+         ~Conjugate.set_state
+
+   .. autosummary::
+
+      

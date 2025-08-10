@@ -1,0 +1,35 @@
+﻿ReLU
+====
+
+``parametricmatrixmodels.modules.ReLU``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: ReLU
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~ReLU.__init__
+         ~ReLU.astype
+         ~ReLU.compile
+         ~ReLU.deserialize
+         ~ReLU.func
+         ~ReLU.get_hyperparameters
+         ~ReLU.get_num_trainable_floats
+         ~ReLU.get_output_shape
+         ~ReLU.get_params
+         ~ReLU.get_state
+         ~ReLU.is_ready
+         ~ReLU.name
+         ~ReLU.serialize
+         ~ReLU.set_hyperparameters
+         ~ReLU.set_params
+         ~ReLU.set_precision
+         ~ReLU.set_state
+
+   .. autosummary::
+
+      

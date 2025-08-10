@@ -1,0 +1,35 @@
+﻿Ceil
+====
+
+``parametricmatrixmodels.modules.Ceil``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Ceil
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Ceil.__init__
+         ~Ceil.astype
+         ~Ceil.compile
+         ~Ceil.deserialize
+         ~Ceil.func
+         ~Ceil.get_hyperparameters
+         ~Ceil.get_num_trainable_floats
+         ~Ceil.get_output_shape
+         ~Ceil.get_params
+         ~Ceil.get_state
+         ~Ceil.is_ready
+         ~Ceil.name
+         ~Ceil.serialize
+         ~Ceil.set_hyperparameters
+         ~Ceil.set_params
+         ~Ceil.set_precision
+         ~Ceil.set_state
+
+   .. autosummary::
+
+      

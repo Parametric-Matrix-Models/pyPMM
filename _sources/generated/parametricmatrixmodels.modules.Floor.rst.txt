@@ -1,0 +1,35 @@
+﻿Floor
+=====
+
+``parametricmatrixmodels.modules.Floor``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Floor
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Floor.__init__
+         ~Floor.astype
+         ~Floor.compile
+         ~Floor.deserialize
+         ~Floor.func
+         ~Floor.get_hyperparameters
+         ~Floor.get_num_trainable_floats
+         ~Floor.get_output_shape
+         ~Floor.get_params
+         ~Floor.get_state
+         ~Floor.is_ready
+         ~Floor.name
+         ~Floor.serialize
+         ~Floor.set_hyperparameters
+         ~Floor.set_params
+         ~Floor.set_precision
+         ~Floor.set_state
+
+   .. autosummary::
+
+      

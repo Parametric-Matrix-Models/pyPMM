@@ -1,0 +1,35 @@
+﻿Rad2Deg
+=======
+
+``parametricmatrixmodels.modules.Rad2Deg``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Rad2Deg
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Rad2Deg.__init__
+         ~Rad2Deg.astype
+         ~Rad2Deg.compile
+         ~Rad2Deg.deserialize
+         ~Rad2Deg.func
+         ~Rad2Deg.get_hyperparameters
+         ~Rad2Deg.get_num_trainable_floats
+         ~Rad2Deg.get_output_shape
+         ~Rad2Deg.get_params
+         ~Rad2Deg.get_state
+         ~Rad2Deg.is_ready
+         ~Rad2Deg.name
+         ~Rad2Deg.serialize
+         ~Rad2Deg.set_hyperparameters
+         ~Rad2Deg.set_params
+         ~Rad2Deg.set_precision
+         ~Rad2Deg.set_state
+
+   .. autosummary::
+
+      

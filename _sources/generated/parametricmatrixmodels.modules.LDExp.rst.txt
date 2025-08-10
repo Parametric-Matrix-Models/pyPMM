@@ -1,0 +1,35 @@
+﻿LDExp
+=====
+
+``parametricmatrixmodels.modules.LDExp``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: LDExp
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~LDExp.__init__
+         ~LDExp.astype
+         ~LDExp.compile
+         ~LDExp.deserialize
+         ~LDExp.func
+         ~LDExp.get_hyperparameters
+         ~LDExp.get_num_trainable_floats
+         ~LDExp.get_output_shape
+         ~LDExp.get_params
+         ~LDExp.get_state
+         ~LDExp.is_ready
+         ~LDExp.name
+         ~LDExp.serialize
+         ~LDExp.set_hyperparameters
+         ~LDExp.set_params
+         ~LDExp.set_precision
+         ~LDExp.set_state
+
+   .. autosummary::
+
+      

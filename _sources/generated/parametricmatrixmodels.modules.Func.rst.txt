@@ -1,0 +1,34 @@
+﻿Func
+====
+
+``parametricmatrixmodels.modules.Func``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Func
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Func.__init__
+         ~Func.astype
+         ~Func.compile
+         ~Func.deserialize
+         ~Func.get_hyperparameters
+         ~Func.get_num_trainable_floats
+         ~Func.get_output_shape
+         ~Func.get_params
+         ~Func.get_state
+         ~Func.is_ready
+         ~Func.name
+         ~Func.serialize
+         ~Func.set_hyperparameters
+         ~Func.set_params
+         ~Func.set_precision
+         ~Func.set_state
+
+   .. autosummary::
+
+      

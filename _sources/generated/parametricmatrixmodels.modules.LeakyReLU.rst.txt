@@ -1,0 +1,35 @@
+﻿LeakyReLU
+=========
+
+``parametricmatrixmodels.modules.LeakyReLU``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: LeakyReLU
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~LeakyReLU.__init__
+         ~LeakyReLU.astype
+         ~LeakyReLU.compile
+         ~LeakyReLU.deserialize
+         ~LeakyReLU.func
+         ~LeakyReLU.get_hyperparameters
+         ~LeakyReLU.get_num_trainable_floats
+         ~LeakyReLU.get_output_shape
+         ~LeakyReLU.get_params
+         ~LeakyReLU.get_state
+         ~LeakyReLU.is_ready
+         ~LeakyReLU.name
+         ~LeakyReLU.serialize
+         ~LeakyReLU.set_hyperparameters
+         ~LeakyReLU.set_params
+         ~LeakyReLU.set_precision
+         ~LeakyReLU.set_state
+
+   .. autosummary::
+
+      

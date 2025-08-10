@@ -1,0 +1,35 @@
+﻿Cos
+===
+
+``parametricmatrixmodels.modules.Cos``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Cos
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Cos.__init__
+         ~Cos.astype
+         ~Cos.compile
+         ~Cos.deserialize
+         ~Cos.func
+         ~Cos.get_hyperparameters
+         ~Cos.get_num_trainable_floats
+         ~Cos.get_output_shape
+         ~Cos.get_params
+         ~Cos.get_state
+         ~Cos.is_ready
+         ~Cos.name
+         ~Cos.serialize
+         ~Cos.set_hyperparameters
+         ~Cos.set_params
+         ~Cos.set_precision
+         ~Cos.set_state
+
+   .. autosummary::
+
+      

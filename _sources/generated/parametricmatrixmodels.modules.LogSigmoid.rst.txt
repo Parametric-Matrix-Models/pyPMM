@@ -1,0 +1,35 @@
+﻿LogSigmoid
+==========
+
+``parametricmatrixmodels.modules.LogSigmoid``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: LogSigmoid
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~LogSigmoid.__init__
+         ~LogSigmoid.astype
+         ~LogSigmoid.compile
+         ~LogSigmoid.deserialize
+         ~LogSigmoid.func
+         ~LogSigmoid.get_hyperparameters
+         ~LogSigmoid.get_num_trainable_floats
+         ~LogSigmoid.get_output_shape
+         ~LogSigmoid.get_params
+         ~LogSigmoid.get_state
+         ~LogSigmoid.is_ready
+         ~LogSigmoid.name
+         ~LogSigmoid.serialize
+         ~LogSigmoid.set_hyperparameters
+         ~LogSigmoid.set_params
+         ~LogSigmoid.set_precision
+         ~LogSigmoid.set_state
+
+   .. autosummary::
+
+      

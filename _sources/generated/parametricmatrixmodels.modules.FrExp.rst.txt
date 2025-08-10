@@ -1,0 +1,35 @@
+﻿FrExp
+=====
+
+``parametricmatrixmodels.modules.FrExp``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: FrExp
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~FrExp.__init__
+         ~FrExp.astype
+         ~FrExp.compile
+         ~FrExp.deserialize
+         ~FrExp.func
+         ~FrExp.get_hyperparameters
+         ~FrExp.get_num_trainable_floats
+         ~FrExp.get_output_shape
+         ~FrExp.get_params
+         ~FrExp.get_state
+         ~FrExp.is_ready
+         ~FrExp.name
+         ~FrExp.serialize
+         ~FrExp.set_hyperparameters
+         ~FrExp.set_params
+         ~FrExp.set_precision
+         ~FrExp.set_state
+
+   .. autosummary::
+
+      

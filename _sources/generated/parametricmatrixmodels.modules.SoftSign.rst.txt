@@ -1,0 +1,35 @@
+﻿SoftSign
+========
+
+``parametricmatrixmodels.modules.SoftSign``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: SoftSign
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~SoftSign.__init__
+         ~SoftSign.astype
+         ~SoftSign.compile
+         ~SoftSign.deserialize
+         ~SoftSign.func
+         ~SoftSign.get_hyperparameters
+         ~SoftSign.get_num_trainable_floats
+         ~SoftSign.get_output_shape
+         ~SoftSign.get_params
+         ~SoftSign.get_state
+         ~SoftSign.is_ready
+         ~SoftSign.name
+         ~SoftSign.serialize
+         ~SoftSign.set_hyperparameters
+         ~SoftSign.set_params
+         ~SoftSign.set_precision
+         ~SoftSign.set_state
+
+   .. autosummary::
+
+      

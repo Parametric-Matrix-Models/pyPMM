@@ -1,0 +1,35 @@
+﻿ACos
+====
+
+``parametricmatrixmodels.modules.ACos``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: ACos
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~ACos.__init__
+         ~ACos.astype
+         ~ACos.compile
+         ~ACos.deserialize
+         ~ACos.func
+         ~ACos.get_hyperparameters
+         ~ACos.get_num_trainable_floats
+         ~ACos.get_output_shape
+         ~ACos.get_params
+         ~ACos.get_state
+         ~ACos.is_ready
+         ~ACos.name
+         ~ACos.serialize
+         ~ACos.set_hyperparameters
+         ~ACos.set_params
+         ~ACos.set_precision
+         ~ACos.set_state
+
+   .. autosummary::
+
+      

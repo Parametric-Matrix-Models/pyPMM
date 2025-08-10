@@ -1,0 +1,35 @@
+﻿SquarePlus
+==========
+
+``parametricmatrixmodels.modules.SquarePlus``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: SquarePlus
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~SquarePlus.__init__
+         ~SquarePlus.astype
+         ~SquarePlus.compile
+         ~SquarePlus.deserialize
+         ~SquarePlus.func
+         ~SquarePlus.get_hyperparameters
+         ~SquarePlus.get_num_trainable_floats
+         ~SquarePlus.get_output_shape
+         ~SquarePlus.get_params
+         ~SquarePlus.get_state
+         ~SquarePlus.is_ready
+         ~SquarePlus.name
+         ~SquarePlus.serialize
+         ~SquarePlus.set_hyperparameters
+         ~SquarePlus.set_params
+         ~SquarePlus.set_precision
+         ~SquarePlus.set_state
+
+   .. autosummary::
+
+      

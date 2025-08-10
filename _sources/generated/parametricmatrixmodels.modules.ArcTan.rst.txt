@@ -1,0 +1,35 @@
+﻿ArcTan
+======
+
+``parametricmatrixmodels.modules.ArcTan``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: ArcTan
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~ArcTan.__init__
+         ~ArcTan.astype
+         ~ArcTan.compile
+         ~ArcTan.deserialize
+         ~ArcTan.func
+         ~ArcTan.get_hyperparameters
+         ~ArcTan.get_num_trainable_floats
+         ~ArcTan.get_output_shape
+         ~ArcTan.get_params
+         ~ArcTan.get_state
+         ~ArcTan.is_ready
+         ~ArcTan.name
+         ~ArcTan.serialize
+         ~ArcTan.set_hyperparameters
+         ~ArcTan.set_params
+         ~ArcTan.set_precision
+         ~ArcTan.set_state
+
+   .. autosummary::
+
+      

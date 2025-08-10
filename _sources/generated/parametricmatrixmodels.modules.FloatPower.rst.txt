@@ -1,0 +1,35 @@
+﻿FloatPower
+==========
+
+``parametricmatrixmodels.modules.FloatPower``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: FloatPower
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~FloatPower.__init__
+         ~FloatPower.astype
+         ~FloatPower.compile
+         ~FloatPower.deserialize
+         ~FloatPower.func
+         ~FloatPower.get_hyperparameters
+         ~FloatPower.get_num_trainable_floats
+         ~FloatPower.get_output_shape
+         ~FloatPower.get_params
+         ~FloatPower.get_state
+         ~FloatPower.is_ready
+         ~FloatPower.name
+         ~FloatPower.serialize
+         ~FloatPower.set_hyperparameters
+         ~FloatPower.set_params
+         ~FloatPower.set_precision
+         ~FloatPower.set_state
+
+   .. autosummary::
+
+      

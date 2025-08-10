@@ -1,0 +1,35 @@
+﻿HardSigmoid
+===========
+
+``parametricmatrixmodels.modules.HardSigmoid``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: HardSigmoid
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~HardSigmoid.__init__
+         ~HardSigmoid.astype
+         ~HardSigmoid.compile
+         ~HardSigmoid.deserialize
+         ~HardSigmoid.func
+         ~HardSigmoid.get_hyperparameters
+         ~HardSigmoid.get_num_trainable_floats
+         ~HardSigmoid.get_output_shape
+         ~HardSigmoid.get_params
+         ~HardSigmoid.get_state
+         ~HardSigmoid.is_ready
+         ~HardSigmoid.name
+         ~HardSigmoid.serialize
+         ~HardSigmoid.set_hyperparameters
+         ~HardSigmoid.set_params
+         ~HardSigmoid.set_precision
+         ~HardSigmoid.set_state
+
+   .. autosummary::
+
+      

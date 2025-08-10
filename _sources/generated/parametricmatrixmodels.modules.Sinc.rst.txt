@@ -1,0 +1,35 @@
+﻿Sinc
+====
+
+``parametricmatrixmodels.modules.Sinc``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Sinc
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Sinc.__init__
+         ~Sinc.astype
+         ~Sinc.compile
+         ~Sinc.deserialize
+         ~Sinc.func
+         ~Sinc.get_hyperparameters
+         ~Sinc.get_num_trainable_floats
+         ~Sinc.get_output_shape
+         ~Sinc.get_params
+         ~Sinc.get_state
+         ~Sinc.is_ready
+         ~Sinc.name
+         ~Sinc.serialize
+         ~Sinc.set_hyperparameters
+         ~Sinc.set_params
+         ~Sinc.set_precision
+         ~Sinc.set_state
+
+   .. autosummary::
+
+      

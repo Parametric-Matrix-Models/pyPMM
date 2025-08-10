@@ -1,0 +1,34 @@
+﻿AOPMM
+=====
+
+``parametricmatrixmodels.modules.AOPMM``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: AOPMM
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~AOPMM.__init__
+         ~AOPMM.astype
+         ~AOPMM.compile
+         ~AOPMM.deserialize
+         ~AOPMM.get_hyperparameters
+         ~AOPMM.get_num_trainable_floats
+         ~AOPMM.get_output_shape
+         ~AOPMM.get_params
+         ~AOPMM.get_state
+         ~AOPMM.is_ready
+         ~AOPMM.name
+         ~AOPMM.serialize
+         ~AOPMM.set_hyperparameters
+         ~AOPMM.set_params
+         ~AOPMM.set_precision
+         ~AOPMM.set_state
+
+   .. autosummary::
+
+      

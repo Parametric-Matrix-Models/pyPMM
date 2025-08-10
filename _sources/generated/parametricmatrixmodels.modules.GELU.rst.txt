@@ -1,0 +1,35 @@
+﻿GELU
+====
+
+``parametricmatrixmodels.modules.GELU``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: GELU
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~GELU.__init__
+         ~GELU.astype
+         ~GELU.compile
+         ~GELU.deserialize
+         ~GELU.func
+         ~GELU.get_hyperparameters
+         ~GELU.get_num_trainable_floats
+         ~GELU.get_output_shape
+         ~GELU.get_params
+         ~GELU.get_state
+         ~GELU.is_ready
+         ~GELU.name
+         ~GELU.serialize
+         ~GELU.set_hyperparameters
+         ~GELU.set_params
+         ~GELU.set_precision
+         ~GELU.set_state
+
+   .. autosummary::
+
+      

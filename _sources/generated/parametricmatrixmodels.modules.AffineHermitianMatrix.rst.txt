@@ -1,0 +1,34 @@
+﻿AffineHermitianMatrix
+=====================
+
+``parametricmatrixmodels.modules.AffineHermitianMatrix``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: AffineHermitianMatrix
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~AffineHermitianMatrix.__init__
+         ~AffineHermitianMatrix.astype
+         ~AffineHermitianMatrix.compile
+         ~AffineHermitianMatrix.deserialize
+         ~AffineHermitianMatrix.get_hyperparameters
+         ~AffineHermitianMatrix.get_num_trainable_floats
+         ~AffineHermitianMatrix.get_output_shape
+         ~AffineHermitianMatrix.get_params
+         ~AffineHermitianMatrix.get_state
+         ~AffineHermitianMatrix.is_ready
+         ~AffineHermitianMatrix.name
+         ~AffineHermitianMatrix.serialize
+         ~AffineHermitianMatrix.set_hyperparameters
+         ~AffineHermitianMatrix.set_params
+         ~AffineHermitianMatrix.set_precision
+         ~AffineHermitianMatrix.set_state
+
+   .. autosummary::
+
+      

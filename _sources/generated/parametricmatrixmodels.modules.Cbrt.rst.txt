@@ -1,0 +1,35 @@
+﻿Cbrt
+====
+
+``parametricmatrixmodels.modules.Cbrt``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Cbrt
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Cbrt.__init__
+         ~Cbrt.astype
+         ~Cbrt.compile
+         ~Cbrt.deserialize
+         ~Cbrt.func
+         ~Cbrt.get_hyperparameters
+         ~Cbrt.get_num_trainable_floats
+         ~Cbrt.get_output_shape
+         ~Cbrt.get_params
+         ~Cbrt.get_state
+         ~Cbrt.is_ready
+         ~Cbrt.name
+         ~Cbrt.serialize
+         ~Cbrt.set_hyperparameters
+         ~Cbrt.set_params
+         ~Cbrt.set_precision
+         ~Cbrt.set_state
+
+   .. autosummary::
+
+      

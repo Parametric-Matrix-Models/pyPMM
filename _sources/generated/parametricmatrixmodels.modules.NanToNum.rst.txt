@@ -1,0 +1,35 @@
+﻿NanToNum
+========
+
+``parametricmatrixmodels.modules.NanToNum``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: NanToNum
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~NanToNum.__init__
+         ~NanToNum.astype
+         ~NanToNum.compile
+         ~NanToNum.deserialize
+         ~NanToNum.func
+         ~NanToNum.get_hyperparameters
+         ~NanToNum.get_num_trainable_floats
+         ~NanToNum.get_output_shape
+         ~NanToNum.get_params
+         ~NanToNum.get_state
+         ~NanToNum.is_ready
+         ~NanToNum.name
+         ~NanToNum.serialize
+         ~NanToNum.set_hyperparameters
+         ~NanToNum.set_params
+         ~NanToNum.set_precision
+         ~NanToNum.set_state
+
+   .. autosummary::
+
+      

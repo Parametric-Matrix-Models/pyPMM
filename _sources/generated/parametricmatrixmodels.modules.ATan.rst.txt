@@ -1,0 +1,35 @@
+﻿ATan
+====
+
+``parametricmatrixmodels.modules.ATan``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: ATan
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~ATan.__init__
+         ~ATan.astype
+         ~ATan.compile
+         ~ATan.deserialize
+         ~ATan.func
+         ~ATan.get_hyperparameters
+         ~ATan.get_num_trainable_floats
+         ~ATan.get_output_shape
+         ~ATan.get_params
+         ~ATan.get_state
+         ~ATan.is_ready
+         ~ATan.name
+         ~ATan.serialize
+         ~ATan.set_hyperparameters
+         ~ATan.set_params
+         ~ATan.set_precision
+         ~ATan.set_state
+
+   .. autosummary::
+
+      

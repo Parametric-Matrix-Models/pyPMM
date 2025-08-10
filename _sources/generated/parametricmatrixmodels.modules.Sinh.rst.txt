@@ -1,0 +1,35 @@
+﻿Sinh
+====
+
+``parametricmatrixmodels.modules.Sinh``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Sinh
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Sinh.__init__
+         ~Sinh.astype
+         ~Sinh.compile
+         ~Sinh.deserialize
+         ~Sinh.func
+         ~Sinh.get_hyperparameters
+         ~Sinh.get_num_trainable_floats
+         ~Sinh.get_output_shape
+         ~Sinh.get_params
+         ~Sinh.get_state
+         ~Sinh.is_ready
+         ~Sinh.name
+         ~Sinh.serialize
+         ~Sinh.set_hyperparameters
+         ~Sinh.set_params
+         ~Sinh.set_precision
+         ~Sinh.set_state
+
+   .. autosummary::
+
+      

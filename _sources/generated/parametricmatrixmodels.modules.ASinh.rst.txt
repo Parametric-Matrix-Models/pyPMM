@@ -1,0 +1,35 @@
+﻿ASinh
+=====
+
+``parametricmatrixmodels.modules.ASinh``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: ASinh
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~ASinh.__init__
+         ~ASinh.astype
+         ~ASinh.compile
+         ~ASinh.deserialize
+         ~ASinh.func
+         ~ASinh.get_hyperparameters
+         ~ASinh.get_num_trainable_floats
+         ~ASinh.get_output_shape
+         ~ASinh.get_params
+         ~ASinh.get_state
+         ~ASinh.is_ready
+         ~ASinh.name
+         ~ASinh.serialize
+         ~ASinh.set_hyperparameters
+         ~ASinh.set_params
+         ~ASinh.set_precision
+         ~ASinh.set_state
+
+   .. autosummary::
+
+      

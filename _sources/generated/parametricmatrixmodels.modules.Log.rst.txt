@@ -1,0 +1,35 @@
+﻿Log
+===
+
+``parametricmatrixmodels.modules.Log``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Log
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Log.__init__
+         ~Log.astype
+         ~Log.compile
+         ~Log.deserialize
+         ~Log.func
+         ~Log.get_hyperparameters
+         ~Log.get_num_trainable_floats
+         ~Log.get_output_shape
+         ~Log.get_params
+         ~Log.get_state
+         ~Log.is_ready
+         ~Log.name
+         ~Log.serialize
+         ~Log.set_hyperparameters
+         ~Log.set_params
+         ~Log.set_precision
+         ~Log.set_state
+
+   .. autosummary::
+
+      

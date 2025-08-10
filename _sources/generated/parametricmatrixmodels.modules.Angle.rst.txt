@@ -1,0 +1,35 @@
+﻿Angle
+=====
+
+``parametricmatrixmodels.modules.Angle``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Angle
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Angle.__init__
+         ~Angle.astype
+         ~Angle.compile
+         ~Angle.deserialize
+         ~Angle.func
+         ~Angle.get_hyperparameters
+         ~Angle.get_num_trainable_floats
+         ~Angle.get_output_shape
+         ~Angle.get_params
+         ~Angle.get_state
+         ~Angle.is_ready
+         ~Angle.name
+         ~Angle.serialize
+         ~Angle.set_hyperparameters
+         ~Angle.set_params
+         ~Angle.set_precision
+         ~Angle.set_state
+
+   .. autosummary::
+
+      

@@ -1,0 +1,35 @@
+﻿Signbit
+=======
+
+``parametricmatrixmodels.modules.Signbit``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Signbit
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Signbit.__init__
+         ~Signbit.astype
+         ~Signbit.compile
+         ~Signbit.deserialize
+         ~Signbit.func
+         ~Signbit.get_hyperparameters
+         ~Signbit.get_num_trainable_floats
+         ~Signbit.get_output_shape
+         ~Signbit.get_params
+         ~Signbit.get_state
+         ~Signbit.is_ready
+         ~Signbit.name
+         ~Signbit.serialize
+         ~Signbit.set_hyperparameters
+         ~Signbit.set_params
+         ~Signbit.set_precision
+         ~Signbit.set_state
+
+   .. autosummary::
+
+      

@@ -1,0 +1,35 @@
+﻿Softplus
+========
+
+``parametricmatrixmodels.modules.Softplus``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Softplus
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Softplus.__init__
+         ~Softplus.astype
+         ~Softplus.compile
+         ~Softplus.deserialize
+         ~Softplus.func
+         ~Softplus.get_hyperparameters
+         ~Softplus.get_num_trainable_floats
+         ~Softplus.get_output_shape
+         ~Softplus.get_params
+         ~Softplus.get_state
+         ~Softplus.is_ready
+         ~Softplus.name
+         ~Softplus.serialize
+         ~Softplus.set_hyperparameters
+         ~Softplus.set_params
+         ~Softplus.set_precision
+         ~Softplus.set_state
+
+   .. autosummary::
+
+      

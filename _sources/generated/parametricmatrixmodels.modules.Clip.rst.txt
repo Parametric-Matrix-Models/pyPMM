@@ -1,0 +1,35 @@
+﻿Clip
+====
+
+``parametricmatrixmodels.modules.Clip``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Clip
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Clip.__init__
+         ~Clip.astype
+         ~Clip.compile
+         ~Clip.deserialize
+         ~Clip.func
+         ~Clip.get_hyperparameters
+         ~Clip.get_num_trainable_floats
+         ~Clip.get_output_shape
+         ~Clip.get_params
+         ~Clip.get_state
+         ~Clip.is_ready
+         ~Clip.name
+         ~Clip.serialize
+         ~Clip.set_hyperparameters
+         ~Clip.set_params
+         ~Clip.set_precision
+         ~Clip.set_state
+
+   .. autosummary::
+
+      

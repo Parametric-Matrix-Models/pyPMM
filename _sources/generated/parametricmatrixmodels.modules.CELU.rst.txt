@@ -1,0 +1,35 @@
+﻿CELU
+====
+
+``parametricmatrixmodels.modules.CELU``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: CELU
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~CELU.__init__
+         ~CELU.astype
+         ~CELU.compile
+         ~CELU.deserialize
+         ~CELU.func
+         ~CELU.get_hyperparameters
+         ~CELU.get_num_trainable_floats
+         ~CELU.get_output_shape
+         ~CELU.get_params
+         ~CELU.get_state
+         ~CELU.is_ready
+         ~CELU.name
+         ~CELU.serialize
+         ~CELU.set_hyperparameters
+         ~CELU.set_params
+         ~CELU.set_precision
+         ~CELU.set_state
+
+   .. autosummary::
+
+      

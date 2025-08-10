@@ -1,0 +1,110 @@
+.. _activations:
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+===========================================
+Elementwise and Activation Function Modules
+===========================================
+
+.. autosummary::
+   :toctree: generated/
+   :nosignatures:
+   :template: class.rst
+
+   ~ReLU
+   ~ReLU6
+   ~Sigmoid
+   ~Softplus
+   ~SparsePlus
+   ~SparseSigmoid
+   ~SoftSign
+   ~SiLU
+   ~Swish
+   ~LogSigmoid
+   ~LeakyReLU
+   ~HardSigmoid
+   ~HardSiLU
+   ~HardSwish
+   ~HardTanh
+   ~ELU
+   ~CELU
+   ~SELU
+   ~GELU
+   ~GLU
+   ~SquarePlus
+   ~Mish
+   ~Identity
+   ~Softmax
+   ~LogSoftmax
+   ~LogSumExp
+   ~Standardize
+   ~OneHot
+   ~Abs
+   ~Absolute
+   ~ACos
+   ~ACosh
+   ~AMax
+   ~AMin
+   ~Angle
+   ~ArcCos
+   ~ArcCosh
+   ~ArcSin
+   ~ArcSinh
+   ~ArcTan
+   ~ArcTan2
+   ~ArcTanh
+   ~ASin
+   ~ASinh
+   ~ATan
+   ~ATanh
+   ~Cbrt
+   ~Ceil
+   ~Clip
+   ~Conj
+   ~Conjugate
+   ~Cos
+   ~Cosh
+   ~Deg2Rad
+   ~Degrees
+   ~Exp
+   ~Exp2
+   ~Expm1
+   ~FAbs
+   ~Fix
+   ~FloatPower
+   ~Floor
+   ~FloorDivide
+   ~FrExp
+   ~I0
+   ~Imag
+   ~Invert
+   ~LDExp
+   ~Log
+   ~Log10
+   ~Log1p
+   ~Log2
+   ~NaNToNum
+   ~NanToNum
+   ~NextAfter
+   ~Packbits
+   ~Piecewise
+   ~Positive
+   ~Pow
+   ~Power
+   ~Rad2Deg
+   ~Radians
+   ~Real
+   ~Reciprocal
+   ~RInt
+   ~Round
+   ~Sign
+   ~Signbit
+   ~Sin
+   ~Sinc
+   ~Sinh
+   ~Sqrt
+   ~Square
+   ~Tan
+   ~Tanh
+   ~Trunc
+   ~Unpackbits

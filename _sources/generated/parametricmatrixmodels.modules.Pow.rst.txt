@@ -1,0 +1,35 @@
+﻿Pow
+===
+
+``parametricmatrixmodels.modules.Pow``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Pow
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Pow.__init__
+         ~Pow.astype
+         ~Pow.compile
+         ~Pow.deserialize
+         ~Pow.func
+         ~Pow.get_hyperparameters
+         ~Pow.get_num_trainable_floats
+         ~Pow.get_output_shape
+         ~Pow.get_params
+         ~Pow.get_state
+         ~Pow.is_ready
+         ~Pow.name
+         ~Pow.serialize
+         ~Pow.set_hyperparameters
+         ~Pow.set_params
+         ~Pow.set_precision
+         ~Pow.set_state
+
+   .. autosummary::
+
+      

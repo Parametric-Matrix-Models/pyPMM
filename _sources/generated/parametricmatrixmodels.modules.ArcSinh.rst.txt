@@ -1,0 +1,35 @@
+﻿ArcSinh
+=======
+
+``parametricmatrixmodels.modules.ArcSinh``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: ArcSinh
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~ArcSinh.__init__
+         ~ArcSinh.astype
+         ~ArcSinh.compile
+         ~ArcSinh.deserialize
+         ~ArcSinh.func
+         ~ArcSinh.get_hyperparameters
+         ~ArcSinh.get_num_trainable_floats
+         ~ArcSinh.get_output_shape
+         ~ArcSinh.get_params
+         ~ArcSinh.get_state
+         ~ArcSinh.is_ready
+         ~ArcSinh.name
+         ~ArcSinh.serialize
+         ~ArcSinh.set_hyperparameters
+         ~ArcSinh.set_params
+         ~ArcSinh.set_precision
+         ~ArcSinh.set_state
+
+   .. autosummary::
+
+      

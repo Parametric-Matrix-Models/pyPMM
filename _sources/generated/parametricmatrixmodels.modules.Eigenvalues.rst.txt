@@ -1,0 +1,34 @@
+﻿Eigenvalues
+===========
+
+``parametricmatrixmodels.modules.Eigenvalues``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Eigenvalues
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Eigenvalues.__init__
+         ~Eigenvalues.astype
+         ~Eigenvalues.compile
+         ~Eigenvalues.deserialize
+         ~Eigenvalues.get_hyperparameters
+         ~Eigenvalues.get_num_trainable_floats
+         ~Eigenvalues.get_output_shape
+         ~Eigenvalues.get_params
+         ~Eigenvalues.get_state
+         ~Eigenvalues.is_ready
+         ~Eigenvalues.name
+         ~Eigenvalues.serialize
+         ~Eigenvalues.set_hyperparameters
+         ~Eigenvalues.set_params
+         ~Eigenvalues.set_precision
+         ~Eigenvalues.set_state
+
+   .. autosummary::
+
+      

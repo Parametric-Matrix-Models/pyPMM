@@ -1,0 +1,35 @@
+﻿GLU
+===
+
+``parametricmatrixmodels.modules.GLU``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: GLU
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~GLU.__init__
+         ~GLU.astype
+         ~GLU.compile
+         ~GLU.deserialize
+         ~GLU.func
+         ~GLU.get_hyperparameters
+         ~GLU.get_num_trainable_floats
+         ~GLU.get_output_shape
+         ~GLU.get_params
+         ~GLU.get_state
+         ~GLU.is_ready
+         ~GLU.name
+         ~GLU.serialize
+         ~GLU.set_hyperparameters
+         ~GLU.set_params
+         ~GLU.set_precision
+         ~GLU.set_state
+
+   .. autosummary::
+
+      

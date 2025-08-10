@@ -1,0 +1,35 @@
+﻿Fix
+===
+
+``parametricmatrixmodels.modules.Fix``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Fix
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Fix.__init__
+         ~Fix.astype
+         ~Fix.compile
+         ~Fix.deserialize
+         ~Fix.func
+         ~Fix.get_hyperparameters
+         ~Fix.get_num_trainable_floats
+         ~Fix.get_output_shape
+         ~Fix.get_params
+         ~Fix.get_state
+         ~Fix.is_ready
+         ~Fix.name
+         ~Fix.serialize
+         ~Fix.set_hyperparameters
+         ~Fix.set_params
+         ~Fix.set_precision
+         ~Fix.set_state
+
+   .. autosummary::
+
+      

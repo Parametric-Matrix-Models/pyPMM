@@ -1,0 +1,716 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Modules &#8212; Parametric Matrix Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'modules';</script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="BaseModule" href="basemodule.html" />
+    <link rel="prev" title="Model" href="model.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/pmmlogo.svg" class="logo__image only-light" alt=""/>
+    <img src="_static/pmmlogo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PMM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="model.html">
+    Model
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="model.html">
+    Model
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basemodule.html"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="pmms.html">PMM Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html">AffineHermitianMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvalues.html">Eigenvalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineEigenvaluePMM.html">AffineEigenvaluePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AEPMM.html">AEPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineObservablePMM.html">AffineObservablePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AOPMM.html">AOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LegacyAffineObservablePMM.html">LegacyAffineObservablePMM</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="nns.html">Neural Network Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LinearNN.html">LinearNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.NonnegativeLinearNN.html">NonnegativeLinearNN</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="activations.html">Elementwise and Activation Function Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU.html">ReLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU6.html">ReLU6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sigmoid.html">Sigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Softplus.html">Softplus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SparsePlus.html">SparsePlus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SparseSigmoid.html">SparseSigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SoftSign.html">SoftSign</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SiLU.html">SiLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Swish.html">Swish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LogSigmoid.html">LogSigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LeakyReLU.html">LeakyReLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardSigmoid.html">HardSigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardSiLU.html">HardSiLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardSwish.html">HardSwish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardTanh.html">HardTanh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ELU.html">ELU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.CELU.html">CELU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SELU.html">SELU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.GELU.html">GELU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.GLU.html">GLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SquarePlus.html">SquarePlus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Mish.html">Mish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Identity.html">Identity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Softmax.html">Softmax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LogSoftmax.html">LogSoftmax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LogSumExp.html">LogSumExp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Standardize.html">Standardize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.OneHot.html">OneHot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Abs.html">Abs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Absolute.html">Absolute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ACos.html">ACos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ACosh.html">ACosh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AMax.html">AMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AMin.html">AMin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Angle.html">Angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcCos.html">ArcCos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcCosh.html">ArcCosh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcSin.html">ArcSin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcSinh.html">ArcSinh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcTan.html">ArcTan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcTan2.html">ArcTan2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcTanh.html">ArcTanh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ASin.html">ASin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ASinh.html">ASinh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ATan.html">ATan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ATanh.html">ATanh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Cbrt.html">Cbrt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Ceil.html">Ceil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Clip.html">Clip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Conj.html">Conj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Conjugate.html">Conjugate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Cos.html">Cos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Cosh.html">Cosh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Deg2Rad.html">Deg2Rad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Degrees.html">Degrees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Exp.html">Exp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Exp2.html">Exp2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Expm1.html">Expm1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.FAbs.html">FAbs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Fix.html">Fix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.FloatPower.html">FloatPower</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Floor.html">Floor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.FloorDivide.html">FloorDivide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.FrExp.html">FrExp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.I0.html">I0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Imag.html">Imag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Invert.html">Invert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LDExp.html">LDExp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log.html">Log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log10.html">Log10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log1p.html">Log1p</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log2.html">Log2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.NaNToNum.html">NaNToNum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.NanToNum.html">NanToNum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.NextAfter.html">NextAfter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Packbits.html">Packbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Piecewise.html">Piecewise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Positive.html">Positive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Pow.html">Pow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Power.html">Power</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Rad2Deg.html">Rad2Deg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Radians.html">Radians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Real.html">Real</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Reciprocal.html">Reciprocal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.RInt.html">RInt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Round.html">Round</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sign.html">Sign</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Signbit.html">Signbit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sin.html">Sin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sinc.html">Sinc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sinh.html">Sinh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sqrt.html">Sqrt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Square.html">Square</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Tan.html">Tan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Tanh.html">Tanh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Trunc.html">Trunc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Unpackbits.html">Unpackbits</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="utils.html">Utility and Meta Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Flatten.html">Flatten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Reshape.html">Reshape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Func.html">Func</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SubsetModule.html">SubsetModule</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Modules</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-parametricmatrixmodles.modules">
+<span id="modules"></span><span id="id1"></span><h1>Modules<a class="headerlink" href="#module-parametricmatrixmodles.modules" title="Link to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basemodule.html"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basemodule.html#parametricmatrixmodels.modules.BaseModule"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="basemodule.html#methods-that-must-be-overridden-by-subclasses">Methods that must be overridden by subclasses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basemodule.html#methods-with-default-implementations">Methods with default implementations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pmms.html">PMM Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html">AffineHermitianMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvalues.html">Eigenvalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineEigenvaluePMM.html">AffineEigenvaluePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AEPMM.html">AEPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineObservablePMM.html">AffineObservablePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AOPMM.html">AOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LegacyAffineObservablePMM.html">LegacyAffineObservablePMM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nns.html">Neural Network Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LinearNN.html">LinearNN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.NonnegativeLinearNN.html">NonnegativeLinearNN</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="activations.html">Elementwise and Activation Function Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU.html">ReLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU6.html">ReLU6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sigmoid.html">Sigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Softplus.html">Softplus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SparsePlus.html">SparsePlus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SparseSigmoid.html">SparseSigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SoftSign.html">SoftSign</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SiLU.html">SiLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Swish.html">Swish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LogSigmoid.html">LogSigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LeakyReLU.html">LeakyReLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardSigmoid.html">HardSigmoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardSiLU.html">HardSiLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardSwish.html">HardSwish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardTanh.html">HardTanh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ELU.html">ELU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.CELU.html">CELU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SELU.html">SELU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.GELU.html">GELU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.GLU.html">GLU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SquarePlus.html">SquarePlus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Mish.html">Mish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Identity.html">Identity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Softmax.html">Softmax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LogSoftmax.html">LogSoftmax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LogSumExp.html">LogSumExp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Standardize.html">Standardize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.OneHot.html">OneHot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Abs.html">Abs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Absolute.html">Absolute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ACos.html">ACos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ACosh.html">ACosh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AMax.html">AMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AMin.html">AMin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Angle.html">Angle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcCos.html">ArcCos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcCosh.html">ArcCosh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcSin.html">ArcSin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcSinh.html">ArcSinh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcTan.html">ArcTan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcTan2.html">ArcTan2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcTanh.html">ArcTanh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ASin.html">ASin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ASinh.html">ASinh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ATan.html">ATan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ATanh.html">ATanh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Cbrt.html">Cbrt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Ceil.html">Ceil</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Clip.html">Clip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Conj.html">Conj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Conjugate.html">Conjugate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Cos.html">Cos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Cosh.html">Cosh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Deg2Rad.html">Deg2Rad</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Degrees.html">Degrees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Exp.html">Exp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Exp2.html">Exp2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Expm1.html">Expm1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.FAbs.html">FAbs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Fix.html">Fix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.FloatPower.html">FloatPower</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Floor.html">Floor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.FloorDivide.html">FloorDivide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.FrExp.html">FrExp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.I0.html">I0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Imag.html">Imag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Invert.html">Invert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LDExp.html">LDExp</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log.html">Log</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log10.html">Log10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log1p.html">Log1p</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log2.html">Log2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.NaNToNum.html">NaNToNum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.NanToNum.html">NanToNum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.NextAfter.html">NextAfter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Packbits.html">Packbits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Piecewise.html">Piecewise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Positive.html">Positive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Pow.html">Pow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Power.html">Power</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Rad2Deg.html">Rad2Deg</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Radians.html">Radians</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Real.html">Real</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Reciprocal.html">Reciprocal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.RInt.html">RInt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Round.html">Round</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sign.html">Sign</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Signbit.html">Signbit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sin.html">Sin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sinc.html">Sinc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sinh.html">Sinh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sqrt.html">Sqrt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Square.html">Square</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Tan.html">Tan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Tanh.html">Tanh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Trunc.html">Trunc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Unpackbits.html">Unpackbits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utility and Meta Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Flatten.html">Flatten</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Reshape.html">Reshape</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Func.html">Func</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SubsetModule.html">SubsetModule</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="model.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">Model</span></code></p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="basemodule.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/modules.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Patrick Cook.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

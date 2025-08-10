@@ -1,0 +1,35 @@
+﻿OneHot
+======
+
+``parametricmatrixmodels.modules.OneHot``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: OneHot
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~OneHot.__init__
+         ~OneHot.astype
+         ~OneHot.compile
+         ~OneHot.deserialize
+         ~OneHot.func
+         ~OneHot.get_hyperparameters
+         ~OneHot.get_num_trainable_floats
+         ~OneHot.get_output_shape
+         ~OneHot.get_params
+         ~OneHot.get_state
+         ~OneHot.is_ready
+         ~OneHot.name
+         ~OneHot.serialize
+         ~OneHot.set_hyperparameters
+         ~OneHot.set_params
+         ~OneHot.set_precision
+         ~OneHot.set_state
+
+   .. autosummary::
+
+      

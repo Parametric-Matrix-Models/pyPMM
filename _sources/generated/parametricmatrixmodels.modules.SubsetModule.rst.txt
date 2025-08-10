@@ -1,0 +1,34 @@
+﻿SubsetModule
+============
+
+``parametricmatrixmodels.modules.SubsetModule``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: SubsetModule
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~SubsetModule.__init__
+         ~SubsetModule.astype
+         ~SubsetModule.compile
+         ~SubsetModule.deserialize
+         ~SubsetModule.get_hyperparameters
+         ~SubsetModule.get_num_trainable_floats
+         ~SubsetModule.get_output_shape
+         ~SubsetModule.get_params
+         ~SubsetModule.get_state
+         ~SubsetModule.is_ready
+         ~SubsetModule.name
+         ~SubsetModule.serialize
+         ~SubsetModule.set_hyperparameters
+         ~SubsetModule.set_params
+         ~SubsetModule.set_precision
+         ~SubsetModule.set_state
+
+   .. autosummary::
+
+      

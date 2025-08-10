@@ -1,0 +1,35 @@
+﻿AMax
+====
+
+``parametricmatrixmodels.modules.AMax``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: AMax
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~AMax.__init__
+         ~AMax.astype
+         ~AMax.compile
+         ~AMax.deserialize
+         ~AMax.func
+         ~AMax.get_hyperparameters
+         ~AMax.get_num_trainable_floats
+         ~AMax.get_output_shape
+         ~AMax.get_params
+         ~AMax.get_state
+         ~AMax.is_ready
+         ~AMax.name
+         ~AMax.serialize
+         ~AMax.set_hyperparameters
+         ~AMax.set_params
+         ~AMax.set_precision
+         ~AMax.set_state
+
+   .. autosummary::
+
+      

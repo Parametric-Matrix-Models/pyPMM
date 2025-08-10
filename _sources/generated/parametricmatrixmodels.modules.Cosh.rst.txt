@@ -1,0 +1,35 @@
+﻿Cosh
+====
+
+``parametricmatrixmodels.modules.Cosh``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Cosh
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~Cosh.__init__
+         ~Cosh.astype
+         ~Cosh.compile
+         ~Cosh.deserialize
+         ~Cosh.func
+         ~Cosh.get_hyperparameters
+         ~Cosh.get_num_trainable_floats
+         ~Cosh.get_output_shape
+         ~Cosh.get_params
+         ~Cosh.get_state
+         ~Cosh.is_ready
+         ~Cosh.name
+         ~Cosh.serialize
+         ~Cosh.set_hyperparameters
+         ~Cosh.set_params
+         ~Cosh.set_precision
+         ~Cosh.set_state
+
+   .. autosummary::
+
+      

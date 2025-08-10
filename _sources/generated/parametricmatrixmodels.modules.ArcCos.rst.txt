@@ -1,0 +1,35 @@
+﻿ArcCos
+======
+
+``parametricmatrixmodels.modules.ArcCos``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: ArcCos
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~ArcCos.__init__
+         ~ArcCos.astype
+         ~ArcCos.compile
+         ~ArcCos.deserialize
+         ~ArcCos.func
+         ~ArcCos.get_hyperparameters
+         ~ArcCos.get_num_trainable_floats
+         ~ArcCos.get_output_shape
+         ~ArcCos.get_params
+         ~ArcCos.get_state
+         ~ArcCos.is_ready
+         ~ArcCos.name
+         ~ArcCos.serialize
+         ~ArcCos.set_hyperparameters
+         ~ArcCos.set_params
+         ~ArcCos.set_precision
+         ~ArcCos.set_state
+
+   .. autosummary::
+
+      

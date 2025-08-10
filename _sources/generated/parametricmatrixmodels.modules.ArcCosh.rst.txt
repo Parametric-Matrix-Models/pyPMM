@@ -1,0 +1,35 @@
+﻿ArcCosh
+=======
+
+``parametricmatrixmodels.modules.ArcCosh``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: ArcCosh
+   :show-inheritance:
+
+   .. autosummary::
+      :nosignatures:
+
+      
+         ~ArcCosh.__init__
+         ~ArcCosh.astype
+         ~ArcCosh.compile
+         ~ArcCosh.deserialize
+         ~ArcCosh.func
+         ~ArcCosh.get_hyperparameters
+         ~ArcCosh.get_num_trainable_floats
+         ~ArcCosh.get_output_shape
+         ~ArcCosh.get_params
+         ~ArcCosh.get_state
+         ~ArcCosh.is_ready
+         ~ArcCosh.name
+         ~ArcCosh.serialize
+         ~ArcCosh.set_hyperparameters
+         ~ArcCosh.set_params
+         ~ArcCosh.set_precision
+         ~ArcCosh.set_state
+
+   .. autosummary::
+
+      
