@@ -9,9 +9,6 @@ Parametric Matrix Models reference
 :Release: |version|
 :Date: |today|
 
-API Reference
-=============
-
 .. toctree::
    :maxdepth: 2
 

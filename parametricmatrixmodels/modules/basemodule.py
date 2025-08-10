@@ -5,7 +5,9 @@ other (optionally stateful and trainable) operations in JAX.
 Modules can be combined to create Models.
 """
 
-from typing import Any, Callable, Dict, Optional, Tuple, Union
+from __future__ import annotations
+
+from typing import Any, Callable
 
 import jax
 import jax.numpy as np
@@ -46,7 +48,6 @@ class BaseModule(object):
 
         Returns
         -------
-        str
             Name of the module.
         """
         return self.__class__.__name__
@@ -59,7 +60,6 @@ class BaseModule(object):
 
         Returns
         -------
-        str
             String representation of the module.
         """
 
@@ -79,8 +79,7 @@ class BaseModule(object):
 
         Returns
         -------
-        bool
-            True if the module is ready, False otherwise.
+            ``True`` if the module is ready, ``False`` otherwise.
 
         Raises
         ------
@@ -91,7 +90,7 @@ class BaseModule(object):
             "is_ready method must be implemented in subclasses"
         )
 
-    def get_num_trainable_floats(self) -> Optional[int]:
+    def get_num_trainable_floats(self) -> int | None:
         """
         Returns the number of trainable floats in the module.
         If the module does not have trainable parameters, returns 0.
@@ -99,7 +98,6 @@ class BaseModule(object):
 
         Returns
         -------
-        Optional[int]
             Number of trainable floats in the module, or None if the module
             is not ready.
 
@@ -116,53 +114,43 @@ class BaseModule(object):
         self,
     ) -> Callable[
         [
-            Tuple[np.ndarray, ...],
+            tuple[np.ndarray, ...],
             np.ndarray,
             bool,
-            Tuple[np.ndarray, ...],
+            tuple[np.ndarray, ...],
             Any,
         ],
-        Tuple[np.ndarray, Tuple[np.ndarray, ...]],
+        tuple[np.ndarray, tuple[np.ndarray, ...]],
     ]:
         """
-        Returns a `jax.jit`-able and `jax.grad`-able callable that represents
-        the module's forward pass.
+        Returns a ``jax.jit``-able and ``jax.grad``-able callable that
+        represents the module's forward pass.
 
         This method must be implemented by all subclasses and must return a
-        jax-jittable and jax-gradable callable in the form of
+        ``jax-jit``-able and ``jax-grad``-able callable in the form of
 
         .. code-block:: python
 
             module_callable(
-                params: Tuple[np.ndarray, ...],
+                params: tuple[np.ndarray, ...],
                 input_NF: np.ndarray[num_samples, num_features],
                 training: bool,
-                state: Tuple[np.ndarray, ...],
+                state: tuple[np.ndarray, ...],
                 rng: Any
             ) -> (
                     output_NF: np.ndarray[num_samples, num_output_features],
-                    new_state: Tuple[np.ndarray, ...]
+                    new_state: tuple[np.ndarray, ...]
                 )
 
         That is, all hyperparameters are traced out and the callable depends
-        explicitly only on a Tuple of parameter jax.numpy arrays, the input
-        array, the training flag, a state Tuple of numpy arrays, and a JAX rng
-        key.
+        explicitly only on a ``tuple`` of parameter ``jax.numpy`` arrays,
+        the input array, the training flag, a state ``tuple`` of ``jax.numpy``
+        arrays, and a JAX rng key.
 
         The training flag will be traced out, so it doesn't need to be jittable
 
         Returns
         -------
-        : Callable[ \
-            [ \
-                Tuple[np.ndarray, ...], \
-                np.ndarray, \
-                bool, \
-                Tuple[np.ndarray, ...], \
-                Any \
-            ], \
-            Tuple[np.ndarray, Tuple[np.ndarray, ...]], \
-        ]
             A callable that takes the module's parameters, input data,
             training flag, state, and rng key and returns the output data and
             new state.
@@ -174,7 +162,7 @@ class BaseModule(object):
 
         See Also
         --------
-        BaseModule.__call__ : Calls the module with the current parameters and
+        __call__ : Calls the module with the current parameters and
             given input, state, and rng.
         """
         raise NotImplementedError(
@@ -185,27 +173,26 @@ class BaseModule(object):
         self,
         input_NF: np.ndarray,
         training: bool = False,
-        state: Tuple[np.ndarray, ...] = (),
+        state: tuple[np.ndarray, ...] = (),
         rng: Any = None,
-    ) -> Tuple[np.ndarray, Tuple[np.ndarray, ...]]:
+    ) -> tuple[np.ndarray, tuple[np.ndarray, ...]]:
         """
         Call the module with the current parameters and given input, state, and
         rng.
 
         Parameters
         ----------
-        input_NF : np.ndarray
+        input_NF
             Input array of shape (num_samples, num_features).
-        training : bool, optional
+        training
             Whether the module is in training mode, by default False.
-        state : Tuple[np.ndarray, ...], optional
-            State of the module, by default ().
-        rng : Any, optional
+        state
+            State of the module, by default ``()``.
+        rng
             JAX random key, by default None.
 
         Returns
         -------
-        Tuple[np.ndarray, Tuple[np.ndarray, ...]]
             Output array of shape (num_samples, num_output_features) and new
             state.
 
@@ -216,7 +203,7 @@ class BaseModule(object):
 
         See Also
         --------
-        BaseModule._get_callable : Returns a callable that can be used to
+        _get_callable : Returns a callable that can be used to
             compute the output and new state given the parameters, input,
             training flag, state, and rng.
         """
@@ -236,7 +223,7 @@ class BaseModule(object):
             rng,
         )
 
-    def compile(self, rng: Any, input_shape: Tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
         """
         Compile the module to be used with the given input shape.
 
@@ -255,10 +242,10 @@ class BaseModule(object):
 
         Parameters
         ----------
-        rng : Any
+        rng
             JAX random key.
-        input_shape : Tuple[int, ...]
-            Shape of the input data, e.g. (num_features,).
+        input_shape
+            Shape of the input data, e.g. ``(num_features,)``.
 
         Raises
         ------
@@ -270,20 +257,19 @@ class BaseModule(object):
         )
 
     def get_output_shape(
-        self, input_shape: Tuple[int, ...]
-    ) -> Tuple[int, ...]:
+        self, input_shape: tuple[int, ...]
+    ) -> tuple[int, ...]:
         """
         Get the output shape of the module given the input shape.
 
         Parameters
         ----------
-        input_shape : Tuple[int, ...]
-            Shape of the input data, e.g. (num_features,).
+        input_shape
+            Shape of the input data, e.g. ``(num_features,)``.
 
         Returns
         -------
-        Tuple[int, ...]
-            Shape of the output data, e.g. (num_output_features,).
+            Shape of the output data, e.g. ``(num_output_features,)``.
 
         Raises
         ------
@@ -294,7 +280,7 @@ class BaseModule(object):
             "get_output_shape method must be implemented in subclasses"
         )
 
-    def get_hyperparameters(self) -> Dict[str, Any]:
+    def get_hyperparameters(self) -> dict[str, Any]:
         """
         Get the hyperparameters of the module.
 
@@ -303,14 +289,13 @@ class BaseModule(object):
 
         Returns
         -------
-        Dict[str, Any]
             Dictionary containing the hyperparameters of the module.
         """
         raise NotImplementedError(
             "get_hyperparameters method must be implemented in subclasses"
         )
 
-    def set_hyperparameters(self, hyperparameters: Dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparameters: dict[str, Any]) -> None:
         """
         Set the hyperparameters of the module.
 
@@ -322,7 +307,7 @@ class BaseModule(object):
 
         Parameters
         ----------
-        hyperparameters : Dict[str, Any]
+        hyperparameters
             Dictionary containing the hyperparameters to set.
 
         Raises
@@ -337,14 +322,13 @@ class BaseModule(object):
         for key, value in hyperparameters.items():
             setattr(self, key, value)
 
-    def get_params(self) -> Tuple[np.ndarray, ...]:
+    def get_params(self) -> tuple[np.ndarray, ...]:
         """
         Get the current trainable parameters of the module. If the module has
         no trainable parameters, this method should return an empty tuple.
 
         Returns
         -------
-        Tuple[np.ndarray, ...]
             Tuple of numpy arrays representing the module's parameters.
 
         Raises
@@ -356,13 +340,13 @@ class BaseModule(object):
             "get_params method must be implemented in subclasses"
         )
 
-    def set_params(self, params: Tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
         """
         Set the trainable parameters of the module.
 
         Parameters
         ----------
-        params : Tuple[np.ndarray, ...]
+        params
             Tuple of numpy arrays representing the new parameters.
 
         Raises
@@ -374,7 +358,7 @@ class BaseModule(object):
             "set_params method must be implemented in subclasses"
         )
 
-    def get_state(self) -> Tuple[np.ndarray, ...]:
+    def get_state(self) -> tuple[np.ndarray, ...]:
         """
         Get the current state of the module.
 
@@ -387,12 +371,11 @@ class BaseModule(object):
 
         Returns
         -------
-        Tuple[np.ndarray, ...]
             Tuple of numpy arrays representing the module's state.
         """
         return ()
 
-    def set_state(self, state: Tuple[np.ndarray, ...]) -> None:
+    def set_state(self, state: tuple[np.ndarray, ...]) -> None:
         """
         Set the state of the module.
 
@@ -400,39 +383,40 @@ class BaseModule(object):
 
         Parameters
         ----------
-        state : Tuple[np.ndarray, ...]
+        state
             Tuple of numpy arrays representing the new state.
         """
         pass
 
-    def set_precision(self, prec: Union[np.dtype, str, int]) -> None:
+    def set_precision(self, prec: np.dtype | str | int) -> None:
         """
         Set the precision of the module parameters and state.
 
         Parameters
         ----------
-            prec : Union[np.dtype, str, int]
+            prec
                 Precision to set for the module parameters.
                 Valid options are:
                 *For 32-bit precision (all options are equivalent)*
                 ``np.float32``, ``np.complex64``, ``"float32"``,
-                ``"complex64"``, ``"single"``, ``"f32"``, ``"c64"``, ``32``
+                ``"complex64"``, ``"single"``, ``"f32"``, ``"c64"``, ``32``.
                 *For 64-bit precision (all options are equivalent)*
                 ``np.float64``, ``np.complex128``, ``"float64"``,
-                ``"complex128"``, ``"double"``, ``"f64"``, ``"c128"``, ``64``
+                ``"complex128"``, ``"double"``, ``"f64"``, ``"c128"``, ``64``.
 
         Raises
         ------
         ValueError
             If the precision is invalid or if 64-bit precision is requested
-            but JAX_ENABLE_X64 is not set.
+            but ``JAX_ENABLE_X64`` is not set.
         RuntimeError
             If the module is not ready (i.e., `compile()` has not been called).
 
         See Also
         --------
-        BaseModule.astype : Convenience wrapper to set_precision using the
-            dtype argument, returns self.
+        astype
+            Convenience wrapper to set_precision using the dtype argument,
+            returns self.
         """
         if not self.is_ready():
             raise RuntimeError("Module is not ready. Call compile() first.")
@@ -490,14 +474,14 @@ class BaseModule(object):
         self.set_params(tuple(set_param_prec(p) for p in self.get_params()))
         self.set_state(tuple(set_param_prec(s) for s in self.get_state()))
 
-    def astype(self, dtype: Union[np.dtype, str]) -> "BaseModule":
+    def astype(self, dtype: np.dtype | str) -> "BaseModule":
         """
         Convenience wrapper to set_precision using the dtype argument, returns
         self.
 
         Parameters
         ----------
-        dtype : Union[np.dtype, str]
+        dtype
             Precision to set for the module parameters.
             Valid options are:
             *For 32-bit precision (all options are equivalent)*
@@ -516,19 +500,19 @@ class BaseModule(object):
         ------
         ValueError
             If the precision is invalid or if 64-bit precision is requested
-            but JAX_ENABLE_X64 is not set.
+            but ``JAX_ENABLE_X64`` is not set.
         RuntimeError
             If the module is not ready (i.e., `compile()` has not been called).
 
         See Also
         --------
-        BaseModule.set_precision : Sets the precision of the module parameters
-            and state.
+        set_precision
+            Sets the precision of the module parameters and state.
         """
         self.set_precision(dtype)
         return self
 
-    def serialize(self) -> Dict[str, Any]:
+    def serialize(self) -> dict[str, Any]:
         """
         Serialize the module to a dictionary.
 
@@ -544,7 +528,6 @@ class BaseModule(object):
 
         Returns
         -------
-        Dict[str, Any]
             Dictionary containing the serialized module data.
         """
 
@@ -556,7 +539,7 @@ class BaseModule(object):
             "package_version": pmm.__version__,
         }
 
-    def deserialize(self, data: Dict[str, Any]) -> None:
+    def deserialize(self, data: dict[str, Any]) -> None:
         """
         Deserialize the module from a dictionary.
 
@@ -568,7 +551,7 @@ class BaseModule(object):
 
         Parameters
         ----------
-        data : Dict[str, Union[np.ndarray, str]]
+        data
             Dictionary containing the serialized module data.
         """
 

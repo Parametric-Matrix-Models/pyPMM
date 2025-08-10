@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import base64
 from inspect import signature
-from typing import Any, Callable, Dict, Optional, Tuple, Union
+from typing import Any, Callable
 
 import dill
 import jax
@@ -17,55 +19,35 @@ class Func(BaseModule):
 
     def __init__(
         self,
-        f: Union[
-            Callable[[np.ndarray], np.ndarray],
-            Callable[
-                [Tuple[np.ndarray, ...], np.ndarray],
+        f: (
+            Callable[[np.ndarray], np.ndarray]
+            | Callable[
+                [tuple[np.ndarray, ...], np.ndarray],
                 np.ndarray,
-            ],
-            Callable[
-                [Tuple[np.ndarray, ...], np.ndarray, Tuple[np.ndarray, ...]],
-                Tuple[np.ndarray, Tuple[np.ndarray, ...]],
-            ],
-            Callable[
+            ]
+            | Callable[
+                [tuple[np.ndarray, ...], np.ndarray, tuple[np.ndarray, ...]],
+                tuple[np.ndarray, tuple[np.ndarray, ...]],
+            ]
+            | Callable[
                 [
-                    Tuple[np.ndarray, ...],
+                    tuple[np.ndarray, ...],
                     np.ndarray,
-                    Tuple[np.ndarray, ...],
+                    tuple[np.ndarray, ...],
                     Any,
                 ],
-                Tuple[np.ndarray, Tuple[np.ndarray, ...]],
-            ],
-        ] = None,
-        fname: Optional[str] = None,
-        params: Optional[Tuple[np.ndarray, ...]] = None,
-        state: Optional[Tuple[np.ndarray, ...]] = (),
+                tuple[np.ndarray, tuple[np.ndarray, ...]],
+            ]
+        ) = None,
+        fname: str = None,
+        params: tuple[np.ndarray, ...] = None,
+        state: tuple[np.ndarray, ...] = (),
     ) -> None:
         """
         Parameters
         ----------
 
-        f: Union[
-            Callable[[np.ndarray], np.ndarray],
-            Callable[
-                [Tuple[np.ndarray, ...], np.ndarray],
-                np.ndarray,
-            ],
-            Callable[
-                [Tuple[np.ndarray, ...], np.ndarray, Tuple[np.ndarray, ...]],
-                Tuple[np.ndarray, Tuple[np.ndarray, ...]],
-            ],
-            Callable[
-                [
-                    Tuple[np.ndarray, ...],
-                    np.ndarray,
-                    Tuple[np.ndarray, ...],
-                    Any,
-                ],
-                Tuple[np.ndarray, Tuple[np.ndarray, ...]],
-            ],
-        ]
-
+        f
             A function that performs the modules operation. It can take only
             the input features and return only the output features (if there
             are no trainable parameters), or the tuple of trainable parameters
@@ -83,32 +65,32 @@ class Func(BaseModule):
             1. `f(input_NF: np.ndarray) -> np.ndarray` used in the case of no
                 trainable parameters, no state, and no rng.
 
-            2. `f(params: Tuple[np.ndarray, ...], input_NF: np.ndarray) ->
+            2. `f(params: tuple[np.ndarray, ...], input_NF: np.ndarray) ->
                 np.ndarray` used in the case of trainable parameters, no state,
                 and no rng.
 
-            3. `f(params: Tuple[np.ndarray, ...], input_NF: np.ndarray,
-                state: Tuple[np.ndarray, ...]) -> Tuple[np.ndarray,
-                Tuple[np.ndarray, ...]]` used in the case of trainable
+            3. `f(params: tuple[np.ndarray, ...], input_NF: np.ndarray,
+                state: tuple[np.ndarray, ...]) -> tuple[np.ndarray,
+                tuple[np.ndarray, ...]]` used in the case of trainable
                 parameters, state, but no rng.
 
-            4. `f(params: Tuple[np.ndarray, ...], input_NF: np.ndarray,
-                state: Tuple[np.ndarray, ...], rng: Any) -> Tuple[np.ndarray,
-                Tuple[np.ndarray, ...]]` used in the case of trainable
+            4. `f(params: tuple[np.ndarray, ...], input_NF: np.ndarray,
+                state: tuple[np.ndarray, ...], rng: Any) -> tuple[np.ndarray,
+                tuple[np.ndarray, ...]]` used in the case of trainable
                 parameters, state, and rng.
 
-        fname : Optional[str]
+        fname
             Name of the function. If not provided, the function's Pythonic name
             will be used.
 
-        params : Optional[Tuple[np.ndarray, ...]]
+        params
             Initial trainable parameters of the module. This can be used to
             store any tuple of numpy arrays that the function might need to
             maintain state across calls. If not provided, an empty tuple will
             be used. If the function requires trainable parameters, their
             initial values must be provided here.
 
-        state : Optional[Tuple[np.ndarray, ...]]
+        state
             Initial state of the module. This can be used to store any tuple of
             numpy arrays that the function might need to maintain state across
             calls. If not provided, an empty tuple will be used.
@@ -125,31 +107,31 @@ class Func(BaseModule):
 
     def _handle_inputs(
         self,
-        f: Union[
-            Callable[[np.ndarray], np.ndarray],
-            Callable[
-                [Tuple[np.ndarray, ...], np.ndarray],
+        f: (
+            Callable[[np.ndarray], np.ndarray]
+            | Callable[
+                [tuple[np.ndarray, ...], np.ndarray],
                 np.ndarray,
-            ],
-            Callable[
-                [Tuple[np.ndarray, ...], np.ndarray, Tuple[np.ndarray, ...]],
-                Tuple[np.ndarray, Tuple[np.ndarray, ...]],
-            ],
-            Callable[
+            ]
+            | Callable[
+                [tuple[np.ndarray, ...], np.ndarray, tuple[np.ndarray, ...]],
+                tuple[np.ndarray, tuple[np.ndarray, ...]],
+            ]
+            | Callable[
                 [
-                    Tuple[np.ndarray, ...],
+                    tuple[np.ndarray, ...],
                     np.ndarray,
-                    Tuple[np.ndarray, ...],
+                    tuple[np.ndarray, ...],
                     Any,
                 ],
-                Tuple[np.ndarray, Tuple[np.ndarray, ...]],
-            ],
-        ],
-        fname: Optional[str] = None,
-        params: Optional[Tuple[np.ndarray, ...]] = None,
-        state: Optional[Tuple[np.ndarray, ...]] = (),
-        input_shape: Optional[Tuple[int, ...]] = None,
-        output_shape: Optional[Tuple[int, ...]] = None,
+                tuple[np.ndarray, tuple[np.ndarray, ...]],
+            ]
+        ),
+        fname: str = None,
+        params: tuple[np.ndarray, ...] = None,
+        state: tuple[np.ndarray, ...] = (),
+        input_shape: tuple[int, ...] = None,
+        output_shape: tuple[int, ...] = None,
     ) -> None:
         """
         Handle the hyperparameters for the Func module.
@@ -251,7 +233,7 @@ class Func(BaseModule):
             and self.output_shape is not None
         )
 
-    def get_num_trainable_floats(self) -> Optional[int]:
+    def get_num_trainable_floats(self) -> int | None:
         if not self.is_ready():
             return None
 
@@ -269,13 +251,13 @@ class Func(BaseModule):
             params, input_NF, state, rng
         )
 
-    def compile(self, rng: Any, input_shape: Tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
         self.input_shape = input_shape
         self.output_shape = self.get_output_shape(input_shape)
 
     def get_output_shape(
-        self, input_shape: Tuple[int, ...]
-    ) -> Tuple[int, ...]:
+        self, input_shape: tuple[int, ...]
+    ) -> tuple[int, ...]:
         if not self.is_ready():
             # compute the output shape if the module is not ready
             # validate output signature and get output shape
@@ -354,7 +336,7 @@ class Func(BaseModule):
             )
         return self.output_shape
 
-    def get_hyperparameters(self) -> Dict[str, Any]:
+    def get_hyperparameters(self) -> dict[str, Any]:
         return {
             "f": self.f,
             "fname": self.fname,
@@ -364,7 +346,7 @@ class Func(BaseModule):
             "output_shape": self.output_shape,
         }
 
-    def set_hyperparameters(self, hyperparams: Dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
         if not isinstance(hyperparams, dict):
             raise ValueError("hyperparams must be a dictionary")
 
@@ -381,10 +363,10 @@ class Func(BaseModule):
             output_shape=hyperparams.get("output_shape"),
         )
 
-    def get_params(self) -> Tuple[np.ndarray, ...]:
+    def get_params(self) -> tuple[np.ndarray, ...]:
         return self.params
 
-    def set_params(self, params: Tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
         if not isinstance(params, tuple) or not all(
             isinstance(p, np.ndarray) for p in params
         ):
@@ -398,7 +380,7 @@ class Func(BaseModule):
 
         self.params = params
 
-    def serialize(self) -> Dict[str, Any]:
+    def serialize(self) -> dict[str, Any]:
         # serializing "f" isn't straightforward so it has to be handled
         # differently from the default implementation
 
@@ -417,7 +399,7 @@ class Func(BaseModule):
 
         return serial
 
-    def deserialize(self, serial: Dict[str, Any]) -> None:
+    def deserialize(self, serial: dict[str, Any]) -> None:
         raw = base64.b64decode(serial["hyperparameters"]["f"].encode("utf-8"))
         self._orig_f = dill.loads(raw)
 

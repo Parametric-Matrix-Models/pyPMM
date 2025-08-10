@@ -1,4 +1,6 @@
-from typing import Any, Callable, Dict, Optional, Tuple
+from __future__ import annotations
+
+from typing import Any, Callable
 
 import jax
 import jax.numpy as np
@@ -18,7 +20,7 @@ class AffineEigenvaluePMM(BaseModule):
         n: int = None,
         k: int = 1,
         which: str = "SA",
-        Ms: Optional[np.ndarray] = None,
+        Ms: np.ndarray = None,
         init_magnitude: float = 1e-2,
     ) -> None:
         """
@@ -32,11 +34,11 @@ class AffineEigenvaluePMM(BaseModule):
 
         Parameters
         ----------
-            n : int
+            n
                 Size of the PMM matrices (n x n).
-            k : int, optional
+            k
                 Number of eigenvalues to compute, by default 1.
-            which : str, optional
+            which
                 Which eigenvalues to compute, by default "SA".
                 Options are:
                 - 'SA' for smallest algebraic (default)
@@ -53,11 +55,11 @@ class AffineEigenvaluePMM(BaseModule):
 
                 For magnitude 'which' options, the eigenvalues are returned in
                 ascending magnitude order.
-            Ms : Optional[np.ndarray], optional
+            Ms
                 Optional (p+1, n, n) array of matrices M0, M1, ..., Mp for the
                 matrices in the PMM. If not provided, they will be randomly
                 initialized when the module is compiled.
-            init_magnitude : float, optional
+            init_magnitude
                 Initial magnitude for the random matrices if Ms is not
                 provided, by default 1e-2.
         """
@@ -132,7 +134,7 @@ class AffineEigenvaluePMM(BaseModule):
     def is_ready(self) -> bool:
         return self.p is not None and self.Ms is not None
 
-    def get_num_trainable_floats(self) -> Optional[int]:
+    def get_num_trainable_floats(self) -> int | None:
         if not self.is_ready():
             return None
 
@@ -141,7 +143,16 @@ class AffineEigenvaluePMM(BaseModule):
         # the total number of trainable floats is then just n^2 per matrix
         return (self.p + 1) * self.n * self.n
 
-    def _get_callable(self) -> Callable:
+    def _get_callable(self) -> Callable[
+        [
+            tuple[np.ndarray, ...],
+            np.ndarray,
+            bool,
+            tuple[np.ndarray, ...],
+            Any,
+        ],
+        tuple[np.ndarray, tuple[np.ndarray, ...]],
+    ]:
         return lambda params, input_NF, training, state, rng: (
             affine_pmm_predict_func(
                 params[0][0],  # A or M0
@@ -153,7 +164,7 @@ class AffineEigenvaluePMM(BaseModule):
             state,  # state is not used in this module, return it unchanged
         )
 
-    def compile(self, rng: Any, input_shape: Tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
         # input shape must be 1D
         if len(input_shape) != 1:
             raise ValueError(
@@ -187,11 +198,11 @@ class AffineEigenvaluePMM(BaseModule):
         self.Ms = (self.Ms + self.Ms.conj().transpose((0, 2, 1))) / 2.0
 
     def get_output_shape(
-        self, input_shape: Tuple[int, ...]
-    ) -> Tuple[int, ...]:
+        self, input_shape: tuple[int, ...]
+    ) -> tuple[int, ...]:
         return (self.k,)
 
-    def get_hyperparameters(self) -> Dict[str, Any]:
+    def get_hyperparameters(self) -> dict[str, Any]:
         return {
             "n": self.n,
             "k": self.k,
@@ -200,7 +211,7 @@ class AffineEigenvaluePMM(BaseModule):
             "init_magnitude": self.init_magnitude,
         }
 
-    def set_hyperparameters(self, hyperparams: Dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
         if self.Ms is not None:
             raise ValueError(
                 "Cannot set hyperparameters after the module has parameters"
@@ -208,10 +219,10 @@ class AffineEigenvaluePMM(BaseModule):
 
         super(AffineEigenvaluePMM, self).set_hyperparameters(hyperparams)
 
-    def get_params(self) -> Tuple[np.ndarray, ...]:
+    def get_params(self) -> tuple[np.ndarray, ...]:
         return (self.Ms,)
 
-    def set_params(self, params: Tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
         if not isinstance(params, tuple) or not all(
             isinstance(p, np.ndarray) for p in params
         ):

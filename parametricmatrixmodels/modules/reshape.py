@@ -1,4 +1,6 @@
-from typing import Any, Callable, Dict, Optional, Tuple
+from __future__ import annotations
+
+from typing import Any, Callable
 
 import jax.numpy as np
 
@@ -7,15 +9,15 @@ from .basemodule import BaseModule
 
 class Reshape(BaseModule):
     """
-    Modules that reshapes the input array to a specified shape. Ignores the
+    Module that reshapes the input array to a specified shape. Ignores the
     batch dimension.
     """
 
-    def __init__(self, shape: Optional[Tuple[int, ...]] = None) -> None:
+    def __init__(self, shape: tuple[int, ...] = None) -> None:
         """
         Parameters
         ----------
-        shape : Optional[Tuple[int, ...]], optional
+        shape
             The target shape to reshape the input to, by default None.
             If None, the input shape will remain unchanged.
             Does not include the batch dimension.
@@ -28,20 +30,20 @@ class Reshape(BaseModule):
     def is_ready(self) -> bool:
         return True
 
-    def get_num_trainable_floats(self) -> Optional[int]:
+    def get_num_trainable_floats(self) -> int | None:
         return 0
 
     def _get_callable(
         self,
     ) -> Callable[
         [
-            Tuple[np.ndarray, ...],
+            tuple[np.ndarray, ...],
             np.ndarray,
             bool,
-            Tuple[np.ndarray, ...],
+            tuple[np.ndarray, ...],
             Any,
         ],
-        Tuple[np.ndarray, Tuple[np.ndarray, ...]],
+        tuple[np.ndarray, tuple[np.ndarray, ...]],
     ]:
         return lambda params, input_NF, training, state, rng: (
             (
@@ -52,12 +54,12 @@ class Reshape(BaseModule):
             state,  # state is unchanged
         )
 
-    def compile(self, rng: Any, input_shape: Tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
         pass
 
     def get_output_shape(
-        self, input_shape: Tuple[int, ...]
-    ) -> Tuple[int, ...]:
+        self, input_shape: tuple[int, ...]
+    ) -> tuple[int, ...]:
         # handle the special cases where self.shape is None or (-1,)
         if self.shape is None:
             return input_shape
@@ -66,13 +68,13 @@ class Reshape(BaseModule):
         else:
             return self.shape
 
-    def get_hyperparameters(self) -> Dict[str, Any]:
+    def get_hyperparameters(self) -> dict[str, Any]:
         return {
             "shape": self.shape,
         }
 
-    def get_params(self) -> Tuple[np.ndarray, ...]:
+    def get_params(self) -> tuple[np.ndarray, ...]:
         return ()
 
-    def set_params(self, params: Tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
         pass

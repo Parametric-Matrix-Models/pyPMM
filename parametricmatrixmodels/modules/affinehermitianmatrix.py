@@ -1,4 +1,6 @@
-from typing import Any, Callable, Dict, Optional, Tuple
+from __future__ import annotations
+
+from typing import Any, Callable
 
 import jax
 import jax.numpy as np
@@ -8,37 +10,70 @@ from .basemodule import BaseModule
 
 
 class AffineHermitianMatrix(BaseModule):
+    """
+    Module that builds a parametric hermitian matrix that is affine in the
+    input features.
+
+    :math:`M(x) = M_0 + x_1 M_1 + ... + x_p M_p + s C`
+    where :math:`M_0, M_1, ..., M_p` are (trainable) Hermitian matrices,
+    :math:`x_1, ..., x_p` are the input features, :math:`s` is the
+    smoothing hyperparameter, and :math:`C` is a matrix that is computed
+    as the sum of the commutators of all the Hermitian matrices, in an
+    efficient way using cumulative sums and the linearity of the
+    commutator:
+
+    .. math::
+
+        C &= \\sum_{\\substack{i,j\\\\i\\neq j}} \\left[M_i, M_j\\right] \\\\
+          &= \\sum_{\\substack{i\\\\i\\neq j}}
+             \\left[M_i, \\sum_k^j M_k\\right]
+
+    See Also
+    --------
+    AffineEigenvaluePMM
+        Module that builds a parametric matrix that is affine in the input
+        features, the same as this module, but returns the eigenvalues of said
+        matrix.
+    AffineObservablePMM
+        Module that builds a parametric matrix that is affine in the input
+        features, the same as this module, but returns the sum of trainable
+        observables and transition probabilities of eigenstates of said matrix.
+    Eigenvalues
+        Module that computes the eigenvalues of a given Hermitian matrix. Can
+        be applied after this module to effectively re-create the
+        ``AffineEigenvaluePMM`` module.
+    """
 
     def __init__(
         self,
         matrix_size: int = None,
-        smoothing: Optional[float] = None,
-        Ms: Optional[np.ndarray] = None,
+        smoothing: float = None,
+        Ms: np.ndarray = None,
         init_magnitude: float = 1e-2,
         flatten: bool = False,
     ) -> None:
         """
-        M(x) = M0 + x1 * M1 + ... + xp * Mp + smoothing * C
+        Create an ``AffineHermitianMatrix`` module.
 
         Parameters
         ----------
-            matrix_size : int
-                Size of the PMM matrices (square), shorthand `n`.
-            smoothing : Optional[float], optional
-                Smoothing parameter, set to 0.0 to disable smoothing.
-                Defaults to None/0.0.
-            Ms : Optional[np.ndarray], optional
-                Optional array of matrices M0, M1, ..., Mp that define the
-                parametric affine matrix. Each M must be Hermitian. If not
-                provided, the matrices will be randomly initialized when the
-                module is compiled.
-            init_magnitude : float, optional
-                Initial magnitude of the random matrices, used when
-                initializing the module. Defaults to 1e-2.
-            flatten : bool, optional
-                If True, the output will be flattened to a 1D array. Useful
-                when combining with SubsetModule or other modules in order to
-                avoid ragged arrays.
+            matrix_size
+                Size of the PMM matrices (square), shorthand :math:`n`.
+            smoothing
+                Optional smoothing parameter. Set to ``0.0`` to disable
+                smoothing. Default is ``None``/``0.0`` (no smoothing).
+            Ms
+                Optional array of matrices :math:`M_0, M_1, ..., M_p` that
+                define the parametric affine matrix. Each :math:`M` must be
+                Hermitian. If not provided, the matrices will be randomly
+                initialized when the module is compiled. Default is ``None``.
+            init_magnitude
+                Optional initial magnitude of the random matrices, used when
+                initializing the module. Default is ``1e-2``.
+            flatten
+                If ``True``, the *output* will be flattened to a 1D array.
+                Useful when combining with ``SubsetModule`` or other modules in
+                order to avoid ragged arrays. Default is ``False``.
 
         """
 
@@ -77,7 +112,7 @@ class AffineHermitianMatrix(BaseModule):
     def is_ready(self) -> bool:
         return self.Ms is not None
 
-    def get_num_trainable_floats(self) -> Optional[int]:
+    def get_num_trainable_floats(self) -> int | None:
         if not self.is_ready():
             return None
 
@@ -90,12 +125,12 @@ class AffineHermitianMatrix(BaseModule):
 
     def _get_callable(self) -> Callable:
         def affine_hermitian_matrix(
-            params: Tuple[np.ndarray, ...],
+            params: tuple[np.ndarray, ...],
             input_NF: np.ndarray,
             training: bool,
-            state: Tuple[np.ndarray, ...],
+            state: tuple[np.ndarray, ...],
             rng: Any,
-        ) -> Tuple[np.ndarray, Tuple[np.ndarray, ...]]:
+        ) -> tuple[np.ndarray, tuple[np.ndarray, ...]]:
 
             Ms = params[0]
 
@@ -120,7 +155,7 @@ class AffineHermitianMatrix(BaseModule):
 
         return affine_hermitian_matrix
 
-    def compile(self, rng: Any, input_shape: Tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
         # input shape must be 1D
         if len(input_shape) != 1:
             raise ValueError(
@@ -156,14 +191,14 @@ class AffineHermitianMatrix(BaseModule):
         self.Ms = (self.Ms + self.Ms.conj().transpose((0, 2, 1))) / 2.0
 
     def get_output_shape(
-        self, input_shape: Tuple[int, ...]
-    ) -> Tuple[int, ...]:
+        self, input_shape: tuple[int, ...]
+    ) -> tuple[int, ...]:
         if self.flatten:
             return (self.matrix_size**2,)
         else:
             return (self.matrix_size, self.matrix_size)
 
-    def get_hyperparameters(self) -> Dict[str, Any]:
+    def get_hyperparameters(self) -> dict[str, Any]:
         return {
             "matrix_size": self.matrix_size,
             "smoothing": self.smoothing,
@@ -171,7 +206,7 @@ class AffineHermitianMatrix(BaseModule):
             "flatten": self.flatten,
         }
 
-    def set_hyperparameters(self, hyperparams: Dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
         if self.Ms is not None:
             raise ValueError(
                 "Cannot set hyperparameters after the module has parameters"
@@ -179,10 +214,10 @@ class AffineHermitianMatrix(BaseModule):
 
         super(AffineHermitianMatrix, self).set_hyperparameters(hyperparams)
 
-    def get_params(self) -> Tuple[np.ndarray, ...]:
+    def get_params(self) -> tuple[np.ndarray, ...]:
         return (self.Ms,)
 
-    def set_params(self, params: Tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
         if not isinstance(params, tuple) or not all(
             isinstance(p, np.ndarray) for p in params
         ):

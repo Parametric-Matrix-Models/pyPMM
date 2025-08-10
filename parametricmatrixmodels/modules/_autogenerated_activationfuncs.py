@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import jax
 
 from .activationbase import ActivationBase
@@ -9,7 +11,6 @@ class ReLU(ActivationBase):
 
     See Also
     --------
-
     jax.nn.relu : The function used for the elementwise activation.
     """
 
@@ -29,7 +30,6 @@ class ReLU6(ActivationBase):
 
     See Also
     --------
-
     jax.nn.relu6 : The function used for the elementwise activation.
     """
 
@@ -49,7 +49,6 @@ class Sigmoid(ActivationBase):
 
     See Also
     --------
-
     jax.nn.sigmoid : The function used for the elementwise activation.
     """
 
@@ -69,7 +68,6 @@ class Softplus(ActivationBase):
 
     See Also
     --------
-
     jax.nn.softplus : The function used for the elementwise activation.
     """
 
@@ -89,7 +87,6 @@ class SparsePlus(ActivationBase):
 
     See Also
     --------
-
     jax.nn.sparse_plus : The function used for the elementwise activation.
     """
 
@@ -109,7 +106,6 @@ class SparseSigmoid(ActivationBase):
 
     See Also
     --------
-
     jax.nn.sparse_sigmoid : The function used for the elementwise activation.
     """
 
@@ -129,7 +125,6 @@ class SoftSign(ActivationBase):
 
     See Also
     --------
-
     jax.nn.soft_sign : The function used for the elementwise activation.
     """
 
@@ -149,7 +144,6 @@ class SiLU(ActivationBase):
 
     See Also
     --------
-
     jax.nn.silu : The function used for the elementwise activation.
     """
 
@@ -169,7 +163,6 @@ class Swish(ActivationBase):
 
     See Also
     --------
-
     jax.nn.swish : The function used for the elementwise activation.
     """
 
@@ -189,7 +182,6 @@ class LogSigmoid(ActivationBase):
 
     See Also
     --------
-
     jax.nn.log_sigmoid : The function used for the elementwise activation.
     """
 
@@ -209,7 +201,6 @@ class LeakyReLU(ActivationBase):
 
     See Also
     --------
-
     jax.nn.leaky_relu : The function used for the elementwise activation.
     """
 
@@ -229,7 +220,6 @@ class HardSigmoid(ActivationBase):
 
     See Also
     --------
-
     jax.nn.hard_sigmoid : The function used for the elementwise activation.
     """
 
@@ -249,7 +239,6 @@ class HardSiLU(ActivationBase):
 
     See Also
     --------
-
     jax.nn.hard_silu : The function used for the elementwise activation.
     """
 
@@ -269,7 +258,6 @@ class HardSwish(ActivationBase):
 
     See Also
     --------
-
     jax.nn.hard_swish : The function used for the elementwise activation.
     """
 
@@ -289,7 +277,6 @@ class HardTanh(ActivationBase):
 
     See Also
     --------
-
     jax.nn.hard_tanh : The function used for the elementwise activation.
     """
 
@@ -309,7 +296,6 @@ class ELU(ActivationBase):
 
     See Also
     --------
-
     jax.nn.elu : The function used for the elementwise activation.
     """
 
@@ -329,7 +315,6 @@ class CELU(ActivationBase):
 
     See Also
     --------
-
     jax.nn.celu : The function used for the elementwise activation.
     """
 
@@ -349,7 +334,6 @@ class SELU(ActivationBase):
 
     See Also
     --------
-
     jax.nn.selu : The function used for the elementwise activation.
     """
 
@@ -369,7 +353,6 @@ class GELU(ActivationBase):
 
     See Also
     --------
-
     jax.nn.gelu : The function used for the elementwise activation.
     """
 
@@ -389,7 +372,6 @@ class GLU(ActivationBase):
 
     See Also
     --------
-
     jax.nn.glu : The function used for the elementwise activation.
     """
 
@@ -409,7 +391,6 @@ class SquarePlus(ActivationBase):
 
     See Also
     --------
-
     jax.nn.squareplus : The function used for the elementwise activation.
     """
 
@@ -429,7 +410,6 @@ class Mish(ActivationBase):
 
     See Also
     --------
-
     jax.nn.mish : The function used for the elementwise activation.
     """
 
@@ -449,7 +429,6 @@ class Identity(ActivationBase):
 
     See Also
     --------
-
     jax.nn.identity : The function used for the elementwise activation.
     """
 
@@ -469,7 +448,6 @@ class Softmax(ActivationBase):
 
     See Also
     --------
-
     jax.nn.softmax : The function used for the elementwise activation.
     """
 
@@ -489,7 +467,6 @@ class LogSoftmax(ActivationBase):
 
     See Also
     --------
-
     jax.nn.log_softmax : The function used for the elementwise activation.
     """
 
@@ -509,7 +486,6 @@ class LogSumExp(ActivationBase):
 
     See Also
     --------
-
     jax.nn.logsumexp : The function used for the elementwise activation.
     """
 
@@ -529,7 +505,6 @@ class Standardize(ActivationBase):
 
     See Also
     --------
-
     jax.nn.standardize : The function used for the elementwise activation.
     """
 
@@ -549,7 +524,6 @@ class OneHot(ActivationBase):
 
     See Also
     --------
-
     jax.nn.one_hot : The function used for the elementwise activation.
     """
 
@@ -569,7 +543,6 @@ class Abs(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.abs : The function used for the elementwise activation.
     """
 
@@ -589,7 +562,6 @@ class Absolute(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.absolute : The function used for the elementwise activation.
     """
 
@@ -609,7 +581,6 @@ class ACos(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.acos : The function used for the elementwise activation.
     """
 
@@ -629,7 +600,6 @@ class ACosh(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.acosh : The function used for the elementwise activation.
     """
 
@@ -649,7 +619,6 @@ class AMax(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.amax : The function used for the elementwise activation.
     """
 
@@ -669,7 +638,6 @@ class AMin(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.amin : The function used for the elementwise activation.
     """
 
@@ -689,7 +657,6 @@ class Angle(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.angle : The function used for the elementwise activation.
     """
 
@@ -709,7 +676,6 @@ class ArcCos(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.arccos : The function used for the elementwise activation.
     """
 
@@ -729,7 +695,6 @@ class ArcCosh(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.arccosh : The function used for the elementwise activation.
     """
 
@@ -749,7 +714,6 @@ class ArcSin(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.arcsin : The function used for the elementwise activation.
     """
 
@@ -769,7 +733,6 @@ class ArcSinh(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.arcsinh : The function used for the elementwise activation.
     """
 
@@ -789,7 +752,6 @@ class ArcTan(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.arctan : The function used for the elementwise activation.
     """
 
@@ -809,7 +771,6 @@ class ArcTan2(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.arctan2 : The function used for the elementwise activation.
     """
 
@@ -829,7 +790,6 @@ class ArcTanh(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.arctanh : The function used for the elementwise activation.
     """
 
@@ -849,7 +809,6 @@ class ASin(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.asin : The function used for the elementwise activation.
     """
 
@@ -869,7 +828,6 @@ class ASinh(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.asinh : The function used for the elementwise activation.
     """
 
@@ -889,7 +847,6 @@ class ATan(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.atan : The function used for the elementwise activation.
     """
 
@@ -909,7 +866,6 @@ class ATanh(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.atanh : The function used for the elementwise activation.
     """
 
@@ -929,7 +885,6 @@ class Cbrt(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.cbrt : The function used for the elementwise activation.
     """
 
@@ -949,7 +904,6 @@ class Ceil(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.ceil : The function used for the elementwise activation.
     """
 
@@ -969,7 +923,6 @@ class Clip(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.clip : The function used for the elementwise activation.
     """
 
@@ -989,7 +942,6 @@ class Conj(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.conj : The function used for the elementwise activation.
     """
 
@@ -1009,7 +961,6 @@ class Conjugate(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.conjugate : The function used for the elementwise activation.
     """
 
@@ -1029,7 +980,6 @@ class Cos(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.cos : The function used for the elementwise activation.
     """
 
@@ -1049,7 +999,6 @@ class Cosh(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.cosh : The function used for the elementwise activation.
     """
 
@@ -1069,7 +1018,6 @@ class Deg2Rad(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.deg2rad : The function used for the elementwise activation.
     """
 
@@ -1089,7 +1037,6 @@ class Degrees(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.degrees : The function used for the elementwise activation.
     """
 
@@ -1109,7 +1056,6 @@ class Exp(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.exp : The function used for the elementwise activation.
     """
 
@@ -1129,7 +1075,6 @@ class Exp2(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.exp2 : The function used for the elementwise activation.
     """
 
@@ -1149,7 +1094,6 @@ class Expm1(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.expm1 : The function used for the elementwise activation.
     """
 
@@ -1169,7 +1113,6 @@ class FAbs(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.fabs : The function used for the elementwise activation.
     """
 
@@ -1189,7 +1132,6 @@ class Fix(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.fix : The function used for the elementwise activation.
     """
 
@@ -1209,7 +1151,6 @@ class FloatPower(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.float_power : The function used for the elementwise activation.
     """
 
@@ -1229,7 +1170,6 @@ class Floor(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.floor : The function used for the elementwise activation.
     """
 
@@ -1249,7 +1189,6 @@ class FloorDivide(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.floor_divide : The function used for the elementwise activation.
     """
 
@@ -1269,7 +1208,6 @@ class FrExp(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.frexp : The function used for the elementwise activation.
     """
 
@@ -1289,7 +1227,6 @@ class I0(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.i0 : The function used for the elementwise activation.
     """
 
@@ -1309,7 +1246,6 @@ class Imag(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.imag : The function used for the elementwise activation.
     """
 
@@ -1329,7 +1265,6 @@ class Invert(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.invert : The function used for the elementwise activation.
     """
 
@@ -1349,7 +1284,6 @@ class LDExp(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.ldexp : The function used for the elementwise activation.
     """
 
@@ -1369,7 +1303,6 @@ class Log(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.log : The function used for the elementwise activation.
     """
 
@@ -1389,7 +1322,6 @@ class Log10(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.log10 : The function used for the elementwise activation.
     """
 
@@ -1409,7 +1341,6 @@ class Log1p(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.log1p : The function used for the elementwise activation.
     """
 
@@ -1429,7 +1360,6 @@ class Log2(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.log2 : The function used for the elementwise activation.
     """
 
@@ -1449,7 +1379,6 @@ class NaNToNum(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.nan_to_num : The function used for the elementwise activation.
     """
 
@@ -1469,7 +1398,6 @@ class NanToNum(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.nan_to_num : The function used for the elementwise activation.
     """
 
@@ -1489,7 +1417,6 @@ class NextAfter(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.nextafter : The function used for the elementwise activation.
     """
 
@@ -1509,7 +1436,6 @@ class Packbits(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.packbits : The function used for the elementwise activation.
     """
 
@@ -1529,7 +1455,6 @@ class Piecewise(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.piecewise : The function used for the elementwise activation.
     """
 
@@ -1549,7 +1474,6 @@ class Positive(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.positive : The function used for the elementwise activation.
     """
 
@@ -1569,7 +1493,6 @@ class Pow(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.pow : The function used for the elementwise activation.
     """
 
@@ -1589,7 +1512,6 @@ class Power(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.power : The function used for the elementwise activation.
     """
 
@@ -1609,7 +1531,6 @@ class Rad2Deg(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.rad2deg : The function used for the elementwise activation.
     """
 
@@ -1629,7 +1550,6 @@ class Radians(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.radians : The function used for the elementwise activation.
     """
 
@@ -1649,7 +1569,6 @@ class Real(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.real : The function used for the elementwise activation.
     """
 
@@ -1669,7 +1588,6 @@ class Reciprocal(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.reciprocal : The function used for the elementwise activation.
     """
 
@@ -1689,7 +1607,6 @@ class RInt(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.rint : The function used for the elementwise activation.
     """
 
@@ -1709,7 +1626,6 @@ class Round(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.round : The function used for the elementwise activation.
     """
 
@@ -1729,7 +1645,6 @@ class Sign(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.sign : The function used for the elementwise activation.
     """
 
@@ -1749,7 +1664,6 @@ class Signbit(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.signbit : The function used for the elementwise activation.
     """
 
@@ -1769,7 +1683,6 @@ class Sin(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.sin : The function used for the elementwise activation.
     """
 
@@ -1789,7 +1702,6 @@ class Sinc(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.sinc : The function used for the elementwise activation.
     """
 
@@ -1809,7 +1721,6 @@ class Sinh(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.sinh : The function used for the elementwise activation.
     """
 
@@ -1829,7 +1740,6 @@ class Sqrt(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.sqrt : The function used for the elementwise activation.
     """
 
@@ -1849,7 +1759,6 @@ class Square(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.square : The function used for the elementwise activation.
     """
 
@@ -1869,7 +1778,6 @@ class Tan(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.tan : The function used for the elementwise activation.
     """
 
@@ -1889,7 +1797,6 @@ class Tanh(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.tanh : The function used for the elementwise activation.
     """
 
@@ -1909,7 +1816,6 @@ class Trunc(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.trunc : The function used for the elementwise activation.
     """
 
@@ -1929,7 +1835,6 @@ class Unpackbits(ActivationBase):
 
     See Also
     --------
-
     jax.numpy.unpackbits : The function used for the elementwise activation.
     """
 

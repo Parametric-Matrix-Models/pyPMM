@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 import sys
-from typing import Any, Callable, Dict, Optional, Tuple, Union
+from typing import Any, Callable
 
 import jax.numpy as np
 
@@ -42,7 +44,7 @@ class SubsetModule(BaseModule):
 
     def __init__(
         self,
-        subset: Union[Tuple[slice, ...], Tuple[np.ndarray, ...]] = None,
+        subset: tuple[slice, ...] | tuple[np.ndarray, ...] = None,
         module: BaseModule = None,
         prepend: bool = True,
         axis: int = 0,
@@ -51,7 +53,7 @@ class SubsetModule(BaseModule):
         """
         Parameters
         ----------
-        subset : Union[Tuple[slice, ...], Tuple[np.ndarray, ...]], optional
+        subset
             A tuple of slices or index arrays indicating which parts of the
             input data to apply the module to. The number of slices must match
             the shape of the input data, not including the batch dimension.
@@ -59,17 +61,17 @@ class SubsetModule(BaseModule):
             input data of shape (num_samples, num_features), a subset of all
             except the first two features would be specified as
             (slice(2, None),).
-        module : BaseModule
+        module
             The module to apply to the specified subset of the input data.
-        prepend : bool, optional
+        prepend
             If True, the output of the module will be prepended to the
             unchanged input data. If False, the output will be appended.
             Defaults to True.
-        axis : int, optional
+        axis
             The axis along which to concatenate the output of the module and
             the unchanged input data. Defaults to 0 (i.e., along the first
             feature dimension). This does not include the batch dimension.
-        passthrough : bool, optional
+        passthrough
             If True, the unchanged input data will be passed through alongside
             the output of the module. If False, the unchanged input data will
             be dropped. Defaults to False.
@@ -105,11 +107,11 @@ class SubsetModule(BaseModule):
             and self.output_shape is not None
         )
 
-    def get_num_trainable_floats(self) -> Optional[int]:
+    def get_num_trainable_floats(self) -> int | None:
         return self.module.get_num_trainable_floats()
 
     def _get_inverse_subset_mask(
-        self, input_shape: Tuple[int, ...]
+        self, input_shape: tuple[int, ...]
     ) -> np.ndarray:
         # make a mask for the inverse of the subset
         # if passthrough, then the mask is just the entire input
@@ -134,12 +136,12 @@ class SubsetModule(BaseModule):
         subcallable = self.module._get_callable()
 
         def _callable(
-            params: Tuple[np.ndarray, ...],
+            params: tuple[np.ndarray, ...],
             input_NF: np.ndarray,
             training: bool = False,
-            state: Tuple[np.ndarray, ...] = (),
+            state: tuple[np.ndarray, ...] = (),
             rng: Any = None,
-        ) -> Tuple[np.ndarray, Tuple[np.ndarray, ...]]:
+        ) -> tuple[np.ndarray, tuple[np.ndarray, ...]]:
 
             # apply the module to the subset of the input data
             subset_input = input_NF[full_subset]
@@ -163,7 +165,7 @@ class SubsetModule(BaseModule):
 
         return _callable
 
-    def compile(self, rng: Any, input_shape: Tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
         self.input_shape = input_shape
 
         # get subinput shape to pass to the module's compile method
@@ -174,8 +176,8 @@ class SubsetModule(BaseModule):
         self.output_shape = self.get_output_shape(input_shape)
 
     def get_output_shape(
-        self, input_shape: Tuple[int, ...]
-    ) -> Tuple[int, ...]:
+        self, input_shape: tuple[int, ...]
+    ) -> tuple[int, ...]:
         # easiest way to get the output shape is to perform a dummy forward
         # pass with zeros and the module's `get_output_shape` method
 
@@ -199,7 +201,7 @@ class SubsetModule(BaseModule):
 
         return output_zeros.shape
 
-    def get_hyperparameters(self) -> Dict[str, Any]:
+    def get_hyperparameters(self) -> dict[str, Any]:
         return {
             "subset": self.subset,
             "prepend": self.prepend,
@@ -208,7 +210,7 @@ class SubsetModule(BaseModule):
             "module": self.module,
         }
 
-    def set_hyperparameters(self, hyperparams: Dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
         if self.input_shape is not None or self.output_shape is not None:
             raise ValueError(
                 "Cannot set hyperparameters after compile. "
@@ -217,19 +219,19 @@ class SubsetModule(BaseModule):
 
         super(SubsetModule, self).set_hyperparameters(hyperparams)
 
-    def get_params(self) -> Tuple[np.ndarray, ...]:
+    def get_params(self) -> tuple[np.ndarray, ...]:
         return self.module.get_params()
 
-    def set_params(self, params: Tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
         self.module.set_params(params)
 
-    def get_state(self) -> Tuple[np.ndarray, ...]:
+    def get_state(self) -> tuple[np.ndarray, ...]:
         return self.module.get_state()
 
-    def set_state(self, state: Tuple[np.ndarray, ...]) -> None:
+    def set_state(self, state: tuple[np.ndarray, ...]) -> None:
         self.module.set_state(state)
 
-    def serialize(self) -> Dict[str, Any]:
+    def serialize(self) -> dict[str, Any]:
         # call the base class serialize method to get most of the data
         # serialized
         serial = super(SubsetModule, self).serialize()
@@ -265,7 +267,7 @@ class SubsetModule(BaseModule):
 
         return serial
 
-    def deserialize(self, data: Dict[str, Any]) -> None:
+    def deserialize(self, data: dict[str, Any]) -> None:
         # replace non-standard serialized fields with the partially
         # deserialized values before calling the base class's deserialize
 

@@ -1,4 +1,6 @@
-from typing import Any, Callable, Dict, Optional, Tuple
+from __future__ import annotations
+
+from typing import Any, Callable
 
 import jax
 import jax.numpy as np
@@ -19,10 +21,10 @@ class AffineObservablePMM(BaseModule):
         num_eig: int = None,
         num_secondaries: int = None,
         output_size: int = None,
-        smoothing: Optional[float] = None,
-        Ms: Optional[np.ndarray] = None,
-        Ds: Optional[np.ndarray] = None,
-        gs: Optional[np.ndarray] = None,
+        smoothing: float = None,
+        Ms: np.ndarray = None,
+        Ds: np.ndarray = None,
+        gs: np.ndarray = None,
         init_magnitude: float = 1e-2,
     ) -> None:
         """
@@ -46,35 +48,35 @@ class AffineObservablePMM(BaseModule):
 
         Parameters
         ----------
-            matrix_size : int
+            matrix_size
                 Size of the PMM matrices (square), shorthand `n`.
-            num_eig : int
+            num_eig
                 Number of eigenpairs to use. Shorthand `r`.
-            num_secondaries : int
+            num_secondaries
                 Number of secondary (observable) matrices to use in the PMM.
                 Shorthand `l`.
-            output_size : int
+            output_size
                 Number of output features. Shorthand `k`.
-            smoothing : Optional[float], optional
+            smoothing
                 Smoothing parameter, set to 0.0 to disable smoothing.
                 Defaults to None/0.0.
-            Ms : Optional[np.ndarray], optional
+            Ms
                 Optional array of matrices M0, M1, ..., Mp that define the
                 parametric Hamiltonian. Each M must be Hermitian. If not
                 provided, the matrices will be randomly initialized when the
                 module is compiled.
-            Ds : Optional[np.ndarray], optional
+            Ds
                 Optional 4D array of matrices D_{kl} that define the
                 observables. Each D must be Hermitian. If not provided, the
                 observables will be randomly initialized when the module is
                 compiled.
-            gs : Optional[np.ndarray], optional
-                Optional vector of length `output_size` that defines the real
+            gs
+                Optional vector of length ``output_size`` that defines the real
                 biases for the observable. If not provided, the biases will be
                 randomly initialized when the module is compiled.
-            init_magnitude : float, optional
+            init_magnitude
                 Initial magnitude for the random matrices if Ms is not
-                provided, by default 1e-2.
+                provided, by default ``1e-2``.
         """
 
         # input validation
@@ -190,7 +192,7 @@ class AffineObservablePMM(BaseModule):
             and self.gs is not None
         )
 
-    def get_num_trainable_floats(self) -> Optional[int]:
+    def get_num_trainable_floats(self) -> int | None:
         if not self.is_ready():
             return None
 
@@ -208,7 +210,16 @@ class AffineObservablePMM(BaseModule):
             + self.output_size
         )
 
-    def _get_callable(self) -> Callable:
+    def _get_callable(self) -> Callable[
+        [
+            tuple[np.ndarray, ...],
+            np.ndarray,
+            bool,
+            tuple[np.ndarray, ...],
+            Any,
+        ],
+        tuple[np.ndarray, tuple[np.ndarray, ...]],
+    ]:
         return lambda params, input_NF, training, state, rng: (
             reg_pmm_predict_func(
                 params[0][0],  # A or M0
@@ -222,7 +233,7 @@ class AffineObservablePMM(BaseModule):
             state,  # state is not used in this module, return it unchanged
         )
 
-    def compile(self, rng: Any, input_shape: Tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
         # input shape must be 1D
         if len(input_shape) != 1:
             raise ValueError(
@@ -294,11 +305,11 @@ class AffineObservablePMM(BaseModule):
         )
 
     def get_output_shape(
-        self, input_shape: Tuple[int, ...]
-    ) -> Tuple[int, ...]:
+        self, input_shape: tuple[int, ...]
+    ) -> tuple[int, ...]:
         return (self.output_size,)
 
-    def get_hyperparameters(self) -> Dict[str, Any]:
+    def get_hyperparameters(self) -> dict[str, Any]:
         return {
             "matrix_size": self.matrix_size,
             "num_eig": self.num_eig,
@@ -309,7 +320,7 @@ class AffineObservablePMM(BaseModule):
             "init_magnitude": self.init_magnitude,
         }
 
-    def set_hyperparameters(self, hyperparams: Dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
         if self.Ms is not None or self.Ds is not None or self.gs is not None:
             raise ValueError(
                 "Cannot set hyperparameters after the module has parameters"
@@ -317,10 +328,10 @@ class AffineObservablePMM(BaseModule):
 
         super(AffineObservablePMM, self).set_hyperparameters(hyperparams)
 
-    def get_params(self) -> Tuple[np.ndarray, ...]:
+    def get_params(self) -> tuple[np.ndarray, ...]:
         return (self.Ms, self.Ds, self.gs)
 
-    def set_params(self, params: Tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
         if not isinstance(params, tuple) or not all(
             isinstance(p, np.ndarray) for p in params
         ):

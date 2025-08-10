@@ -1,4 +1,6 @@
-from typing import Any, Callable, Dict, Optional, Tuple
+from __future__ import annotations
+
+from typing import Any, Callable
 
 import jax
 import jax.numpy as np
@@ -14,28 +16,28 @@ class NonnegativeLinearNN(BaseModule):
 
     def __init__(
         self,
-        k: Optional[int] = None,
-        W: Optional[np.ndarray] = None,
-        b: Optional[np.ndarray] = None,
+        k: int = None,
+        W: np.ndarray = None,
+        b: np.ndarray = None,
         init_magnitude: float = 1e-2,
         real: bool = True,
     ) -> None:
         """
         Parameters
         ----------
-        k : int
+        k
             Number of output features.
-        W : Optional[np.ndarray], optional
+        W
             Weight matrix of shape (num_features, k). If None, it will be
             initialized randomly.
-        b : Optional[np.ndarray], optional
+        b
             Bias vector of shape (k,). If None, it will be initialized randomly
-        init_magnitude : float, optional
+        init_magnitude
             Magnitude for the random initialization of weights and biases.
-            Default is 1e-2.
-        real : bool, optional
-            If True, the weights and biases will be real-valued. If False,
-            they will be complex-valued. Default is True.
+            Default is ``1e-2``.
+        real
+            If ``True``, the weights and biases will be real-valued. If
+            ``False``, they will be complex-valued. Default is ``True``.
         """
 
         self.k = k
@@ -78,7 +80,7 @@ class NonnegativeLinearNN(BaseModule):
             and self.b is not None
         )
 
-    def get_num_trainable_floats(self) -> Optional[int]:
+    def get_num_trainable_floats(self) -> int | None:
         if not self.is_ready():
             return None
 
@@ -96,7 +98,7 @@ class NonnegativeLinearNN(BaseModule):
             state,  # state is not used in this module, return it unchanged
         )
 
-    def compile(self, rng: Any, input_shape: Tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
         # input shape must be 1D
         if len(input_shape) != 1:
             raise ValueError(
@@ -154,11 +156,11 @@ class NonnegativeLinearNN(BaseModule):
                 self.b = real_part + 1j * imag_part
 
     def get_output_shape(
-        self, input_shape: Tuple[int, ...]
-    ) -> Tuple[int, ...]:
+        self, input_shape: tuple[int, ...]
+    ) -> tuple[int, ...]:
         return (self.k,)
 
-    def get_hyperparameters(self) -> Dict[str, Any]:
+    def get_hyperparameters(self) -> dict[str, Any]:
         return {
             "k": self.k,
             "p": self.p,
@@ -166,7 +168,7 @@ class NonnegativeLinearNN(BaseModule):
             "real": self.real,
         }
 
-    def set_hyperparameters(self, hyperparams: Dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
         if self.W is not None or self.b is not None:
             raise ValueError(
                 "Cannot set hyperparameters after the module has parameters"
@@ -174,10 +176,10 @@ class NonnegativeLinearNN(BaseModule):
 
         super(NonnegativeLinearNN, self).set_hyperparameters(hyperparams)
 
-    def get_params(self) -> Tuple[np.ndarray, ...]:
+    def get_params(self) -> tuple[np.ndarray, ...]:
         return (self.W, self.b)
 
-    def set_params(self, params: Tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
         if not isinstance(params, tuple) or not all(
             isinstance(p, np.ndarray) for p in params
         ):

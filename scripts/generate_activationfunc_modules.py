@@ -14,7 +14,11 @@ if os.path.exists(file):
         " script."
     )
 
-imports = ["import jax", "from .activationbase import ActivationBase"]
+imports = [
+    "from __future__ import annotations",
+    "from .activationbase import ActivationBase",
+    "import jax",
+]
 
 funcs = {
     "ReLU": "jax.nn.relu",

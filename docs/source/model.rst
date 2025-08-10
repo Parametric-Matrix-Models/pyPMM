@@ -2,9 +2,27 @@
 
 .. currentmodule:: parametricmatrixmodels
 
-=====
-Model
-=====
+=========
+``Model``
+=========
+
+Basic Usage
+-----------
+
+TODO
+
+Advanced Usage
+--------------
+
+TODO
+
+Saving and Loading Models
+-------------------------
+
+TODO
+
+API Reference
+-------------
 
 .. autoclass:: Model
    :show-inheritance:

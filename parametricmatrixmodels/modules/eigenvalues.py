@@ -1,4 +1,6 @@
-from typing import Any, Callable, Dict, Optional, Tuple
+from __future__ import annotations
+
+from typing import Any, Callable
 
 import jax
 import jax.numpy as np
@@ -46,10 +48,19 @@ class Eigenvalues(BaseModule):
     def is_ready(self) -> bool:
         return True
 
-    def get_num_trainable_floats(self) -> Optional[int]:
+    def get_num_trainable_floats(self) -> int | None:
         return 0
 
-    def _get_callable(self) -> Callable:
+    def _get_callable(self) -> Callable[
+        [
+            tuple[np.ndarray, ...],
+            np.ndarray,
+            bool,
+            tuple[np.ndarray, ...],
+            Any,
+        ],
+        tuple[np.ndarray, tuple[np.ndarray, ...]],
+    ]:
         return lambda params, input_NF, training, state, rng: (
             jax.vmap(select_eigenvalues, in_axes=(0, None, None))(
                 np.linalg.eigvalsh(input_NF), self.num_eig, self.which
@@ -57,7 +68,7 @@ class Eigenvalues(BaseModule):
             state,  # state is not used in this module, return it unchanged
         )
 
-    def compile(self, rng: Any, input_shape: Tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
         # ensure input shape is valid
         if len(input_shape) != 2 or input_shape[0] != input_shape[1]:
             raise ValueError(
@@ -65,21 +76,21 @@ class Eigenvalues(BaseModule):
             )
 
     def get_output_shape(
-        self, input_shape: Tuple[int, ...]
-    ) -> Tuple[int, ...]:
+        self, input_shape: tuple[int, ...]
+    ) -> tuple[int, ...]:
         return (self.num_eig,)
 
-    def get_hyperparameters(self) -> Dict[str, Any]:
+    def get_hyperparameters(self) -> dict[str, Any]:
         return {
             "num_eig": self.num_eig,
             "which": self.which,
         }
 
-    def set_hyperparameters(self, hyperparams: Dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
         super(Eigenvalues, self).set_hyperparameters(hyperparams)
 
-    def get_params(self) -> Tuple[np.ndarray, ...]:
+    def get_params(self) -> tuple[np.ndarray, ...]:
         return ()
 
-    def set_params(self, params: Tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
         return

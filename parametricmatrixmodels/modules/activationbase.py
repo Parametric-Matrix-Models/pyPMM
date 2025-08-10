@@ -1,4 +1,6 @@
-from typing import Any, Callable, Dict, Tuple
+from __future__ import annotations
+
+from typing import Any, Callable
 
 import jax.numpy as np
 
@@ -17,10 +19,10 @@ class ActivationBase(BaseModule):
 
         Parameters
         ----------
-        args : tuple
+        args
             Positional arguments for the activation function, starts with the
             second argument, as the first is the input array.
-        kwargs : dict
+        kwargs
             Keyword arguments for the activation function.
         """
         self.args = args
@@ -36,19 +38,17 @@ class ActivationBase(BaseModule):
 
         Returns
         -------
-        bool
             Always returns True.
         """
         return True
 
-    def get_num_trainable_floats(self) -> int:
+    def get_num_trainable_floats(self) -> int | None:
         """
         Get the number of trainable floats in the module. Activation functions
         do not have trainable parameters.
 
         Returns
         -------
-        int
             Always returns 0.
         """
         return 0
@@ -59,23 +59,30 @@ class ActivationBase(BaseModule):
 
         Parameters
         ----------
-        x : np.ndarray
+        x
             Input array to the activation function.
 
         Returns
         -------
-        np.ndarray
             Output array after applying the activation function.
         """
         raise NotImplementedError("Subclasses must implement the func method.")
 
-    def _get_callable(self) -> Callable:
+    def _get_callable(self) -> Callable[
+        [
+            tuple[np.ndarray, ...],
+            np.ndarray,
+            bool,
+            tuple[np.ndarray, ...],
+            Any,
+        ],
+        tuple[np.ndarray, tuple[np.ndarray, ...]],
+    ]:
         """
         Get the callable for the activation function.
 
         Returns
         -------
-        Callable
             The activation function callable in the form the PMM library
             expects
         """
@@ -85,45 +92,43 @@ class ActivationBase(BaseModule):
             state,
         )
 
-    def compile(self, rng: Any, input_shape: Tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
         """
         Compile the activation function module. This method is a no-op for
         activation functions.
 
         Parameters
         ----------
-        rng : Any
+        rng
             Random number generator state.
-        input_shape : Tuple[int, ...]
+        input_shape
             Shape of the input array.
         """
         pass
 
     def get_output_shape(
-        self, input_shape: Tuple[int, ...]
-    ) -> Tuple[int, ...]:
+        self, input_shape: tuple[int, ...]
+    ) -> tuple[int, ...]:
         """
         Get the output shape of the activation function given the input shape.
 
         Parameters
         ----------
-        input_shape : Tuple[int, ...]
+        input_shape
             Shape of the input array.
 
         Returns
         -------
-        Tuple[int, ...]
             Output shape after applying the activation function.
         """
         return input_shape
 
-    def get_hyperparameters(self) -> Dict[str, Any]:
+    def get_hyperparameters(self) -> dict[str, Any]:
         """
         Get the hyperparameters of the activation function module.
 
         Returns
         -------
-        Dict[str, Any]
             Hyperparameters of the activation function.
         """
         return {
@@ -131,16 +136,15 @@ class ActivationBase(BaseModule):
             "kwargs": self.kwargs,
         }
 
-    def get_params(self) -> Tuple[np.ndarray, ...]:
+    def get_params(self) -> tuple[np.ndarray, ...]:
         """
         Get the parameters of the activation function module.
 
         Returns
         -------
-        Tuple[np.ndarray, ...]
             An empty tuple, as activation functions do not have parameters.
         """
         return ()
 
-    def set_params(self, params: Tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
         return

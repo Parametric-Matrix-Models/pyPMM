@@ -33,6 +33,9 @@ extensions = [
     "sphinx_autodoc_typehints",
 ]
 
+autodoc_typehints = "signature"
+napoleon_use_rtype = False
+
 autosummary_generate = True
 autosummary_imported_members = False
 autosummary_ignore_module_all = False
@@ -51,6 +54,8 @@ intersphinx_mapping = {
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
     "jax": ("https://docs.jax.dev/en/latest/", None),
 }
+
+add_module_names = False
 
 
 # -- Options for HTML output -------------------------------------------------

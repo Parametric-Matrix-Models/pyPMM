@@ -1,5 +1,3 @@
-from typing import Optional
-
 import jax
 import jax.numpy as np
 
@@ -57,30 +55,29 @@ def reg_pmm_predict_func(
     gs: np.ndarray,
     r: int,
     X: np.ndarray,
-    smoothing: Optional[float] = None,  # must be traced out before JIT
+    smoothing: float = None,  # must be traced out before JIT
 ) -> np.ndarray:
     """
     Parameters:
-    A : np.ndarray
+    A
         Constant matrix (n, n), must be Hermitian.
-    Bs : np.ndarray
+    Bs
         Array of linear matrices (p, n, n) where p is the number of features.
         Each Bs[i] must be Hermitian.
-    Ds : np.ndarray
+    Ds
         Array of secondary matrices (q, d, n, n), where q is the number of
         outputs and d is the number of secondary matrices.
         Each Ds[i, j] must be Hermitian.
-    gs : np.ndarray
+    gs
         Array of bias terms (q,). Where q is the number of outputs Must be
         real-valued.
-    r : int
+    r
         Number of eigenvectors to use for the prediction.
-    X : np.ndarray
+    X
         Input samples (N, p), where N is the number of samples and p is the
         number of features.
 
     Returns:
-    np.ndarray
         Output predictions (N, q), where q is the number of outputs.
         Each row corresponds to the prediction for each output class for a
         sample.
@@ -100,7 +97,7 @@ def reg_pmm_predict_func_single(
     gs: np.ndarray,
     r: int,
     X: np.ndarray,
-    smoothing: Optional[float] = None,  # must be traced out before JIT
+    smoothing: float = None,  # must be traced out before JIT
 ) -> np.ndarray:
     """
     Predict function for a single instance using PMM regression. The output is
@@ -117,25 +114,24 @@ def reg_pmm_predict_func_single(
         + sum_{ij}^r sum_l |v_i^H D_{kl} v_j|^2
 
     Parameters:
-    A : np.ndarray
+    A
         Constant matrix (n, n), must be Hermitian.
-    Bs : np.ndarray
+    Bs
         Array of linear matrices (p, n, n) where p is the number of features.
         Each Bs[i] must be Hermitian.
-    Ds : np.ndarray
+    Ds
         Array of secondary matrices (q, d, n, n), where q is the number of
         outputs and d is the number of secondary matrices.
         Each Ds[i, j] must be Hermitian.
-    gs : np.ndarray
+    gs
         Array of bias terms (q,). Where q is the number of outputs Must be
         real-valued.
-    r : int
+    r
         Number of eigenvectors to use for the prediction.
-    X : np.ndarray
+    X
         Input features (p,). Each X[i] corresponds to the i-th feature.
 
     Returns:
-    np.ndarray
         Output predictions (q,). Each element corresponds to the prediction for
         each output class.
     """
@@ -189,31 +185,30 @@ def reg_pmm_predict_func_legacy(
     Ds: np.ndarray,
     gs: np.ndarray,
     X: np.ndarray,
-    smoothing: Optional[float] = None,  # must be traced out before JIT
+    smoothing: float = None,  # must be traced out before JIT
 ) -> np.ndarray:
     """
     Parameters:
-    A : np.ndarray
+    A
         Constant matrix (n, n), must be Hermitian.
-    Bs : np.ndarray
+    Bs
         Array of linear matrices (p, n, n) where p is the number of features.
         Each Bs[i] must be Hermitian.
-    Ds : np.ndarray
+    Ds
         Array of secondary matrices (q, r, r, n, n), where q is the number of
         outputs and d is the number of secondary matrices.
         Each Ds[i, j] must be Hermitian and
         Ds[:, i, j, :, :] = Ds[:, j, i, :, :].
-    gs : np.ndarray
+    gs
         Array of bias terms (q,). Where q is the number of outputs Must be
         real-valued.
-    r : int
+    r
         Number of eigenvectors to use for the prediction.
-    X : np.ndarray
+    X
         Input samples (N, p), where N is the number of samples and p is the
         number of features.
 
     Returns:
-    np.ndarray
         Output predictions (N, q), where q is the number of outputs.
         Each row corresponds to the prediction for each output class for a
         sample.
@@ -239,7 +234,7 @@ def reg_pmm_predict_func_single_legacy(
     Ds: np.ndarray,
     gs: np.ndarray,
     X: np.ndarray,
-    smoothing: Optional[float] = None,  # must be traced out before JIT
+    smoothing: float = None,  # must be traced out before JIT
 ) -> np.ndarray:
     """
     Predict function for a single instance using PMM regression. The output is
@@ -256,26 +251,25 @@ def reg_pmm_predict_func_single_legacy(
         + sum_{ij}^r sum_l |v_i^H D_{kl} v_j|^2
 
     Parameters:
-    A : np.ndarray
+    A
         Constant matrix (n, n), must be Hermitian.
-    Bs : np.ndarray
+    Bs
         Array of linear matrices (p, n, n) where p is the number of features.
         Each Bs[i] must be Hermitian.
-    Ds : np.ndarray
+    Ds
         Array of secondary matrices (q, r, r, n, n), where q is the number of
         outputs and d is the number of secondary matrices.
         Each Ds[i, j] must be Hermitian and
         Ds[:, i, j, :, :] = Ds[:, j, i, :, :].
-    gs : np.ndarray
+    gs
         Array of bias terms (q,). Where q is the number of outputs Must be
         real-valued.
-    r : int
+    r
         Number of eigenvectors to use for the prediction.
-    X : np.ndarray
+    X
         Input features (p,). Each X[i] corresponds to the i-th feature.
 
     Returns:
-    np.ndarray
         Output predictions (q,). Each element corresponds to the prediction for
         each output class.
     """
