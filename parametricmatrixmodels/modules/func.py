@@ -62,22 +62,21 @@ class Func(BaseModule):
 
             Summary of allowed signatures:
 
-            1. `f(input_NF: np.ndarray) -> np.ndarray` used in the case of no
-                trainable parameters, no state, and no rng.
+            1. ``f(input_NF: Array) -> Array``
+                used in the case of no trainable parameters, no state, and no
+                rng.
 
-            2. `f(params: tuple[np.ndarray, ...], input_NF: np.ndarray) ->
-                np.ndarray` used in the case of trainable parameters, no state,
-                and no rng.
+            2. ``f(params: tuple[Array, ...], input_NF: Array) -> Array``
+                used in the case of trainable parameters, no state, and no rng.
 
-            3. `f(params: tuple[np.ndarray, ...], input_NF: np.ndarray,
-                state: tuple[np.ndarray, ...]) -> tuple[np.ndarray,
-                tuple[np.ndarray, ...]]` used in the case of trainable
-                parameters, state, but no rng.
+            3. ``f(params: tuple[Array, ...], input_NF: Array, state: \
+tuple[Array, ...]) -> tuple[Array, tuple[Array, ...]]``
+                used in the case of trainable parameters, state, but no rng.
 
-            4. `f(params: tuple[np.ndarray, ...], input_NF: np.ndarray,
-                state: tuple[np.ndarray, ...], rng: Any) -> tuple[np.ndarray,
-                tuple[np.ndarray, ...]]` used in the case of trainable
-                parameters, state, and rng.
+            4. ``f(params: tuple[Array, ...], input_NF: Array, state: \
+tuple[Array, ...], rng: Any) -> \
+tuple[Array, tuple[Array, ...]]``
+                used in the case of trainable parameters, state, and rng.
 
         fname
             Name of the function. If not provided, the function's Pythonic name
