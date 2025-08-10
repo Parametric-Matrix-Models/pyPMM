@@ -66,6 +66,9 @@ html_theme = "pydata_sphinx_theme"
 html_context = {"default_mode": "auto"}
 html_static_path = ["_static"]
 
+html_show_copyright = False
+html_show_sphinx = False
+
 html_favicon = "_static/favicon.ico"
 
 html_theme_options = {
@@ -79,4 +82,6 @@ html_theme_options = {
     "github_url": "https://github.com/Parametric-Matrix-Models",
     "show_toc_level": 2,
     "navigation_depth": 4,
+    "footer_start": [],
+    "footer_end": [],
 }
