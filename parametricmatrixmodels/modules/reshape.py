@@ -15,6 +15,8 @@ class Reshape(BaseModule):
 
     def __init__(self, shape: tuple[int, ...] = None) -> None:
         """
+        Initialize a ``Reshape`` module.
+
         Parameters
         ----------
         shape

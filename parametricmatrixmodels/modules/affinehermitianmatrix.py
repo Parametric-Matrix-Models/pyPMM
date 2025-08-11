@@ -18,14 +18,14 @@ class AffineHermitianMatrix(BaseModule):
     where :math:`M_0, M_1, ..., M_p` are (trainable) Hermitian matrices,
     :math:`x_1, ..., x_p` are the input features, :math:`s` is the
     smoothing hyperparameter, and :math:`C` is a matrix that is computed
-    as the sum of the commutators of all the Hermitian matrices, in an
-    efficient way using cumulative sums and the linearity of the
-    commutator:
+    as the imaginary unit times the sum of the commutators of all the
+    :math:`M_i` matrices, in an efficient way using cumulative sums and the
+    linearity of the commutator:
 
     .. math::
 
-        C &= \\sum_{\\substack{i,j\\\\i\\neq j}} \\left[M_i, M_j\\right] \\\\
-          &= \\sum_{\\substack{i\\\\i\\neq j}}
+        C &= i\\sum_{\\substack{i,j\\\\i\\neq j}} \\left[M_i, M_j\\right] \\\\
+          &= i\\sum_{\\substack{i\\\\i\\neq j}}
              \\left[M_i, \\sum_k^j M_k\\right]
 
     See Also
@@ -64,7 +64,7 @@ class AffineHermitianMatrix(BaseModule):
                 smoothing. Default is ``None``/``0.0`` (no smoothing).
             Ms
                 Optional array of matrices :math:`M_0, M_1, ..., M_p` that
-                define the parametric affine matrix. Each :math:`M` must be
+                define the parametric affine matrix. Each :math:`M_i` must be
                 Hermitian. If not provided, the matrices will be randomly
                 initialized when the module is compiled. Default is ``None``.
             init_magnitude

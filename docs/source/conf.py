@@ -54,6 +54,7 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
     "jax": ("https://docs.jax.dev/en/latest/", None),
+    "dill": ("https://dill.readthedocs.io/en/latest/", None),
 }
 
 add_module_names = False
@@ -79,7 +80,7 @@ html_theme_options = {
     },
     "collapse_navigation": False,
     "show_version_warning_banner": True,
-    "github_url": "https://github.com/Parametric-Matrix-Models",
+    "github_url": "https://github.com/Parametric-Matrix-Models/pyPMM",
     "show_toc_level": 2,
     "navigation_depth": 4,
     "footer_start": [],

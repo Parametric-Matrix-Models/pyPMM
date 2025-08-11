@@ -15,6 +15,17 @@ class Func(BaseModule):
     """
     Module that implements a general element-wise function, optionally with
     trainable parameters and state.
+
+    .. warning::
+        Saving and loading a ``Model`` which contains this module can be very
+        tricky, as the function is automatically serialized using ``dill``. For
+        loaded models to work correctly, the same import paths must be used
+        as when the model was saved. This means that the function must be
+        defined in the same module and with the same name as when the model
+        was saved. If the function is defined in a different module or with a
+        different name, the model will not be able to deserialize the function
+        and esoteric errors will occur.
+
     """
 
     def __init__(
@@ -44,9 +55,10 @@ class Func(BaseModule):
         state: tuple[np.ndarray, ...] = (),
     ) -> None:
         """
+        Initialize a ``Func`` module.
+
         Parameters
         ----------
-
         f
             A function that performs the modules operation. It can take only
             the input features and return only the output features (if there

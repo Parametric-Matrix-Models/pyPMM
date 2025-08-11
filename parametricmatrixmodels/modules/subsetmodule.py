@@ -11,19 +11,22 @@ from .basemodule import BaseModule
 
 class SubsetModule(BaseModule):
     """
-    Meta-module that applies a given Module to a subset of the input data and
+    Meta-module that applies a given module to a subset of the input data and
     optionally passes the remaining input data through unchanged.
 
     Diagrammatic example:
 
-       [x0] -> ...................................... -> [x0]
-       [x1] -> ...................................... -> [x1]
-       [x2] -> [ SubsetModule([2:], APPEND, module) ] -> [module(x2, x3)]
-       [x3] -> [                                    ]
+    .. code-block:: text
+
+       [x0] -> ............................................ -> [x0]
+       [x1] -> ............................................ -> [x1]
+       [x2] -> [ SubsetModule([2:], APPEND, CONSUME, mod) ] -> [mod(x2, x3)]
+       [x3] -> [                                          ]
 
     The output shape need not match the input shape, as the module may change
     the shape of the data, as in the example above, where the module takes two
-    input features (x2, x3) and produces one output feature (module(x2, x3)).
+    input features ``(x2, x3)`` and produces one output feature
+    ``(mod(x2, x3),)``.
 
     The output of the module that is applied can either be prepended or
     appended to the unchanged input data, as specified by the `prepend`
@@ -31,14 +34,16 @@ class SubsetModule(BaseModule):
 
     Additionally, the unchanged input data can be passed through unchanged
     alongside the output of the module, or it can be ignored, depending on the
-    `passthrough` parameter in the constructor. A diagrammatic example of a
-    passthrough SubsetModule is as follows:
+    ``passthrough`` parameter in the constructor. A diagrammatic example of a
+    passthrough ``SubsetModule`` is as follows:
 
-    [x0] -> .............................................. -> [x0]
-    [x1] -> .............................................. -> [x1]
-    [x2] -> [ SubsetModule([2:], APPEND, PASSTHROUGH, m) ] -> [x2]
-    [x3] -> [                                            ] -> [x3]
-            [                                            ] -> [m(x2, x3)]
+    .. code-block:: text
+
+        [x0] -> .............................................. -> [x0]
+        [x1] -> .............................................. -> [x1]
+        [x2] -> [ SubsetModule([2:], APPEND, PASSTHROUGH, m) ] -> [x2]
+        [x3] -> [                                            ] -> [x3]
+                [                                            ] -> [m(x2, x3)]
 
     """
 
@@ -51,30 +56,38 @@ class SubsetModule(BaseModule):
         passthrough: bool = False,
     ):
         """
+        Initialize a ``SubsetModule``.
+
         Parameters
         ----------
         subset
             A tuple of slices or index arrays indicating which parts of the
             input data to apply the module to. The number of slices must match
             the shape of the input data, not including the batch dimension.
-            For example, for
-            input data of shape (num_samples, num_features), a subset of all
+            For example, for input data of shape
+            ``(num_samples, num_features)``, a subset of all
             except the first two features would be specified as
-            (slice(2, None),).
+            ``(slice(2, None),)``.
         module
             The module to apply to the specified subset of the input data.
         prepend
-            If True, the output of the module will be prepended to the
-            unchanged input data. If False, the output will be appended.
-            Defaults to True.
+            If ``True``, the output of the module will be prepended to the
+            unchanged input data. If ``False``, the output will be appended.
+            Default is ``True``.
         axis
             The axis along which to concatenate the output of the module and
-            the unchanged input data. Defaults to 0 (i.e., along the first
-            feature dimension). This does not include the batch dimension.
+            the unchanged input data (if applicable). Default is ``0``
+            (i.e., along the first feature dimension). This does not include
+            the batch dimension.
         passthrough
-            If True, the unchanged input data will be passed through alongside
-            the output of the module. If False, the unchanged input data will
-            be dropped. Defaults to False.
+            If ``True``, the unchanged input data will be passed through
+            alongside the output of the module. If ``False``, the unchanged
+            input data will be dropped. Defaults to False.
+
+        Raises
+        ------
+        TypeError
+            If `subset` is not a tuple of slices or index arrays.
         """
         if subset is not None and not isinstance(subset, tuple):
             raise TypeError(

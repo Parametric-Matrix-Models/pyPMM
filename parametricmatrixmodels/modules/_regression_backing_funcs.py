@@ -45,7 +45,7 @@ def exact_smoothing_matrix(
         np.arange(Bs.shape[0] - 1),  # don't include the last index
     )
 
-    return smoothing_matrix
+    return 1j * smoothing_matrix
 
 
 def reg_pmm_predict_func(

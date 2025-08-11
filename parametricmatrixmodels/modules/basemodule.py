@@ -227,15 +227,15 @@ class BaseModule(object):
         """
         Compile the module to be used with the given input shape.
 
-        This method should initialize the module's parameters and state based
+        This method initializes the module's parameters and state based
         on the input shape and random key.
 
-        This is needed since Models are built before the input data is given,
-        so before training or inference can be done, the module needs to be
-        compiled and each Module passes its output shape to the next Module's
-        compile method.
+        This is needed since ``Model`` s are built before the input data is
+        given, so before training or inference can be done, the module
+        needs to be compiled and each module passes its output shape to the
+        next module's ``compile`` method.
 
-        The rng key is used to initialize random parameters, if needed.
+        The RNG key is used to initialize random parameters, if needed.
 
         This is **not** used to trace or jit the module's callable, that is
         done automatically later.
@@ -516,7 +516,7 @@ class BaseModule(object):
         """
         Serialize the module to a dictionary.
 
-        This method should return a dictionary representation of the module,
+        This method returns a dictionary representation of the module,
         including its parameters and state.
 
         The default implementation serializes the module's name,
@@ -543,7 +543,7 @@ class BaseModule(object):
         """
         Deserialize the module from a dictionary.
 
-        This method should set the module's parameters and state based on the
+        This method sets the module's parameters and state based on the
         provided dictionary.
 
         The default implementation expects the dictionary to contain
@@ -553,6 +553,13 @@ class BaseModule(object):
         ----------
         data
             Dictionary containing the serialized module data.
+
+        Raises
+        ------
+        ValueError
+            If the serialized data does not contain the expected keys or
+            if the version of the serialized data is not compatible with
+            with the current package version.
         """
 
         # read the version of the package this module was serialized with

@@ -11,8 +11,54 @@ from .basemodule import BaseModule
 
 class LegacyAffineObservablePMM(BaseModule):
     """
-    AffineObservablePMM is a module that implements the affine observable
-    Parametric Matrix Model (PMM), which is useful for generalize regression
+    Module that implements the legacy affine observable Parametric Matrix Model
+    (PMM), which is useful for generalized regression.
+
+    The algorithm is described in [1]_ and is summarized as follows:
+
+    Given trainable Hermitian matrices :math:`M_0, M_1, \\ldots, M_p` and input
+    features :math:`x_1, \\ldots, x_p`, we define the Hermitian, affine,
+    parametric matrix:
+
+    .. math::
+
+        M(x) = M_0 + x_1 M_1 + \\ldots + x_p M_p + s C
+
+    where :math:`s` is an optional smoothing parameter and :math:`C` is a
+    matrix that is the imaginary unit times the sum of all commutators of the
+    :math:`M_i` matrices. This :math:`C` matrix can be efficiently computed by
+    using cumulative sums and the linearity of the commutator:
+
+    .. math::
+
+        C &= i\\sum_{\\substack{i,j\\\\i\\neq j}} \\left[M_i, M_j\\right] \\\\
+          &= i\\sum_{\\substack{i\\\\i\\neq j}}
+             \\left[M_i, \\sum_k^j M_k\\right]
+
+    The :math:`r` eigenvectors of :math:`M(x)` corresponding to the largest
+    magnitude eigenvalues are then used to compute expectation values and
+    transition amplitudes with respect to a set of trainable Hermitian
+    secondary matrices :math:`D_{kij}`. These values are combined with
+    trainable real biases :math:`g_k` to produce the final outputs :math:`z_k`:
+
+    .. math::
+
+        z_k = g_k &+ \\sum_{i,j}^{r} \\left|v_i^H D_{kij} v_j\\right|^2 \\\\
+            &- \\frac{1}{2} \\sum_{i,j}^{r} \
+            \\left\\Vert D_{kij}\\right\\Vert^2_2
+
+    See Also
+    --------
+    AffineObservablePMM
+        The improved version of this module, which uses a slightly modified
+        formulation for the application of the secondary matrices which
+        improves both model performance and size.
+
+    References
+    ----------
+    .. [1] Cook, P., Jammooa, D., Hjorth-Jensen, M. et al. Parametric matrix
+            models. Nat Commun 16, 5929 (2025).
+            https://doi.org/10.1038/s41467-025-61362-4
     """
 
     def __init__(
@@ -27,53 +73,38 @@ class LegacyAffineObservablePMM(BaseModule):
         init_magnitude: float = 1e-2,
     ) -> None:
         """
-        Initialize the LegacyAffineObservablePMM module. Represents a PMM which
-        evaluates the legacy affine observable PMM given by the process:
-
-        M(x) = M0 + x1 * M1 + ... + xp * Mp
-             -> (E, V) = eig(M(x)) [sorted in decreasing eigenvalue magnitude]
-
-        z_k = g_k
-            + sum_{ij}^r (
-                [ |v_i^H D_{kij} v_j|^2 - 0.5 * ||D_{kij}||^2_2 ]
-            )
-
-            = g_k
-            - 0.5 * sum_ij^r ||D_{kij}||^2_2
-            + sum_{ij}^r |v_i^H D_{kij} v_j|^2
-
-        By default this module is initialized to compute the smallest algebraic
-        eigenvalue (ground state).
+        Initialize a ``LegacyAffineObservablePMM`` module.
 
         Parameters
         ----------
             matrix_size : int
-                Size of the PMM matrices (square). Shorthand `n`.
+                Size of the PMM matrices (square). Shorthand :math:`n`.
             num_eig : int
                 Number of eigenvectors to use, the number of secondary matrices
-                will be r^2. Shorthand `r`.
+                will be this value squared. Shorthand :math:`r`.
             output_size : int
-                Number of output features. Shorthand `k`.
+                Number of output features. Shorthand :math:`k`.
             smoothing : float, optional
-                Smoothing parameter, set to None/0.0 to disable.
-                Defaults to None/0.0.
+                Smoothing parameter, set to ``None``/``0.0`` to disable.
+                Default is ``None``/``0.0``.
             Ms : np.ndarray, optional
-                Optional array of matrices M0, M1, ..., Mp that define the
-                parametric Hamiltonian. Each M must be Hermitian. If not
-                provided, the matrices will be randomly initialized when the
-                module is compiled.
-            Ds : np.ndarray, optional
-                Optional 5D array of matrices D_{kl} that define the
-                observables. Each D must be Hermitian. If not provided, the
-                observables will be randomly initialized when the module is
+                Optional array of matrices :math:`M_0, M_1, ..., M_p` that
+                define the parametric Hamiltonian.
+                Each :math:`M_i` must be Hermitian. If not provided, the
+                matrices will be randomly initialized when the module is
                 compiled.
+            Ds : np.ndarray, optional
+                Optional 5D array of matrices :math:`D_{kij}` that define the
+                observables. Each :math:`D_{kij}` must be Hermitian.
+                If not provided, the observables will be randomly initialized
+                when the module is compiled.
             gs : np.ndarray, optional
-                Optional vector of length r that defines the real biases for
-                the observable. If not provided, the biases will be
+                Optional vector of length ``num_eig`` that defines the real
+                biases for the observable. If not provided, the biases will be
                 randomly initialized when the module is compiled.
             init_magnitude : float, optional
-                Initial magnitude for the random matrices if Ms is not
-                provided, by default 1e-2.
+                Initial magnitude for the random matrices if they are not
+                provided, default is ``1e-2``.
         """
 
         # input validation
