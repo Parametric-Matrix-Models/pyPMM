@@ -184,7 +184,7 @@
           
           
           
-          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -277,7 +277,7 @@
           
           
           
-          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -489,7 +489,7 @@
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.Flatten.__init__" title="parametricmatrixmodels.modules.Flatten.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Initialize a <code class="docutils literal notranslate"><span class="pre">Reshape</span></code> module.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.Flatten.astype" title="parametricmatrixmodels.modules.Flatten.astype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">astype</span></code></a></p></td>
 <td><p>Convenience wrapper to set_precision using the dtype argument, returns self.</p></td>
@@ -547,7 +547,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.Flatten.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/flatten.html#Flatten.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.Flatten.__init__" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initialize a <code class="docutils literal notranslate"><span class="pre">Reshape</span></code> module.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>shape</strong> – The target shape to reshape the input to, by default None.
 If None, the input shape will remain unchanged.
@@ -645,13 +646,13 @@ Valid options are:
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.Flatten.compile">
 <span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.Flatten.compile" title="Link to this definition">#</a></dt>
 <dd><p>Compile the module to be used with the given input shape.</p>
-<p>This method should initialize the module’s parameters and state based
+<p>This method initializes the module’s parameters and state based
 on the input shape and random key.</p>
-<p>This is needed since Models are built before the input data is given,
-so before training or inference can be done, the module needs to be
-compiled and each Module passes its output shape to the next Module’s
-compile method.</p>
-<p>The rng key is used to initialize random parameters, if needed.</p>
+<p>This is needed since <code class="docutils literal notranslate"><span class="pre">Model</span></code> s are built before the input data is
+given, so before training or inference can be done, the module
+needs to be compiled and each module passes its output shape to the
+next module’s <code class="docutils literal notranslate"><span class="pre">compile</span></code> method.</p>
+<p>The RNG key is used to initialize random parameters, if needed.</p>
 <p>This is <strong>not</strong> used to trace or jit the module’s callable, that is
 done automatically later.</p>
 <dl class="field-list simple">
@@ -674,7 +675,7 @@ done automatically later.</p>
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.Flatten.deserialize">
 <span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.Flatten.deserialize" title="Link to this definition">#</a></dt>
 <dd><p>Deserialize the module from a dictionary.</p>
-<p>This method should set the module’s parameters and state based on the
+<p>This method sets the module’s parameters and state based on the
 provided dictionary.</p>
 <p>The default implementation expects the dictionary to contain
 the module’s name, trainable parameters, and state.</p>
@@ -682,8 +683,13 @@ the module’s name, trainable parameters, and state.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span>) – Dictionary containing the serialized module data.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If the serialized data does not contain the expected keys or
+    if the version of the serialized data is not compatible with
+    with the current package version.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -818,7 +824,7 @@ name.</p>
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.Flatten.serialize">
 <span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.Flatten.serialize" title="Link to this definition">#</a></dt>
 <dd><p>Serialize the module to a dictionary.</p>
-<p>This method should return a dictionary representation of the module,
+<p>This method returns a dictionary representation of the module,
 including its parameters and state.</p>
 <p>The default implementation serializes the module’s name,
 hyperparameters, trainable parameters, and state via a simple

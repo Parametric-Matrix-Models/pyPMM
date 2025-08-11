@@ -183,7 +183,7 @@
           
           
           
-          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -276,7 +276,7 @@
           
           
           
-          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -484,36 +484,37 @@
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.SubsetModule">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SubsetModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passthrough</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/subsetmodule.html#SubsetModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.SubsetModule" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></a></p>
-<p>Meta-module that applies a given Module to a subset of the input data and
+<p>Meta-module that applies a given module to a subset of the input data and
 optionally passes the remaining input data through unchanged.</p>
 <p>Diagrammatic example:</p>
-<blockquote>
-<div><p>[x0] -&gt; ……………………………….. -&gt; [x0]
-[x1] -&gt; ……………………………….. -&gt; [x1]
-[x2] -&gt; [ SubsetModule([2:], APPEND, module) ] -&gt; [module(x2, x3)]
-[x3] -&gt; [                                    ]</p>
-</div></blockquote>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[x0] -&gt; ............................................ -&gt; [x0]
+[x1] -&gt; ............................................ -&gt; [x1]
+[x2] -&gt; [ SubsetModule([2:], APPEND, CONSUME, mod) ] -&gt; [mod(x2, x3)]
+[x3] -&gt; [                                          ]
+</pre></div>
+</div>
 <p>The output shape need not match the input shape, as the module may change
 the shape of the data, as in the example above, where the module takes two
-input features (x2, x3) and produces one output feature (module(x2, x3)).</p>
+input features <code class="docutils literal notranslate"><span class="pre">(x2,</span> <span class="pre">x3)</span></code> and produces one output feature
+<code class="docutils literal notranslate"><span class="pre">(mod(x2,</span> <span class="pre">x3),)</span></code>.</p>
 <p>The output of the module that is applied can either be prepended or
 appended to the unchanged input data, as specified by the <cite>prepend</cite>
 parameter in the constructor.</p>
 <p>Additionally, the unchanged input data can be passed through unchanged
 alongside the output of the module, or it can be ignored, depending on the
-<cite>passthrough</cite> parameter in the constructor. A diagrammatic example of a
-passthrough SubsetModule is as follows:</p>
-<p>[x0] -&gt; ………………………………………. -&gt; [x0]
-[x1] -&gt; ………………………………………. -&gt; [x1]
+<code class="docutils literal notranslate"><span class="pre">passthrough</span></code> parameter in the constructor. A diagrammatic example of a
+passthrough <code class="docutils literal notranslate"><span class="pre">SubsetModule</span></code> is as follows:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[x0] -&gt; .............................................. -&gt; [x0]
+[x1] -&gt; .............................................. -&gt; [x1]
 [x2] -&gt; [ SubsetModule([2:], APPEND, PASSTHROUGH, m) ] -&gt; [x2]
-[x3] -&gt; [                                            ] -&gt; [x3]</p>
-<blockquote>
-<div><p>[                                            ] -&gt; [m(x2, x3)]</p>
-</div></blockquote>
+[x3] -&gt; [                                            ] -&gt; [x3]
+        [                                            ] -&gt; [m(x2, x3)]
+</pre></div>
+</div>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.SubsetModule.__init__" title="parametricmatrixmodels.modules.SubsetModule.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a></p></td>
-<td><p></p></td>
+<td><p>Initialize a <code class="docutils literal notranslate"><span class="pre">SubsetModule</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.SubsetModule.astype" title="parametricmatrixmodels.modules.SubsetModule.astype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">astype</span></code></a></p></td>
 <td><p>Convenience wrapper to set_precision using the dtype argument, returns self.</p></td>
@@ -571,27 +572,32 @@ passthrough SubsetModule is as follows:</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.SubsetModule.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passthrough</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/subsetmodule.html#SubsetModule.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.SubsetModule.__init__" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initialize a <code class="docutils literal notranslate"><span class="pre">SubsetModule</span></code>.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>subset</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#slice" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">slice</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>] | <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]</span>) – A tuple of slices or index arrays indicating which parts of the
 input data to apply the module to. The number of slices must match
 the shape of the input data, not including the batch dimension.
-For example, for
-input data of shape (num_samples, num_features), a subset of all
+For example, for input data of shape
+<code class="docutils literal notranslate"><span class="pre">(num_samples,</span> <span class="pre">num_features)</span></code>, a subset of all
 except the first two features would be specified as
-(slice(2, None),).</p></li>
+<code class="docutils literal notranslate"><span class="pre">(slice(2,</span> <span class="pre">None),)</span></code>.</p></li>
 <li><p><strong>module</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></a></span>) – The module to apply to the specified subset of the input data.</p></li>
-<li><p><strong>prepend</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If True, the output of the module will be prepended to the
-unchanged input data. If False, the output will be appended.
-Defaults to True.</p></li>
+<li><p><strong>prepend</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the output of the module will be prepended to the
+unchanged input data. If <code class="docutils literal notranslate"><span class="pre">False</span></code>, the output will be appended.
+Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 <li><p><strong>axis</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – The axis along which to concatenate the output of the module and
-the unchanged input data. Defaults to 0 (i.e., along the first
-feature dimension). This does not include the batch dimension.</p></li>
-<li><p><strong>passthrough</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If True, the unchanged input data will be passed through alongside
-the output of the module. If False, the unchanged input data will
-be dropped. Defaults to False.</p></li>
+the unchanged input data (if applicable). Default is <code class="docutils literal notranslate"><span class="pre">0</span></code>
+(i.e., along the first feature dimension). This does not include
+the batch dimension.</p></li>
+<li><p><strong>passthrough</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the unchanged input data will be passed through
+alongside the output of the module. If <code class="docutils literal notranslate"><span class="pre">False</span></code>, the unchanged
+input data will be dropped. Defaults to False.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If <cite>subset</cite> is not a tuple of slices or index arrays.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -695,13 +701,13 @@ Valid options are:
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.SubsetModule.compile">
 <span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/subsetmodule.html#SubsetModule.compile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.SubsetModule.compile" title="Link to this definition">#</a></dt>
 <dd><p>Compile the module to be used with the given input shape.</p>
-<p>This method should initialize the module’s parameters and state based
+<p>This method initializes the module’s parameters and state based
 on the input shape and random key.</p>
-<p>This is needed since Models are built before the input data is given,
-so before training or inference can be done, the module needs to be
-compiled and each Module passes its output shape to the next Module’s
-compile method.</p>
-<p>The rng key is used to initialize random parameters, if needed.</p>
+<p>This is needed since <code class="docutils literal notranslate"><span class="pre">Model</span></code> s are built before the input data is
+given, so before training or inference can be done, the module
+needs to be compiled and each module passes its output shape to the
+next module’s <code class="docutils literal notranslate"><span class="pre">compile</span></code> method.</p>
+<p>The RNG key is used to initialize random parameters, if needed.</p>
 <p>This is <strong>not</strong> used to trace or jit the module’s callable, that is
 done automatically later.</p>
 <dl class="field-list simple">
@@ -724,7 +730,7 @@ done automatically later.</p>
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.SubsetModule.deserialize">
 <span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/subsetmodule.html#SubsetModule.deserialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.SubsetModule.deserialize" title="Link to this definition">#</a></dt>
 <dd><p>Deserialize the module from a dictionary.</p>
-<p>This method should set the module’s parameters and state based on the
+<p>This method sets the module’s parameters and state based on the
 provided dictionary.</p>
 <p>The default implementation expects the dictionary to contain
 the module’s name, trainable parameters, and state.</p>
@@ -732,8 +738,13 @@ the module’s name, trainable parameters, and state.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span>) – Dictionary containing the serialized module data.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If the serialized data does not contain the expected keys or
+    if the version of the serialized data is not compatible with
+    with the current package version.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -868,7 +879,7 @@ name.</p>
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.SubsetModule.serialize">
 <span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/subsetmodule.html#SubsetModule.serialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.SubsetModule.serialize" title="Link to this definition">#</a></dt>
 <dd><p>Serialize the module to a dictionary.</p>
-<p>This method should return a dictionary representation of the module,
+<p>This method returns a dictionary representation of the module,
 including its parameters and state.</p>
 <p>The default implementation serializes the module’s name,
 hyperparameters, trainable parameters, and state via a simple

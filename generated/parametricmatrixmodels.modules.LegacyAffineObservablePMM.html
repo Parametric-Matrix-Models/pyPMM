@@ -41,6 +41,7 @@
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/parametricmatrixmodels.modules.LegacyAffineObservablePMM';</script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -184,7 +185,7 @@
           
           
           
-          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -277,7 +278,7 @@
           
           
           
-          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -485,12 +486,50 @@
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.LegacyAffineObservablePMM">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">LegacyAffineObservablePMM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_eig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_magnitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/legacyaffineobservablepmm.html#LegacyAffineObservablePMM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.LegacyAffineObservablePMM" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></a></p>
-<p>AffineObservablePMM is a module that implements the affine observable
-Parametric Matrix Model (PMM), which is useful for generalize regression</p>
+<p>Module that implements the legacy affine observable Parametric Matrix Model
+(PMM), which is useful for generalized regression.</p>
+<p>The algorithm is described in <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and is summarized as follows:</p>
+<p>Given trainable Hermitian matrices <span class="math notranslate nohighlight">\(M_0, M_1, \ldots, M_p\)</span> and input
+features <span class="math notranslate nohighlight">\(x_1, \ldots, x_p\)</span>, we define the Hermitian, affine,
+parametric matrix:</p>
+<div class="math notranslate nohighlight">
+\[M(x) = M_0 + x_1 M_1 + \ldots + x_p M_p + s C\]</div>
+<p>where <span class="math notranslate nohighlight">\(s\)</span> is an optional smoothing parameter and <span class="math notranslate nohighlight">\(C\)</span> is a
+matrix that is the imaginary unit times the sum of all commutators of the
+<span class="math notranslate nohighlight">\(M_i\)</span> matrices. This <span class="math notranslate nohighlight">\(C\)</span> matrix can be efficiently computed by
+using cumulative sums and the linearity of the commutator:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}C &amp;= i\sum_{\substack{i,j\\i\neq j}} \left[M_i, M_j\right] \\
+  &amp;= i\sum_{\substack{i\\i\neq j}}
+     \left[M_i, \sum_k^j M_k\right]\end{split}\]</div>
+<p>The <span class="math notranslate nohighlight">\(r\)</span> eigenvectors of <span class="math notranslate nohighlight">\(M(x)\)</span> corresponding to the largest
+magnitude eigenvalues are then used to compute expectation values and
+transition amplitudes with respect to a set of trainable Hermitian
+secondary matrices <span class="math notranslate nohighlight">\(D_{kij}\)</span>. These values are combined with
+trainable real biases <span class="math notranslate nohighlight">\(g_k\)</span> to produce the final outputs <span class="math notranslate nohighlight">\(z_k\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}z_k = g_k &amp;+ \sum_{i,j}^{r} \left|v_i^H D_{kij} v_j\right|^2 \\
+    &amp;- \frac{1}{2} \sum_{i,j}^{r}             \left\Vert D_{kij}\right\Vert^2_2\end{split}\]</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="parametricmatrixmodels.modules.AffineObservablePMM.html#parametricmatrixmodels.modules.AffineObservablePMM" title="parametricmatrixmodels.modules.AffineObservablePMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AffineObservablePMM</span></code></a></dt><dd><p>The improved version of this module, which uses a slightly modified formulation for the application of the secondary matrices which improves both model performance and size.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Cook, P., Jammooa, D., Hjorth-Jensen, M. et al. Parametric matrix
+models. Nat Commun 16, 5929 (2025).
+<a class="reference external" href="https://doi.org/10.1038/s41467-025-61362-4">https://doi.org/10.1038/s41467-025-61362-4</a></p>
+</aside>
+</aside>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.LegacyAffineObservablePMM.__init__" title="parametricmatrixmodels.modules.LegacyAffineObservablePMM.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a></p></td>
-<td><p>Initialize the LegacyAffineObservablePMM module.</p></td>
+<td><p>Initialize a <code class="docutils literal notranslate"><span class="pre">LegacyAffineObservablePMM</span></code> module.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.LegacyAffineObservablePMM.astype" title="parametricmatrixmodels.modules.LegacyAffineObservablePMM.astype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">astype</span></code></a></p></td>
 <td><p>Convenience wrapper to set_precision using the dtype argument, returns self.</p></td>
@@ -548,48 +587,30 @@ Parametric Matrix Model (PMM), which is useful for generalize regression</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.LegacyAffineObservablePMM.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_eig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_magnitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/legacyaffineobservablepmm.html#LegacyAffineObservablePMM.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.LegacyAffineObservablePMM.__init__" title="Link to this definition">#</a></dt>
-<dd><p>Initialize the LegacyAffineObservablePMM module. Represents a PMM which
-evaluates the legacy affine observable PMM given by the process:</p>
-<dl>
-<dt>M(x) = M0 + x1 * M1 + … + xp * Mp</dt><dd><p>-&gt; (E, V) = eig(M(x)) [sorted in decreasing eigenvalue magnitude]</p>
-</dd>
-<dt>z_k = g_k</dt><dd><ul class="simple">
-<li><dl class="simple">
-<dt>sum_{ij}^r (</dt><dd><p>[ <a href="#id1"><span class="problematic" id="id2">|</span></a>v_i^H D_{kij} v_j|^2 - 0.5 * ||D_{kij}||^2_2 ]</p>
-</dd>
-</dl>
-</li>
-</ul>
-<p>)</p>
-<p>= g_k
-- 0.5 * sum_ij^r ||D_{kij}||^2_2
-+ sum_{ij}^r <a href="#id3"><span class="problematic" id="id4">|</span></a>v_i^H D_{kij} v_j|^2</p>
-</dd>
-</dl>
-<p>By default this module is initialized to compute the smallest algebraic
-eigenvalue (ground state).</p>
+<dd><p>Initialize a <code class="docutils literal notranslate"><span class="pre">LegacyAffineObservablePMM</span></code> module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>matrix_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Size of the PMM matrices (square). Shorthand <cite>n</cite>.</p></li>
+<li><p><strong>matrix_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Size of the PMM matrices (square). Shorthand <span class="math notranslate nohighlight">\(n\)</span>.</p></li>
 <li><p><strong>num_eig</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of eigenvectors to use, the number of secondary matrices
-will be r^2. Shorthand <cite>r</cite>.</p></li>
-<li><p><strong>output_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of output features. Shorthand <cite>k</cite>.</p></li>
-<li><p><strong>smoothing</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Smoothing parameter, set to None/0.0 to disable.
-Defaults to None/0.0.</p></li>
-<li><p><strong>Ms</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Optional array of matrices M0, M1, …, Mp that define the
-parametric Hamiltonian. Each M must be Hermitian. If not
-provided, the matrices will be randomly initialized when the
-module is compiled.</p></li>
-<li><p><strong>Ds</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Optional 5D array of matrices D_{kl} that define the
-observables. Each D must be Hermitian. If not provided, the
-observables will be randomly initialized when the module is
+will be this value squared. Shorthand <span class="math notranslate nohighlight">\(r\)</span>.</p></li>
+<li><p><strong>output_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of output features. Shorthand <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
+<li><p><strong>smoothing</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Smoothing parameter, set to <code class="docutils literal notranslate"><span class="pre">None</span></code>/<code class="docutils literal notranslate"><span class="pre">0.0</span></code> to disable.
+Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>/<code class="docutils literal notranslate"><span class="pre">0.0</span></code>.</p></li>
+<li><p><strong>Ms</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Optional array of matrices <span class="math notranslate nohighlight">\(M_0, M_1, ..., M_p\)</span> that
+define the parametric Hamiltonian.
+Each <span class="math notranslate nohighlight">\(M_i\)</span> must be Hermitian. If not provided, the
+matrices will be randomly initialized when the module is
 compiled.</p></li>
-<li><p><strong>gs</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Optional vector of length r that defines the real biases for
-the observable. If not provided, the biases will be
+<li><p><strong>Ds</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Optional 5D array of matrices <span class="math notranslate nohighlight">\(D_{kij}\)</span> that define the
+observables. Each <span class="math notranslate nohighlight">\(D_{kij}\)</span> must be Hermitian.
+If not provided, the observables will be randomly initialized
+when the module is compiled.</p></li>
+<li><p><strong>gs</strong> (<em>np.ndarray</em><em>, </em><em>optional</em>) – Optional vector of length <code class="docutils literal notranslate"><span class="pre">num_eig</span></code> that defines the real
+biases for the observable. If not provided, the biases will be
 randomly initialized when the module is compiled.</p></li>
-<li><p><strong>init_magnitude</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Initial magnitude for the random matrices if Ms is not
-provided, by default 1e-2.</p></li>
+<li><p><strong>init_magnitude</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Initial magnitude for the random matrices if they are not
+provided, default is <code class="docutils literal notranslate"><span class="pre">1e-2</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -684,13 +705,13 @@ Valid options are:
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.LegacyAffineObservablePMM.compile">
 <span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/legacyaffineobservablepmm.html#LegacyAffineObservablePMM.compile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.LegacyAffineObservablePMM.compile" title="Link to this definition">#</a></dt>
 <dd><p>Compile the module to be used with the given input shape.</p>
-<p>This method should initialize the module’s parameters and state based
+<p>This method initializes the module’s parameters and state based
 on the input shape and random key.</p>
-<p>This is needed since Models are built before the input data is given,
-so before training or inference can be done, the module needs to be
-compiled and each Module passes its output shape to the next Module’s
-compile method.</p>
-<p>The rng key is used to initialize random parameters, if needed.</p>
+<p>This is needed since <code class="docutils literal notranslate"><span class="pre">Model</span></code> s are built before the input data is
+given, so before training or inference can be done, the module
+needs to be compiled and each module passes its output shape to the
+next module’s <code class="docutils literal notranslate"><span class="pre">compile</span></code> method.</p>
+<p>The RNG key is used to initialize random parameters, if needed.</p>
 <p>This is <strong>not</strong> used to trace or jit the module’s callable, that is
 done automatically later.</p>
 <dl class="field-list simple">
@@ -713,7 +734,7 @@ done automatically later.</p>
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.LegacyAffineObservablePMM.deserialize">
 <span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.LegacyAffineObservablePMM.deserialize" title="Link to this definition">#</a></dt>
 <dd><p>Deserialize the module from a dictionary.</p>
-<p>This method should set the module’s parameters and state based on the
+<p>This method sets the module’s parameters and state based on the
 provided dictionary.</p>
 <p>The default implementation expects the dictionary to contain
 the module’s name, trainable parameters, and state.</p>
@@ -721,8 +742,13 @@ the module’s name, trainable parameters, and state.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</span>) – Dictionary containing the serialized module data.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If the serialized data does not contain the expected keys or
+    if the version of the serialized data is not compatible with
+    with the current package version.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -857,7 +883,7 @@ name.</p>
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.LegacyAffineObservablePMM.serialize">
 <span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.LegacyAffineObservablePMM.serialize" title="Link to this definition">#</a></dt>
 <dd><p>Serialize the module to a dictionary.</p>
-<p>This method should return a dictionary representation of the module,
+<p>This method returns a dictionary representation of the module,
 including its parameters and state.</p>
 <p>The default implementation serializes the module’s name,
 hyperparameters, trainable parameters, and state via a simple
