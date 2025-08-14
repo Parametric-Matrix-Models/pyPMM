@@ -9,7 +9,7 @@ authors = [
 ]
 description = "Python package for Parametric Matrix Models"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 keywords = ["PMM", "Parametric Matrix Models", "Emulation", "Machine Learning"]
 license = "GPL-3.0-or-later"
 classifiers= [
