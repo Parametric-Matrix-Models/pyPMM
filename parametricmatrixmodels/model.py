@@ -51,7 +51,7 @@ class Model(object):
         return rep
 
     def __init__(
-        self, modules: List[BaseModule] = [], rng: Any = None
+        self, modules: list[BaseModule] | BaseModule = None, rng: Any = None
     ) -> None:
         """
         Initialize the model with the input shape and a list of modules.
@@ -67,7 +67,9 @@ class Model(object):
                 an integer is provided, it will be used as the seed to create
                 the key.
         """
-        self.modules = modules
+        self.modules = modules if modules is not None else []
+        if isinstance(modules, BaseModule):
+            self.modules = [modules]
         if rng is None:
             self.rng = jax.random.key(random.randint(0, 2**32 - 1))
         elif isinstance(rng, int):
