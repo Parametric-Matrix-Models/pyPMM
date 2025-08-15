@@ -7,27 +7,50 @@
 
 .. autoclass:: I0
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~I0.__init__
+      
+      
          ~I0.astype
+      
          ~I0.compile
+      
          ~I0.deserialize
+      
          ~I0.func
+      
          ~I0.get_hyperparameters
+      
          ~I0.get_num_trainable_floats
+      
          ~I0.get_output_shape
+      
          ~I0.get_params
+      
          ~I0.get_state
+      
          ~I0.is_ready
+      
          ~I0.name
+      
          ~I0.serialize
+      
          ~I0.set_hyperparameters
+      
          ~I0.set_params
+      
          ~I0.set_precision
+      
          ~I0.set_state
 
    .. autosummary::

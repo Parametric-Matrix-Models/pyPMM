@@ -7,27 +7,50 @@
 
 .. autoclass:: SiLU
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~SiLU.__init__
+      
+      
          ~SiLU.astype
+      
          ~SiLU.compile
+      
          ~SiLU.deserialize
+      
          ~SiLU.func
+      
          ~SiLU.get_hyperparameters
+      
          ~SiLU.get_num_trainable_floats
+      
          ~SiLU.get_output_shape
+      
          ~SiLU.get_params
+      
          ~SiLU.get_state
+      
          ~SiLU.is_ready
+      
          ~SiLU.name
+      
          ~SiLU.serialize
+      
          ~SiLU.set_hyperparameters
+      
          ~SiLU.set_params
+      
          ~SiLU.set_precision
+      
          ~SiLU.set_state
 
    .. autosummary::

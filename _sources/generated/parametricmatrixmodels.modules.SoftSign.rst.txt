@@ -7,27 +7,50 @@
 
 .. autoclass:: SoftSign
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~SoftSign.__init__
+      
+      
          ~SoftSign.astype
+      
          ~SoftSign.compile
+      
          ~SoftSign.deserialize
+      
          ~SoftSign.func
+      
          ~SoftSign.get_hyperparameters
+      
          ~SoftSign.get_num_trainable_floats
+      
          ~SoftSign.get_output_shape
+      
          ~SoftSign.get_params
+      
          ~SoftSign.get_state
+      
          ~SoftSign.is_ready
+      
          ~SoftSign.name
+      
          ~SoftSign.serialize
+      
          ~SoftSign.set_hyperparameters
+      
          ~SoftSign.set_params
+      
          ~SoftSign.set_precision
+      
          ~SoftSign.set_state
 
    .. autosummary::

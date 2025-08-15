@@ -7,27 +7,50 @@
 
 .. autoclass:: FAbs
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~FAbs.__init__
+      
+      
          ~FAbs.astype
+      
          ~FAbs.compile
+      
          ~FAbs.deserialize
+      
          ~FAbs.func
+      
          ~FAbs.get_hyperparameters
+      
          ~FAbs.get_num_trainable_floats
+      
          ~FAbs.get_output_shape
+      
          ~FAbs.get_params
+      
          ~FAbs.get_state
+      
          ~FAbs.is_ready
+      
          ~FAbs.name
+      
          ~FAbs.serialize
+      
          ~FAbs.set_hyperparameters
+      
          ~FAbs.set_params
+      
          ~FAbs.set_precision
+      
          ~FAbs.set_state
 
    .. autosummary::

@@ -7,27 +7,50 @@
 
 .. autoclass:: Exp
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Exp.__init__
+      
+      
          ~Exp.astype
+      
          ~Exp.compile
+      
          ~Exp.deserialize
+      
          ~Exp.func
+      
          ~Exp.get_hyperparameters
+      
          ~Exp.get_num_trainable_floats
+      
          ~Exp.get_output_shape
+      
          ~Exp.get_params
+      
          ~Exp.get_state
+      
          ~Exp.is_ready
+      
          ~Exp.name
+      
          ~Exp.serialize
+      
          ~Exp.set_hyperparameters
+      
          ~Exp.set_params
+      
          ~Exp.set_precision
+      
          ~Exp.set_state
 
    .. autosummary::

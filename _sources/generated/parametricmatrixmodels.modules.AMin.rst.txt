@@ -7,27 +7,50 @@
 
 .. autoclass:: AMin
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~AMin.__init__
+      
+      
          ~AMin.astype
+      
          ~AMin.compile
+      
          ~AMin.deserialize
+      
          ~AMin.func
+      
          ~AMin.get_hyperparameters
+      
          ~AMin.get_num_trainable_floats
+      
          ~AMin.get_output_shape
+      
          ~AMin.get_params
+      
          ~AMin.get_state
+      
          ~AMin.is_ready
+      
          ~AMin.name
+      
          ~AMin.serialize
+      
          ~AMin.set_hyperparameters
+      
          ~AMin.set_params
+      
          ~AMin.set_precision
+      
          ~AMin.set_state
 
    .. autosummary::

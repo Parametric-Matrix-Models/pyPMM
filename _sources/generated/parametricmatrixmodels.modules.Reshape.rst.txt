@@ -7,26 +7,48 @@
 
 .. autoclass:: Reshape
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Reshape.__init__
+      
+      
          ~Reshape.astype
+      
          ~Reshape.compile
+      
          ~Reshape.deserialize
+      
          ~Reshape.get_hyperparameters
+      
          ~Reshape.get_num_trainable_floats
+      
          ~Reshape.get_output_shape
+      
          ~Reshape.get_params
+      
          ~Reshape.get_state
+      
          ~Reshape.is_ready
+      
          ~Reshape.name
+      
          ~Reshape.serialize
+      
          ~Reshape.set_hyperparameters
+      
          ~Reshape.set_params
+      
          ~Reshape.set_precision
+      
          ~Reshape.set_state
 
    .. autosummary::

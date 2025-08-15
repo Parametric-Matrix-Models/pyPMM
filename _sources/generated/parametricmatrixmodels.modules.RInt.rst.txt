@@ -7,27 +7,50 @@
 
 .. autoclass:: RInt
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~RInt.__init__
+      
+      
          ~RInt.astype
+      
          ~RInt.compile
+      
          ~RInt.deserialize
+      
          ~RInt.func
+      
          ~RInt.get_hyperparameters
+      
          ~RInt.get_num_trainable_floats
+      
          ~RInt.get_output_shape
+      
          ~RInt.get_params
+      
          ~RInt.get_state
+      
          ~RInt.is_ready
+      
          ~RInt.name
+      
          ~RInt.serialize
+      
          ~RInt.set_hyperparameters
+      
          ~RInt.set_params
+      
          ~RInt.set_precision
+      
          ~RInt.set_state
 
    .. autosummary::

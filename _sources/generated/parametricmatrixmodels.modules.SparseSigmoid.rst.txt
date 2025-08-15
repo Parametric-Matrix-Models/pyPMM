@@ -7,27 +7,50 @@
 
 .. autoclass:: SparseSigmoid
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~SparseSigmoid.__init__
+      
+      
          ~SparseSigmoid.astype
+      
          ~SparseSigmoid.compile
+      
          ~SparseSigmoid.deserialize
+      
          ~SparseSigmoid.func
+      
          ~SparseSigmoid.get_hyperparameters
+      
          ~SparseSigmoid.get_num_trainable_floats
+      
          ~SparseSigmoid.get_output_shape
+      
          ~SparseSigmoid.get_params
+      
          ~SparseSigmoid.get_state
+      
          ~SparseSigmoid.is_ready
+      
          ~SparseSigmoid.name
+      
          ~SparseSigmoid.serialize
+      
          ~SparseSigmoid.set_hyperparameters
+      
          ~SparseSigmoid.set_params
+      
          ~SparseSigmoid.set_precision
+      
          ~SparseSigmoid.set_state
 
    .. autosummary::

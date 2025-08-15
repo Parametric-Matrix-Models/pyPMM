@@ -7,27 +7,50 @@
 
 .. autoclass:: Log2
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Log2.__init__
+      
+      
          ~Log2.astype
+      
          ~Log2.compile
+      
          ~Log2.deserialize
+      
          ~Log2.func
+      
          ~Log2.get_hyperparameters
+      
          ~Log2.get_num_trainable_floats
+      
          ~Log2.get_output_shape
+      
          ~Log2.get_params
+      
          ~Log2.get_state
+      
          ~Log2.is_ready
+      
          ~Log2.name
+      
          ~Log2.serialize
+      
          ~Log2.set_hyperparameters
+      
          ~Log2.set_params
+      
          ~Log2.set_precision
+      
          ~Log2.set_state
 
    .. autosummary::

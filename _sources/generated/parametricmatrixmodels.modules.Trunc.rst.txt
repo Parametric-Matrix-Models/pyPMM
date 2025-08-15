@@ -7,27 +7,50 @@
 
 .. autoclass:: Trunc
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Trunc.__init__
+      
+      
          ~Trunc.astype
+      
          ~Trunc.compile
+      
          ~Trunc.deserialize
+      
          ~Trunc.func
+      
          ~Trunc.get_hyperparameters
+      
          ~Trunc.get_num_trainable_floats
+      
          ~Trunc.get_output_shape
+      
          ~Trunc.get_params
+      
          ~Trunc.get_state
+      
          ~Trunc.is_ready
+      
          ~Trunc.name
+      
          ~Trunc.serialize
+      
          ~Trunc.set_hyperparameters
+      
          ~Trunc.set_params
+      
          ~Trunc.set_precision
+      
          ~Trunc.set_state
 
    .. autosummary::

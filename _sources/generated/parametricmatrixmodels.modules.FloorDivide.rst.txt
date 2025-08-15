@@ -7,27 +7,50 @@
 
 .. autoclass:: FloorDivide
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~FloorDivide.__init__
+      
+      
          ~FloorDivide.astype
+      
          ~FloorDivide.compile
+      
          ~FloorDivide.deserialize
+      
          ~FloorDivide.func
+      
          ~FloorDivide.get_hyperparameters
+      
          ~FloorDivide.get_num_trainable_floats
+      
          ~FloorDivide.get_output_shape
+      
          ~FloorDivide.get_params
+      
          ~FloorDivide.get_state
+      
          ~FloorDivide.is_ready
+      
          ~FloorDivide.name
+      
          ~FloorDivide.serialize
+      
          ~FloorDivide.set_hyperparameters
+      
          ~FloorDivide.set_params
+      
          ~FloorDivide.set_precision
+      
          ~FloorDivide.set_state
 
    .. autosummary::

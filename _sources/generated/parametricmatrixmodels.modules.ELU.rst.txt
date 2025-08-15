@@ -7,27 +7,50 @@
 
 .. autoclass:: ELU
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~ELU.__init__
+      
+      
          ~ELU.astype
+      
          ~ELU.compile
+      
          ~ELU.deserialize
+      
          ~ELU.func
+      
          ~ELU.get_hyperparameters
+      
          ~ELU.get_num_trainable_floats
+      
          ~ELU.get_output_shape
+      
          ~ELU.get_params
+      
          ~ELU.get_state
+      
          ~ELU.is_ready
+      
          ~ELU.name
+      
          ~ELU.serialize
+      
          ~ELU.set_hyperparameters
+      
          ~ELU.set_params
+      
          ~ELU.set_precision
+      
          ~ELU.set_state
 
    .. autosummary::

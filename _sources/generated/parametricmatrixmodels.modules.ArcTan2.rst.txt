@@ -7,27 +7,50 @@
 
 .. autoclass:: ArcTan2
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~ArcTan2.__init__
+      
+      
          ~ArcTan2.astype
+      
          ~ArcTan2.compile
+      
          ~ArcTan2.deserialize
+      
          ~ArcTan2.func
+      
          ~ArcTan2.get_hyperparameters
+      
          ~ArcTan2.get_num_trainable_floats
+      
          ~ArcTan2.get_output_shape
+      
          ~ArcTan2.get_params
+      
          ~ArcTan2.get_state
+      
          ~ArcTan2.is_ready
+      
          ~ArcTan2.name
+      
          ~ArcTan2.serialize
+      
          ~ArcTan2.set_hyperparameters
+      
          ~ArcTan2.set_params
+      
          ~ArcTan2.set_precision
+      
          ~ArcTan2.set_state
 
    .. autosummary::

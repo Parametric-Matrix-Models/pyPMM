@@ -7,27 +7,50 @@
 
 .. autoclass:: ACosh
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~ACosh.__init__
+      
+      
          ~ACosh.astype
+      
          ~ACosh.compile
+      
          ~ACosh.deserialize
+      
          ~ACosh.func
+      
          ~ACosh.get_hyperparameters
+      
          ~ACosh.get_num_trainable_floats
+      
          ~ACosh.get_output_shape
+      
          ~ACosh.get_params
+      
          ~ACosh.get_state
+      
          ~ACosh.is_ready
+      
          ~ACosh.name
+      
          ~ACosh.serialize
+      
          ~ACosh.set_hyperparameters
+      
          ~ACosh.set_params
+      
          ~ACosh.set_precision
+      
          ~ACosh.set_state
 
    .. autosummary::

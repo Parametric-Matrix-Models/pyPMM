@@ -7,27 +7,50 @@
 
 .. autoclass:: Positive
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Positive.__init__
+      
+      
          ~Positive.astype
+      
          ~Positive.compile
+      
          ~Positive.deserialize
+      
          ~Positive.func
+      
          ~Positive.get_hyperparameters
+      
          ~Positive.get_num_trainable_floats
+      
          ~Positive.get_output_shape
+      
          ~Positive.get_params
+      
          ~Positive.get_state
+      
          ~Positive.is_ready
+      
          ~Positive.name
+      
          ~Positive.serialize
+      
          ~Positive.set_hyperparameters
+      
          ~Positive.set_params
+      
          ~Positive.set_precision
+      
          ~Positive.set_state
 
    .. autosummary::

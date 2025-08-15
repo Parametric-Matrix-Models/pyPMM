@@ -7,27 +7,50 @@
 
 .. autoclass:: Ceil
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Ceil.__init__
+      
+      
          ~Ceil.astype
+      
          ~Ceil.compile
+      
          ~Ceil.deserialize
+      
          ~Ceil.func
+      
          ~Ceil.get_hyperparameters
+      
          ~Ceil.get_num_trainable_floats
+      
          ~Ceil.get_output_shape
+      
          ~Ceil.get_params
+      
          ~Ceil.get_state
+      
          ~Ceil.is_ready
+      
          ~Ceil.name
+      
          ~Ceil.serialize
+      
          ~Ceil.set_hyperparameters
+      
          ~Ceil.set_params
+      
          ~Ceil.set_precision
+      
          ~Ceil.set_state
 
    .. autosummary::

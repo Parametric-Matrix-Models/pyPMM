@@ -7,27 +7,50 @@
 
 .. autoclass:: Tanh
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Tanh.__init__
+      
+      
          ~Tanh.astype
+      
          ~Tanh.compile
+      
          ~Tanh.deserialize
+      
          ~Tanh.func
+      
          ~Tanh.get_hyperparameters
+      
          ~Tanh.get_num_trainable_floats
+      
          ~Tanh.get_output_shape
+      
          ~Tanh.get_params
+      
          ~Tanh.get_state
+      
          ~Tanh.is_ready
+      
          ~Tanh.name
+      
          ~Tanh.serialize
+      
          ~Tanh.set_hyperparameters
+      
          ~Tanh.set_params
+      
          ~Tanh.set_precision
+      
          ~Tanh.set_state
 
    .. autosummary::

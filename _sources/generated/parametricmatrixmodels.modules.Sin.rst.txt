@@ -7,27 +7,50 @@
 
 .. autoclass:: Sin
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Sin.__init__
+      
+      
          ~Sin.astype
+      
          ~Sin.compile
+      
          ~Sin.deserialize
+      
          ~Sin.func
+      
          ~Sin.get_hyperparameters
+      
          ~Sin.get_num_trainable_floats
+      
          ~Sin.get_output_shape
+      
          ~Sin.get_params
+      
          ~Sin.get_state
+      
          ~Sin.is_ready
+      
          ~Sin.name
+      
          ~Sin.serialize
+      
          ~Sin.set_hyperparameters
+      
          ~Sin.set_params
+      
          ~Sin.set_precision
+      
          ~Sin.set_state
 
    .. autosummary::

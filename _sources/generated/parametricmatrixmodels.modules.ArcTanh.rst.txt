@@ -7,27 +7,50 @@
 
 .. autoclass:: ArcTanh
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~ArcTanh.__init__
+      
+      
          ~ArcTanh.astype
+      
          ~ArcTanh.compile
+      
          ~ArcTanh.deserialize
+      
          ~ArcTanh.func
+      
          ~ArcTanh.get_hyperparameters
+      
          ~ArcTanh.get_num_trainable_floats
+      
          ~ArcTanh.get_output_shape
+      
          ~ArcTanh.get_params
+      
          ~ArcTanh.get_state
+      
          ~ArcTanh.is_ready
+      
          ~ArcTanh.name
+      
          ~ArcTanh.serialize
+      
          ~ArcTanh.set_hyperparameters
+      
          ~ArcTanh.set_params
+      
          ~ArcTanh.set_precision
+      
          ~ArcTanh.set_state
 
    .. autosummary::

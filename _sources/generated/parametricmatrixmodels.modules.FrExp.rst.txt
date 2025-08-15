@@ -7,27 +7,50 @@
 
 .. autoclass:: FrExp
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~FrExp.__init__
+      
+      
          ~FrExp.astype
+      
          ~FrExp.compile
+      
          ~FrExp.deserialize
+      
          ~FrExp.func
+      
          ~FrExp.get_hyperparameters
+      
          ~FrExp.get_num_trainable_floats
+      
          ~FrExp.get_output_shape
+      
          ~FrExp.get_params
+      
          ~FrExp.get_state
+      
          ~FrExp.is_ready
+      
          ~FrExp.name
+      
          ~FrExp.serialize
+      
          ~FrExp.set_hyperparameters
+      
          ~FrExp.set_params
+      
          ~FrExp.set_precision
+      
          ~FrExp.set_state
 
    .. autosummary::

@@ -7,27 +7,50 @@
 
 .. autoclass:: LogSoftmax
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~LogSoftmax.__init__
+      
+      
          ~LogSoftmax.astype
+      
          ~LogSoftmax.compile
+      
          ~LogSoftmax.deserialize
+      
          ~LogSoftmax.func
+      
          ~LogSoftmax.get_hyperparameters
+      
          ~LogSoftmax.get_num_trainable_floats
+      
          ~LogSoftmax.get_output_shape
+      
          ~LogSoftmax.get_params
+      
          ~LogSoftmax.get_state
+      
          ~LogSoftmax.is_ready
+      
          ~LogSoftmax.name
+      
          ~LogSoftmax.serialize
+      
          ~LogSoftmax.set_hyperparameters
+      
          ~LogSoftmax.set_params
+      
          ~LogSoftmax.set_precision
+      
          ~LogSoftmax.set_state
 
    .. autosummary::

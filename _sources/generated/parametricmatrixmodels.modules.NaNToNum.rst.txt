@@ -7,27 +7,50 @@
 
 .. autoclass:: NaNToNum
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~NaNToNum.__init__
+      
+      
          ~NaNToNum.astype
+      
          ~NaNToNum.compile
+      
          ~NaNToNum.deserialize
+      
          ~NaNToNum.func
+      
          ~NaNToNum.get_hyperparameters
+      
          ~NaNToNum.get_num_trainable_floats
+      
          ~NaNToNum.get_output_shape
+      
          ~NaNToNum.get_params
+      
          ~NaNToNum.get_state
+      
          ~NaNToNum.is_ready
+      
          ~NaNToNum.name
+      
          ~NaNToNum.serialize
+      
          ~NaNToNum.set_hyperparameters
+      
          ~NaNToNum.set_params
+      
          ~NaNToNum.set_precision
+      
          ~NaNToNum.set_state
 
    .. autosummary::

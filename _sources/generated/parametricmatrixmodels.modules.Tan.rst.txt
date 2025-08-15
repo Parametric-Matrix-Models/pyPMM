@@ -7,27 +7,50 @@
 
 .. autoclass:: Tan
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Tan.__init__
+      
+      
          ~Tan.astype
+      
          ~Tan.compile
+      
          ~Tan.deserialize
+      
          ~Tan.func
+      
          ~Tan.get_hyperparameters
+      
          ~Tan.get_num_trainable_floats
+      
          ~Tan.get_output_shape
+      
          ~Tan.get_params
+      
          ~Tan.get_state
+      
          ~Tan.is_ready
+      
          ~Tan.name
+      
          ~Tan.serialize
+      
          ~Tan.set_hyperparameters
+      
          ~Tan.set_params
+      
          ~Tan.set_precision
+      
          ~Tan.set_state
 
    .. autosummary::

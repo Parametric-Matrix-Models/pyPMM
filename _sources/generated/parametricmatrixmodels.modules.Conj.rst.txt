@@ -7,27 +7,50 @@
 
 .. autoclass:: Conj
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Conj.__init__
+      
+      
          ~Conj.astype
+      
          ~Conj.compile
+      
          ~Conj.deserialize
+      
          ~Conj.func
+      
          ~Conj.get_hyperparameters
+      
          ~Conj.get_num_trainable_floats
+      
          ~Conj.get_output_shape
+      
          ~Conj.get_params
+      
          ~Conj.get_state
+      
          ~Conj.is_ready
+      
          ~Conj.name
+      
          ~Conj.serialize
+      
          ~Conj.set_hyperparameters
+      
          ~Conj.set_params
+      
          ~Conj.set_precision
+      
          ~Conj.set_state
 
    .. autosummary::

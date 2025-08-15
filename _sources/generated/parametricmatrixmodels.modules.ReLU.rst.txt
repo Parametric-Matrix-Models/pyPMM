@@ -7,27 +7,50 @@
 
 .. autoclass:: ReLU
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~ReLU.__init__
+      
+      
          ~ReLU.astype
+      
          ~ReLU.compile
+      
          ~ReLU.deserialize
+      
          ~ReLU.func
+      
          ~ReLU.get_hyperparameters
+      
          ~ReLU.get_num_trainable_floats
+      
          ~ReLU.get_output_shape
+      
          ~ReLU.get_params
+      
          ~ReLU.get_state
+      
          ~ReLU.is_ready
+      
          ~ReLU.name
+      
          ~ReLU.serialize
+      
          ~ReLU.set_hyperparameters
+      
          ~ReLU.set_params
+      
          ~ReLU.set_precision
+      
          ~ReLU.set_state
 
    .. autosummary::

@@ -487,64 +487,6 @@
 <dd><p>Bases: <a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></a></p>
 <p>Module that implements a single linear NN layer with non-negative weights
 and biases.</p>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.__init__" title="parametricmatrixmodels.modules.NonnegativeLinearNN.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.astype" title="parametricmatrixmodels.modules.NonnegativeLinearNN.astype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">astype</span></code></a></p></td>
-<td><p>Convenience wrapper to set_precision using the dtype argument, returns self.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.compile" title="parametricmatrixmodels.modules.NonnegativeLinearNN.compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></a></p></td>
-<td><p>Compile the module to be used with the given input shape.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.deserialize" title="parametricmatrixmodels.modules.NonnegativeLinearNN.deserialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deserialize</span></code></a></p></td>
-<td><p>Deserialize the module from a dictionary.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.get_hyperparameters" title="parametricmatrixmodels.modules.NonnegativeLinearNN.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a></p></td>
-<td><p>Get the hyperparameters of the module.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.get_num_trainable_floats" title="parametricmatrixmodels.modules.NonnegativeLinearNN.get_num_trainable_floats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_num_trainable_floats</span></code></a></p></td>
-<td><p>Returns the number of trainable floats in the module.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.get_output_shape" title="parametricmatrixmodels.modules.NonnegativeLinearNN.get_output_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape</span></code></a></p></td>
-<td><p>Get the output shape of the module given the input shape.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.get_params" title="parametricmatrixmodels.modules.NonnegativeLinearNN.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a></p></td>
-<td><p>Get the current trainable parameters of the module.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.get_state" title="parametricmatrixmodels.modules.NonnegativeLinearNN.get_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state</span></code></a></p></td>
-<td><p>Get the current state of the module.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.is_ready" title="parametricmatrixmodels.modules.NonnegativeLinearNN.is_ready"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_ready</span></code></a></p></td>
-<td><p>Return True if the module is initialized and ready for training or inference.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.name" title="parametricmatrixmodels.modules.NonnegativeLinearNN.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
-<td><p>Returns the name of the module, unless overridden, this is the class name.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.serialize" title="parametricmatrixmodels.modules.NonnegativeLinearNN.serialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize</span></code></a></p></td>
-<td><p>Serialize the module to a dictionary.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.set_hyperparameters" title="parametricmatrixmodels.modules.NonnegativeLinearNN.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a></p></td>
-<td><p>Set the hyperparameters of the module.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.set_params" title="parametricmatrixmodels.modules.NonnegativeLinearNN.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a></p></td>
-<td><p>Set the trainable parameters of the module.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.set_precision" title="parametricmatrixmodels.modules.NonnegativeLinearNN.set_precision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_precision</span></code></a></p></td>
-<td><p>Set the precision of the module parameters and state.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.set_state" title="parametricmatrixmodels.modules.NonnegativeLinearNN.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a></p></td>
-<td><p>Set the state of the module.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
-<tbody>
-</tbody>
-</table>
-</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.NonnegativeLinearNN.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">W</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_magnitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/nonnegativelinearnn.html#NonnegativeLinearNN.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.__init__" title="Link to this definition">#</a></dt>
@@ -562,6 +504,101 @@ Default is <code class="docutils literal notranslate"><span class="pre">1e-2</sp
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.__call__" title="parametricmatrixmodels.modules.NonnegativeLinearNN.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a></p></td>
+<td><p>Call the module with the current parameters and given input, state, and rng.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN._get_callable" title="parametricmatrixmodels.modules.NonnegativeLinearNN._get_callable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_callable</span></code></a></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">jax.jit</span></code>-able and <code class="docutils literal notranslate"><span class="pre">jax.grad</span></code>-able callable that represents the module's forward pass.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.astype" title="parametricmatrixmodels.modules.NonnegativeLinearNN.astype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">astype</span></code></a></p></td>
+<td><p>Convenience wrapper to set_precision using the dtype argument, returns self.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.compile" title="parametricmatrixmodels.modules.NonnegativeLinearNN.compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></a></p></td>
+<td><p>Compile the module to be used with the given input shape.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.deserialize" title="parametricmatrixmodels.modules.NonnegativeLinearNN.deserialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deserialize</span></code></a></p></td>
+<td><p>Deserialize the module from a dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.get_hyperparameters" title="parametricmatrixmodels.modules.NonnegativeLinearNN.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a></p></td>
+<td><p>Get the hyperparameters of the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.get_num_trainable_floats" title="parametricmatrixmodels.modules.NonnegativeLinearNN.get_num_trainable_floats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_num_trainable_floats</span></code></a></p></td>
+<td><p>Returns the number of trainable floats in the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.get_output_shape" title="parametricmatrixmodels.modules.NonnegativeLinearNN.get_output_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape</span></code></a></p></td>
+<td><p>Get the output shape of the module given the input shape.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.get_params" title="parametricmatrixmodels.modules.NonnegativeLinearNN.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a></p></td>
+<td><p>Get the current trainable parameters of the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.get_state" title="parametricmatrixmodels.modules.NonnegativeLinearNN.get_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state</span></code></a></p></td>
+<td><p>Get the current state of the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.is_ready" title="parametricmatrixmodels.modules.NonnegativeLinearNN.is_ready"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_ready</span></code></a></p></td>
+<td><p>Return True if the module is initialized and ready for training or inference.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.name" title="parametricmatrixmodels.modules.NonnegativeLinearNN.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p>Returns the name of the module, unless overridden, this is the class name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.serialize" title="parametricmatrixmodels.modules.NonnegativeLinearNN.serialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize</span></code></a></p></td>
+<td><p>Serialize the module to a dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.set_hyperparameters" title="parametricmatrixmodels.modules.NonnegativeLinearNN.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a></p></td>
+<td><p>Set the hyperparameters of the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.set_params" title="parametricmatrixmodels.modules.NonnegativeLinearNN.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a></p></td>
+<td><p>Set the trainable parameters of the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.set_precision" title="parametricmatrixmodels.modules.NonnegativeLinearNN.set_precision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_precision</span></code></a></p></td>
+<td><p>Set the precision of the module parameters and state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.set_state" title="parametricmatrixmodels.modules.NonnegativeLinearNN.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a></p></td>
+<td><p>Set the state of the module.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.NonnegativeLinearNN.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_NF</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.__call__" title="Link to this definition">#</a></dt>
+<dd><p>Call the module with the current parameters and given input, state, and
+rng.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_NF</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a></span>) – Input array of shape (num_samples, num_features).</p></li>
+<li><p><strong>training</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Whether the module is in training mode, by default False.</p></li>
+<li><p><strong>state</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]</span>) – State of the module, by default <code class="docutils literal notranslate"><span class="pre">()</span></code>.</p></li>
+<li><p><strong>rng</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a></span>) – JAX random key, by default None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Output array of shape (num_samples, num_output_features) and new
+state.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If the module is not ready (i.e., <cite>compile()</cite> has not been called).</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN._get_callable" title="parametricmatrixmodels.modules.NonnegativeLinearNN._get_callable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_callable</span></code></a></dt><dd><p>Returns a callable that can be used to compute the output and new state given the parameters, input, training flag, state, and rng.</p>
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -604,7 +641,7 @@ new state.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></dt><dd><p>Calls the module with the current parameters and given input, state, and rng.</p>
+<dt><a class="reference internal" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.__call__" title="parametricmatrixmodels.modules.NonnegativeLinearNN.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a></dt><dd><p>Calls the module with the current parameters and given input, state, and rng.</p>
 </dd>
 </dl>
 </div>
@@ -719,7 +756,7 @@ They can be set via <cite>set_hyperparameters</cite>.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.NonnegativeLinearNN.get_num_trainable_floats">
-<span class="sig-name descname"><span class="pre">get_num_trainable_floats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/nonnegativelinearnn.html#NonnegativeLinearNN.get_num_trainable_floats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.get_num_trainable_floats" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_num_trainable_floats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.get_num_trainable_floats" title="Link to this definition">#</a></dt>
 <dd><p>Returns the number of trainable floats in the module.
 If the module does not have trainable parameters, returns 0.
 If the module is not ready, returns None.</p>
@@ -730,9 +767,6 @@ If the module is not ready, returns None.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Number of trainable floats in the module, or None if the module
 is not ready.</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.13)"><strong>NotImplementedError</strong></a> – If the method is not implemented in the subclass.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -989,6 +1023,7 @@ Valid options are:
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.NonnegativeLinearNN"><code class="docutils literal notranslate"><span class="pre">NonnegativeLinearNN</span></code></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.__init__"><code class="docutils literal notranslate"><span class="pre">NonnegativeLinearNN.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.__call__"><code class="docutils literal notranslate"><span class="pre">NonnegativeLinearNN.__call__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.NonnegativeLinearNN._get_callable"><code class="docutils literal notranslate"><span class="pre">NonnegativeLinearNN._get_callable()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.astype"><code class="docutils literal notranslate"><span class="pre">NonnegativeLinearNN.astype()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.NonnegativeLinearNN.compile"><code class="docutils literal notranslate"><span class="pre">NonnegativeLinearNN.compile()</span></code></a></li>

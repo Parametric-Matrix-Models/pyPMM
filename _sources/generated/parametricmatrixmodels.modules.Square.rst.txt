@@ -7,27 +7,50 @@
 
 .. autoclass:: Square
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Square.__init__
+      
+      
          ~Square.astype
+      
          ~Square.compile
+      
          ~Square.deserialize
+      
          ~Square.func
+      
          ~Square.get_hyperparameters
+      
          ~Square.get_num_trainable_floats
+      
          ~Square.get_output_shape
+      
          ~Square.get_params
+      
          ~Square.get_state
+      
          ~Square.is_ready
+      
          ~Square.name
+      
          ~Square.serialize
+      
          ~Square.set_hyperparameters
+      
          ~Square.set_params
+      
          ~Square.set_precision
+      
          ~Square.set_state
 
    .. autosummary::

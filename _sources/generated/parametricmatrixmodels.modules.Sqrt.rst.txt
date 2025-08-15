@@ -7,27 +7,50 @@
 
 .. autoclass:: Sqrt
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Sqrt.__init__
+      
+      
          ~Sqrt.astype
+      
          ~Sqrt.compile
+      
          ~Sqrt.deserialize
+      
          ~Sqrt.func
+      
          ~Sqrt.get_hyperparameters
+      
          ~Sqrt.get_num_trainable_floats
+      
          ~Sqrt.get_output_shape
+      
          ~Sqrt.get_params
+      
          ~Sqrt.get_state
+      
          ~Sqrt.is_ready
+      
          ~Sqrt.name
+      
          ~Sqrt.serialize
+      
          ~Sqrt.set_hyperparameters
+      
          ~Sqrt.set_params
+      
          ~Sqrt.set_precision
+      
          ~Sqrt.set_state
 
    .. autosummary::

@@ -7,26 +7,48 @@
 
 .. autoclass:: Eigenvalues
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Eigenvalues.__init__
+      
+      
          ~Eigenvalues.astype
+      
          ~Eigenvalues.compile
+      
          ~Eigenvalues.deserialize
+      
          ~Eigenvalues.get_hyperparameters
+      
          ~Eigenvalues.get_num_trainable_floats
+      
          ~Eigenvalues.get_output_shape
+      
          ~Eigenvalues.get_params
+      
          ~Eigenvalues.get_state
+      
          ~Eigenvalues.is_ready
+      
          ~Eigenvalues.name
+      
          ~Eigenvalues.serialize
+      
          ~Eigenvalues.set_hyperparameters
+      
          ~Eigenvalues.set_params
+      
          ~Eigenvalues.set_precision
+      
          ~Eigenvalues.set_state
 
    .. autosummary::

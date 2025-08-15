@@ -7,27 +7,50 @@
 
 .. autoclass:: Real
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Real.__init__
+      
+      
          ~Real.astype
+      
          ~Real.compile
+      
          ~Real.deserialize
+      
          ~Real.func
+      
          ~Real.get_hyperparameters
+      
          ~Real.get_num_trainable_floats
+      
          ~Real.get_output_shape
+      
          ~Real.get_params
+      
          ~Real.get_state
+      
          ~Real.is_ready
+      
          ~Real.name
+      
          ~Real.serialize
+      
          ~Real.set_hyperparameters
+      
          ~Real.set_params
+      
          ~Real.set_precision
+      
          ~Real.set_state
 
    .. autosummary::

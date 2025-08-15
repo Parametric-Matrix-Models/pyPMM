@@ -7,27 +7,50 @@
 
 .. autoclass:: Reciprocal
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Reciprocal.__init__
+      
+      
          ~Reciprocal.astype
+      
          ~Reciprocal.compile
+      
          ~Reciprocal.deserialize
+      
          ~Reciprocal.func
+      
          ~Reciprocal.get_hyperparameters
+      
          ~Reciprocal.get_num_trainable_floats
+      
          ~Reciprocal.get_output_shape
+      
          ~Reciprocal.get_params
+      
          ~Reciprocal.get_state
+      
          ~Reciprocal.is_ready
+      
          ~Reciprocal.name
+      
          ~Reciprocal.serialize
+      
          ~Reciprocal.set_hyperparameters
+      
          ~Reciprocal.set_params
+      
          ~Reciprocal.set_precision
+      
          ~Reciprocal.set_state
 
    .. autosummary::

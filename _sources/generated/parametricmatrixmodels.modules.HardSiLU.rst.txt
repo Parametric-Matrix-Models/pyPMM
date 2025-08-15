@@ -7,27 +7,50 @@
 
 .. autoclass:: HardSiLU
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~HardSiLU.__init__
+      
+      
          ~HardSiLU.astype
+      
          ~HardSiLU.compile
+      
          ~HardSiLU.deserialize
+      
          ~HardSiLU.func
+      
          ~HardSiLU.get_hyperparameters
+      
          ~HardSiLU.get_num_trainable_floats
+      
          ~HardSiLU.get_output_shape
+      
          ~HardSiLU.get_params
+      
          ~HardSiLU.get_state
+      
          ~HardSiLU.is_ready
+      
          ~HardSiLU.name
+      
          ~HardSiLU.serialize
+      
          ~HardSiLU.set_hyperparameters
+      
          ~HardSiLU.set_params
+      
          ~HardSiLU.set_precision
+      
          ~HardSiLU.set_state
 
    .. autosummary::

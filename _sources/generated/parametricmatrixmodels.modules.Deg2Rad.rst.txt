@@ -7,27 +7,50 @@
 
 .. autoclass:: Deg2Rad
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Deg2Rad.__init__
+      
+      
          ~Deg2Rad.astype
+      
          ~Deg2Rad.compile
+      
          ~Deg2Rad.deserialize
+      
          ~Deg2Rad.func
+      
          ~Deg2Rad.get_hyperparameters
+      
          ~Deg2Rad.get_num_trainable_floats
+      
          ~Deg2Rad.get_output_shape
+      
          ~Deg2Rad.get_params
+      
          ~Deg2Rad.get_state
+      
          ~Deg2Rad.is_ready
+      
          ~Deg2Rad.name
+      
          ~Deg2Rad.serialize
+      
          ~Deg2Rad.set_hyperparameters
+      
          ~Deg2Rad.set_params
+      
          ~Deg2Rad.set_precision
+      
          ~Deg2Rad.set_state
 
    .. autosummary::

@@ -7,27 +7,50 @@
 
 .. autoclass:: Abs
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Abs.__init__
+      
+      
          ~Abs.astype
+      
          ~Abs.compile
+      
          ~Abs.deserialize
+      
          ~Abs.func
+      
          ~Abs.get_hyperparameters
+      
          ~Abs.get_num_trainable_floats
+      
          ~Abs.get_output_shape
+      
          ~Abs.get_params
+      
          ~Abs.get_state
+      
          ~Abs.is_ready
+      
          ~Abs.name
+      
          ~Abs.serialize
+      
          ~Abs.set_hyperparameters
+      
          ~Abs.set_params
+      
          ~Abs.set_precision
+      
          ~Abs.set_state
 
    .. autosummary::

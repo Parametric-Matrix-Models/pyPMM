@@ -7,26 +7,48 @@
 
 .. autoclass:: AffineObservablePMM
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~AffineObservablePMM.__init__
+      
+      
          ~AffineObservablePMM.astype
+      
          ~AffineObservablePMM.compile
+      
          ~AffineObservablePMM.deserialize
+      
          ~AffineObservablePMM.get_hyperparameters
+      
          ~AffineObservablePMM.get_num_trainable_floats
+      
          ~AffineObservablePMM.get_output_shape
+      
          ~AffineObservablePMM.get_params
+      
          ~AffineObservablePMM.get_state
+      
          ~AffineObservablePMM.is_ready
+      
          ~AffineObservablePMM.name
+      
          ~AffineObservablePMM.serialize
+      
          ~AffineObservablePMM.set_hyperparameters
+      
          ~AffineObservablePMM.set_params
+      
          ~AffineObservablePMM.set_precision
+      
          ~AffineObservablePMM.set_state
 
    .. autosummary::

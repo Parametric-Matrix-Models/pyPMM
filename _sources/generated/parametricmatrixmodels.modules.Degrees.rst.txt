@@ -7,27 +7,50 @@
 
 .. autoclass:: Degrees
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Degrees.__init__
+      
+      
          ~Degrees.astype
+      
          ~Degrees.compile
+      
          ~Degrees.deserialize
+      
          ~Degrees.func
+      
          ~Degrees.get_hyperparameters
+      
          ~Degrees.get_num_trainable_floats
+      
          ~Degrees.get_output_shape
+      
          ~Degrees.get_params
+      
          ~Degrees.get_state
+      
          ~Degrees.is_ready
+      
          ~Degrees.name
+      
          ~Degrees.serialize
+      
          ~Degrees.set_hyperparameters
+      
          ~Degrees.set_params
+      
          ~Degrees.set_precision
+      
          ~Degrees.set_state
 
    .. autosummary::

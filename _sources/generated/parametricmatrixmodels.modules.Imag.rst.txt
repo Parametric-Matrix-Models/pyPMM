@@ -7,27 +7,50 @@
 
 .. autoclass:: Imag
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Imag.__init__
+      
+      
          ~Imag.astype
+      
          ~Imag.compile
+      
          ~Imag.deserialize
+      
          ~Imag.func
+      
          ~Imag.get_hyperparameters
+      
          ~Imag.get_num_trainable_floats
+      
          ~Imag.get_output_shape
+      
          ~Imag.get_params
+      
          ~Imag.get_state
+      
          ~Imag.is_ready
+      
          ~Imag.name
+      
          ~Imag.serialize
+      
          ~Imag.set_hyperparameters
+      
          ~Imag.set_params
+      
          ~Imag.set_precision
+      
          ~Imag.set_state
 
    .. autosummary::

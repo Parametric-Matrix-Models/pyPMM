@@ -7,27 +7,50 @@
 
 .. autoclass:: Sinc
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Sinc.__init__
+      
+      
          ~Sinc.astype
+      
          ~Sinc.compile
+      
          ~Sinc.deserialize
+      
          ~Sinc.func
+      
          ~Sinc.get_hyperparameters
+      
          ~Sinc.get_num_trainable_floats
+      
          ~Sinc.get_output_shape
+      
          ~Sinc.get_params
+      
          ~Sinc.get_state
+      
          ~Sinc.is_ready
+      
          ~Sinc.name
+      
          ~Sinc.serialize
+      
          ~Sinc.set_hyperparameters
+      
          ~Sinc.set_params
+      
          ~Sinc.set_precision
+      
          ~Sinc.set_state
 
    .. autosummary::

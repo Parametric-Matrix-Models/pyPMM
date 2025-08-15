@@ -7,27 +7,50 @@
 
 .. autoclass:: Log10
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Log10.__init__
+      
+      
          ~Log10.astype
+      
          ~Log10.compile
+      
          ~Log10.deserialize
+      
          ~Log10.func
+      
          ~Log10.get_hyperparameters
+      
          ~Log10.get_num_trainable_floats
+      
          ~Log10.get_output_shape
+      
          ~Log10.get_params
+      
          ~Log10.get_state
+      
          ~Log10.is_ready
+      
          ~Log10.name
+      
          ~Log10.serialize
+      
          ~Log10.set_hyperparameters
+      
          ~Log10.set_params
+      
          ~Log10.set_precision
+      
          ~Log10.set_state
 
    .. autosummary::

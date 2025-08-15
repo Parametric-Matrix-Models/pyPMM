@@ -7,26 +7,48 @@
 
 .. autoclass:: AEPMM
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~AEPMM.__init__
+      
+      
          ~AEPMM.astype
+      
          ~AEPMM.compile
+      
          ~AEPMM.deserialize
+      
          ~AEPMM.get_hyperparameters
+      
          ~AEPMM.get_num_trainable_floats
+      
          ~AEPMM.get_output_shape
+      
          ~AEPMM.get_params
+      
          ~AEPMM.get_state
+      
          ~AEPMM.is_ready
+      
          ~AEPMM.name
+      
          ~AEPMM.serialize
+      
          ~AEPMM.set_hyperparameters
+      
          ~AEPMM.set_params
+      
          ~AEPMM.set_precision
+      
          ~AEPMM.set_state
 
    .. autosummary::

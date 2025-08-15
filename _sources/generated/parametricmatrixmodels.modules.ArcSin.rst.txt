@@ -7,27 +7,50 @@
 
 .. autoclass:: ArcSin
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~ArcSin.__init__
+      
+      
          ~ArcSin.astype
+      
          ~ArcSin.compile
+      
          ~ArcSin.deserialize
+      
          ~ArcSin.func
+      
          ~ArcSin.get_hyperparameters
+      
          ~ArcSin.get_num_trainable_floats
+      
          ~ArcSin.get_output_shape
+      
          ~ArcSin.get_params
+      
          ~ArcSin.get_state
+      
          ~ArcSin.is_ready
+      
          ~ArcSin.name
+      
          ~ArcSin.serialize
+      
          ~ArcSin.set_hyperparameters
+      
          ~ArcSin.set_params
+      
          ~ArcSin.set_precision
+      
          ~ArcSin.set_state
 
    .. autosummary::

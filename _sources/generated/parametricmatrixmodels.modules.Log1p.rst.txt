@@ -7,27 +7,50 @@
 
 .. autoclass:: Log1p
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Log1p.__init__
+      
+      
          ~Log1p.astype
+      
          ~Log1p.compile
+      
          ~Log1p.deserialize
+      
          ~Log1p.func
+      
          ~Log1p.get_hyperparameters
+      
          ~Log1p.get_num_trainable_floats
+      
          ~Log1p.get_output_shape
+      
          ~Log1p.get_params
+      
          ~Log1p.get_state
+      
          ~Log1p.is_ready
+      
          ~Log1p.name
+      
          ~Log1p.serialize
+      
          ~Log1p.set_hyperparameters
+      
          ~Log1p.set_params
+      
          ~Log1p.set_precision
+      
          ~Log1p.set_state
 
    .. autosummary::

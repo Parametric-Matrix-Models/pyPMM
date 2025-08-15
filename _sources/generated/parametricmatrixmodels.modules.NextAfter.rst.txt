@@ -7,27 +7,50 @@
 
 .. autoclass:: NextAfter
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~NextAfter.__init__
+      
+      
          ~NextAfter.astype
+      
          ~NextAfter.compile
+      
          ~NextAfter.deserialize
+      
          ~NextAfter.func
+      
          ~NextAfter.get_hyperparameters
+      
          ~NextAfter.get_num_trainable_floats
+      
          ~NextAfter.get_output_shape
+      
          ~NextAfter.get_params
+      
          ~NextAfter.get_state
+      
          ~NextAfter.is_ready
+      
          ~NextAfter.name
+      
          ~NextAfter.serialize
+      
          ~NextAfter.set_hyperparameters
+      
          ~NextAfter.set_params
+      
          ~NextAfter.set_precision
+      
          ~NextAfter.set_state
 
    .. autosummary::

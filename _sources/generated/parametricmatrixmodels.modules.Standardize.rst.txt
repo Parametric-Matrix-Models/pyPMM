@@ -7,27 +7,50 @@
 
 .. autoclass:: Standardize
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Standardize.__init__
+      
+      
          ~Standardize.astype
+      
          ~Standardize.compile
+      
          ~Standardize.deserialize
+      
          ~Standardize.func
+      
          ~Standardize.get_hyperparameters
+      
          ~Standardize.get_num_trainable_floats
+      
          ~Standardize.get_output_shape
+      
          ~Standardize.get_params
+      
          ~Standardize.get_state
+      
          ~Standardize.is_ready
+      
          ~Standardize.name
+      
          ~Standardize.serialize
+      
          ~Standardize.set_hyperparameters
+      
          ~Standardize.set_params
+      
          ~Standardize.set_precision
+      
          ~Standardize.set_state
 
    .. autosummary::

@@ -7,27 +7,50 @@
 
 .. autoclass:: Floor
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Floor.__init__
+      
+      
          ~Floor.astype
+      
          ~Floor.compile
+      
          ~Floor.deserialize
+      
          ~Floor.func
+      
          ~Floor.get_hyperparameters
+      
          ~Floor.get_num_trainable_floats
+      
          ~Floor.get_output_shape
+      
          ~Floor.get_params
+      
          ~Floor.get_state
+      
          ~Floor.is_ready
+      
          ~Floor.name
+      
          ~Floor.serialize
+      
          ~Floor.set_hyperparameters
+      
          ~Floor.set_params
+      
          ~Floor.set_precision
+      
          ~Floor.set_state
 
    .. autosummary::

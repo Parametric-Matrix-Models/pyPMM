@@ -7,27 +7,50 @@
 
 .. autoclass:: HardSwish
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~HardSwish.__init__
+      
+      
          ~HardSwish.astype
+      
          ~HardSwish.compile
+      
          ~HardSwish.deserialize
+      
          ~HardSwish.func
+      
          ~HardSwish.get_hyperparameters
+      
          ~HardSwish.get_num_trainable_floats
+      
          ~HardSwish.get_output_shape
+      
          ~HardSwish.get_params
+      
          ~HardSwish.get_state
+      
          ~HardSwish.is_ready
+      
          ~HardSwish.name
+      
          ~HardSwish.serialize
+      
          ~HardSwish.set_hyperparameters
+      
          ~HardSwish.set_params
+      
          ~HardSwish.set_precision
+      
          ~HardSwish.set_state
 
    .. autosummary::

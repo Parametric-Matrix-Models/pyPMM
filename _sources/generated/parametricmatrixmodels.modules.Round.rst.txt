@@ -7,27 +7,50 @@
 
 .. autoclass:: Round
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Round.__init__
+      
+      
          ~Round.astype
+      
          ~Round.compile
+      
          ~Round.deserialize
+      
          ~Round.func
+      
          ~Round.get_hyperparameters
+      
          ~Round.get_num_trainable_floats
+      
          ~Round.get_output_shape
+      
          ~Round.get_params
+      
          ~Round.get_state
+      
          ~Round.is_ready
+      
          ~Round.name
+      
          ~Round.serialize
+      
          ~Round.set_hyperparameters
+      
          ~Round.set_params
+      
          ~Round.set_precision
+      
          ~Round.set_state
 
    .. autosummary::

@@ -7,27 +7,50 @@
 
 .. autoclass:: Invert
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Invert.__init__
+      
+      
          ~Invert.astype
+      
          ~Invert.compile
+      
          ~Invert.deserialize
+      
          ~Invert.func
+      
          ~Invert.get_hyperparameters
+      
          ~Invert.get_num_trainable_floats
+      
          ~Invert.get_output_shape
+      
          ~Invert.get_params
+      
          ~Invert.get_state
+      
          ~Invert.is_ready
+      
          ~Invert.name
+      
          ~Invert.serialize
+      
          ~Invert.set_hyperparameters
+      
          ~Invert.set_params
+      
          ~Invert.set_precision
+      
          ~Invert.set_state
 
    .. autosummary::

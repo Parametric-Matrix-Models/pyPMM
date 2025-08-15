@@ -7,27 +7,50 @@
 
 .. autoclass:: SquarePlus
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~SquarePlus.__init__
+      
+      
          ~SquarePlus.astype
+      
          ~SquarePlus.compile
+      
          ~SquarePlus.deserialize
+      
          ~SquarePlus.func
+      
          ~SquarePlus.get_hyperparameters
+      
          ~SquarePlus.get_num_trainable_floats
+      
          ~SquarePlus.get_output_shape
+      
          ~SquarePlus.get_params
+      
          ~SquarePlus.get_state
+      
          ~SquarePlus.is_ready
+      
          ~SquarePlus.name
+      
          ~SquarePlus.serialize
+      
          ~SquarePlus.set_hyperparameters
+      
          ~SquarePlus.set_params
+      
          ~SquarePlus.set_precision
+      
          ~SquarePlus.set_state
 
    .. autosummary::

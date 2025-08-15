@@ -7,27 +7,50 @@
 
 .. autoclass:: CELU
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~CELU.__init__
+      
+      
          ~CELU.astype
+      
          ~CELU.compile
+      
          ~CELU.deserialize
+      
          ~CELU.func
+      
          ~CELU.get_hyperparameters
+      
          ~CELU.get_num_trainable_floats
+      
          ~CELU.get_output_shape
+      
          ~CELU.get_params
+      
          ~CELU.get_state
+      
          ~CELU.is_ready
+      
          ~CELU.name
+      
          ~CELU.serialize
+      
          ~CELU.set_hyperparameters
+      
          ~CELU.set_params
+      
          ~CELU.set_precision
+      
          ~CELU.set_state
 
    .. autosummary::

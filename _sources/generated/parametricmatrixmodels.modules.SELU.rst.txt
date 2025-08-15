@@ -7,27 +7,50 @@
 
 .. autoclass:: SELU
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~SELU.__init__
+      
+      
          ~SELU.astype
+      
          ~SELU.compile
+      
          ~SELU.deserialize
+      
          ~SELU.func
+      
          ~SELU.get_hyperparameters
+      
          ~SELU.get_num_trainable_floats
+      
          ~SELU.get_output_shape
+      
          ~SELU.get_params
+      
          ~SELU.get_state
+      
          ~SELU.is_ready
+      
          ~SELU.name
+      
          ~SELU.serialize
+      
          ~SELU.set_hyperparameters
+      
          ~SELU.set_params
+      
          ~SELU.set_precision
+      
          ~SELU.set_state
 
    .. autosummary::

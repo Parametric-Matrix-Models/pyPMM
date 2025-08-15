@@ -7,27 +7,50 @@
 
 .. autoclass:: Packbits
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Packbits.__init__
+      
+      
          ~Packbits.astype
+      
          ~Packbits.compile
+      
          ~Packbits.deserialize
+      
          ~Packbits.func
+      
          ~Packbits.get_hyperparameters
+      
          ~Packbits.get_num_trainable_floats
+      
          ~Packbits.get_output_shape
+      
          ~Packbits.get_params
+      
          ~Packbits.get_state
+      
          ~Packbits.is_ready
+      
          ~Packbits.name
+      
          ~Packbits.serialize
+      
          ~Packbits.set_hyperparameters
+      
          ~Packbits.set_params
+      
          ~Packbits.set_precision
+      
          ~Packbits.set_state
 
    .. autosummary::

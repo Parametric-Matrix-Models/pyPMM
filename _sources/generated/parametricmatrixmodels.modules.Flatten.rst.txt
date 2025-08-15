@@ -7,26 +7,48 @@
 
 .. autoclass:: Flatten
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Flatten.__init__
+      
+      
          ~Flatten.astype
+      
          ~Flatten.compile
+      
          ~Flatten.deserialize
+      
          ~Flatten.get_hyperparameters
+      
          ~Flatten.get_num_trainable_floats
+      
          ~Flatten.get_output_shape
+      
          ~Flatten.get_params
+      
          ~Flatten.get_state
+      
          ~Flatten.is_ready
+      
          ~Flatten.name
+      
          ~Flatten.serialize
+      
          ~Flatten.set_hyperparameters
+      
          ~Flatten.set_params
+      
          ~Flatten.set_precision
+      
          ~Flatten.set_state
 
    .. autosummary::

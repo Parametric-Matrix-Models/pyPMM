@@ -7,27 +7,50 @@
 
 .. autoclass:: Mish
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Mish.__init__
+      
+      
          ~Mish.astype
+      
          ~Mish.compile
+      
          ~Mish.deserialize
+      
          ~Mish.func
+      
          ~Mish.get_hyperparameters
+      
          ~Mish.get_num_trainable_floats
+      
          ~Mish.get_output_shape
+      
          ~Mish.get_params
+      
          ~Mish.get_state
+      
          ~Mish.is_ready
+      
          ~Mish.name
+      
          ~Mish.serialize
+      
          ~Mish.set_hyperparameters
+      
          ~Mish.set_params
+      
          ~Mish.set_precision
+      
          ~Mish.set_state
 
    .. autosummary::

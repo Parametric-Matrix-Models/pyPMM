@@ -9,7 +9,7 @@ Elementwise and Activation Function Modules
 .. autosummary::
    :toctree: generated/
    :nosignatures:
-   :template: class.rst
+   :template: modulesubclass.rst
 
    ~ReLU
    ~ReLU6

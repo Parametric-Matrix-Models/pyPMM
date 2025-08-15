@@ -7,27 +7,50 @@
 
 .. autoclass:: ATan
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~ATan.__init__
+      
+      
          ~ATan.astype
+      
          ~ATan.compile
+      
          ~ATan.deserialize
+      
          ~ATan.func
+      
          ~ATan.get_hyperparameters
+      
          ~ATan.get_num_trainable_floats
+      
          ~ATan.get_output_shape
+      
          ~ATan.get_params
+      
          ~ATan.get_state
+      
          ~ATan.is_ready
+      
          ~ATan.name
+      
          ~ATan.serialize
+      
          ~ATan.set_hyperparameters
+      
          ~ATan.set_params
+      
          ~ATan.set_precision
+      
          ~ATan.set_state
 
    .. autosummary::

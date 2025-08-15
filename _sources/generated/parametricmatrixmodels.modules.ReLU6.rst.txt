@@ -7,27 +7,50 @@
 
 .. autoclass:: ReLU6
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~ReLU6.__init__
+      
+      
          ~ReLU6.astype
+      
          ~ReLU6.compile
+      
          ~ReLU6.deserialize
+      
          ~ReLU6.func
+      
          ~ReLU6.get_hyperparameters
+      
          ~ReLU6.get_num_trainable_floats
+      
          ~ReLU6.get_output_shape
+      
          ~ReLU6.get_params
+      
          ~ReLU6.get_state
+      
          ~ReLU6.is_ready
+      
          ~ReLU6.name
+      
          ~ReLU6.serialize
+      
          ~ReLU6.set_hyperparameters
+      
          ~ReLU6.set_params
+      
          ~ReLU6.set_precision
+      
          ~ReLU6.set_state
 
    .. autosummary::

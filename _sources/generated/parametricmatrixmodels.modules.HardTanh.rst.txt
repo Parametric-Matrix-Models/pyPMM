@@ -7,27 +7,50 @@
 
 .. autoclass:: HardTanh
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~HardTanh.__init__
+      
+      
          ~HardTanh.astype
+      
          ~HardTanh.compile
+      
          ~HardTanh.deserialize
+      
          ~HardTanh.func
+      
          ~HardTanh.get_hyperparameters
+      
          ~HardTanh.get_num_trainable_floats
+      
          ~HardTanh.get_output_shape
+      
          ~HardTanh.get_params
+      
          ~HardTanh.get_state
+      
          ~HardTanh.is_ready
+      
          ~HardTanh.name
+      
          ~HardTanh.serialize
+      
          ~HardTanh.set_hyperparameters
+      
          ~HardTanh.set_params
+      
          ~HardTanh.set_precision
+      
          ~HardTanh.set_state
 
    .. autosummary::

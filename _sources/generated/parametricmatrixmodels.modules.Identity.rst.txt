@@ -7,27 +7,50 @@
 
 .. autoclass:: Identity
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Identity.__init__
+      
+      
          ~Identity.astype
+      
          ~Identity.compile
+      
          ~Identity.deserialize
+      
          ~Identity.func
+      
          ~Identity.get_hyperparameters
+      
          ~Identity.get_num_trainable_floats
+      
          ~Identity.get_output_shape
+      
          ~Identity.get_params
+      
          ~Identity.get_state
+      
          ~Identity.is_ready
+      
          ~Identity.name
+      
          ~Identity.serialize
+      
          ~Identity.set_hyperparameters
+      
          ~Identity.set_params
+      
          ~Identity.set_precision
+      
          ~Identity.set_state
 
    .. autosummary::

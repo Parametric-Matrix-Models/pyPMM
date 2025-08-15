@@ -7,27 +7,50 @@
 
 .. autoclass:: ASinh
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~ASinh.__init__
+      
+      
          ~ASinh.astype
+      
          ~ASinh.compile
+      
          ~ASinh.deserialize
+      
          ~ASinh.func
+      
          ~ASinh.get_hyperparameters
+      
          ~ASinh.get_num_trainable_floats
+      
          ~ASinh.get_output_shape
+      
          ~ASinh.get_params
+      
          ~ASinh.get_state
+      
          ~ASinh.is_ready
+      
          ~ASinh.name
+      
          ~ASinh.serialize
+      
          ~ASinh.set_hyperparameters
+      
          ~ASinh.set_params
+      
          ~ASinh.set_precision
+      
          ~ASinh.set_state
 
    .. autosummary::

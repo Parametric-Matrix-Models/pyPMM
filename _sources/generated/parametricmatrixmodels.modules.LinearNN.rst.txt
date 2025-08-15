@@ -7,26 +7,48 @@
 
 .. autoclass:: LinearNN
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~LinearNN.__init__
+      
+      
          ~LinearNN.astype
+      
          ~LinearNN.compile
+      
          ~LinearNN.deserialize
+      
          ~LinearNN.get_hyperparameters
+      
          ~LinearNN.get_num_trainable_floats
+      
          ~LinearNN.get_output_shape
+      
          ~LinearNN.get_params
+      
          ~LinearNN.get_state
+      
          ~LinearNN.is_ready
+      
          ~LinearNN.name
+      
          ~LinearNN.serialize
+      
          ~LinearNN.set_hyperparameters
+      
          ~LinearNN.set_params
+      
          ~LinearNN.set_precision
+      
          ~LinearNN.set_state
 
    .. autosummary::

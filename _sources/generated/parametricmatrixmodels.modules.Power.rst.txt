@@ -7,27 +7,50 @@
 
 .. autoclass:: Power
    :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
 
    .. autosummary::
       :nosignatures:
 
+      __call__
+      _get_callable
       
-         ~Power.__init__
+      
+      
          ~Power.astype
+      
          ~Power.compile
+      
          ~Power.deserialize
+      
          ~Power.func
+      
          ~Power.get_hyperparameters
+      
          ~Power.get_num_trainable_floats
+      
          ~Power.get_output_shape
+      
          ~Power.get_params
+      
          ~Power.get_state
+      
          ~Power.is_ready
+      
          ~Power.name
+      
          ~Power.serialize
+      
          ~Power.set_hyperparameters
+      
          ~Power.set_params
+      
          ~Power.set_precision
+      
          ~Power.set_state
 
    .. autosummary::
