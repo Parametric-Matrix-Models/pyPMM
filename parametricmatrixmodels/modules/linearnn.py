@@ -66,16 +66,6 @@ class LinearNN(BaseModule):
             and self.b is not None
         )
 
-    def get_num_trainable_floats(self) -> int | None:
-        if not self.is_ready():
-            return None
-
-        num_params = self.k * self.p + self.k  # W and b
-        if self.real:
-            return num_params
-        else:
-            return 2 * num_params
-
     def _get_callable(self) -> Callable:
         return lambda params, input_NF, training, state, rng: (
             input_NF @ params[0] + params[1][None, :],

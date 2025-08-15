@@ -244,19 +244,6 @@ tuple[Array, tuple[Array, ...]]``
             and self.output_shape is not None
         )
 
-    def get_num_trainable_floats(self) -> int | None:
-        if not self.is_ready():
-            return None
-
-        # count the total number of floats in the parameters
-        # multiplying by 2 if the parameters are complex
-        param_count = sum(
-            np.prod(np.array(p.shape)) * (2 if np.iscomplexobj(p) else 1)
-            for p in self.get_params()
-        )
-        # can be 0
-        return param_count
-
     def _get_callable(self) -> Callable:
         return lambda params, input_NF, training, state, rng: self.f(
             params, input_NF, state, rng

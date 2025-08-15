@@ -66,7 +66,10 @@ class BaseModule(object):
         param_count = self.get_num_trainable_floats()
         ready = self.is_ready()
         if param_count is not None and ready:
-            return f"{self.name()} (trainable floats: {param_count:,})"
+            if param_count == 0:
+                return f"{self.name()}"
+            else:
+                return f"{self.name()} (trainable floats: {param_count:,})"
         elif not ready:
             return f"{self.name()} (uninitialized)"
         else:
@@ -100,15 +103,18 @@ class BaseModule(object):
         -------
             Number of trainable floats in the module, or None if the module
             is not ready.
-
-        Raises
-        ------
-        NotImplementedError
-            If the method is not implemented in the subclass.
         """
-        raise NotImplementedError(
-            "get_num_trainable_floats method must be implemented in subclasses"
-        )
+        if not self.is_ready():
+            return None
+        try:
+            params = self.get_params()
+            if not params:
+                return 0
+            return sum(
+                [(2 if np.iscomplexobj(p) else 1) * p.size for p in params]
+            )
+        except Exception:
+            return None
 
     def _get_callable(
         self,
