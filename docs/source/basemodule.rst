@@ -20,7 +20,6 @@ Methods that must be overridden by subclasses
 
     ~BaseModule.__init__
     ~BaseModule.is_ready
-    ~BaseModule.get_num_trainable_floats
     ~BaseModule._get_callable
     ~BaseModule.compile
     ~BaseModule.get_output_shape
@@ -30,7 +29,6 @@ Methods that must be overridden by subclasses
 
 .. automethod:: parametricmatrixmodels.modules.BaseModule.__init__
 .. automethod:: parametricmatrixmodels.modules.BaseModule.is_ready
-.. automethod:: parametricmatrixmodels.modules.BaseModule.get_num_trainable_floats
 .. automethod:: parametricmatrixmodels.modules.BaseModule._get_callable
 .. automethod:: parametricmatrixmodels.modules.BaseModule.compile
 .. automethod:: parametricmatrixmodels.modules.BaseModule.get_output_shape
@@ -48,6 +46,7 @@ Methods with default implementations
     ~BaseModule.__repr__
     ~BaseModule.__call__
     ~BaseModule.set_hyperparameters
+    ~BaseModule.get_num_trainable_floats
     ~BaseModule.get_state
     ~BaseModule.set_state
     ~BaseModule.set_precision
@@ -59,6 +58,7 @@ Methods with default implementations
 .. automethod:: parametricmatrixmodels.modules.BaseModule.__repr__
 .. automethod:: parametricmatrixmodels.modules.BaseModule.__call__
 .. automethod:: parametricmatrixmodels.modules.BaseModule.set_hyperparameters
+.. automethod:: parametricmatrixmodels.modules.BaseModule.get_num_trainable_floats
 .. automethod:: parametricmatrixmodels.modules.BaseModule.get_state
 .. automethod:: parametricmatrixmodels.modules.BaseModule.set_state
 .. automethod:: parametricmatrixmodels.modules.BaseModule.set_precision

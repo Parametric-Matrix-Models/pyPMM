@@ -9,7 +9,7 @@ Utility and Meta Modules
 .. autosummary::
    :toctree: generated/
    :nosignatures:
-   :template: class.rst
+   :template: modulesubclass.rst
 
    ~Flatten
    ~Reshape

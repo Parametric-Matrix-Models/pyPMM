@@ -9,7 +9,7 @@ Neural Network Modules
 .. autosummary::
    :toctree: generated/
    :nosignatures:
-   :template: class.rst
+   :template: modulesubclass.rst
 
    ~LinearNN
    ~NonnegativeLinearNN

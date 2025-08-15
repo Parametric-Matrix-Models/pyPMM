@@ -9,7 +9,7 @@ PMM Modules
 .. autosummary::
    :toctree: generated/
    :nosignatures:
-   :template: class.rst
+   :template: modulesubclass.rst
 
    ~AffineHermitianMatrix
    ~Eigenvalues
