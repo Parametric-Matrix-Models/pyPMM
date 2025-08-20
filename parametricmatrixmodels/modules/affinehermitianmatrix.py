@@ -50,6 +50,7 @@ class AffineHermitianMatrix(BaseModule):
         smoothing: float = None,
         Ms: np.ndarray = None,
         init_magnitude: float = 1e-2,
+        bias_term: bool = True,
         flatten: bool = False,
     ) -> None:
         """
@@ -70,6 +71,9 @@ class AffineHermitianMatrix(BaseModule):
             init_magnitude
                 Optional initial magnitude of the random matrices, used when
                 initializing the module. Default is ``1e-2``.
+            bias_term
+                If ``True``, include the bias term :math:`M_0` in the affine
+                matrix. Default is ``True``.
             flatten
                 If ``True``, the *output* will be flattened to a 1D array.
                 Useful when combining with ``SubsetModule`` or other modules in
@@ -98,6 +102,7 @@ class AffineHermitianMatrix(BaseModule):
 
         self.matrix_size = matrix_size
         self.smoothing = smoothing if smoothing is not None else 0.0
+        self.bias_term = bias_term
         self.Ms = Ms  # matrices M0, M1, ..., Mp
         self.init_magnitude = init_magnitude
         self.flatten = flatten
@@ -105,8 +110,9 @@ class AffineHermitianMatrix(BaseModule):
     def name(self) -> str:
         return (
             f"AffineHermitianMatrix({self.matrix_size}x{self.matrix_size},"
-            f" smoothing={self.smoothing}"
-            f"{', FLATTENED' if self.flatten else ''})"
+            f" smoothing={self.smoothing},"
+            f"{'' if self.bias_term else ' no bias,'}"
+            f"{' FLATTENED' if self.flatten else ''})"
         )
 
     def is_ready(self) -> bool:
@@ -137,15 +143,15 @@ class AffineHermitianMatrix(BaseModule):
             # enforce Hermitian matrices
             Ms = (Ms + Ms.conj().transpose((0, 2, 1))) / 2.0
 
-            M = Ms[0][None, :, :] + np.einsum(
-                "ni,ijk->njk", input_NF.astype(Ms.dtype), Ms[1:]
-            )
+            if self.bias_term:
+                M = Ms[0][None, :, :] + np.einsum(
+                    "ni,ijk->njk", input_NF.astype(Ms.dtype), Ms[1:]
+                )
+            else:
+                M = np.einsum("ni,ijk->njk", input_NF.astype(Ms.dtype), Ms)
 
             if self.smoothing != 0.0:
-                M += (
-                    self.smoothing
-                    * exact_smoothing_matrix(Ms[0], Ms[1:])[None, :, :]
-                )
+                M += self.smoothing * exact_smoothing_matrix(Ms)[None, :, :]
 
             if self.flatten:
                 # preserve batch dimension
@@ -163,9 +169,12 @@ class AffineHermitianMatrix(BaseModule):
                 f"{input_shape}"
             )
 
+        # number of matrices is number of features + 1 (bias) if bias is used
+        p = input_shape[0] + 1 if self.bias_term else input_shape[0]
+
         # if the module is already ready, just verify the input shape
         if self.is_ready():
-            if self.Ms.shape[0] != input_shape[0] + 1:
+            if self.Ms.shape[0] != p:
                 raise ValueError(
                     f"Input shape {input_shape} does not match the expected "
                     f"number of features {self.Ms.shape[0] - 1} "
@@ -177,13 +186,13 @@ class AffineHermitianMatrix(BaseModule):
         self.Ms = self.init_magnitude * (
             jax.random.normal(
                 rng_Mreal,
-                (input_shape[0] + 1, self.matrix_size, self.matrix_size),
+                (p, self.matrix_size, self.matrix_size),
                 dtype=np.complex64,
             )
             + 1j
             * jax.random.normal(
                 rng_Mimag,
-                (input_shape[0] + 1, self.matrix_size, self.matrix_size),
+                (p, self.matrix_size, self.matrix_size),
                 dtype=np.complex64,
             )
         )
@@ -204,6 +213,7 @@ class AffineHermitianMatrix(BaseModule):
             "smoothing": self.smoothing,
             "init_magnitude": self.init_magnitude,
             "flatten": self.flatten,
+            "bias_term": self.bias_term,
         }
 
     def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
@@ -235,7 +245,8 @@ class AffineHermitianMatrix(BaseModule):
 
         if Ms.shape != expected_shape:
             raise ValueError(
-                "Ms must be a 3D array of shape (input_size+1, matrix_size,"
+                "Ms must be a 3D array of shape (input_size"
+                f"{'+1' if self.bias_term else ''}, matrix_size,"
                 f" matrix_size) [{expected_shape}], got {Ms.shape}"
             )
         # ensure Ms are Hermitian
