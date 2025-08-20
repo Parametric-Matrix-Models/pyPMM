@@ -96,8 +96,8 @@ class BaseModule(object):
     def get_num_trainable_floats(self) -> int | None:
         """
         Returns the number of trainable floats in the module.
-        If the module does not have trainable parameters, returns 0.
-        If the module is not ready, returns None.
+        If the module does not have trainable parameters, returns ``0``.
+        If the module is not ready, returns ``None``.
 
         Returns
         -------
