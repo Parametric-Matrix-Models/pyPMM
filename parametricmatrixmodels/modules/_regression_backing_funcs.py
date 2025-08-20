@@ -13,39 +13,71 @@ def commutator(
 
 
 def exact_smoothing_matrix(
-    A: np.ndarray,
-    Bs: np.ndarray,
+    Ms: np.ndarray,
 ) -> np.ndarray:
-    # compute the sum of all commutators between pairs of matrices
+    """
+    Compute the exact smoothing matrix for a set of Hermitian matrices.
 
-    # first do A with all Bs
-    # since [A, B + C] = [A, B] + [A, C], the most efficient way to do this
-    # is by summing all the Bs first, then computing the commutator
-    B_sum = np.sum(Bs, axis=0)
-    commutator_A_Bs = commutator(A, B_sum)
+    Which is 1j times the sum of all commutators between pairs of matrices.
 
-    # then all pairs of Bs
-    # specifically, [B_i, B_j] for i < j
+    C = sqrt(-1) sum_{ij} [M_i, M_j]
 
-    # again we use [A, B + C] = [A, B] + [A, C]
-    # sum all B_j for j >= i, using cumsum
-    # its okay to include the i=j case, since [B_i, B_i] = 0
-    B_sums = np.cumsum(Bs[::~0], axis=0)[::~0]
+    This is done efficiently using the linearity of the commutator and
+    cumulative sums.
+    """
 
-    # B_sums[i] is the sum of all B_j for j >= i
-    def scan_Bs_comms(acc: np.ndarray, i: int) -> np.ndarray:
+    Ms_sums = np.cumsum(Ms[::~0], axis=0)[::~0]
+
+    def scan_Ms_comms(acc: np.ndarray, i: int) -> np.ndarray:
         """
-        Compute the commutator [B_i, B_j] for j >= i and accumulate.
+        Compute the commutator [M_i, M_j] for j >= i and accumulate.
         """
-        return acc + commutator(Bs[i], B_sums[i]), ()
+        # TODO: shouldn't this raise a jax exception since i is dynamic?
+        return acc + commutator(Ms[i], Ms_sums[i]), ()
 
     smoothing_matrix, _ = jax.lax.scan(
-        scan_Bs_comms,
-        commutator_A_Bs,
-        np.arange(Bs.shape[0] - 1),  # don't include the last index
+        scan_Ms_comms,
+        np.zeros_like(Ms[0]),
+        np.arange(Ms.shape[0] - 1),  # don't include the last index
     )
 
     return 1j * smoothing_matrix
+
+
+# def exact_smoothing_matrix(
+#    A: np.ndarray,
+#    Bs: np.ndarray,
+# ) -> np.ndarray:
+#    # compute the sum of all commutators between pairs of matrices
+#
+#    # first do A with all Bs
+#    # since [A, B + C] = [A, B] + [A, C], the most efficient way to do this
+#    # is by summing all the Bs first, then computing the commutator
+#    B_sum = np.sum(Bs, axis=0)
+#    commutator_A_Bs = commutator(A, B_sum)
+#
+#    # then all pairs of Bs
+#    # specifically, [B_i, B_j] for i < j
+#
+#    # again we use [A, B + C] = [A, B] + [A, C]
+#    # sum all B_j for j >= i, using cumsum
+#    # its okay to include the i=j case, since [B_i, B_i] = 0
+#    B_sums = np.cumsum(Bs[::~0], axis=0)[::~0]
+#
+#    # B_sums[i] is the sum of all B_j for j >= i
+#    def scan_Bs_comms(acc: np.ndarray, i: int) -> np.ndarray:
+#        """
+#        Compute the commutator [B_i, B_j] for j >= i and accumulate.
+#        """
+#        return acc + commutator(Bs[i], B_sums[i]), ()
+#
+#    smoothing_matrix, _ = jax.lax.scan(
+#        scan_Bs_comms,
+#        commutator_A_Bs,
+#        np.arange(Bs.shape[0] - 1),  # don't include the last index
+#    )
+#
+#    return 1j * smoothing_matrix
 
 
 def reg_pmm_predict_func(
@@ -152,7 +184,7 @@ def reg_pmm_predict_func_single(
 
     else:
         M = A + np.einsum("i,ijk->jk", X.astype(Bs.dtype), Bs)
-        C = exact_smoothing_matrix(A, Bs)
+        C = exact_smoothing_matrix(np.concatenate((A[None, :, :], Bs), axis=0))
 
         E, V = np.linalg.eigh(M + smoothing * C)
 
@@ -293,7 +325,7 @@ def reg_pmm_predict_func_single_legacy(
 
     else:
         M = A + np.einsum("i,ijk->jk", X.astype(Bs.dtype), Bs)
-        C = exact_smoothing_matrix(A, Bs)
+        C = exact_smoothing_matrix(np.concatenate((A[None, :, :], Bs), axis=0))
 
         E, V = np.linalg.eigh(M + smoothing * C)
 
