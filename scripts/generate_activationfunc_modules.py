@@ -151,10 +151,17 @@ class {name}(ActivationBase):
     {func} : The function used for the elementwise activation.
     \"\"\"
     def __init__(self, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
     def name(self) -> str:
-        return "{name}"
+        basename = "{name}"
+
+        if self.args or self.kwargs:
+            return f"{{basename}}(args={{self.args}}, kwargs={{self.kwargs}})"
+        else:
+            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return {func}(x, *self.args, **self.kwargs)
