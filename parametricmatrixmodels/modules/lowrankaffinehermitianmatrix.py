@@ -187,13 +187,13 @@ class LowRankAffineHermitianMatrix(BaseModule):
         self.us = self.init_magnitude * (
             jax.random.normal(
                 rng_ureal,
-                (p, self.matrix_size, self.matrix_size),
+                (p, self.rank, self.matrix_size),
                 dtype=np.complex64,
             )
             + 1j
             * jax.random.normal(
                 rng_uimag,
-                (p, self.matrix_size, self.matrix_size),
+                (p, self.rank, self.matrix_size),
                 dtype=np.complex64,
             )
         )
