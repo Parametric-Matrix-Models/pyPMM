@@ -523,9 +523,9 @@ transition amplitudes of these eigenvectors with trainable Hermitian
 observable matrices (secondaries) <span class="math notranslate nohighlight">\(D_{ql}\)</span> to form the output vector
 <span class="math notranslate nohighlight">\(z\)</span> with <span class="math notranslate nohighlight">\(q\)</span> components as</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}z_k &amp;= \sum_{m=1}^l \left(
-        \sum_{i,j=1}^r \left( |v_i^H D_{km} v_j|^2 \right)\\
-        &amp;\quad - \frac{r^2}{2} ||D_{km}||^2_2 \right)\end{split}\]</div>
+\[z_k = \sum_{m=1}^l \left(
+       \left[\sum_{i,j=1}^r |v_i^H D_{km} v_j|^2 \right]
+        - \frac{r^2}{2} ||D_{km}||^2_2 \right)\]</div>
 <p>where <span class="math notranslate nohighlight">\(||\cdot||_2\)</span> is the operator 2-norm (largest singular value)
 so for Hermitian <span class="math notranslate nohighlight">\(D\)</span>, <span class="math notranslate nohighlight">\(||D||_2\)</span> is the largest absolute
 eigenvalue.</p>
