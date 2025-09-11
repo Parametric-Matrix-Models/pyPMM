@@ -45,8 +45,8 @@
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="AffineEigenvaluePMM" href="parametricmatrixmodels.modules.AffineEigenvaluePMM.html" />
-    <link rel="prev" title="AffineHermitianMatrix" href="parametricmatrixmodels.modules.AffineHermitianMatrix.html" />
+    <link rel="next" title="Eigenvectors" href="parametricmatrixmodels.modules.Eigenvectors.html" />
+    <link rel="prev" title="LowRankAffineHermitianMatrix" href="parametricmatrixmodels.modules.LowRankAffineHermitianMatrix.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -295,11 +295,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../basemodule.html"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../pmms.html">PMM Modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AffineHermitianMatrix.html">AffineHermitianMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LowRankAffineHermitianMatrix.html">LowRankAffineHermitianMatrix</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Eigenvalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Eigenvectors.html">Eigenvectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Eigensystem.html">Eigensystem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AffineEigenvaluePMM.html">AffineEigenvaluePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AEPMM.html">AEPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LowRankAffineEigenvaluePMM.html">LowRankAffineEigenvaluePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LRAEPMM.html">LRAEPMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AffineObservablePMM.html">AffineObservablePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AOPMM.html">AOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LowRankAffineObservablePMM.html">LowRankAffineObservablePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LRAOPMM.html">LRAOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.TransitionAmplitudeSum.html">TransitionAmplitudeSum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LowRankTransitionAmplitudeSum.html">LowRankTransitionAmplitudeSum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LegacyAffineObservablePMM.html">LegacyAffineObservablePMM</a></li>
 </ul>
 </details></li>
@@ -309,6 +318,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../activations.html">Elementwise and Activation Function Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.PReLU.html">PReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ReLU.html">ReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ReLU6.html">ReLU6</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Sigmoid.html">Sigmoid</a></li>
@@ -409,10 +419,13 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utils.html">Utility and Meta Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Comment.html">Comment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Bias.html">Bias</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Flatten.html">Flatten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Reshape.html">Reshape</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Func.html">Func</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.SubsetModule.html">SubsetModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.MultiModule.html">MultiModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Func.html">Func</a></li>
 </ul>
 </details></li>
 </ul>
@@ -485,17 +498,44 @@
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.Eigenvalues">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Eigenvalues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_eig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SA'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/eigenvalues.html#Eigenvalues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.Eigenvalues" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></a></p>
+<p>Module to compute selected eigenvalues of a symmetric (Hermitian) matrix.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="parametricmatrixmodels.modules.Eigenvectors.html#parametricmatrixmodels.modules.Eigenvectors" title="parametricmatrixmodels.modules.Eigenvectors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Eigenvectors</span></code></a></dt><dd><p>Module to compute only eigenvectors.</p>
+</dd>
+<dt><a class="reference internal" href="parametricmatrixmodels.modules.Eigensystem.html#parametricmatrixmodels.modules.Eigensystem" title="parametricmatrixmodels.modules.Eigensystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Eigensystem</span></code></a></dt><dd><p>Module to compute both eigenvalues and eigenvectors. Although JAX/NumPy’s <cite>np.linalg.eigvalsh</cite> just calls <cite>np.linalg.eigh</cite> and discards the eigenvectors, it is still more efficient here so that an entire batch of eigenvectors aren’t passed around needlessly.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.numpy.linalg.eigvalsh.html#jax.numpy.linalg.eigvalsh" title="(in JAX)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jax.numpy.linalg.eigvalsh</span></code></a></dt><dd><p>JAX function to compute the eigenvalues of a symmetric (Hermitian) matrix, which is used internally by this module.</p>
+</dd>
+</dl>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.Eigenvalues.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_eig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SA'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/eigenvalues.html#Eigenvalues.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.Eigenvalues.__init__" title="Link to this definition">#</a></dt>
-<dd><p>BaseModule constructor, must be overridden by subclasses.</p>
-<p>All modules <strong>must</strong> be able to be initialized without any arguments in
-order for Model saving and loading to work correctly.</p>
-<p><code class="docutils literal notranslate"><span class="pre">__init__</span></code> can take optional parameters, but all aspects of the
-module must be able to be set by <code class="docutils literal notranslate"><span class="pre">set_hyperparameters</span></code>,
-<code class="docutils literal notranslate"><span class="pre">set_params</span></code>, and <code class="docutils literal notranslate"><span class="pre">set_state</span></code>.</p>
-<p>Always raises <code class="docutils literal notranslate"><span class="pre">NotImplementedError</span></code> when called on <code class="docutils literal notranslate"><span class="pre">BaseModule</span></code> s.</p>
-<p><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code> is not meant to be instantiated directly.</p>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_eig</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of eigenvalues to compute. Must be a positive integer.
+Default is 1.</p></li>
+<li><p><strong>which</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – <p>Which eigenvalues to return, by default “SA”.
+Options are:
+- ‘SA’ for smallest algebraic (default)
+- ‘LA’ for largest algebraic
+- ‘SM’ for smallest magnitude
+- ‘LM’ for largest magnitude
+- ‘EA’ for exterior algebraically
+- ‘EM’ for exterior by magnitude
+- ‘IA’ for interior algebraically
+- ‘IM’ for interior by magnitude</p>
+<p>For algebraic ‘which’ options, the eigenvalues are returned in
+ascending algebraic order.</p>
+<p>For magnitude ‘which’ options, the eigenvalues are returned in
+ascending magnitude order.</p>
+</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
@@ -750,8 +790,8 @@ They can be set via <cite>set_hyperparameters</cite>.</p>
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.Eigenvalues.get_num_trainable_floats">
 <span class="sig-name descname"><span class="pre">get_num_trainable_floats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/eigenvalues.html#Eigenvalues.get_num_trainable_floats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.Eigenvalues.get_num_trainable_floats" title="Link to this definition">#</a></dt>
 <dd><p>Returns the number of trainable floats in the module.
-If the module does not have trainable parameters, returns 0.
-If the module is not ready, returns None.</p>
+If the module does not have trainable parameters, returns <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+If the module is not ready, returns <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
@@ -977,20 +1017,20 @@ Valid options are:
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="parametricmatrixmodels.modules.AffineHermitianMatrix.html"
+       href="parametricmatrixmodels.modules.LowRankAffineHermitianMatrix.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">AffineHermitianMatrix</p>
+        <p class="prev-next-title">LowRankAffineHermitianMatrix</p>
       </div>
     </a>
     <a class="right-next"
-       href="parametricmatrixmodels.modules.AffineEigenvaluePMM.html"
+       href="parametricmatrixmodels.modules.Eigenvectors.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">AffineEigenvaluePMM</p>
+        <p class="prev-next-title">Eigenvectors</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

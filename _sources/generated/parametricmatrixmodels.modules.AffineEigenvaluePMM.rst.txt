@@ -41,6 +41,8 @@
       
          ~AffineEigenvaluePMM.name
       
+         ~AffineEigenvaluePMM.reset
+      
          ~AffineEigenvaluePMM.serialize
       
          ~AffineEigenvaluePMM.set_hyperparameters

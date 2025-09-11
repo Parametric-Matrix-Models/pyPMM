@@ -295,11 +295,20 @@
 <li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="pmms.html">PMM Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html">AffineHermitianMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineHermitianMatrix.html">LowRankAffineHermitianMatrix</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvalues.html">Eigenvalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvectors.html">Eigenvectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigensystem.html">Eigensystem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineEigenvaluePMM.html">AffineEigenvaluePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AEPMM.html">AEPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineEigenvaluePMM.html">LowRankAffineEigenvaluePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LRAEPMM.html">LRAEPMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineObservablePMM.html">AffineObservablePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AOPMM.html">AOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineObservablePMM.html">LowRankAffineObservablePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LRAOPMM.html">LRAOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.TransitionAmplitudeSum.html">TransitionAmplitudeSum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankTransitionAmplitudeSum.html">LowRankTransitionAmplitudeSum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LegacyAffineObservablePMM.html">LegacyAffineObservablePMM</a></li>
 </ul>
 </details></li>
@@ -309,6 +318,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="activations.html">Elementwise and Activation Function Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.PReLU.html">PReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU.html">ReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU6.html">ReLU6</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sigmoid.html">Sigmoid</a></li>
@@ -409,10 +419,13 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="utils.html">Utility and Meta Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Comment.html">Comment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Bias.html">Bias</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Flatten.html">Flatten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Reshape.html">Reshape</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Func.html">Func</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SubsetModule.html">SubsetModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.MultiModule.html">MultiModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Func.html">Func</a></li>
 </ul>
 </details></li>
 </ul>
@@ -823,8 +836,8 @@ attributes of the class instance.</p>
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.BaseModule.get_num_trainable_floats">
 <span class="sig-prename descclassname"><span class="pre">BaseModule.</span></span><span class="sig-name descname"><span class="pre">get_num_trainable_floats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/parametricmatrixmodels/modules/basemodule.html#BaseModule.get_num_trainable_floats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.BaseModule.get_num_trainable_floats" title="Link to this definition">#</a></dt>
 <dd><p>Returns the number of trainable floats in the module.
-If the module does not have trainable parameters, returns 0.
-If the module is not ready, returns None.</p>
+If the module does not have trainable parameters, returns <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+If the module is not ready, returns <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>

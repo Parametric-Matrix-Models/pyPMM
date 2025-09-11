@@ -45,7 +45,7 @@
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="ReLU" href="generated/parametricmatrixmodels.modules.ReLU.html" />
+    <link rel="next" title="PReLU" href="generated/parametricmatrixmodels.modules.PReLU.html" />
     <link rel="prev" title="NonnegativeLinearNN" href="generated/parametricmatrixmodels.modules.NonnegativeLinearNN.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -295,11 +295,20 @@
 <li class="toctree-l1"><a class="reference internal" href="basemodule.html"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="pmms.html">PMM Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html">AffineHermitianMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineHermitianMatrix.html">LowRankAffineHermitianMatrix</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvalues.html">Eigenvalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvectors.html">Eigenvectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigensystem.html">Eigensystem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineEigenvaluePMM.html">AffineEigenvaluePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AEPMM.html">AEPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineEigenvaluePMM.html">LowRankAffineEigenvaluePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LRAEPMM.html">LRAEPMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineObservablePMM.html">AffineObservablePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AOPMM.html">AOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineObservablePMM.html">LowRankAffineObservablePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LRAOPMM.html">LRAOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.TransitionAmplitudeSum.html">TransitionAmplitudeSum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankTransitionAmplitudeSum.html">LowRankTransitionAmplitudeSum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LegacyAffineObservablePMM.html">LegacyAffineObservablePMM</a></li>
 </ul>
 </details></li>
@@ -309,6 +318,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Elementwise and Activation Function Modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.PReLU.html">PReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU.html">ReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU6.html">ReLU6</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sigmoid.html">Sigmoid</a></li>
@@ -409,10 +419,13 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="utils.html">Utility and Meta Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Comment.html">Comment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Bias.html">Bias</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Flatten.html">Flatten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Reshape.html">Reshape</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Func.html">Func</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SubsetModule.html">SubsetModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.MultiModule.html">MultiModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Func.html">Func</a></li>
 </ul>
 </details></li>
 </ul>
@@ -479,295 +492,298 @@
 <span id="activations"></span><h1>Elementwise and Activation Function Modules<a class="headerlink" href="#elementwise-and-activation-function-modules" title="Link to this heading">#</a></h1>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU.html#parametricmatrixmodels.modules.ReLU" title="parametricmatrixmodels.modules.ReLU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReLU</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.PReLU.html#parametricmatrixmodels.modules.PReLU" title="parametricmatrixmodels.modules.PReLU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PReLU</span></code></a></p></td>
+<td><p>Element-wise Parametric Rectified Linear Unit (PReLU) activation function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU.html#parametricmatrixmodels.modules.ReLU" title="parametricmatrixmodels.modules.ReLU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReLU</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.relu</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU6.html#parametricmatrixmodels.modules.ReLU6" title="parametricmatrixmodels.modules.ReLU6"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReLU6</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU6.html#parametricmatrixmodels.modules.ReLU6" title="parametricmatrixmodels.modules.ReLU6"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ReLU6</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.relu6</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sigmoid.html#parametricmatrixmodels.modules.Sigmoid" title="parametricmatrixmodels.modules.Sigmoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sigmoid</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sigmoid.html#parametricmatrixmodels.modules.Sigmoid" title="parametricmatrixmodels.modules.Sigmoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sigmoid</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.sigmoid</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Softplus.html#parametricmatrixmodels.modules.Softplus" title="parametricmatrixmodels.modules.Softplus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Softplus</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Softplus.html#parametricmatrixmodels.modules.Softplus" title="parametricmatrixmodels.modules.Softplus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Softplus</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.softplus</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SparsePlus.html#parametricmatrixmodels.modules.SparsePlus" title="parametricmatrixmodels.modules.SparsePlus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SparsePlus</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SparsePlus.html#parametricmatrixmodels.modules.SparsePlus" title="parametricmatrixmodels.modules.SparsePlus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SparsePlus</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.sparse_plus</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SparseSigmoid.html#parametricmatrixmodels.modules.SparseSigmoid" title="parametricmatrixmodels.modules.SparseSigmoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SparseSigmoid</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SparseSigmoid.html#parametricmatrixmodels.modules.SparseSigmoid" title="parametricmatrixmodels.modules.SparseSigmoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SparseSigmoid</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.sparse_sigmoid</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SoftSign.html#parametricmatrixmodels.modules.SoftSign" title="parametricmatrixmodels.modules.SoftSign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftSign</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SoftSign.html#parametricmatrixmodels.modules.SoftSign" title="parametricmatrixmodels.modules.SoftSign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoftSign</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.soft_sign</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SiLU.html#parametricmatrixmodels.modules.SiLU" title="parametricmatrixmodels.modules.SiLU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SiLU</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SiLU.html#parametricmatrixmodels.modules.SiLU" title="parametricmatrixmodels.modules.SiLU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SiLU</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.silu</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Swish.html#parametricmatrixmodels.modules.Swish" title="parametricmatrixmodels.modules.Swish"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Swish</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Swish.html#parametricmatrixmodels.modules.Swish" title="parametricmatrixmodels.modules.Swish"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Swish</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.swish</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LogSigmoid.html#parametricmatrixmodels.modules.LogSigmoid" title="parametricmatrixmodels.modules.LogSigmoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogSigmoid</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LogSigmoid.html#parametricmatrixmodels.modules.LogSigmoid" title="parametricmatrixmodels.modules.LogSigmoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogSigmoid</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.log_sigmoid</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LeakyReLU.html#parametricmatrixmodels.modules.LeakyReLU" title="parametricmatrixmodels.modules.LeakyReLU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LeakyReLU</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LeakyReLU.html#parametricmatrixmodels.modules.LeakyReLU" title="parametricmatrixmodels.modules.LeakyReLU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LeakyReLU</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.leaky_relu</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardSigmoid.html#parametricmatrixmodels.modules.HardSigmoid" title="parametricmatrixmodels.modules.HardSigmoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HardSigmoid</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardSigmoid.html#parametricmatrixmodels.modules.HardSigmoid" title="parametricmatrixmodels.modules.HardSigmoid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HardSigmoid</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.hard_sigmoid</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardSiLU.html#parametricmatrixmodels.modules.HardSiLU" title="parametricmatrixmodels.modules.HardSiLU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HardSiLU</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardSiLU.html#parametricmatrixmodels.modules.HardSiLU" title="parametricmatrixmodels.modules.HardSiLU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HardSiLU</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.hard_silu</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardSwish.html#parametricmatrixmodels.modules.HardSwish" title="parametricmatrixmodels.modules.HardSwish"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HardSwish</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardSwish.html#parametricmatrixmodels.modules.HardSwish" title="parametricmatrixmodels.modules.HardSwish"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HardSwish</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.hard_swish</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardTanh.html#parametricmatrixmodels.modules.HardTanh" title="parametricmatrixmodels.modules.HardTanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HardTanh</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.HardTanh.html#parametricmatrixmodels.modules.HardTanh" title="parametricmatrixmodels.modules.HardTanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HardTanh</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.hard_tanh</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ELU.html#parametricmatrixmodels.modules.ELU" title="parametricmatrixmodels.modules.ELU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ELU</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ELU.html#parametricmatrixmodels.modules.ELU" title="parametricmatrixmodels.modules.ELU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ELU</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.elu</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.CELU.html#parametricmatrixmodels.modules.CELU" title="parametricmatrixmodels.modules.CELU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CELU</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.CELU.html#parametricmatrixmodels.modules.CELU" title="parametricmatrixmodels.modules.CELU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CELU</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.celu</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SELU.html#parametricmatrixmodels.modules.SELU" title="parametricmatrixmodels.modules.SELU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SELU</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SELU.html#parametricmatrixmodels.modules.SELU" title="parametricmatrixmodels.modules.SELU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SELU</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.selu</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.GELU.html#parametricmatrixmodels.modules.GELU" title="parametricmatrixmodels.modules.GELU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GELU</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.GELU.html#parametricmatrixmodels.modules.GELU" title="parametricmatrixmodels.modules.GELU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GELU</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.gelu</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.GLU.html#parametricmatrixmodels.modules.GLU" title="parametricmatrixmodels.modules.GLU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GLU</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.GLU.html#parametricmatrixmodels.modules.GLU" title="parametricmatrixmodels.modules.GLU"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GLU</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.glu</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SquarePlus.html#parametricmatrixmodels.modules.SquarePlus" title="parametricmatrixmodels.modules.SquarePlus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SquarePlus</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SquarePlus.html#parametricmatrixmodels.modules.SquarePlus" title="parametricmatrixmodels.modules.SquarePlus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SquarePlus</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.squareplus</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Mish.html#parametricmatrixmodels.modules.Mish" title="parametricmatrixmodels.modules.Mish"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mish</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Mish.html#parametricmatrixmodels.modules.Mish" title="parametricmatrixmodels.modules.Mish"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mish</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.mish</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Identity.html#parametricmatrixmodels.modules.Identity" title="parametricmatrixmodels.modules.Identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Identity</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Identity.html#parametricmatrixmodels.modules.Identity" title="parametricmatrixmodels.modules.Identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Identity</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.identity</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Softmax.html#parametricmatrixmodels.modules.Softmax" title="parametricmatrixmodels.modules.Softmax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Softmax</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Softmax.html#parametricmatrixmodels.modules.Softmax" title="parametricmatrixmodels.modules.Softmax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Softmax</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.softmax</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LogSoftmax.html#parametricmatrixmodels.modules.LogSoftmax" title="parametricmatrixmodels.modules.LogSoftmax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogSoftmax</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LogSoftmax.html#parametricmatrixmodels.modules.LogSoftmax" title="parametricmatrixmodels.modules.LogSoftmax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogSoftmax</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.log_softmax</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LogSumExp.html#parametricmatrixmodels.modules.LogSumExp" title="parametricmatrixmodels.modules.LogSumExp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogSumExp</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LogSumExp.html#parametricmatrixmodels.modules.LogSumExp" title="parametricmatrixmodels.modules.LogSumExp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LogSumExp</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.logsumexp</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Standardize.html#parametricmatrixmodels.modules.Standardize" title="parametricmatrixmodels.modules.Standardize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Standardize</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Standardize.html#parametricmatrixmodels.modules.Standardize" title="parametricmatrixmodels.modules.Standardize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Standardize</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.standardize</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.OneHot.html#parametricmatrixmodels.modules.OneHot" title="parametricmatrixmodels.modules.OneHot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OneHot</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.OneHot.html#parametricmatrixmodels.modules.OneHot" title="parametricmatrixmodels.modules.OneHot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OneHot</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.nn.one_hot</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Abs.html#parametricmatrixmodels.modules.Abs" title="parametricmatrixmodels.modules.Abs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Abs</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Abs.html#parametricmatrixmodels.modules.Abs" title="parametricmatrixmodels.modules.Abs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Abs</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.abs</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Absolute.html#parametricmatrixmodels.modules.Absolute" title="parametricmatrixmodels.modules.Absolute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Absolute</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Absolute.html#parametricmatrixmodels.modules.Absolute" title="parametricmatrixmodels.modules.Absolute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Absolute</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.absolute</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ACos.html#parametricmatrixmodels.modules.ACos" title="parametricmatrixmodels.modules.ACos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACos</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ACos.html#parametricmatrixmodels.modules.ACos" title="parametricmatrixmodels.modules.ACos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACos</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.acos</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ACosh.html#parametricmatrixmodels.modules.ACosh" title="parametricmatrixmodels.modules.ACosh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACosh</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ACosh.html#parametricmatrixmodels.modules.ACosh" title="parametricmatrixmodels.modules.ACosh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACosh</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.acosh</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AMax.html#parametricmatrixmodels.modules.AMax" title="parametricmatrixmodels.modules.AMax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMax</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AMax.html#parametricmatrixmodels.modules.AMax" title="parametricmatrixmodels.modules.AMax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMax</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.amax</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AMin.html#parametricmatrixmodels.modules.AMin" title="parametricmatrixmodels.modules.AMin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMin</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AMin.html#parametricmatrixmodels.modules.AMin" title="parametricmatrixmodels.modules.AMin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AMin</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.amin</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Angle.html#parametricmatrixmodels.modules.Angle" title="parametricmatrixmodels.modules.Angle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Angle</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Angle.html#parametricmatrixmodels.modules.Angle" title="parametricmatrixmodels.modules.Angle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Angle</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.angle</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcCos.html#parametricmatrixmodels.modules.ArcCos" title="parametricmatrixmodels.modules.ArcCos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcCos</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcCos.html#parametricmatrixmodels.modules.ArcCos" title="parametricmatrixmodels.modules.ArcCos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcCos</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.arccos</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcCosh.html#parametricmatrixmodels.modules.ArcCosh" title="parametricmatrixmodels.modules.ArcCosh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcCosh</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcCosh.html#parametricmatrixmodels.modules.ArcCosh" title="parametricmatrixmodels.modules.ArcCosh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcCosh</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.arccosh</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcSin.html#parametricmatrixmodels.modules.ArcSin" title="parametricmatrixmodels.modules.ArcSin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcSin</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcSin.html#parametricmatrixmodels.modules.ArcSin" title="parametricmatrixmodels.modules.ArcSin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcSin</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.arcsin</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcSinh.html#parametricmatrixmodels.modules.ArcSinh" title="parametricmatrixmodels.modules.ArcSinh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcSinh</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcSinh.html#parametricmatrixmodels.modules.ArcSinh" title="parametricmatrixmodels.modules.ArcSinh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcSinh</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.arcsinh</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcTan.html#parametricmatrixmodels.modules.ArcTan" title="parametricmatrixmodels.modules.ArcTan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcTan</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcTan.html#parametricmatrixmodels.modules.ArcTan" title="parametricmatrixmodels.modules.ArcTan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcTan</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.arctan</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcTan2.html#parametricmatrixmodels.modules.ArcTan2" title="parametricmatrixmodels.modules.ArcTan2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcTan2</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcTan2.html#parametricmatrixmodels.modules.ArcTan2" title="parametricmatrixmodels.modules.ArcTan2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcTan2</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.arctan2</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcTanh.html#parametricmatrixmodels.modules.ArcTanh" title="parametricmatrixmodels.modules.ArcTanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcTanh</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ArcTanh.html#parametricmatrixmodels.modules.ArcTanh" title="parametricmatrixmodels.modules.ArcTanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ArcTanh</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.arctanh</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ASin.html#parametricmatrixmodels.modules.ASin" title="parametricmatrixmodels.modules.ASin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ASin</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ASin.html#parametricmatrixmodels.modules.ASin" title="parametricmatrixmodels.modules.ASin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ASin</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.asin</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ASinh.html#parametricmatrixmodels.modules.ASinh" title="parametricmatrixmodels.modules.ASinh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ASinh</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ASinh.html#parametricmatrixmodels.modules.ASinh" title="parametricmatrixmodels.modules.ASinh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ASinh</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.asinh</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ATan.html#parametricmatrixmodels.modules.ATan" title="parametricmatrixmodels.modules.ATan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ATan</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ATan.html#parametricmatrixmodels.modules.ATan" title="parametricmatrixmodels.modules.ATan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ATan</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.atan</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ATanh.html#parametricmatrixmodels.modules.ATanh" title="parametricmatrixmodels.modules.ATanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ATanh</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.ATanh.html#parametricmatrixmodels.modules.ATanh" title="parametricmatrixmodels.modules.ATanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ATanh</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.atanh</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Cbrt.html#parametricmatrixmodels.modules.Cbrt" title="parametricmatrixmodels.modules.Cbrt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Cbrt</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Cbrt.html#parametricmatrixmodels.modules.Cbrt" title="parametricmatrixmodels.modules.Cbrt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Cbrt</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.cbrt</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Ceil.html#parametricmatrixmodels.modules.Ceil" title="parametricmatrixmodels.modules.Ceil"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Ceil</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Ceil.html#parametricmatrixmodels.modules.Ceil" title="parametricmatrixmodels.modules.Ceil"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Ceil</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.ceil</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Clip.html#parametricmatrixmodels.modules.Clip" title="parametricmatrixmodels.modules.Clip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Clip</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Clip.html#parametricmatrixmodels.modules.Clip" title="parametricmatrixmodels.modules.Clip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Clip</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.clip</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Conj.html#parametricmatrixmodels.modules.Conj" title="parametricmatrixmodels.modules.Conj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Conj</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Conj.html#parametricmatrixmodels.modules.Conj" title="parametricmatrixmodels.modules.Conj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Conj</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.conj</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Conjugate.html#parametricmatrixmodels.modules.Conjugate" title="parametricmatrixmodels.modules.Conjugate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Conjugate</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Conjugate.html#parametricmatrixmodels.modules.Conjugate" title="parametricmatrixmodels.modules.Conjugate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Conjugate</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.conjugate</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Cos.html#parametricmatrixmodels.modules.Cos" title="parametricmatrixmodels.modules.Cos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Cos</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Cos.html#parametricmatrixmodels.modules.Cos" title="parametricmatrixmodels.modules.Cos"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Cos</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.cos</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Cosh.html#parametricmatrixmodels.modules.Cosh" title="parametricmatrixmodels.modules.Cosh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Cosh</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Cosh.html#parametricmatrixmodels.modules.Cosh" title="parametricmatrixmodels.modules.Cosh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Cosh</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.cosh</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Deg2Rad.html#parametricmatrixmodels.modules.Deg2Rad" title="parametricmatrixmodels.modules.Deg2Rad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Deg2Rad</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Deg2Rad.html#parametricmatrixmodels.modules.Deg2Rad" title="parametricmatrixmodels.modules.Deg2Rad"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Deg2Rad</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.deg2rad</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Degrees.html#parametricmatrixmodels.modules.Degrees" title="parametricmatrixmodels.modules.Degrees"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Degrees</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Degrees.html#parametricmatrixmodels.modules.Degrees" title="parametricmatrixmodels.modules.Degrees"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Degrees</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.degrees</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Exp.html#parametricmatrixmodels.modules.Exp" title="parametricmatrixmodels.modules.Exp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Exp</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Exp.html#parametricmatrixmodels.modules.Exp" title="parametricmatrixmodels.modules.Exp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Exp</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.exp</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Exp2.html#parametricmatrixmodels.modules.Exp2" title="parametricmatrixmodels.modules.Exp2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Exp2</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Exp2.html#parametricmatrixmodels.modules.Exp2" title="parametricmatrixmodels.modules.Exp2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Exp2</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.exp2</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Expm1.html#parametricmatrixmodels.modules.Expm1" title="parametricmatrixmodels.modules.Expm1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expm1</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Expm1.html#parametricmatrixmodels.modules.Expm1" title="parametricmatrixmodels.modules.Expm1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expm1</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.expm1</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.FAbs.html#parametricmatrixmodels.modules.FAbs" title="parametricmatrixmodels.modules.FAbs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FAbs</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.FAbs.html#parametricmatrixmodels.modules.FAbs" title="parametricmatrixmodels.modules.FAbs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FAbs</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.fabs</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Fix.html#parametricmatrixmodels.modules.Fix" title="parametricmatrixmodels.modules.Fix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Fix</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Fix.html#parametricmatrixmodels.modules.Fix" title="parametricmatrixmodels.modules.Fix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Fix</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.fix</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.FloatPower.html#parametricmatrixmodels.modules.FloatPower" title="parametricmatrixmodels.modules.FloatPower"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FloatPower</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.FloatPower.html#parametricmatrixmodels.modules.FloatPower" title="parametricmatrixmodels.modules.FloatPower"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FloatPower</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.float_power</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Floor.html#parametricmatrixmodels.modules.Floor" title="parametricmatrixmodels.modules.Floor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Floor</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Floor.html#parametricmatrixmodels.modules.Floor" title="parametricmatrixmodels.modules.Floor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Floor</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.floor</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.FloorDivide.html#parametricmatrixmodels.modules.FloorDivide" title="parametricmatrixmodels.modules.FloorDivide"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FloorDivide</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.FloorDivide.html#parametricmatrixmodels.modules.FloorDivide" title="parametricmatrixmodels.modules.FloorDivide"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FloorDivide</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.floor_divide</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.FrExp.html#parametricmatrixmodels.modules.FrExp" title="parametricmatrixmodels.modules.FrExp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FrExp</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.FrExp.html#parametricmatrixmodels.modules.FrExp" title="parametricmatrixmodels.modules.FrExp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FrExp</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.frexp</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.I0.html#parametricmatrixmodels.modules.I0" title="parametricmatrixmodels.modules.I0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">I0</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.I0.html#parametricmatrixmodels.modules.I0" title="parametricmatrixmodels.modules.I0"><code class="xref py py-obj docutils literal notranslate"><span class="pre">I0</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.i0</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Imag.html#parametricmatrixmodels.modules.Imag" title="parametricmatrixmodels.modules.Imag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Imag</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Imag.html#parametricmatrixmodels.modules.Imag" title="parametricmatrixmodels.modules.Imag"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Imag</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.imag</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Invert.html#parametricmatrixmodels.modules.Invert" title="parametricmatrixmodels.modules.Invert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Invert</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Invert.html#parametricmatrixmodels.modules.Invert" title="parametricmatrixmodels.modules.Invert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Invert</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.invert</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LDExp.html#parametricmatrixmodels.modules.LDExp" title="parametricmatrixmodels.modules.LDExp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LDExp</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LDExp.html#parametricmatrixmodels.modules.LDExp" title="parametricmatrixmodels.modules.LDExp"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LDExp</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.ldexp</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log.html#parametricmatrixmodels.modules.Log" title="parametricmatrixmodels.modules.Log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Log</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log.html#parametricmatrixmodels.modules.Log" title="parametricmatrixmodels.modules.Log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Log</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.log</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log10.html#parametricmatrixmodels.modules.Log10" title="parametricmatrixmodels.modules.Log10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Log10</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log10.html#parametricmatrixmodels.modules.Log10" title="parametricmatrixmodels.modules.Log10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Log10</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.log10</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log1p.html#parametricmatrixmodels.modules.Log1p" title="parametricmatrixmodels.modules.Log1p"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Log1p</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log1p.html#parametricmatrixmodels.modules.Log1p" title="parametricmatrixmodels.modules.Log1p"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Log1p</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.log1p</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log2.html#parametricmatrixmodels.modules.Log2" title="parametricmatrixmodels.modules.Log2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Log2</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Log2.html#parametricmatrixmodels.modules.Log2" title="parametricmatrixmodels.modules.Log2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Log2</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.log2</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.NaNToNum.html#parametricmatrixmodels.modules.NaNToNum" title="parametricmatrixmodels.modules.NaNToNum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NaNToNum</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.NaNToNum.html#parametricmatrixmodels.modules.NaNToNum" title="parametricmatrixmodels.modules.NaNToNum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NaNToNum</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.nan_to_num</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.NanToNum.html#parametricmatrixmodels.modules.NanToNum" title="parametricmatrixmodels.modules.NanToNum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NanToNum</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.NanToNum.html#parametricmatrixmodels.modules.NanToNum" title="parametricmatrixmodels.modules.NanToNum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NanToNum</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.nan_to_num</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.NextAfter.html#parametricmatrixmodels.modules.NextAfter" title="parametricmatrixmodels.modules.NextAfter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NextAfter</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.NextAfter.html#parametricmatrixmodels.modules.NextAfter" title="parametricmatrixmodels.modules.NextAfter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NextAfter</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.nextafter</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Packbits.html#parametricmatrixmodels.modules.Packbits" title="parametricmatrixmodels.modules.Packbits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Packbits</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Packbits.html#parametricmatrixmodels.modules.Packbits" title="parametricmatrixmodels.modules.Packbits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Packbits</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.packbits</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Piecewise.html#parametricmatrixmodels.modules.Piecewise" title="parametricmatrixmodels.modules.Piecewise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Piecewise</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Piecewise.html#parametricmatrixmodels.modules.Piecewise" title="parametricmatrixmodels.modules.Piecewise"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Piecewise</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.piecewise</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Positive.html#parametricmatrixmodels.modules.Positive" title="parametricmatrixmodels.modules.Positive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Positive</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Positive.html#parametricmatrixmodels.modules.Positive" title="parametricmatrixmodels.modules.Positive"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Positive</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.positive</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Pow.html#parametricmatrixmodels.modules.Pow" title="parametricmatrixmodels.modules.Pow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pow</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Pow.html#parametricmatrixmodels.modules.Pow" title="parametricmatrixmodels.modules.Pow"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Pow</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.pow</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Power.html#parametricmatrixmodels.modules.Power" title="parametricmatrixmodels.modules.Power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Power</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Power.html#parametricmatrixmodels.modules.Power" title="parametricmatrixmodels.modules.Power"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Power</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.power</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Rad2Deg.html#parametricmatrixmodels.modules.Rad2Deg" title="parametricmatrixmodels.modules.Rad2Deg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rad2Deg</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Rad2Deg.html#parametricmatrixmodels.modules.Rad2Deg" title="parametricmatrixmodels.modules.Rad2Deg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rad2Deg</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.rad2deg</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Radians.html#parametricmatrixmodels.modules.Radians" title="parametricmatrixmodels.modules.Radians"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Radians</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Radians.html#parametricmatrixmodels.modules.Radians" title="parametricmatrixmodels.modules.Radians"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Radians</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.radians</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Real.html#parametricmatrixmodels.modules.Real" title="parametricmatrixmodels.modules.Real"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Real</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Real.html#parametricmatrixmodels.modules.Real" title="parametricmatrixmodels.modules.Real"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Real</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.real</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Reciprocal.html#parametricmatrixmodels.modules.Reciprocal" title="parametricmatrixmodels.modules.Reciprocal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reciprocal</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Reciprocal.html#parametricmatrixmodels.modules.Reciprocal" title="parametricmatrixmodels.modules.Reciprocal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reciprocal</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.reciprocal</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.RInt.html#parametricmatrixmodels.modules.RInt" title="parametricmatrixmodels.modules.RInt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RInt</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.RInt.html#parametricmatrixmodels.modules.RInt" title="parametricmatrixmodels.modules.RInt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RInt</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.rint</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Round.html#parametricmatrixmodels.modules.Round" title="parametricmatrixmodels.modules.Round"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Round</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Round.html#parametricmatrixmodels.modules.Round" title="parametricmatrixmodels.modules.Round"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Round</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.round</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sign.html#parametricmatrixmodels.modules.Sign" title="parametricmatrixmodels.modules.Sign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sign</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sign.html#parametricmatrixmodels.modules.Sign" title="parametricmatrixmodels.modules.Sign"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sign</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.sign</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Signbit.html#parametricmatrixmodels.modules.Signbit" title="parametricmatrixmodels.modules.Signbit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Signbit</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Signbit.html#parametricmatrixmodels.modules.Signbit" title="parametricmatrixmodels.modules.Signbit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Signbit</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.signbit</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sin.html#parametricmatrixmodels.modules.Sin" title="parametricmatrixmodels.modules.Sin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sin</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sin.html#parametricmatrixmodels.modules.Sin" title="parametricmatrixmodels.modules.Sin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sin</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.sin</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sinc.html#parametricmatrixmodels.modules.Sinc" title="parametricmatrixmodels.modules.Sinc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sinc</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sinc.html#parametricmatrixmodels.modules.Sinc" title="parametricmatrixmodels.modules.Sinc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sinc</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.sinc</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sinh.html#parametricmatrixmodels.modules.Sinh" title="parametricmatrixmodels.modules.Sinh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sinh</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sinh.html#parametricmatrixmodels.modules.Sinh" title="parametricmatrixmodels.modules.Sinh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sinh</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.sinh</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sqrt.html#parametricmatrixmodels.modules.Sqrt" title="parametricmatrixmodels.modules.Sqrt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sqrt</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sqrt.html#parametricmatrixmodels.modules.Sqrt" title="parametricmatrixmodels.modules.Sqrt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Sqrt</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.sqrt</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Square.html#parametricmatrixmodels.modules.Square" title="parametricmatrixmodels.modules.Square"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Square</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Square.html#parametricmatrixmodels.modules.Square" title="parametricmatrixmodels.modules.Square"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Square</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.square</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Tan.html#parametricmatrixmodels.modules.Tan" title="parametricmatrixmodels.modules.Tan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tan</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Tan.html#parametricmatrixmodels.modules.Tan" title="parametricmatrixmodels.modules.Tan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tan</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.tan</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Tanh.html#parametricmatrixmodels.modules.Tanh" title="parametricmatrixmodels.modules.Tanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tanh</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Tanh.html#parametricmatrixmodels.modules.Tanh" title="parametricmatrixmodels.modules.Tanh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tanh</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.tanh</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Trunc.html#parametricmatrixmodels.modules.Trunc" title="parametricmatrixmodels.modules.Trunc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trunc</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Trunc.html#parametricmatrixmodels.modules.Trunc" title="parametricmatrixmodels.modules.Trunc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Trunc</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.trunc</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Unpackbits.html#parametricmatrixmodels.modules.Unpackbits" title="parametricmatrixmodels.modules.Unpackbits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Unpackbits</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Unpackbits.html#parametricmatrixmodels.modules.Unpackbits" title="parametricmatrixmodels.modules.Unpackbits"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Unpackbits</span></code></a></p></td>
 <td><p>Elementwise activation function for <code class="docutils literal notranslate"><span class="pre">jax.numpy.unpackbits</span></code>.</p></td>
 </tr>
 </tbody>
@@ -795,11 +811,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="generated/parametricmatrixmodels.modules.ReLU.html"
+       href="generated/parametricmatrixmodels.modules.PReLU.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">ReLU</p>
+        <p class="prev-next-title">PReLU</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

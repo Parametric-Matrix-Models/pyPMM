@@ -46,7 +46,7 @@
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Eigenvalues" href="parametricmatrixmodels.modules.Eigenvalues.html" />
+    <link rel="next" title="LowRankAffineHermitianMatrix" href="parametricmatrixmodels.modules.LowRankAffineHermitianMatrix.html" />
     <link rel="prev" title="PMM Modules" href="../pmms.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -296,11 +296,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../basemodule.html"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../pmms.html">PMM Modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">AffineHermitianMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LowRankAffineHermitianMatrix.html">LowRankAffineHermitianMatrix</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Eigenvalues.html">Eigenvalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Eigenvectors.html">Eigenvectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Eigensystem.html">Eigensystem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AffineEigenvaluePMM.html">AffineEigenvaluePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AEPMM.html">AEPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LowRankAffineEigenvaluePMM.html">LowRankAffineEigenvaluePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LRAEPMM.html">LRAEPMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AffineObservablePMM.html">AffineObservablePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AOPMM.html">AOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LowRankAffineObservablePMM.html">LowRankAffineObservablePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LRAOPMM.html">LRAOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.TransitionAmplitudeSum.html">TransitionAmplitudeSum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LowRankTransitionAmplitudeSum.html">LowRankTransitionAmplitudeSum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LegacyAffineObservablePMM.html">LegacyAffineObservablePMM</a></li>
 </ul>
 </details></li>
@@ -310,6 +319,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../activations.html">Elementwise and Activation Function Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.PReLU.html">PReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ReLU.html">ReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ReLU6.html">ReLU6</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Sigmoid.html">Sigmoid</a></li>
@@ -410,10 +420,13 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utils.html">Utility and Meta Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Comment.html">Comment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Bias.html">Bias</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Flatten.html">Flatten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Reshape.html">Reshape</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Func.html">Func</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.SubsetModule.html">SubsetModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.MultiModule.html">MultiModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Func.html">Func</a></li>
 </ul>
 </details></li>
 </ul>
@@ -484,7 +497,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">parametricmatrixmodels.modules.AffineHermitianMatrix</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineHermitianMatrix">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AffineHermitianMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_magnitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affinehermitianmatrix.html#AffineHermitianMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineHermitianMatrix" title="Link to this definition">#</a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AffineHermitianMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_magnitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias_term</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affinehermitianmatrix.html#AffineHermitianMatrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineHermitianMatrix" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></a></p>
 <p>Module that builds a parametric hermitian matrix that is affine in the
 input features.</p>
@@ -512,7 +525,7 @@ linearity of the commutator:</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineHermitianMatrix.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_magnitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affinehermitianmatrix.html#AffineHermitianMatrix.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineHermitianMatrix.__init__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_magnitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias_term</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affinehermitianmatrix.html#AffineHermitianMatrix.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineHermitianMatrix.__init__" title="Link to this definition">#</a></dt>
 <dd><p>Create an <code class="docutils literal notranslate"><span class="pre">AffineHermitianMatrix</span></code> module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -526,6 +539,8 @@ Hermitian. If not provided, the matrices will be randomly
 initialized when the module is compiled. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 <li><p><strong>init_magnitude</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Optional initial magnitude of the random matrices, used when
 initializing the module. Default is <code class="docutils literal notranslate"><span class="pre">1e-2</span></code>.</p></li>
+<li><p><strong>bias_term</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, include the bias term <span class="math notranslate nohighlight">\(M_0\)</span> in the affine
+matrix. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 <li><p><strong>flatten</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the <em>output</em> will be flattened to a 1D array.
 Useful when combining with <code class="docutils literal notranslate"><span class="pre">SubsetModule</span></code> or other modules in
 order to avoid ragged arrays. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
@@ -786,8 +801,8 @@ They can be set via <cite>set_hyperparameters</cite>.</p>
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineHermitianMatrix.get_num_trainable_floats">
 <span class="sig-name descname"><span class="pre">get_num_trainable_floats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affinehermitianmatrix.html#AffineHermitianMatrix.get_num_trainable_floats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineHermitianMatrix.get_num_trainable_floats" title="Link to this definition">#</a></dt>
 <dd><p>Returns the number of trainable floats in the module.
-If the module does not have trainable parameters, returns 0.
-If the module is not ready, returns None.</p>
+If the module does not have trainable parameters, returns <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+If the module is not ready, returns <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
@@ -1022,11 +1037,11 @@ Valid options are:
       </div>
     </a>
     <a class="right-next"
-       href="parametricmatrixmodels.modules.Eigenvalues.html"
+       href="parametricmatrixmodels.modules.LowRankAffineHermitianMatrix.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Eigenvalues</p>
+        <p class="prev-next-title">LowRankAffineHermitianMatrix</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

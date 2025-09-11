@@ -1,0 +1,56 @@
+﻿Eigensystem
+===========
+
+``parametricmatrixmodels.modules.Eigensystem``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Eigensystem
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~Eigensystem.astype
+      
+         ~Eigensystem.compile
+      
+         ~Eigensystem.deserialize
+      
+         ~Eigensystem.get_hyperparameters
+      
+         ~Eigensystem.get_num_trainable_floats
+      
+         ~Eigensystem.get_output_shape
+      
+         ~Eigensystem.get_params
+      
+         ~Eigensystem.get_state
+      
+         ~Eigensystem.is_ready
+      
+         ~Eigensystem.name
+      
+         ~Eigensystem.serialize
+      
+         ~Eigensystem.set_hyperparameters
+      
+         ~Eigensystem.set_params
+      
+         ~Eigensystem.set_precision
+      
+         ~Eigensystem.set_state
+
+   .. autosummary::
+
+      

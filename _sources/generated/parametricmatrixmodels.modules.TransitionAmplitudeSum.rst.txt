@@ -1,0 +1,56 @@
+﻿TransitionAmplitudeSum
+======================
+
+``parametricmatrixmodels.modules.TransitionAmplitudeSum``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: TransitionAmplitudeSum
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~TransitionAmplitudeSum.astype
+      
+         ~TransitionAmplitudeSum.compile
+      
+         ~TransitionAmplitudeSum.deserialize
+      
+         ~TransitionAmplitudeSum.get_hyperparameters
+      
+         ~TransitionAmplitudeSum.get_num_trainable_floats
+      
+         ~TransitionAmplitudeSum.get_output_shape
+      
+         ~TransitionAmplitudeSum.get_params
+      
+         ~TransitionAmplitudeSum.get_state
+      
+         ~TransitionAmplitudeSum.is_ready
+      
+         ~TransitionAmplitudeSum.name
+      
+         ~TransitionAmplitudeSum.serialize
+      
+         ~TransitionAmplitudeSum.set_hyperparameters
+      
+         ~TransitionAmplitudeSum.set_params
+      
+         ~TransitionAmplitudeSum.set_precision
+      
+         ~TransitionAmplitudeSum.set_state
+
+   .. autosummary::
+
+      

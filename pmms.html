@@ -295,11 +295,20 @@
 <li class="toctree-l1"><a class="reference internal" href="basemodule.html"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">PMM Modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html">AffineHermitianMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineHermitianMatrix.html">LowRankAffineHermitianMatrix</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvalues.html">Eigenvalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvectors.html">Eigenvectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigensystem.html">Eigensystem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineEigenvaluePMM.html">AffineEigenvaluePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AEPMM.html">AEPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineEigenvaluePMM.html">LowRankAffineEigenvaluePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LRAEPMM.html">LRAEPMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineObservablePMM.html">AffineObservablePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AOPMM.html">AOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineObservablePMM.html">LowRankAffineObservablePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LRAOPMM.html">LRAOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.TransitionAmplitudeSum.html">TransitionAmplitudeSum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankTransitionAmplitudeSum.html">LowRankTransitionAmplitudeSum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LegacyAffineObservablePMM.html">LegacyAffineObservablePMM</a></li>
 </ul>
 </details></li>
@@ -309,6 +318,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="activations.html">Elementwise and Activation Function Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.PReLU.html">PReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU.html">ReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU6.html">ReLU6</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sigmoid.html">Sigmoid</a></li>
@@ -409,10 +419,13 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="utils.html">Utility and Meta Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Comment.html">Comment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Bias.html">Bias</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Flatten.html">Flatten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Reshape.html">Reshape</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Func.html">Func</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SubsetModule.html">SubsetModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.MultiModule.html">MultiModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Func.html">Func</a></li>
 </ul>
 </details></li>
 </ul>
@@ -482,22 +495,49 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix" title="parametricmatrixmodels.modules.AffineHermitianMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AffineHermitianMatrix</span></code></a></p></td>
 <td><p>Module that builds a parametric hermitian matrix that is affine in the input features.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvalues.html#parametricmatrixmodels.modules.Eigenvalues" title="parametricmatrixmodels.modules.Eigenvalues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Eigenvalues</span></code></a></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineHermitianMatrix.html#parametricmatrixmodels.modules.LowRankAffineHermitianMatrix" title="parametricmatrixmodels.modules.LowRankAffineHermitianMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LowRankAffineHermitianMatrix</span></code></a></p></td>
+<td><p>Module that builds a parametric hermitian matrix from an affine function of the input features with low-rank matrices.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineEigenvaluePMM.html#parametricmatrixmodels.modules.AffineEigenvaluePMM" title="parametricmatrixmodels.modules.AffineEigenvaluePMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AffineEigenvaluePMM</span></code></a></p></td>
-<td><p>AffineEigenvaluePMM is a module that implements the affine eigenvalue Parametric Matrix Model (PMM).</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvalues.html#parametricmatrixmodels.modules.Eigenvalues" title="parametricmatrixmodels.modules.Eigenvalues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Eigenvalues</span></code></a></p></td>
+<td><p>Module to compute selected eigenvalues of a symmetric (Hermitian) matrix.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AEPMM.html#parametricmatrixmodels.modules.AEPMM" title="parametricmatrixmodels.modules.AEPMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AEPMM</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvectors.html#parametricmatrixmodels.modules.Eigenvectors" title="parametricmatrixmodels.modules.Eigenvectors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Eigenvectors</span></code></a></p></td>
+<td><p>Module to compute selected eigenvectors of a symmetric (Hermitian) matrix.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigensystem.html#parametricmatrixmodels.modules.Eigensystem" title="parametricmatrixmodels.modules.Eigensystem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Eigensystem</span></code></a></p></td>
+<td><p>Module to compute selected eigenpairs of a symmetric (Hermitian) matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineEigenvaluePMM.html#parametricmatrixmodels.modules.AffineEigenvaluePMM" title="parametricmatrixmodels.modules.AffineEigenvaluePMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AffineEigenvaluePMM</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">AffineEigenvaluePMM</span></code> is a module that implements the affine eigenvalue Parametric Matrix Model (PMM) using two primitive modules combined in a MultiModule: an AffineHermitianMatrix module followed by an Eigenvalues module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AEPMM.html#parametricmatrixmodels.modules.AEPMM" title="parametricmatrixmodels.modules.AEPMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AEPMM</span></code></a></p></td>
 <td><p>alias of <a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineEigenvaluePMM.html#parametricmatrixmodels.modules.AffineEigenvaluePMM" title="parametricmatrixmodels.modules.affineeigenvaluepmm.AffineEigenvaluePMM"><code class="xref py py-class docutils literal notranslate"><span class="pre">AffineEigenvaluePMM</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineObservablePMM.html#parametricmatrixmodels.modules.AffineObservablePMM" title="parametricmatrixmodels.modules.AffineObservablePMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AffineObservablePMM</span></code></a></p></td>
-<td><p>AffineObservablePMM is a module that implements the affine observable Parametric Matrix Model (PMM), which is useful for generalized regression</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineEigenvaluePMM.html#parametricmatrixmodels.modules.LowRankAffineEigenvaluePMM" title="parametricmatrixmodels.modules.LowRankAffineEigenvaluePMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LowRankAffineEigenvaluePMM</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">LowRankAffineEigenvaluePMM</span></code> is a module that implements the affine eigenvalue Parametric Matrix Model (PMM) using low-rank matrices via two primitive modules combined in a MultiModule: a LowRankAffineHermitianMatrix module followed by an Eigenvalues module.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AOPMM.html#parametricmatrixmodels.modules.AOPMM" title="parametricmatrixmodels.modules.AOPMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AOPMM</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LRAEPMM.html#parametricmatrixmodels.modules.LRAEPMM" title="parametricmatrixmodels.modules.LRAEPMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LRAEPMM</span></code></a></p></td>
+<td><p>alias of <a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineEigenvaluePMM.html#parametricmatrixmodels.modules.LowRankAffineEigenvaluePMM" title="parametricmatrixmodels.modules.lowrankaffineeigenvaluepmm.LowRankAffineEigenvaluePMM"><code class="xref py py-class docutils literal notranslate"><span class="pre">LowRankAffineEigenvaluePMM</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineObservablePMM.html#parametricmatrixmodels.modules.AffineObservablePMM" title="parametricmatrixmodels.modules.AffineObservablePMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AffineObservablePMM</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">AffineObservablePMM</span></code> is a module that implements a general regression model via the affine observable Parametric Matrix Model (PMM) using four primitive modules combined in a MultiModule: a AffineHermitianMatrix module followed by an Eigenvectors module followed by a TransitionAmplitudeSum module followed optionally by a Bias module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.AOPMM.html#parametricmatrixmodels.modules.AOPMM" title="parametricmatrixmodels.modules.AOPMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AOPMM</span></code></a></p></td>
 <td><p>alias of <a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineObservablePMM.html#parametricmatrixmodels.modules.AffineObservablePMM" title="parametricmatrixmodels.modules.affineobservablepmm.AffineObservablePMM"><code class="xref py py-class docutils literal notranslate"><span class="pre">AffineObservablePMM</span></code></a></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LegacyAffineObservablePMM.html#parametricmatrixmodels.modules.LegacyAffineObservablePMM" title="parametricmatrixmodels.modules.LegacyAffineObservablePMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LegacyAffineObservablePMM</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineObservablePMM.html#parametricmatrixmodels.modules.LowRankAffineObservablePMM" title="parametricmatrixmodels.modules.LowRankAffineObservablePMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LowRankAffineObservablePMM</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">LowRankAffineObservablePMM</span></code> is a module that implements a general regression model via the affine observable Parametric Matrix Model (PMM) with low-rank trainable matrices using four primitive modules combined in a MultiModule: a LowRankAffineHermitianMatrix module followed by an Eigenvectors module followed by a LowrankTransitionAmplitudeSum module followed optionally by a Bias module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LRAOPMM.html#parametricmatrixmodels.modules.LRAOPMM" title="parametricmatrixmodels.modules.LRAOPMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LRAOPMM</span></code></a></p></td>
+<td><p>alias of <a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineObservablePMM.html#parametricmatrixmodels.modules.LowRankAffineObservablePMM" title="parametricmatrixmodels.modules.lowrankaffineobservablepmm.LowRankAffineObservablePMM"><code class="xref py py-class docutils literal notranslate"><span class="pre">LowRankAffineObservablePMM</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.TransitionAmplitudeSum.html#parametricmatrixmodels.modules.TransitionAmplitudeSum" title="parametricmatrixmodels.modules.TransitionAmplitudeSum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransitionAmplitudeSum</span></code></a></p></td>
+<td><p>A module that computes the sum of transition amplitudes of trainable observables given an input of state vectors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankTransitionAmplitudeSum.html#parametricmatrixmodels.modules.LowRankTransitionAmplitudeSum" title="parametricmatrixmodels.modules.LowRankTransitionAmplitudeSum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LowRankTransitionAmplitudeSum</span></code></a></p></td>
+<td><p>A module that computes the sum of transition amplitudes of low-rank trainable observables given an input of state vectors.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.LegacyAffineObservablePMM.html#parametricmatrixmodels.modules.LegacyAffineObservablePMM" title="parametricmatrixmodels.modules.LegacyAffineObservablePMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LegacyAffineObservablePMM</span></code></a></p></td>
 <td><p>Module that implements the legacy affine observable Parametric Matrix Model (PMM), which is useful for generalized regression.</p></td>
 </tr>
 </tbody>

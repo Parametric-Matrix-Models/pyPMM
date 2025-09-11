@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>parametricmatrixmodels.modules.prelu &#8212; Parametric Matrix Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/modules/prelu';</script>
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/pmmlogo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../../_static/pmmlogo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PMM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../model.html">
+    Model
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../model.html">
+    Model
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">parametricmatrixmodels.modules.prelu</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for parametricmatrixmodels.modules.prelu</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.basemodule</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
+
+
+<div class="viewcode-block" id="PReLU">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.PReLU.html#parametricmatrixmodels.modules.PReLU">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PReLU</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Element-wise Parametric Rectified Linear Unit (PReLU) activation function.</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \text{PReLU}(x) =</span>
+<span class="sd">        \begin{cases}</span>
+<span class="sd">        x, &amp; \text{ if } x \ge 0 \\</span>
+<span class="sd">        ax, &amp; \text{ otherwise }</span>
+<span class="sd">        \end{cases}</span>
+
+<span class="sd">    where :math:`a` is a learnable parameter that controls the slope of the</span>
+<span class="sd">    negative part of the function. :math:`a` can be either a single parameter</span>
+<span class="sd">    shared across all input features, or a separate parameter for each input</span>
+<span class="sd">    feature.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    torch.nn.PReLU</span>
+<span class="sd">        PyTorch implementation of PReLU activation function.</span>
+<span class="sd">    LeakyReLU</span>
+<span class="sd">        Non-parametric ReLU activation function with a fixed negative slope.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PReLU.__init__">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.PReLU.html#parametricmatrixmodels.modules.PReLU.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">single_parameter</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">init_magnitude</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span><span class="p">,</span>
+        <span class="n">real</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new ``PReLU`` module.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        single_parameter</span>
+<span class="sd">            If ``True``, use a single learnable parameter for all input</span>
+<span class="sd">            features. If ``False``, use a separate learnable parameter for each</span>
+<span class="sd">            input feature. Default is ``True``.</span>
+<span class="sd">        init_magnitude</span>
+<span class="sd">            Initial magnitude of the learnable parameter(s).</span>
+<span class="sd">            Default is ``0.25``.</span>
+<span class="sd">        real</span>
+<span class="sd">            If ``True``, the learnable parameter(s) will be real-valued.</span>
+<span class="sd">            If ``False``, the learnable parameter(s) will be complex-valued.</span>
+<span class="sd">            Default is ``True``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">single_parameter</span> <span class="o">=</span> <span class="n">single_parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span> <span class="o">=</span> <span class="n">init_magnitude</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="n">real</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># learnable parameter(s), will be set in compilation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># input shape, will be set in compilation</span></div>
+
+
+<div class="viewcode-block" id="PReLU.name">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.PReLU.html#parametricmatrixmodels.modules.PReLU.name">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;PReLU(real=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+
+<div class="viewcode-block" id="PReLU.is_ready">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.PReLU.html#parametricmatrixmodels.modules.PReLU.is_ready">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PReLU._get_callable">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.PReLU.html#parametricmatrixmodels.modules.PReLU._get_callable">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">params</span><span class="p">,</span> <span class="n">input_NF</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">jax</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">leaky_relu</span><span class="p">(</span>
+                <span class="n">input_NF</span><span class="p">,</span>
+                <span class="n">negative_slope</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="p">),</span>
+            <span class="n">state</span><span class="p">,</span>  <span class="c1"># state is not used in this module, return it unchanged</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PReLU.compile">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.PReLU.html#parametricmatrixmodels.modules.PReLU.compile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># if the module is already ready, just verify the input shape</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">input_shape</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Input shape mismatch: expected </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="n">input_shape</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">single_parameter</span><span class="p">:</span>
+            <span class="n">a_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a_shape</span> <span class="o">=</span> <span class="n">input_shape</span>
+
+        <span class="n">rng_areal</span><span class="p">,</span> <span class="n">rng_aimag</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
+                <span class="n">rng_areal</span><span class="p">,</span> <span class="n">a_shape</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span> <span class="o">*</span> <span class="p">(</span>
+                <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">rng_areal</span><span class="p">,</span> <span class="n">a_shape</span><span class="p">)</span>
+                <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">rng_aimag</span><span class="p">,</span> <span class="n">a_shape</span><span class="p">)</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PReLU.get_output_shape">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.PReLU.html#parametricmatrixmodels.modules.PReLU.get_output_shape">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">input_shape</span></div>
+
+
+<div class="viewcode-block" id="PReLU.get_hyperparameters">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.PReLU.html#parametricmatrixmodels.modules.PReLU.get_hyperparameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;single_parameter&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">single_parameter</span><span class="p">,</span>
+            <span class="s2">&quot;init_magnitude&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="PReLU.set_hyperparameters">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.PReLU.html#parametricmatrixmodels.modules.PReLU.set_hyperparameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Cannot set hyperparameters after the module has parameters&quot;</span>
+            <span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">PReLU</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PReLU.get_params">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.PReLU.html#parametricmatrixmodels.modules.PReLU.get_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">,)</span></div>
+
+
+<div class="viewcode-block" id="PReLU.set_params">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.PReLU.html#parametricmatrixmodels.modules.PReLU.set_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;params must be a tuple of numpy arrays&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected 1 parameter array, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Parameter &#39;a&#39; must be real-valued, but got complex-valued&quot;</span>
+                <span class="s2">&quot; array&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">expected_shape</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">single_parameter</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">expected_shape</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Parameter &#39;a&#39; shape mismatch: expected </span><span class="si">{</span><span class="n">expected_shape</span><span class="si">}</span><span class="s2">,&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot; got </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">single_parameter</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Parameter &#39;a&#39; shape mismatch: expected (1,), got&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

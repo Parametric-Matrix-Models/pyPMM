@@ -1,0 +1,56 @@
+﻿Eigenvectors
+============
+
+``parametricmatrixmodels.modules.Eigenvectors``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Eigenvectors
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~Eigenvectors.astype
+      
+         ~Eigenvectors.compile
+      
+         ~Eigenvectors.deserialize
+      
+         ~Eigenvectors.get_hyperparameters
+      
+         ~Eigenvectors.get_num_trainable_floats
+      
+         ~Eigenvectors.get_output_shape
+      
+         ~Eigenvectors.get_params
+      
+         ~Eigenvectors.get_state
+      
+         ~Eigenvectors.is_ready
+      
+         ~Eigenvectors.name
+      
+         ~Eigenvectors.serialize
+      
+         ~Eigenvectors.set_hyperparameters
+      
+         ~Eigenvectors.set_params
+      
+         ~Eigenvectors.set_precision
+      
+         ~Eigenvectors.set_state
+
+   .. autosummary::
+
+      

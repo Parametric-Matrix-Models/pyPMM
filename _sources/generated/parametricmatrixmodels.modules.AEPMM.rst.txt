@@ -41,6 +41,8 @@
       
          ~AEPMM.name
       
+         ~AEPMM.reset
+      
          ~AEPMM.serialize
       
          ~AEPMM.set_hyperparameters

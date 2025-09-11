@@ -45,7 +45,7 @@
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Flatten" href="generated/parametricmatrixmodels.modules.Flatten.html" />
+    <link rel="next" title="Comment" href="generated/parametricmatrixmodels.modules.Comment.html" />
     <link rel="prev" title="Unpackbits" href="generated/parametricmatrixmodels.modules.Unpackbits.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -295,11 +295,20 @@
 <li class="toctree-l1"><a class="reference internal" href="basemodule.html"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="pmms.html">PMM Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html">AffineHermitianMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineHermitianMatrix.html">LowRankAffineHermitianMatrix</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvalues.html">Eigenvalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigenvectors.html">Eigenvectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Eigensystem.html">Eigensystem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineEigenvaluePMM.html">AffineEigenvaluePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AEPMM.html">AEPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineEigenvaluePMM.html">LowRankAffineEigenvaluePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LRAEPMM.html">LRAEPMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AffineObservablePMM.html">AffineObservablePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.AOPMM.html">AOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankAffineObservablePMM.html">LowRankAffineObservablePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LRAOPMM.html">LRAOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.TransitionAmplitudeSum.html">TransitionAmplitudeSum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LowRankTransitionAmplitudeSum.html">LowRankTransitionAmplitudeSum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.LegacyAffineObservablePMM.html">LegacyAffineObservablePMM</a></li>
 </ul>
 </details></li>
@@ -309,6 +318,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="activations.html">Elementwise and Activation Function Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.PReLU.html">PReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU.html">ReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.ReLU6.html">ReLU6</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Sigmoid.html">Sigmoid</a></li>
@@ -409,10 +419,13 @@
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Utility and Meta Modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Comment.html">Comment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Bias.html">Bias</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Flatten.html">Flatten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Reshape.html">Reshape</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Func.html">Func</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.SubsetModule.html">SubsetModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.MultiModule.html">MultiModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/parametricmatrixmodels.modules.Func.html">Func</a></li>
 </ul>
 </details></li>
 </ul>
@@ -479,17 +492,26 @@
 <span id="utils"></span><h1>Utility and Meta Modules<a class="headerlink" href="#utility-and-meta-modules" title="Link to this heading">#</a></h1>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
 <tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Comment.html#parametricmatrixmodels.modules.Comment" title="parametricmatrixmodels.modules.Comment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Comment</span></code></a></p></td>
+<td><p>A module that allows adding comments to <code class="docutils literal notranslate"><span class="pre">Model</span></code> summaries.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Bias.html#parametricmatrixmodels.modules.Bias" title="parametricmatrixmodels.modules.Bias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bias</span></code></a></p></td>
+<td><p>A simple bias module that adds a (trainable by default) bias array (default) or scalar to the input.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Flatten.html#parametricmatrixmodels.modules.Flatten" title="parametricmatrixmodels.modules.Flatten"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Flatten</span></code></a></p></td>
 <td><p>Module that flattens the input to 1D.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Reshape.html#parametricmatrixmodels.modules.Reshape" title="parametricmatrixmodels.modules.Reshape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reshape</span></code></a></p></td>
 <td><p>Module that reshapes the input array to a specified shape.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SubsetModule.html#parametricmatrixmodels.modules.SubsetModule" title="parametricmatrixmodels.modules.SubsetModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubsetModule</span></code></a></p></td>
+<td><p>Meta-module that applies a given module to a subset of the input data and optionally passes the remaining input data through unchanged.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.MultiModule.html#parametricmatrixmodels.modules.MultiModule" title="parametricmatrixmodels.modules.MultiModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiModule</span></code></a></p></td>
+<td><p>Meta-module that applies multiple modules in sequence.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.Func.html#parametricmatrixmodels.modules.Func" title="parametricmatrixmodels.modules.Func"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Func</span></code></a></p></td>
 <td><p>Module that implements a general element-wise function, optionally with trainable parameters and state.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/parametricmatrixmodels.modules.SubsetModule.html#parametricmatrixmodels.modules.SubsetModule" title="parametricmatrixmodels.modules.SubsetModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SubsetModule</span></code></a></p></td>
-<td><p>Meta-module that applies a given module to a subset of the input data and optionally passes the remaining input data through unchanged.</p></td>
 </tr>
 </tbody>
 </table>
@@ -516,11 +538,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="generated/parametricmatrixmodels.modules.Flatten.html"
+       href="generated/parametricmatrixmodels.modules.Comment.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Flatten</p>
+        <p class="prev-next-title">Comment</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

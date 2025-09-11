@@ -1,0 +1,56 @@
+﻿LowRankAffineHermitianMatrix
+============================
+
+``parametricmatrixmodels.modules.LowRankAffineHermitianMatrix``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: LowRankAffineHermitianMatrix
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~LowRankAffineHermitianMatrix.astype
+      
+         ~LowRankAffineHermitianMatrix.compile
+      
+         ~LowRankAffineHermitianMatrix.deserialize
+      
+         ~LowRankAffineHermitianMatrix.get_hyperparameters
+      
+         ~LowRankAffineHermitianMatrix.get_num_trainable_floats
+      
+         ~LowRankAffineHermitianMatrix.get_output_shape
+      
+         ~LowRankAffineHermitianMatrix.get_params
+      
+         ~LowRankAffineHermitianMatrix.get_state
+      
+         ~LowRankAffineHermitianMatrix.is_ready
+      
+         ~LowRankAffineHermitianMatrix.name
+      
+         ~LowRankAffineHermitianMatrix.serialize
+      
+         ~LowRankAffineHermitianMatrix.set_hyperparameters
+      
+         ~LowRankAffineHermitianMatrix.set_params
+      
+         ~LowRankAffineHermitianMatrix.set_precision
+      
+         ~LowRankAffineHermitianMatrix.set_state
+
+   .. autosummary::
+
+      

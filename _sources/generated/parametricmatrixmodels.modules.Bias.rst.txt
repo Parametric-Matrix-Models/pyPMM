@@ -1,0 +1,56 @@
+﻿Bias
+====
+
+``parametricmatrixmodels.modules.Bias``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Bias
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~Bias.astype
+      
+         ~Bias.compile
+      
+         ~Bias.deserialize
+      
+         ~Bias.get_hyperparameters
+      
+         ~Bias.get_num_trainable_floats
+      
+         ~Bias.get_output_shape
+      
+         ~Bias.get_params
+      
+         ~Bias.get_state
+      
+         ~Bias.is_ready
+      
+         ~Bias.name
+      
+         ~Bias.serialize
+      
+         ~Bias.set_hyperparameters
+      
+         ~Bias.set_params
+      
+         ~Bias.set_precision
+      
+         ~Bias.set_state
+
+   .. autosummary::
+
+      

@@ -1,0 +1,56 @@
+﻿Comment
+=======
+
+``parametricmatrixmodels.modules.Comment``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Comment
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~Comment.astype
+      
+         ~Comment.compile
+      
+         ~Comment.deserialize
+      
+         ~Comment.get_hyperparameters
+      
+         ~Comment.get_num_trainable_floats
+      
+         ~Comment.get_output_shape
+      
+         ~Comment.get_params
+      
+         ~Comment.get_state
+      
+         ~Comment.is_ready
+      
+         ~Comment.name
+      
+         ~Comment.serialize
+      
+         ~Comment.set_hyperparameters
+      
+         ~Comment.set_params
+      
+         ~Comment.set_precision
+      
+         ~Comment.set_state
+
+   .. autosummary::
+
+      

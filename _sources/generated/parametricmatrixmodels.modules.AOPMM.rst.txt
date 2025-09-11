@@ -41,6 +41,8 @@
       
          ~AOPMM.name
       
+         ~AOPMM.reset
+      
          ~AOPMM.serialize
       
          ~AOPMM.set_hyperparameters

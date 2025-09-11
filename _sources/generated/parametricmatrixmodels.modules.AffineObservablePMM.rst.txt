@@ -41,6 +41,8 @@
       
          ~AffineObservablePMM.name
       
+         ~AffineObservablePMM.reset
+      
          ~AffineObservablePMM.serialize
       
          ~AffineObservablePMM.set_hyperparameters

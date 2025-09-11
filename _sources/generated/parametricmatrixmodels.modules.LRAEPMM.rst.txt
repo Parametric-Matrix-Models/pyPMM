@@ -1,0 +1,58 @@
+﻿LRAEPMM
+=======
+
+``parametricmatrixmodels.modules.LRAEPMM``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: LRAEPMM
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~LRAEPMM.astype
+      
+         ~LRAEPMM.compile
+      
+         ~LRAEPMM.deserialize
+      
+         ~LRAEPMM.get_hyperparameters
+      
+         ~LRAEPMM.get_num_trainable_floats
+      
+         ~LRAEPMM.get_output_shape
+      
+         ~LRAEPMM.get_params
+      
+         ~LRAEPMM.get_state
+      
+         ~LRAEPMM.is_ready
+      
+         ~LRAEPMM.name
+      
+         ~LRAEPMM.reset
+      
+         ~LRAEPMM.serialize
+      
+         ~LRAEPMM.set_hyperparameters
+      
+         ~LRAEPMM.set_params
+      
+         ~LRAEPMM.set_precision
+      
+         ~LRAEPMM.set_state
+
+   .. autosummary::
+
+      

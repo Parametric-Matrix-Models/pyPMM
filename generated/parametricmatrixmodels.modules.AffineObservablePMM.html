@@ -41,12 +41,13 @@
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/parametricmatrixmodels.modules.AffineObservablePMM';</script>
     <link rel="icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="AOPMM" href="parametricmatrixmodels.modules.AOPMM.html" />
-    <link rel="prev" title="AEPMM" href="parametricmatrixmodels.modules.AEPMM.html" />
+    <link rel="prev" title="LRAEPMM" href="parametricmatrixmodels.modules.LRAEPMM.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -295,11 +296,20 @@
 <li class="toctree-l1"><a class="reference internal" href="../basemodule.html"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../pmms.html">PMM Modules</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AffineHermitianMatrix.html">AffineHermitianMatrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LowRankAffineHermitianMatrix.html">LowRankAffineHermitianMatrix</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Eigenvalues.html">Eigenvalues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Eigenvectors.html">Eigenvectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Eigensystem.html">Eigensystem</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AffineEigenvaluePMM.html">AffineEigenvaluePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AEPMM.html">AEPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LowRankAffineEigenvaluePMM.html">LowRankAffineEigenvaluePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LRAEPMM.html">LRAEPMM</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">AffineObservablePMM</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.AOPMM.html">AOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LowRankAffineObservablePMM.html">LowRankAffineObservablePMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LRAOPMM.html">LRAOPMM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.TransitionAmplitudeSum.html">TransitionAmplitudeSum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LowRankTransitionAmplitudeSum.html">LowRankTransitionAmplitudeSum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.LegacyAffineObservablePMM.html">LegacyAffineObservablePMM</a></li>
 </ul>
 </details></li>
@@ -309,6 +319,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../activations.html">Elementwise and Activation Function Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.PReLU.html">PReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ReLU.html">ReLU</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.ReLU6.html">ReLU6</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Sigmoid.html">Sigmoid</a></li>
@@ -409,10 +420,13 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utils.html">Utility and Meta Modules</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Comment.html">Comment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Bias.html">Bias</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Flatten.html">Flatten</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Reshape.html">Reshape</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Func.html">Func</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.SubsetModule.html">SubsetModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.MultiModule.html">MultiModule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Func.html">Func</a></li>
 </ul>
 </details></li>
 </ul>
@@ -483,59 +497,137 @@
 <p><code class="docutils literal notranslate"><span class="pre">parametricmatrixmodels.modules.AffineObservablePMM</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AffineObservablePMM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_eig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_secondaries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_magnitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></a></p>
-<p>AffineObservablePMM is a module that implements the affine observable
-Parametric Matrix Model (PMM), which is useful for generalized regression</p>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AffineObservablePMM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_eig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affine_bias_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_secondaries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centered</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias_term</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_magnitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="parametricmatrixmodels.modules.MultiModule.html#parametricmatrixmodels.modules.MultiModule" title="parametricmatrixmodels.modules.multimodule.MultiModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiModule</span></code></a></p>
+<p><code class="docutils literal notranslate"><span class="pre">AffineObservablePMM</span></code> is a module that implements a general regression
+model via the affine observable
+Parametric Matrix Model (PMM) using four primitive modules combined in a
+MultiModule: a AffineHermitianMatrix module followed by an Eigenvectors
+module followed by a TransitionAmplitudeSum module followed optionally by a
+Bias module.</p>
+<p>The Affine Observable PMM (AOPMM) is described in <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and is summarized as
+follows:</p>
+<p>Given input features <span class="math notranslate nohighlight">\(x_1, \ldots, x_p\)</span>, construct the Hermitian
+matrix that is affine in these features as</p>
+<div class="math notranslate nohighlight">
+\[M(x) = M_0 + \sum_{i=1}^p x_i M_i\]</div>
+<p>where <span class="math notranslate nohighlight">\(M_0, \ldots, M_p\)</span> are trainable Hermitian matrices. An
+optional smoothing term <span class="math notranslate nohighlight">\(s C\)</span> parameterized by the smoothing
+hyperparameter <span class="math notranslate nohighlight">\(s\)</span> can be added to smooth the eigenvalues and
+eigenvectors of <span class="math notranslate nohighlight">\(M(x)\)</span>. The matrix <span class="math notranslate nohighlight">\(C\)</span> is equal to the
+imaginary unit times the sum of all commutators of the <span class="math notranslate nohighlight">\(M_i\)</span>.</p>
+<p>Then, take the leading <span class="math notranslate nohighlight">\(r\)</span> eigenvectors (by default corresponding to
+the largest magnitude eigenvalues if there is no smoothing, or the smallest
+algebraic if there is smoothing) of <span class="math notranslate nohighlight">\(M(x)\)</span> and compute the sum of the
+transition amplitudes of these eigenvectors with trainable Hermitian
+observable matrices (secondaries) <span class="math notranslate nohighlight">\(D_{ql}\)</span> to form the output vector
+<span class="math notranslate nohighlight">\(z\)</span> with <span class="math notranslate nohighlight">\(q\)</span> components as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}z_k &amp;= \sum_{m=1}^l \left(
+        \sum_{i,j=1}^r \left( |v_i^H D_{km} v_j|^2 \right)\\
+        &amp;\quad - \frac{r^2}{2} ||D_{km}||^2_2 \right)\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(||\cdot||_2\)</span> is the operator 2-norm (largest singular value)
+so for Hermitian <span class="math notranslate nohighlight">\(D\)</span>, <span class="math notranslate nohighlight">\(||D||_2\)</span> is the largest absolute
+eigenvalue.</p>
+<p>The <span class="math notranslate nohighlight">\(-\frac{1}{2} ||D_{km}||^2_2\)</span> term centers the value of each term
+and can be disabled by setting the <code class="docutils literal notranslate"><span class="pre">centered</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<p>Finally, an optional trainable bias term <span class="math notranslate nohighlight">\(b_k\)</span> can be added to each
+component.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Even though the math shows that the centering term should be multiplied
+by <span class="math notranslate nohighlight">\(r^2\)</span>, in practice this doesn’t work well and instead setting
+the centering term to <span class="math notranslate nohighlight">\(\frac{1}{2} ||D_{km}||^2_2\)</span> works much
+better. This non-<span class="math notranslate nohighlight">\(r^2\)</span> scaling is used here.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix" title="parametricmatrixmodels.modules.AffineHermitianMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AffineHermitianMatrix</span></code></a></dt><dd><p>Module that constructs the affine Hermitian matrix <span class="math notranslate nohighlight">\(M(x)\)</span> from trainable Hermitian matrices <span class="math notranslate nohighlight">\(M_i\)</span> and input features.</p>
+</dd>
+<dt><a class="reference internal" href="parametricmatrixmodels.modules.Eigenvectors.html#parametricmatrixmodels.modules.Eigenvectors" title="parametricmatrixmodels.modules.Eigenvectors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Eigenvectors</span></code></a></dt><dd><p>Module that computes the eigenvectors of a matrix.</p>
+</dd>
+<dt><a class="reference internal" href="parametricmatrixmodels.modules.TransitionAmplitudeSum.html#parametricmatrixmodels.modules.TransitionAmplitudeSum" title="parametricmatrixmodels.modules.TransitionAmplitudeSum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TransitionAmplitudeSum</span></code></a></dt><dd><p>Module that computes the sum of transition amplitudes of eigenvectors with trainable observable matrices.</p>
+</dd>
+<dt><a class="reference internal" href="parametricmatrixmodels.modules.Bias.html#parametricmatrixmodels.modules.Bias" title="parametricmatrixmodels.modules.Bias"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Bias</span></code></a></dt><dd><p>Module that adds a trainable bias term to the output.</p>
+</dd>
+<dt><a class="reference internal" href="parametricmatrixmodels.modules.MultiModule.html#parametricmatrixmodels.modules.MultiModule" title="parametricmatrixmodels.modules.MultiModule"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultiModule</span></code></a></dt><dd><p>Module that combines multiple modules in sequence.</p>
+</dd>
+<dt><a class="reference internal" href="parametricmatrixmodels.modules.LowRankAffineObservablePMM.html#parametricmatrixmodels.modules.LowRankAffineObservablePMM" title="parametricmatrixmodels.modules.LowRankAffineObservablePMM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LowRankAffineObservablePMM</span></code></a></dt><dd><p>Low-rank version of this module.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Cook, P., Jammooa, D., Hjorth-Jensen, M. et al. Parametric matrix
+models. Nat Commun 16, 5929 (2025).
+<a class="reference external" href="https://doi.org/10.1038/s41467-025-61362-4">https://doi.org/10.1038/s41467-025-61362-4</a></p>
+</aside>
+</aside>
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_eig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_secondaries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_magnitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.__init__" title="Link to this definition">#</a></dt>
-<dd><p>Initialize the AffineObservablePMM module. Represents a PMM which
-evaluates the affine observable PMM given by the process:</p>
-<dl>
-<dt>M(x) = M0 + x1 * M1 + … + xp * Mp</dt><dd><p>-&gt; (E, V) = eig(M(x)) [sorted in decreasing eigenvalue magnitude]</p>
-</dd>
-<dt>z_k = g_k</dt><dd><ul class="simple">
-<li><dl class="simple">
-<dt>sum_{ij}^r (</dt><dd><p>sum_l [ <a href="#id1"><span class="problematic" id="id2">|</span></a>v_i^H D_{kl} v_j|^2 - 0.5 * ||D_{kl}||^2_2 ]
-)</p>
-</dd>
-</dl>
-</li>
-</ul>
-<p>= g_k
-- 0.5 * r^2 * sum_l ||D_{kl}||^2_2
-+ sum_{ij}^r sum_l <a href="#id3"><span class="problematic" id="id4">|</span></a>v_i^H D_{kl} v_j|^2</p>
-</dd>
-</dl>
-<p>By default this module is initialized to compute the smallest algebraic
-eigenvalue (ground state).</p>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_eig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">which</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affine_bias_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_secondaries</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">centered</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias_term</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_magnitude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Initialize the module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>matrix_size</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Size of the PMM matrices (square), shorthand <cite>n</cite>.</p></li>
-<li><p><strong>num_eig</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of eigenpairs to use. Shorthand <cite>r</cite>.</p></li>
-<li><p><strong>num_secondaries</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of secondary (observable) matrices to use in the PMM.
-Shorthand <cite>l</cite>.</p></li>
-<li><p><strong>output_size</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of output features. Shorthand <cite>k</cite>.</p></li>
-<li><p><strong>smoothing</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Smoothing parameter, set to 0.0 to disable smoothing.
-Defaults to None/0.0.</p></li>
-<li><p><strong>Ms</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a></span>) – Optional array of matrices M0, M1, …, Mp that define the
-parametric Hamiltonian. Each M must be Hermitian. If not
-provided, the matrices will be randomly initialized when the
-module is compiled.</p></li>
-<li><p><strong>Ds</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a></span>) – Optional 4D array of matrices D_{kl} that define the
-observables. Each D must be Hermitian. If not provided, the
-observables will be randomly initialized when the module is
-compiled.</p></li>
-<li><p><strong>gs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a></span>) – Optional vector of length <code class="docutils literal notranslate"><span class="pre">output_size</span></code> that defines the real
-biases for the observable. If not provided, the biases will be
-randomly initialized when the module is compiled.</p></li>
-<li><p><strong>init_magnitude</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Initial magnitude for the random matrices if Ms is not
-provided, by default <code class="docutils literal notranslate"><span class="pre">1e-2</span></code>.</p></li>
+<li><p><strong>matrix_size</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Size of the trainable matrices, shorthand <span class="math notranslate nohighlight">\(n\)</span>.</p></li>
+<li><p><strong>num_eig</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of eigenvectors to use in the transition amplitude
+calculation, shorthand <span class="math notranslate nohighlight">\(r\)</span>.</p></li>
+<li><p><strong>which</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span>) – Which eigenvectors to use based on eigenvalue.
+Options are:
+- ‘SA’ for smallest algebraic (default with smoothing)
+- ‘LA’ for largest algebraic
+- ‘SM’ for smallest magnitude
+- ‘LM’ for largest magnitude (default without smoothing)
+- ‘EA’ for exterior algebraically
+- ‘EM’ for exterior by magnitude
+- ‘IA’ for interior algebraically
+- ‘IM’ for interior by magnitude</p></li>
+<li><p><strong>smoothing</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Optional smoothing parameter for the affine matrix. Set to
+<code class="docutils literal notranslate"><span class="pre">None</span></code>/<code class="docutils literal notranslate"><span class="pre">0.0</span></code> to disable smoothing. Default is
+<code class="docutils literal notranslate"><span class="pre">None</span></code>/<code class="docutils literal notranslate"><span class="pre">0.0</span></code> (no smoothing).</p></li>
+<li><p><strong>affine_bias_matrix</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, include the bias term <span class="math notranslate nohighlight">\(M_0\)</span> in the affine
+matrix. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>num_secondaries</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Number of secondary observable matrices <span class="math notranslate nohighlight">\(D_{km}\)</span> per
+output component. Shorthand <span class="math notranslate nohighlight">\(l\)</span>. Default is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p><strong>output_size</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span>) – Size of the output vector, shorthand <span class="math notranslate nohighlight">\(q\)</span>.</p></li>
+<li><p><strong>centered</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, include the centering term in the transition
+amplitude sum. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>bias_term</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, include a trainable bias term <span class="math notranslate nohighlight">\(b_k\)</span> in the
+output. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>Ms</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a></span>) – Optional array of shape
+<code class="docutils literal notranslate"><span class="pre">(input_size+1,</span> <span class="pre">matrix_size,</span> <span class="pre">matrix_size)</span></code> (if
+<code class="docutils literal notranslate"><span class="pre">affine_bias_matrix</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>) or
+<code class="docutils literal notranslate"><span class="pre">(input_size,</span> <span class="pre">matrix_size,</span> <span class="pre">matrix_size)</span></code> (if
+<code class="docutils literal notranslate"><span class="pre">affine_bias_matrix</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>), containing the
+<span class="math notranslate nohighlight">\(M_i\)</span> Hermitian matrices. If not provided, the matrices
+will be initialized randomly when the module is compiled.
+Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> (random initialization).</p></li>
+<li><p><strong>Ds</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a></span>) – Optional array of shape
+<code class="docutils literal notranslate"><span class="pre">(output_size,</span> <span class="pre">num_secondaries,</span> <span class="pre">matrix_size,</span> <span class="pre">matrix_size)</span></code>
+containing the <span class="math notranslate nohighlight">\(D_{km}\)</span> Hermitian observable matrices. If
+not provided, the matrices will be initialized randomly when
+the module is compiled. Default is <code class="docutils literal notranslate"><span class="pre">None</span></code> (random
+initialization).</p></li>
+<li><p><strong>b</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a></span>) – Optional array of shape <code class="docutils literal notranslate"><span class="pre">(output_size,)</span></code> containing the
+bias terms <span class="math notranslate nohighlight">\(b_k\)</span>. If not provided, the bias terms will be
+randomly initialized when the module is compiled. Default is
+<code class="docutils literal notranslate"><span class="pre">None</span></code> (random initialization).</p></li>
+<li><p><strong>init_magnitude</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – Initial magnitude for the random initialization. Default is
+<code class="docutils literal notranslate"><span class="pre">1e-2</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When using smoothing, the <code class="docutils literal notranslate"><span class="pre">which</span></code> options involving magnitude
+should be avoided, as the smoothing only guarantees that
+eigenvalues near each other algebraically are smoothed, not across
+the spectrum.</p>
+</div>
 </dd></dl>
 
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table">
@@ -576,19 +668,22 @@ provided, by default <code class="docutils literal notranslate"><span class="pre
 <tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.AffineObservablePMM.name" title="parametricmatrixmodels.modules.AffineObservablePMM.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
 <td><p>Returns the name of the module, unless overridden, this is the class name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.AffineObservablePMM.serialize" title="parametricmatrixmodels.modules.AffineObservablePMM.serialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.AffineObservablePMM.reset" title="parametricmatrixmodels.modules.AffineObservablePMM.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.AffineObservablePMM.serialize" title="parametricmatrixmodels.modules.AffineObservablePMM.serialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize</span></code></a></p></td>
 <td><p>Serialize the module to a dictionary.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.AffineObservablePMM.set_hyperparameters" title="parametricmatrixmodels.modules.AffineObservablePMM.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.AffineObservablePMM.set_hyperparameters" title="parametricmatrixmodels.modules.AffineObservablePMM.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a></p></td>
 <td><p>Set the hyperparameters of the module.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.AffineObservablePMM.set_params" title="parametricmatrixmodels.modules.AffineObservablePMM.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.AffineObservablePMM.set_params" title="parametricmatrixmodels.modules.AffineObservablePMM.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a></p></td>
 <td><p>Set the trainable parameters of the module.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.AffineObservablePMM.set_precision" title="parametricmatrixmodels.modules.AffineObservablePMM.set_precision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_precision</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.AffineObservablePMM.set_precision" title="parametricmatrixmodels.modules.AffineObservablePMM.set_precision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_precision</span></code></a></p></td>
 <td><p>Set the precision of the module parameters and state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.AffineObservablePMM.set_state" title="parametricmatrixmodels.modules.AffineObservablePMM.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.AffineObservablePMM.set_state" title="parametricmatrixmodels.modules.AffineObservablePMM.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a></p></td>
 <td><p>Set the state of the module.</p></td>
 </tr>
 </tbody>
@@ -635,7 +730,7 @@ state.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM._get_callable">
-<span class="sig-name descname"><span class="pre">_get_callable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM._get_callable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM._get_callable" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">_get_callable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM._get_callable" title="Link to this definition">#</a></dt>
 <dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">jax.jit</span></code>-able and <code class="docutils literal notranslate"><span class="pre">jax.grad</span></code>-able callable that
 represents the module’s forward pass.</p>
 <p>This method must be implemented by all subclasses and must return a
@@ -659,7 +754,7 @@ arrays, and a JAX rng key.</p>
 <p>The training flag will be traced out, so it doesn’t need to be jittable</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>], <a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.Array.html#jax.Array" title="(in JAX)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Array</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#Ellipsis" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code></a>]]]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a></span></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A callable that takes the module’s parameters, input data,
@@ -720,7 +815,7 @@ Valid options are:
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM.compile">
-<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM.compile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.compile" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.compile" title="Link to this definition">#</a></dt>
 <dd><p>Compile the module to be used with the given input shape.</p>
 <p>This method initializes the module’s parameters and state based
 on the input shape and random key.</p>
@@ -749,7 +844,7 @@ done automatically later.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM.deserialize">
-<span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.deserialize" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM.deserialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.deserialize" title="Link to this definition">#</a></dt>
 <dd><p>Deserialize the module from a dictionary.</p>
 <p>This method sets the module’s parameters and state based on the
 provided dictionary.</p>
@@ -788,10 +883,10 @@ They can be set via <cite>set_hyperparameters</cite>.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM.get_num_trainable_floats">
-<span class="sig-name descname"><span class="pre">get_num_trainable_floats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM.get_num_trainable_floats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.get_num_trainable_floats" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_num_trainable_floats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.get_num_trainable_floats" title="Link to this definition">#</a></dt>
 <dd><p>Returns the number of trainable floats in the module.
-If the module does not have trainable parameters, returns 0.
-If the module is not ready, returns None.</p>
+If the module does not have trainable parameters, returns <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+If the module is not ready, returns <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a> | <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
@@ -805,7 +900,7 @@ is not ready.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM.get_output_shape">
-<span class="sig-name descname"><span class="pre">get_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM.get_output_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.get_output_shape" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.get_output_shape" title="Link to this definition">#</a></dt>
 <dd><p>Get the output shape of the module given the input shape.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -825,7 +920,7 @@ is not ready.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM.get_params">
-<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM.get_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.get_params" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.get_params" title="Link to this definition">#</a></dt>
 <dd><p>Get the current trainable parameters of the module. If the module has
 no trainable parameters, this method should return an empty tuple.</p>
 <dl class="field-list simple">
@@ -862,7 +957,7 @@ empty tuple.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM.is_ready">
-<span class="sig-name descname"><span class="pre">is_ready</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM.is_ready"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.is_ready" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">is_ready</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.is_ready" title="Link to this definition">#</a></dt>
 <dd><p>Return True if the module is initialized and ready for training or
 inference.</p>
 <dl class="field-list simple">
@@ -894,8 +989,18 @@ name.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.reset" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM.serialize">
-<span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.serialize" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM.serialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.serialize" title="Link to this definition">#</a></dt>
 <dd><p>Serialize the module to a dictionary.</p>
 <p>This method returns a dictionary representation of the module,
 including its parameters and state.</p>
@@ -937,7 +1042,7 @@ attributes of the class instance.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM.set_params">
-<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/affineobservablepmm.html#AffineObservablePMM.set_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.set_params" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM.set_params" title="Link to this definition">#</a></dt>
 <dd><p>Set the trainable parameters of the module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1017,12 +1122,12 @@ Valid options are:
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="parametricmatrixmodels.modules.AEPMM.html"
+       href="parametricmatrixmodels.modules.LRAEPMM.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">AEPMM</p>
+        <p class="prev-next-title">LRAEPMM</p>
       </div>
     </a>
     <a class="right-next"
@@ -1067,6 +1172,7 @@ Valid options are:
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM.get_state"><code class="docutils literal notranslate"><span class="pre">AffineObservablePMM.get_state()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM.is_ready"><code class="docutils literal notranslate"><span class="pre">AffineObservablePMM.is_ready()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM.name"><code class="docutils literal notranslate"><span class="pre">AffineObservablePMM.name()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM.reset"><code class="docutils literal notranslate"><span class="pre">AffineObservablePMM.reset()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM.serialize"><code class="docutils literal notranslate"><span class="pre">AffineObservablePMM.serialize()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM.set_hyperparameters"><code class="docutils literal notranslate"><span class="pre">AffineObservablePMM.set_hyperparameters()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM.set_params"><code class="docutils literal notranslate"><span class="pre">AffineObservablePMM.set_params()</span></code></a></li>

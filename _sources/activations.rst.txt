@@ -11,6 +11,7 @@ Elementwise and Activation Function Modules
    :nosignatures:
    :template: modulesubclass.rst
 
+   ~PReLU
    ~ReLU
    ~ReLU6
    ~Sigmoid

@@ -1,0 +1,56 @@
+﻿PReLU
+=====
+
+``parametricmatrixmodels.modules.PReLU``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: PReLU
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~PReLU.astype
+      
+         ~PReLU.compile
+      
+         ~PReLU.deserialize
+      
+         ~PReLU.get_hyperparameters
+      
+         ~PReLU.get_num_trainable_floats
+      
+         ~PReLU.get_output_shape
+      
+         ~PReLU.get_params
+      
+         ~PReLU.get_state
+      
+         ~PReLU.is_ready
+      
+         ~PReLU.name
+      
+         ~PReLU.serialize
+      
+         ~PReLU.set_hyperparameters
+      
+         ~PReLU.set_params
+      
+         ~PReLU.set_precision
+      
+         ~PReLU.set_state
+
+   .. autosummary::
+
+      
