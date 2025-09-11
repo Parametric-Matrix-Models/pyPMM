@@ -5,22 +5,23 @@ from typing import Any
 
 import jax.numpy as np
 
-from .affinehermitianmatrix import AffineHermitianMatrix
 from .basemodule import BaseModule
 from .bias import Bias
 from .eigenvectors import Eigenvectors
+from .lowrankaffinehermitianmatrix import LowRankAffineHermitianMatrix
+from .lowranktransitionamplitudesum import LowRankTransitionAmplitudeSum
 from .multimodule import MultiModule
-from .transitionamplitudesum import TransitionAmplitudeSum
 
 
-class AffineObservablePMM(MultiModule):
+class LowRankAffineObservablePMM(MultiModule):
     r"""
-    ``AffineObservablePMM`` is a module that implements a general regression
-    model via the affine observable
-    Parametric Matrix Model (PMM) using four primitive modules combined in a
-    MultiModule: a AffineHermitianMatrix module followed by an Eigenvectors
-    module followed by a TransitionAmplitudeSum module followed optionally by a
-    Bias module.
+    ``LowRankAffineObservablePMM`` is a module that implements a general
+    regression model via the affine observable
+    Parametric Matrix Model (PMM) with low-rank trainable matrices using four
+    primitive modules combined in a MultiModule: a
+    LowRankAffineHermitianMatrix module followed by an Eigenvectors
+    module followed by a LowrankTransitionAmplitudeSum module followed
+    optionally by a Bias module.
 
     The Affine Observable PMM (AOPMM) is described in [1]_ and is summarized as
     follows:
@@ -61,6 +62,11 @@ class AffineObservablePMM(MultiModule):
     Finally, an optional trainable bias term :math:`b_k` can be added to each
     component.
 
+    In this module, the trainable Hermitian matrices, both :math:`M_i` and
+    :math:`D_{km}`, are parametrized in low-rank form by sums of rank-1 terms
+    constructed from outer products of complex vectors. This reduces the
+    number of trainable parameters.
+
     .. warning::
         Even though the math shows that the centering term should be multiplied
         by :math:`r^2`, in practice this doesn't work well and instead setting
@@ -69,20 +75,20 @@ class AffineObservablePMM(MultiModule):
 
     See Also
     --------
-    AffineHermitianMatrix
+    LowRankAffineHermitianMatrix
         Module that constructs the affine Hermitian matrix :math:`M(x)` from
-        trainable Hermitian matrices :math:`M_i` and input features.
+        low-rank trainable Hermitian matrices :math:`M_i` and input features.
     Eigenvectors
         Module that computes the eigenvectors of a matrix.
-    TransitionAmplitudeSum
+    LowRankTransitionAmplitudeSum
         Module that computes the sum of transition amplitudes of eigenvectors
-        with trainable observable matrices.
+        with trainable low-rank observable matrices.
     Bias
         Module that adds a trainable bias term to the output.
     MultiModule
         Module that combines multiple modules in sequence.
-    LowRankAffineObservablePMM
-        Low-rank version of this module.
+    AffineObservablePMM
+        Full-rank version of this module.
 
     References
     ----------
@@ -94,16 +100,18 @@ class AffineObservablePMM(MultiModule):
     def __init__(
         self,
         matrix_size: int = None,
+        primary_rank: int = None,
         num_eig: int = None,
         which: str = None,
         smoothing: float = None,
         affine_bias_matrix: bool = True,
         num_secondaries: int = 1,
+        secondary_rank: int = None,
         output_size: int = None,
         centered: bool = True,
         bias_term: bool = True,
-        Ms: np.ndarray = None,
-        Ds: np.ndarray = None,
+        uMs: np.ndarray = None,
+        uDs: np.ndarray = None,
         b: np.ndarray = None,
         init_magnitude: float = 0.01,
     ):
@@ -114,6 +122,8 @@ class AffineObservablePMM(MultiModule):
         ----------
             matrix_size
                 Size of the trainable matrices, shorthand :math:`n`.
+            primary_rank
+                Rank of the trainable Hermitian matrices :math:`M_i`.
             num_eig
                 Number of eigenvectors to use in the transition amplitude
                 calculation, shorthand :math:`r`.
@@ -138,6 +148,9 @@ class AffineObservablePMM(MultiModule):
             num_secondaries
                 Number of secondary observable matrices :math:`D_{km}` per
                 output component. Shorthand :math:`l`. Default is ``1``.
+            secondary_rank
+                Rank of the trainable Hermitian observable matrices
+                :math:`D_{km}`.
             output_size
                 Size of the output vector, shorthand :math:`q`.
             centered
@@ -146,20 +159,22 @@ class AffineObservablePMM(MultiModule):
             bias_term
                 If ``True``, include a trainable bias term :math:`b_k` in the
                 output. Default is ``True``.
-            Ms
+            uMs
                 Optional array of shape
-                ``(input_size+1, matrix_size, matrix_size)`` (if
+                ``(input_size+1, primary_rank, matrix_size)`` (if
                 ``affine_bias_matrix`` is ``True``) or
-                ``(input_size, matrix_size, matrix_size)`` (if
+                ``(input_size, primary_rank, matrix_size)`` (if
                 ``affine_bias_matrix`` is ``False``), containing the
-                :math:`M_i` Hermitian matrices. If not provided, the matrices
+                complex vectors which parameterize the low-rank :math:`M_i`
+                Hermitian matrices. If not provided, the vectors
                 will be initialized randomly when the module is compiled.
                 Default is ``None`` (random initialization).
-            Ds
+            uDs
                 Optional array of shape
-                ``(output_size, num_secondaries, matrix_size, matrix_size)``
-                containing the :math:`D_{km}` Hermitian observable matrices. If
-                not provided, the matrices will be initialized randomly when
+                ``(output_size, num_secondaries, secondary_rank, matrix_size)``
+                containing the complex vectors which parameterize the low-rank
+                :math:`D_{km}` Hermitian observable matrices. If
+                not provided, the vectors will be initialized randomly when
                 the module is compiled. Default is ``None`` (random
                 initialization).
             b
@@ -188,16 +203,18 @@ class AffineObservablePMM(MultiModule):
                 which = "SA"
 
         self.matrix_size = matrix_size
+        self.primary_rank = primary_rank
         self.num_eig = num_eig
         self.which = which
         self.smoothing = smoothing
         self.affine_bias_matrix = affine_bias_matrix
         self.num_secondaries = num_secondaries
+        self.secondary_rank = secondary_rank
         self.output_size = output_size
         self.centered = centered
         self.bias_term = bias_term
-        self.Ms = Ms
-        self.Ds = Ds
+        self.uMs = uMs
+        self.uDs = uDs
         self.b = b
         self.init_magnitude = init_magnitude
 
@@ -212,10 +229,11 @@ class AffineObservablePMM(MultiModule):
             )
 
         self.modules = (
-            AffineHermitianMatrix(
+            LowRankAffineHermitianMatrix(
                 matrix_size=matrix_size,
+                rank=primary_rank,
                 smoothing=smoothing,
-                Ms=Ms,
+                us=uMs,
                 init_magnitude=init_magnitude,
                 bias_term=affine_bias_matrix,
                 flatten=False,
@@ -224,11 +242,12 @@ class AffineObservablePMM(MultiModule):
                 num_eig=num_eig,
                 which=which,
             ),
-            TransitionAmplitudeSum(
+            LowRankTransitionAmplitudeSum(
                 num_observables=num_secondaries,
+                rank=secondary_rank,
                 output_size=output_size,
                 centered=centered,
-                Ds=Ds,
+                us=uDs,
                 init_magnitude=init_magnitude,
             ),
         )
@@ -244,24 +263,26 @@ class AffineObservablePMM(MultiModule):
                 ),
             )
 
-        super(AffineObservablePMM, self).__init__(*self.modules)
+        super(LowRankAffineObservablePMM, self).__init__(*self.modules)
 
     def name(self) -> str:
-        multistr = super(AffineObservablePMM, self).name()
+        multistr = super(LowRankAffineObservablePMM, self).name()
 
-        namestr = f"AffineObservablePMM as {multistr}"
+        namestr = f"LowRankAffineObservablePMM as {multistr}"
 
         return namestr
 
     def get_hyperparameters(self) -> dict[str, Any]:
         data = {
             "matrix_size": self.matrix_size,
+            "primary_rank": self.primary_rank,
             "num_eig": self.num_eig,
             "which": self.which,
             "smoothing": self.smoothing,
             "init_magnitude": self.init_magnitude,
             "affine_bias_matrix": self.affine_bias_matrix,
             "num_secondaries": self.num_secondaries,
+            "secondary_rank": self.secondary_rank,
             "output_size": self.output_size,
             "centered": self.centered,
             "bias_term": self.bias_term,
@@ -269,11 +290,12 @@ class AffineObservablePMM(MultiModule):
 
         return {
             **data,
-            **super(AffineObservablePMM, self).get_hyperparameters(),
+            **super(LowRankAffineObservablePMM, self).get_hyperparameters(),
         }
 
     def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
         self.matrix_size = hyperparams["matrix_size"]
+        self.primary_rank = hyperparams["primary_rank"]
         self.num_eig = hyperparams["num_eig"]
         self.which = hyperparams["which"]
         self.smoothing = hyperparams["smoothing"]
@@ -281,6 +303,7 @@ class AffineObservablePMM(MultiModule):
         self.bias_term = hyperparams["bias_term"]
         self.affine_bias_matrix = hyperparams["affine_bias_matrix"]
         self.num_secondaries = hyperparams["num_secondaries"]
+        self.secondary_rank = hyperparams["secondary_rank"]
         self.output_size = hyperparams["output_size"]
         self.centered = hyperparams["centered"]
         self.parameter_counts = hyperparams["parameter_counts"]
@@ -289,10 +312,11 @@ class AffineObservablePMM(MultiModule):
         self.output_shape = hyperparams["output_shape"]
 
         self.modules = (
-            AffineHermitianMatrix(
+            LowRankAffineHermitianMatrix(
                 matrix_size=self.matrix_size,
+                rank=self.primary_rank,
                 smoothing=self.smoothing,
-                Ms=self.Ms,
+                us=self.uMs,
                 init_magnitude=self.init_magnitude,
                 bias_term=self.affine_bias_matrix,
                 flatten=False,
@@ -301,11 +325,12 @@ class AffineObservablePMM(MultiModule):
                 num_eig=self.num_eig,
                 which=self.which,
             ),
-            TransitionAmplitudeSum(
+            LowRankTransitionAmplitudeSum(
                 num_observables=self.num_secondaries,
+                rank=self.secondary_rank,
                 output_size=self.output_size,
                 centered=self.centered,
-                Ds=self.Ds,
+                us=self.uDs,
                 init_magnitude=self.init_magnitude,
             ),
         )

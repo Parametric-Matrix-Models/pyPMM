@@ -5,25 +5,26 @@ from typing import Any, Callable
 import jax
 import jax.numpy as np
 
-from ._eigensystems import select_eigenvalues
+from ._eigensystems import select_eigenpairs_by_eigenvalue
 from .basemodule import BaseModule
 
 
-class Eigenvalues(BaseModule):
+class Eigenvectors(BaseModule):
     r"""
-    Module to compute selected eigenvalues of a symmetric (Hermitian) matrix.
+    Module to compute selected eigenvectors of a symmetric (Hermitian) matrix.
+
+    The output of this module for a single input sample is an array where each
+    column is an eigenvector, with the columns ordered according to the
+    specified `which` parameter.
 
     See Also
     --------
-    Eigenvectors
-        Module to compute only eigenvectors.
+    Eigenvalues
+        Module to compute only eigenvalues.
     Eigensystem
-        Module to compute both eigenvalues and eigenvectors. Although
-        JAX/NumPy's `np.linalg.eigvalsh` just calls `np.linalg.eigh` and
-        discards the eigenvectors, it is still more efficient here so that an
-        entire batch of eigenvectors aren't passed around needlessly.
-    jax.numpy.linalg.eigvalsh
-        JAX function to compute the eigenvalues of a symmetric (Hermitian)
+        Module to compute both eigenvalues and eigenvectors.
+    jax.numpy.linalg.eigh
+        JAX function to compute the eigensystem of a symmetric (Hermitian)
         matrix, which is used internally by this module.
     """
 
@@ -36,10 +37,11 @@ class Eigenvalues(BaseModule):
         Parameters
         ----------
         num_eig
-            Number of eigenvalues to compute. Must be a positive integer.
+            Number of eigenvectors to compute. Must be a positive integer.
             Default is 1.
         which
-            Which eigenvalues to return, by default "SA".
+            Which eigenvectors to return based on associated eigenvalues,
+            by default "SA".
             Options are:
             - 'SA' for smallest algebraic (default)
             - 'LA' for largest algebraic
@@ -50,15 +52,18 @@ class Eigenvalues(BaseModule):
             - 'IA' for interior algebraically
             - 'IM' for interior by magnitude
 
-            For algebraic 'which' options, the eigenvalues are returned in
-            ascending algebraic order.
+            For algebraic 'which' options, the eigenvectors are returned in
+            ascending eigenvalue algebraic order.
 
-            For magnitude 'which' options, the eigenvalues are returned in
-            ascending magnitude order.
+            For magnitude 'which' options, the eigenvectors are returned in
+            ascending eigenvalue magnitude order.
         """
-
-        if num_eig <= 0 or not isinstance(num_eig, int):
-            raise ValueError("num_eig must be a positive integer")
+        if num_eig is not None and (
+            num_eig <= 0 or not isinstance(num_eig, int)
+        ):
+            raise ValueError(
+                f"num_eig must be a positive integer, got {num_eig}"
+            )
         if which.lower() not in [
             "sa",
             "la",
@@ -76,18 +81,20 @@ class Eigenvalues(BaseModule):
 
         self.num_eig = num_eig
         self.which = which.lower()
+        self.input_shape = None
+        self.output_shape = None
 
     def name(self) -> str:
         if self.num_eig == 1 and self.which == "sa":
-            return "Eigenvalues(ground state)"
+            return "Eigenvectors(ground state)"
         else:
             return (
-                f"Eigenvalues(num_eig={self.num_eig},"
+                f"Eigenvectors(num_eig={self.num_eig},"
                 f" which={self.which.upper()})"
             )
 
     def is_ready(self) -> bool:
-        return True
+        return self.input_shape is not None and self.output_shape is not None
 
     def get_num_trainable_floats(self) -> int | None:
         return 0
@@ -102,12 +109,20 @@ class Eigenvalues(BaseModule):
         ],
         tuple[np.ndarray, tuple[np.ndarray, ...]],
     ]:
-        return lambda params, input_NF, training, state, rng: (
-            jax.vmap(select_eigenvalues, in_axes=(0, None, None))(
-                np.linalg.eigvalsh(input_NF), self.num_eig, self.which
-            ),
-            state,  # state is not used in this module, return it unchanged
-        )
+        def _callable(
+            params: tuple[np.ndarray, ...],
+            input_NF: np.ndarray,
+            training: bool,
+            state: tuple[np.ndarray, ...],
+            rng: Any,
+        ) -> tuple[np.ndarray, tuple[np.ndarray, ...]]:
+            E, V = jax.vmap(
+                select_eigenpairs_by_eigenvalue,
+                in_axes=(0, 0, None, None),
+            )(*np.linalg.eigh(input_NF), self.num_eig, self.which)
+            return V, state
+
+        return _callable
 
     def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
         # ensure input shape is valid
@@ -116,19 +131,29 @@ class Eigenvalues(BaseModule):
                 f"Input shape must be a square matrix, got {input_shape}"
             )
 
+        self.input_shape = input_shape
+        self.output_shape = self.get_output_shape(input_shape)
+
     def get_output_shape(
         self, input_shape: tuple[int, ...]
     ) -> tuple[int, ...]:
-        return (self.num_eig,)
+        if len(input_shape) != 2 or input_shape[0] != input_shape[1]:
+            raise ValueError(
+                f"Input shape must be a square matrix, got {input_shape}"
+            )
+
+        return (input_shape[0], self.num_eig)
 
     def get_hyperparameters(self) -> dict[str, Any]:
         return {
             "num_eig": self.num_eig,
             "which": self.which,
+            "input_shape": self.input_shape,
+            "output_shape": self.output_shape,
         }
 
     def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
-        super(Eigenvalues, self).set_hyperparameters(hyperparams)
+        super(Eigenvectors, self).set_hyperparameters(hyperparams)
 
     def get_params(self) -> tuple[np.ndarray, ...]:
         return ()

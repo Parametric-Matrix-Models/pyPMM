@@ -5,18 +5,18 @@ from typing import Any
 
 import jax.numpy as np
 
-from .affinehermitianmatrix import AffineHermitianMatrix
 from .basemodule import BaseModule
 from .eigenvalues import Eigenvalues
+from .lowrankaffinehermitianmatrix import LowRankAffineHermitianMatrix
 from .multimodule import MultiModule
 
 
-class AffineEigenvaluePMM(MultiModule):
+class LowRankAffineEigenvaluePMM(MultiModule):
     r"""
-    ``AffineEigenvaluePMM`` is a module that implements the affine eigenvalue
-    Parametric Matrix Model (PMM) using two primitive modules combined in a
-    MultiModule: an AffineHermitianMatrix module followed by an Eigenvalues
-    module.
+    ``LowRankAffineEigenvaluePMM`` is a module that implements the affine
+    eigenvalue Parametric Matrix Model (PMM) using low-rank matrices via
+    two primitive modules combined in a MultiModule: a
+    LowRankAffineHermitianMatrix module followed by an Eigenvalues module.
 
     The Affine Eigenvalue PMM (AEPMM) is described in [1]_ and is summarized as
     follows:
@@ -36,13 +36,19 @@ class AffineEigenvaluePMM(MultiModule):
     The requested eigenvalues of :math:`M(x)` are then computed and returned as
     the output of the module.
 
+    This module constructs the :math:`M_i` matrices as low-rank matrices, from
+    outer products of trainable vectors.
+
     See Also
     --------
-    AffineHermitianMatrix
+    LowRankAffineHermitianMatrix
         Module that constructs the affine Hermitian matrix :math:`M(x)` from
-        trainable Hermitian matrices :math:`M_i` and input features.
+        low-rank matrices via outer products of trainable vectors.
     Eigenvalues
         Module that computes the eigenvalues of a matrix.
+    AffineEigenvaluePMM
+        Module that implements the affine eigenvalue PMM using full-rank
+        matrices.
     MultiModule
         Module that combines multiple modules in sequence.
 
@@ -56,10 +62,11 @@ class AffineEigenvaluePMM(MultiModule):
     def __init__(
         self,
         matrix_size: int = None,
+        rank: int = None,
         num_eig: int = 1,
         which: str = "SA",
         smoothing: float = None,
-        Ms: np.ndarray = None,
+        us: np.ndarray = None,
         init_magnitude: float = 0.01,
         bias_term: bool = True,
     ):
@@ -73,6 +80,9 @@ class AffineEigenvaluePMM(MultiModule):
         ----------
             matrix_size
                 Size of the PMM matrices, shorthand :math:`n`.
+            rank
+                Rank of the low-rank matrices, shorthand :math:`r`. Must be a
+                positive integer less than or equal to ``matrix_size``.
             num_eig
                 Number of eigenvalues to compute, shorthand :math:`k`. Default
                 is 1.
@@ -96,16 +106,17 @@ class AffineEigenvaluePMM(MultiModule):
             smoothing
                 Optional smoothing parameter. Set to ``0.0`` to disable
                 smoothing. Default is ``None``/``0.0`` (no smoothing).
-            Ms
+            us
                 Optional array of shape
-                ``(input_size+1, matrix_size, matrix_size)`` (if ``bias_term``
-                is ``True``) or ``(input_size, matrix_size, matrix_size)`` (if
-                ``bias_term`` is ``False``), containing the :math:`M_i`
-                Hermitian matrices. If not provided, the matrices will be
+                ``(input_size+1, rank, matrix_size)`` (if ``bias_term``
+                is ``True``) or ``(input_size, rank, matrix_size)`` (if
+                ``bias_term`` is ``False``), containing the :math:`u_k^i`
+                complex vectors used to construct the low-rank Hermitian
+                matrices. If not provided, the vectors will be
                 initialized randomly when the module is compiled. Default is
                 ``None`` (random initialization).
             init_magnitude
-                Initial magnitude for the random matrices if ``Ms`` is not
+                Initial magnitude for the random matrices if ``us`` is not
                 provided. Default is ``1e-2``.
             bias_term
                 If ``True``, include the bias term :math:`M_0` in the affine
@@ -120,10 +131,11 @@ class AffineEigenvaluePMM(MultiModule):
         """
 
         self.matrix_size = matrix_size
+        self.rank = rank
         self.num_eig = num_eig
         self.which = which
         self.smoothing = smoothing
-        self.Ms = Ms
+        self.us = us
         self.init_magnitude = init_magnitude
         self.bias_term = bias_term
 
@@ -138,10 +150,11 @@ class AffineEigenvaluePMM(MultiModule):
             )
 
         self.modules = (
-            AffineHermitianMatrix(
+            LowRankAffineHermitianMatrix(
                 matrix_size=matrix_size,
+                rank=rank,
                 smoothing=smoothing,
-                Ms=Ms,
+                us=us,
                 init_magnitude=init_magnitude,
                 bias_term=bias_term,
                 flatten=False,
@@ -152,18 +165,19 @@ class AffineEigenvaluePMM(MultiModule):
             ),
         )
 
-        super(AffineEigenvaluePMM, self).__init__(*self.modules)
+        super(LowRankAffineEigenvaluePMM, self).__init__(*self.modules)
 
     def name(self) -> str:
-        multistr = super(AffineEigenvaluePMM, self).name()
+        multistr = super(LowRankAffineEigenvaluePMM, self).name()
 
-        namestr = f"AffineEigenvaluePMM as {multistr}"
+        namestr = f"LowRankAffineEigenvaluePMM as {multistr}"
 
         return namestr
 
     def get_hyperparameters(self) -> dict[str, Any]:
         data = {
             "matrix_size": self.matrix_size,
+            "rank": self.rank,
             "num_eig": self.num_eig,
             "which": self.which,
             "smoothing": self.smoothing,
@@ -173,11 +187,12 @@ class AffineEigenvaluePMM(MultiModule):
 
         return {
             **data,
-            **super(AffineEigenvaluePMM, self).get_hyperparameters(),
+            **super(LowRankAffineEigenvaluePMM, self).get_hyperparameters(),
         }
 
     def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
         self.matrix_size = hyperparams["matrix_size"]
+        self.rank = hyperparams["rank"]
         self.num_eig = hyperparams["num_eig"]
         self.which = hyperparams["which"]
         self.smoothing = hyperparams["smoothing"]
@@ -189,10 +204,11 @@ class AffineEigenvaluePMM(MultiModule):
         self.output_shape = hyperparams["output_shape"]
 
         self.modules = (
-            AffineHermitianMatrix(
+            LowRankAffineHermitianMatrix(
                 matrix_size=self.matrix_size,
+                rank=self.rank,
                 smoothing=self.smoothing,
-                Ms=self.Ms,
+                us=self.us,
                 init_magnitude=self.init_magnitude,
                 bias_term=self.bias_term,
                 flatten=False,

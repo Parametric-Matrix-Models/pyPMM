@@ -133,6 +133,23 @@ class Model(object):
         self.modules.insert(index, module)
         self.reset()
 
+    def __add__(self, module: BaseModule) -> "Model":
+        """
+        Overload the + operator to append a module to the model.
+
+        Parameters
+        ----------
+            module : BaseModule
+                Module to append to the model.
+
+        Returns
+        -------
+            Model
+                The model with the appended module.
+        """
+        self.append_module(module)
+        return self
+
     add = append_module
     put = prepend_module
     insert = insert_module

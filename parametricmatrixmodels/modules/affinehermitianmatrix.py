@@ -110,9 +110,9 @@ class AffineHermitianMatrix(BaseModule):
     def name(self) -> str:
         return (
             f"AffineHermitianMatrix({self.matrix_size}x{self.matrix_size},"
-            f" smoothing={self.smoothing},"
-            f"{'' if self.bias_term else ' no bias,'}"
-            f"{' FLATTENED' if self.flatten else ''})"
+            f" smoothing={self.smoothing}"
+            f"{'' if self.bias_term else ', no bias'}"
+            f"{', FLATTENED' if self.flatten else ''})"
         )
 
     def is_ready(self) -> bool:
