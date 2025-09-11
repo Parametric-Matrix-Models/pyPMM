@@ -11,8 +11,11 @@ Utility and Meta Modules
    :nosignatures:
    :template: modulesubclass.rst
 
+   ~Comment
+   ~Bias
    ~Flatten
    ~Reshape
-   ~Func
    ~SubsetModule
+   ~MultiModule
+   ~Func
 
