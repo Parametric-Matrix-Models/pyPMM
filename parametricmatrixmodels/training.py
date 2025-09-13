@@ -991,8 +991,10 @@ def train(
     # random key for JAX
     if batch_seed is None:
         batch_seed = random.randint(0, 2**32 - 1)
-
-    batch_rng = jax.random.key(batch_seed)
+    elif isinstance(batch_seed, int):
+        batch_rng = jax.random.key(batch_seed)
+    else:
+        batch_rng = batch_seed
 
     # random key for the model itself
     if isinstance(init_rng, int):

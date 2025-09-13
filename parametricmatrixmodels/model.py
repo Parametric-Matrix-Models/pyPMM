@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import random
 import sys
 import warnings
@@ -15,8 +17,19 @@ from .training import make_loss_fn, train
 
 
 class Model(object):
-    """
-    Model class built from a list of modules.
+    r"""
+
+    A Model is a sequence of modules that can be trained and evaluated. Inputs
+    are passed through each module in sequence to produce outputs.
+
+    For confidence intervals or uncertainty quantification, wrap a trained
+    model with ``ConformalModel``.
+
+    See Also
+    --------
+    ConformalModel
+        Wrap a trained model to produce confidence intervals.
+
     """
 
     def __repr__(self) -> str:
@@ -58,10 +71,10 @@ class Model(object):
 
         Parameters
         ----------
-            modules : List[BaseModule], optional
+            modules
                 List of modules to initialize the model with. Default is an
                 empty list.
-            rng : Any, optional
+            rng
                 Initial random key for the model. Default is None. If None, a
                 new random key will be generated using JAX's random.PRNGKey. If
                 an integer is provided, it will be used as the seed to create
@@ -94,6 +107,10 @@ class Model(object):
         self.parameter_counts = None
         self.state_counts = None
         self.callable = None
+        self.grad_callable_params = None
+        self.grad_callable_params_options = None
+        self.grad_callable_inputs = None
+        self.grad_callable_inputs_options = None
 
     def append_module(self, module: BaseModule) -> None:
         """
@@ -508,35 +525,42 @@ class Model(object):
         rng: Any = None,
         return_state: bool = False,
         update_state: bool = False,
-    ) -> np.ndarray:
+        max_batch_size: int = None,
+    ) -> Tuple[np.ndarray, Tuple[np.ndarray, ...]] | np.ndarray:
         """
         Call the model with the input array.
 
         Parameters
         ----------
-            X : np.ndarray
+            X
                 Input array of shape (batch_size, <input feature axes>).
                 For example, (batch_size, input_features) for a 1D input or
                 (batch_size, input_height, input_width, input_channels) for a
                 3D input.
-            dtype : Optional[Any], optional
+            dtype
                 Data type of the output array. Default is jax.numpy.float64.
                 It is strongly recommended to perform training in single
                 precision (float32 and complex64) and inference with double
                 precision inputs (float64, the default here) with single
-                precision weights.
-            rng : Any, optional
+                precision weights. Default is float64.
+            rng
                 JAX random key for stochastic modules. Default is None.
                 If None, the saved rng key will be used if it exists, which
                 would be the final rng key from the last training run. If an
                 integer is provided, it will be used as the seed to create a
-                new JAX random key.
-            return_state : bool, optional
+                new JAX random key. Default is the saved rng key if it exists,
+                otherwise a new random key will be generated.
+            return_state
                 If True, the model will return the state of the model after
-                evaluation. Default is False.
-            update_state : bool, optional
+                evaluation. Default is ``False``.
+            update_state
                 If True, the model will update the state of the model after
-                evaluation. Default is False.
+                evaluation. Default is ``False``.
+            max_batch_size
+                If provided, the input will be split into batches of at most
+                this size and processed sequentially to avoid OOM errors.
+                Default is ``None``, which means the input will be processed in
+                a single batch.
 
         Returns
         -------
@@ -576,9 +600,28 @@ class Model(object):
         elif isinstance(rng, int):
             rng = jax.random.key(rng)
 
-        out, new_state = self.callable(
-            self.get_params(), X_, False, self.get_state(), rng
-        )
+        if max_batch_size is not None and X_.shape[0] > max_batch_size:
+            # process in batches
+            outputs = []
+            new_states = []
+            num_batches = int(np.ceil(X_.shape[0] / max_batch_size))
+            for i in range(num_batches):
+                batch_X = X_[
+                    i * max_batch_size : (i + 1) * max_batch_size, ...
+                ]
+                out, new_state = self.callable(
+                    self.get_params(), batch_X, False, self.get_state(), rng
+                )
+                outputs.append(out)
+                new_states.append(new_state)
+            out = np.concatenate(outputs, axis=0)
+            # just take the state from the last batch
+            new_state = new_states[-1]
+
+        else:
+            out, new_state = self.callable(
+                self.get_params(), X_, False, self.get_state(), rng
+            )
 
         if update_state:
             warnings.warn(
@@ -594,6 +637,284 @@ class Model(object):
 
     # alias for __call__ method
     predict = __call__
+
+    def grad_input(
+        self,
+        X: np.ndarray,
+        dtype: Optional[Any] = np.float64,
+        rng: Any = None,
+        return_state: bool = False,
+        update_state: bool = False,
+        batched: bool = True,
+        fwd: bool = None,
+        max_batch_size: int = None,
+    ) -> Tuple[np.ndarray, Tuple[np.ndarray, ...]] | np.ndarray:
+        r"""
+        Doc TODO
+
+        Parameters
+        ----------
+        batched
+            If True, compute the jacobian for a batch of inputs, otherwise
+            inputs are ``jax.vmap``'d over. Default is ``True``. ``X`` must
+            always have a batch dimension.
+        fwd
+            If True, use ``jax.jacfwd``, otherwise use ``jax.jacrev``. Default
+            is ``None``, which decides based on the input and output shapes.
+        max_batch_size
+            If provided, the input will be split into batches of at most
+            this size and processed sequentially to avoid OOM errors.
+            Default is ``None``, which means the input will be processed in
+            a single batch. Only applies if ``batched=True``.
+        """
+
+        if not self.ready:
+            raise RuntimeError("Model is not ready. Call compile() first.")
+        if self.callable is None:
+            self.callable = jax.jit(
+                self._get_callable(), static_argnames=["training"]
+            )
+
+        fwd = (
+            fwd
+            if fwd is not None
+            else (
+                np.prod(np.array(self.input_shape))
+                < np.prod(np.array(self.output_shape))
+            )
+        )
+
+        if (self.grad_callable_inputs is None) or (
+            self.grad_callable_inputs_options != (batched, fwd)
+        ):
+            self.grad_callable_inputs_options = (batched, fwd)
+            if not batched:
+                # make non-batched version of the callable
+                def callable_single(
+                    params: Tuple[np.ndarray, ...],
+                    x: np.ndarray,
+                    training: bool,
+                    states: Tuple[np.ndarray, ...],
+                    rng: Any,
+                ) -> np.ndarray:
+                    y, new_states = self.callable(
+                        params, x[None, ...], training, states, rng
+                    )
+                    return y[0], new_states
+
+                if fwd:
+                    grad_single = jax.jacfwd(
+                        callable_single, argnums=1, has_aux=True
+                    )
+                else:
+                    grad_single = jax.jacrev(
+                        callable_single, argnums=1, has_aux=True
+                    )
+                self.grad_callable_inputs = jax.jit(
+                    jax.vmap(grad_single, in_axes=(None, 0, None, None, None)),
+                    static_argnames=["training"],
+                )
+            else:
+                if fwd:
+                    grad_callable_inputs_ = jax.jit(
+                        jax.jacfwd(self.callable, argnums=1, has_aux=True),
+                        static_argnames=["training"],
+                    )
+                else:
+                    grad_callable_inputs_ = jax.jit(
+                        jax.jacrev(self.callable, argnums=1, has_aux=True),
+                        static_argnames=["training"],
+                    )
+
+                # take the diagonal (batch-wise jacobian)
+                def grad_callable_inputs(
+                    params: Tuple[np.ndarray, ...],
+                    X: np.ndarray,
+                    training: bool,
+                    states: Tuple[np.ndarray, ...],
+                    rng: Any,
+                ) -> Tuple[np.ndarray, Tuple[np.ndarray, ...]]:
+                    Y, new_states = grad_callable_inputs_(
+                        params, X, training, states, rng
+                    )
+                    # Y is (batch_size, output_dim1, output_dim2, ...,
+                    # batch_size, input_dim1, input_dim2, ...)
+                    # we want to take the diagonal along the two batch axes
+                    batch_size = X.shape[0]
+                    output_ndim = len(self.output_shape)
+                    input_ndim = len(self.input_shape)
+                    diag_indices = (
+                        (np.arange(batch_size),)
+                        + (slice(None),) * output_ndim
+                        + (np.arange(batch_size),)
+                        + (slice(None),) * input_ndim
+                    )
+                    return Y[diag_indices], new_states
+
+                self.grad_callable_inputs = grad_callable_inputs
+
+        X_ = X.astype(dtype)
+        # make sure the dtype was converted, issue a warning if not
+        if X_.dtype != dtype:
+            warnings.warn(
+                "While performing inference with model: "
+                f"Requested dtype ({dtype}) was not successfully applied. "
+                "This is most likely due to JAX_ENABLE_X64 not being set. "
+                "See accompanying JAX warning for more details.",
+                UserWarning,
+            )
+        if rng is None:
+            rng = self.get_rng()
+        elif isinstance(rng, int):
+            rng = jax.random.key(rng)
+
+        if self.grad_callable_inputs_options[0] and (
+            max_batch_size is not None and X_.shape[0] > max_batch_size
+        ):
+            # process in batches
+            grad_inputs = []
+            new_states = []
+            num_batches = int(np.ceil(X_.shape[0] / max_batch_size))
+            for i in range(num_batches):
+                batch_X = X_[
+                    i * max_batch_size : (i + 1) * max_batch_size, ...
+                ]
+                grad_inp, new_state = self.grad_callable_inputs(
+                    self.get_params(), batch_X, False, self.get_state(), rng
+                )
+                grad_inputs.append(grad_inp)
+                new_states.append(new_state)
+            grad_input_result = np.concatenate(grad_inputs, axis=0)
+            # just take the state from the last batch
+            new_state = new_states[-1]
+        else:
+            grad_input_result, new_state = self.grad_callable_inputs(
+                self.get_params(), X_, False, self.get_state(), rng
+            )
+
+        if update_state:
+            warnings.warn(
+                "update_state is True. This is an uncommon use case, make "
+                "sure you know what you are doing.",
+                UserWarning,
+            )
+            self.set_state(new_state)
+        if return_state:
+            return grad_input_result, new_state
+        else:
+            return grad_input_result
+
+    def grad_params(
+        self,
+        X: np.ndarray,
+        dtype: Optional[Any] = np.float64,
+        rng: Any = None,
+        return_state: bool = False,
+        update_state: bool = False,
+        fwd: bool = None,
+        max_batch_size: int = None,
+    ) -> (
+        Tuple[Tuple[np.ndarray, ...], Tuple[np.ndarray, ...]]
+        | Tuple[np.ndarray, ...]
+    ):
+        r"""
+        Doc TODO
+
+        Parameters
+        ----------
+        fwd
+            If True, use ``jax.jacfwd``, otherwise use ``jax.jacrev``. Default
+            is ``None``, which decides based on the input and output shapes.
+        max_batch_size
+            If provided, the input will be split into batches of at most
+            this size and processed sequentially to avoid OOM errors.
+            Default is ``None``, which means the input will be processed in
+            a single batch.
+        """
+
+        if not self.ready:
+            raise RuntimeError("Model is not ready. Call compile() first.")
+        if self.callable is None:
+            self.callable = jax.jit(
+                self._get_callable(), static_argnames=["training"]
+            )
+
+        fwd = (
+            fwd
+            if fwd is not None
+            else (
+                np.prod(np.array(self.input_shape))
+                < np.prod(np.array(self.output_shape))
+            )
+        )
+
+        if self.grad_callable_params is None or (
+            self.grad_callable_params_options != fwd
+        ):
+            self.grad_callable_params_options = fwd
+            if fwd:
+                self.grad_callable_params = jax.jit(
+                    jax.jacfwd(self.callable, argnums=0, has_aux=True),
+                    static_argnames=["training"],
+                )
+            else:
+                self.grad_callable_params = jax.jit(
+                    jax.jacrev(self.callable, argnums=0, has_aux=True),
+                    static_argnames=["training"],
+                )
+
+        X_ = X.astype(dtype)
+        # make sure the dtype was converted, issue a warning if not
+        if X_.dtype != dtype:
+            warnings.warn(
+                "While performing inference with model: "
+                f"Requested dtype ({dtype}) was not successfully applied. "
+                "This is most likely due to JAX_ENABLE_X64 not being set. "
+                "See accompanying JAX warning for more details.",
+                UserWarning,
+            )
+        if rng is None:
+            rng = self.get_rng()
+        elif isinstance(rng, int):
+            rng = jax.random.key(rng)
+
+        if max_batch_size is not None and X_.shape[0] > max_batch_size:
+            # process in batches
+            grad_params = []
+            new_states = []
+            num_batches = int(np.ceil(X_.shape[0] / max_batch_size))
+            for i in range(num_batches):
+                batch_X = X_[
+                    i * max_batch_size : (i + 1) * max_batch_size, ...
+                ]
+                grad_param, new_state = self.grad_callable_params(
+                    self.get_params(), batch_X, False, self.get_state(), rng
+                )
+                grad_params.append(grad_param)
+                new_states.append(new_state)
+            # average the gradients over the batches
+            grad_params_result = tuple(
+                np.mean(np.array([gp[j] for gp in grad_params]), axis=0)
+                for j in range(len(grad_params[0]))
+            )
+            # just take the state from the last batch
+            new_state = new_states[-1]
+        else:
+            grad_params_result, new_state = self.grad_callable_params(
+                self.get_params(), X_, False, self.get_state(), rng
+            )
+
+        if update_state:
+            warnings.warn(
+                "update_state is True. This is an uncommon use case, make "
+                "sure you know what you are doing.",
+                UserWarning,
+            )
+            self.set_state(new_state)
+        if return_state:
+            return grad_params_result, new_state
+        else:
+            return grad_params_result
 
     def set_precision(self, prec: Union[np.dtype, str, int]) -> None:
         """
