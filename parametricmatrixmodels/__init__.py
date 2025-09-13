@@ -9,4 +9,5 @@ def _get_version():
 __version__ = _get_version()
 
 from . import modules, scalers, training
+from .conformalizedmodel import ConformalizedModel
 from .model import Model

@@ -684,6 +684,9 @@ class Model(object):
             )
         )
 
+        if max_batch_size == 1:
+            batched = False
+
         if (self.grad_callable_inputs is None) or (
             self.grad_callable_inputs_options != (batched, fwd)
         ):
@@ -892,11 +895,12 @@ class Model(object):
                 )
                 grad_params.append(grad_param)
                 new_states.append(new_state)
-            # average the gradients over the batches
+            # concatenate the batch results
             grad_params_result = tuple(
-                np.mean(np.array([gp[j] for gp in grad_params]), axis=0)
-                for j in range(len(grad_params[0]))
+                np.concatenate([gp[i] for gp in grad_params], axis=0)
+                for i in range(len(grad_params[0]))
             )
+
             # just take the state from the last batch
             new_state = new_states[-1]
         else:

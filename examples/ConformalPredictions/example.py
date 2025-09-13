@@ -1,3 +1,4 @@
+import jax
 import jax.numpy as np
 import jax.random as jr
 import matplotlib.pyplot as plt
@@ -8,6 +9,23 @@ import parametricmatrixmodels as pmm
 SEED = 0
 rng = jr.key(SEED)
 
+# data is some simple functions
+N_samples = 100
+x = jr.uniform(rng, (N_samples, 1), minval=-3, maxval=3)
+
+
+def f_single(x):
+    return np.array([x**2, x**3, np.abs(x)])
+
+
+f = jax.vmap(f_single)
+
+y = f(x).squeeze()
+
+# add some noise
+noisekey, rng = jr.split(rng)
+y += 0.15 * jr.normal(noisekey, y.shape)
+
 model = pmm.Model()
 
 # simple NN with 2 outputs
@@ -17,15 +35,7 @@ hidden_layers = 2
 for _ in range(hidden_layers):
     model += pmm.modules.LinearNN(k=hidden_dim)
     model += pmm.modules.Softplus()
-model += pmm.modules.LinearNN(k=2)
-
-# data is two simple functions
-N_samples = 1000
-x = np.linspace(-3, 3, N_samples).reshape(-1, 1)
-y = np.hstack((x**2, x**3))
-# add some noise
-noisekey, rng = jr.split(rng)
-y += 0.05 * jr.normal(noisekey, y.shape)
+model += pmm.modules.LinearNN(k=y.shape[1])
 
 # split into train, val, cal, test
 splits = [0.6, 0.2, 0.1, 0.1]
@@ -56,8 +66,8 @@ x_test, y_test = (
     y_shuffled[N_train + N_val + N_cal :],
 )
 
-x = np.linspace(-100, 100, 10 * N_samples).reshape(-1, 1)
-y = np.hstack((x**2, x**3))
+x = np.linspace(-3, 3, 2000).reshape(-1, 1)
+y = f(x).squeeze()
 
 # standardize data
 xscaler = StandardScaler()
@@ -102,52 +112,15 @@ y_cal_pred = model.predict(x_cal)
 y_test_pred = model.predict(x_test)
 y_pred = model.predict(x)
 
-# get gradients
-# tuple of df/dp for each param, each of
-# shape (N_samples, <output shape>, <param shape>)
+# conformalize model
+cmodel = pmm.ConformalizedModel(
+    model, additional_data={"std_X_train": np.std(x_train, axis=0)}
+)
+cmodel.calibrate(x_cal, y_cal, max_batch_size=128)
 
-
-def u(x_):
-    dy_dparams = model.grad_params(x_)
-    params = model.get_params()
-    # array of df/dx of shape (N_samples, <output shape>, <input shape>)
-    dy_dx = model.grad_input(x_, batched=True, max_batch_size=128)
-
-    # l2 norm of the gradients, scaled by the magnitude of the parameters
-    dy_dparams = np.array(
-        [
-            np.linalg.norm(
-                (np.abs(p) * dp).reshape((dp.shape[0], 2, -1)), ord=2, axis=2
-            )
-            for p, dp in zip(params, dy_dparams)
-        ]
-    )
-    # shape (N_params, N_samples, <output shape>), now sum over the params
-    dy_dparams = np.sum(
-        dy_dparams, axis=0
-    )  # shape (N_samples, <output shape>)
-
-    # l2 norm of dy/dx, scaled by the variance of the training inputs
-    dy_dx = (
-        np.linalg.norm(np.std(x_train) * dy_dx, ord=2, axis=(2,)) ** 2
-    )  # shape (N_samples, <output shape>)
-
-    # uncertainty heuristic
-    return dy_dx + dy_dparams  # shape (N_samples, <output shape>)
-
-
-# nonconformity scores
-scores = np.abs(y_cal - y_cal_pred) / u(x_cal)
-
+# get prediction intervals
 alpha = 0.1  # 90% prediction intervals
-
-# score quantiles
-qhat = np.quantile(scores, np.ceil((1 - alpha) * (N_cal + 1)) / N_cal)
-
-# prediction intervals
-muhat, stdhat = model.predict(x), u(x)
-lower = muhat - qhat * stdhat
-upper = muhat + qhat * stdhat
+y_pred, (lower, upper) = cmodel(x, alpha=alpha, max_batch_size=128)
 
 # unstandardize the data
 x_train = xscaler.inverse_transform(x_train)
@@ -171,7 +144,7 @@ upper = yscaler.inverse_transform(upper)
 
 
 # plot
-fig, axes = plt.subplots(2, 2, figsize=(10, 5))
+fig, axes = plt.subplots(2, y.shape[1], figsize=(10, 5))
 for i in range(y.shape[1]):
     axes[0, i].scatter(
         x_train, y_train[:, i], color="blue", label="train", s=5
