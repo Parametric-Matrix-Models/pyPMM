@@ -234,7 +234,7 @@ class LegacyAffineObservablePMM(BaseModule):
             + self.output_size
             * (self.num_eig * (self.num_eig + 1) // 2)
             * self.matrix_size**2
-            + self.k
+            + self.output_size
         )
 
     def _get_callable(self) -> Callable[
