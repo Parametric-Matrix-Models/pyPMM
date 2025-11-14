@@ -20,7 +20,8 @@ class LowRankTransitionAmplitudeSum(BaseModule):
     this module uses :math:`q\times l` low-rank trainable observables
     :math:`D_11, D_12, \ldots, D_1l, D_21, \ldots, D_ql` (each of shape ``(n,
     n)``), parameterized by the sum of self-outer products of :math:`h \leq n`
-    complex vectors :math:`u_i^j`, :math:`i=1, \ldots, h`,
+    complex vectors :math:`u_i^j`, :math:`i=1, \ldots, h`, scaled by real
+    values :math:`\lambda_i`,
     :math:`j=1, \ldots, q\times l` (shape ``(h, n)``) to compute the output:
 
     .. math::
@@ -47,7 +48,7 @@ class LowRankTransitionAmplitudeSum(BaseModule):
 
     .. math::
 
-        D_{km} = \sum_{i=1}^h u_i^{km} (u_i^{km})^H
+        D_{km} = \sum_{i=1}^h \lambda_i u_i^{km} (u_i^{km})^H
 
     .. warning::
         This module assumes that the input state vectors are normalized. If
@@ -73,11 +74,12 @@ class LowRankTransitionAmplitudeSum(BaseModule):
         rank: int = None,
         num_observables: int = None,
         output_size: int = None,
+        lambdas: np.ndarray = None,
         us: np.ndarray = None,
         init_magnitude: float = 1e-2,
         centered: bool = True,
     ) -> None:
-        """
+        r"""
         Initialize the module.
 
         Parameters
@@ -88,6 +90,11 @@ class LowRankTransitionAmplitudeSum(BaseModule):
                 Number of observable matrices, shorthand :math:`l`.
             output_size
                 Number of output features, shorthand :math:`q`.
+            lambdas
+                Optional 3D array of real values :math:`\lambda_{qlh}` that
+                scale the self-outer product sums that define the
+                observables. If not provided, the values will be
+                initialized randomly when the module is compiled.
             us
                 Optional 4D array of complex vectors :math:`u_{qlh}` that
                 define the observables via self-outer product sums. If not
@@ -100,6 +107,33 @@ class LowRankTransitionAmplitudeSum(BaseModule):
                 Whether to center the output by subtracting half the operator
                 norm squared of each observable. Default ``True``.
         """
+
+        if lambdas is not None:
+            if not isinstance(lambdas, np.ndarray):
+                raise ValueError("lambdas must be a numpy array")
+            if lambdas.ndim != 3:
+                raise ValueError(
+                    f"lambdas must be a 3D array, got {lambdas.ndim}D array"
+                )
+            if rank is not None and lambdas.shape[2] != rank:
+                raise ValueError(
+                    "If provided, rank must match the shape of axis 2 of"
+                    f" lambdas (got {rank} and {lambdas.shape[2]})"
+                )
+            if (
+                num_observables is not None
+                and lambdas.shape[1] != num_observables
+            ):
+                raise ValueError(
+                    "If provided, num_observables must match the shape of"
+                    f" axis 1 of lambdas (got {num_observables} and"
+                    f" {lambdas.shape[1]})"
+                )
+            if output_size is not None and lambdas.shape[0] != output_size:
+                raise ValueError(
+                    "If provided, output_size must match the shape of axis 0"
+                    f" of lambdas (got {output_size} and {lambdas.shape[0]})"
+                )
 
         if us is not None:
             if not isinstance(us, np.ndarray):
@@ -127,10 +161,21 @@ class LowRankTransitionAmplitudeSum(BaseModule):
                 )
 
         self.num_observables = (
-            us.shape[1] if us is not None else num_observables
+            us.shape[1]
+            if us is not None
+            else lambdas.shape[1] if lambdas is not None else num_observables
         )
-        self.rank = us.shape[2] if us is not None else rank
-        self.output_size = us.shape[0] if us is not None else output_size
+        self.rank = (
+            us.shape[2]
+            if us is not None
+            else lambdas.shape[2] if lambdas is not None else rank
+        )
+        self.output_size = (
+            us.shape[0]
+            if us is not None
+            else lambdas.shape[0] if lambdas is not None else output_size
+        )
+        self.lambdas = lambdas
         self.us = us
         self.init_magnitude = init_magnitude
         self.centered = centered
@@ -143,7 +188,7 @@ class LowRankTransitionAmplitudeSum(BaseModule):
         )
 
     def is_ready(self) -> bool:
-        return self.us is not None
+        return self.us is not None and self.lambdas is not None
 
     def _get_callable(self) -> Callable[
         [
@@ -180,10 +225,14 @@ class LowRankTransitionAmplitudeSum(BaseModule):
             states: tuple[np.ndarray, ...],
             rng: Any,
         ) -> tuple[np.ndarray, tuple[np.ndarray, ...]]:
-            (us,) = params
+
+            (
+                lambdas,
+                us,
+            ) = params
 
             # construct Ds from us
-            Ds = np.einsum("qlhi,qlhj->qlij", us, us.conj())
+            Ds = np.einsum("qlh,qlhi,qlhj->qlij", lambdas.real, us, us.conj())
 
             outputs = jax.vmap(_single, in_axes=(None, 0))(Ds, inputs)
             return outputs, states
@@ -219,7 +268,14 @@ class LowRankTransitionAmplitudeSum(BaseModule):
         # otherwise, initialize the matrices
         n, _ = input_shape
 
-        rng_ureal, rng_uimag = jax.random.split(rng, 2)
+        rng_lambdas, rng_ureal, rng_uimag = jax.random.split(rng, 3)
+
+        # initialize lambdas
+        self.lambdas = self.init_magnitude * jax.random.normal(
+            rng_lambdas,
+            (self.output_size, self.num_observables, self.rank),
+            dtype=np.float32,
+        )
 
         # initialize us
         self.us = self.init_magnitude * (
@@ -271,18 +327,26 @@ class LowRankTransitionAmplitudeSum(BaseModule):
         )
 
     def get_params(self) -> tuple[np.ndarray, ...]:
-        return (self.us,)
+        return (
+            self.lambdas,
+            self.us,
+        )
 
     def set_params(self, params: tuple[np.ndarray, ...]) -> None:
         if not isinstance(params, tuple) or not all(
             isinstance(p, np.ndarray) for p in params
         ):
             raise ValueError("params must be a tuple of numpy arrays")
-        if len(params) != 1:
-            raise ValueError(f"Expected 1 parameter array, got {len(params)}")
+        if len(params) != 2:
+            raise ValueError(f"Expected 2 parameter array, got {len(params)}")
 
-        us = params[0]
+        lambdas = params[0]
+        us = params[1]
 
+        if lambdas.ndim != 3:
+            raise ValueError(
+                f"lambdas must be a 3D array, got {lambdas.ndim}D array"
+            )
         if us.ndim != 4:
             raise ValueError(f"us must be a 4D array, got {us.ndim}D array")
 
@@ -300,5 +364,17 @@ class LowRankTransitionAmplitudeSum(BaseModule):
                 f" [({self.output_size}, {self.num_observables},"
                 f" {self.rank}, {matrix_size})], got {us.shape}"
             )
+        if lambdas.shape != (
+            self.output_size,
+            self.num_observables,
+            self.rank,
+        ):
+            raise ValueError(
+                "lambdas must be a 3D array of shape (output_size,"
+                " num_observables, rank)"
+                f" [({self.output_size}, {self.num_observables},"
+                f" {self.rank})], got {lambdas.shape}"
+            )
 
+        self.lambdas = lambdas
         self.us = us

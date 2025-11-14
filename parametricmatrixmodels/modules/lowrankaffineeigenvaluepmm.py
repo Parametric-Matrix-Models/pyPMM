@@ -66,6 +66,7 @@ class LowRankAffineEigenvaluePMM(MultiModule):
         num_eig: int = 1,
         which: str = "SA",
         smoothing: float = None,
+        lambdas: np.ndarray = None,
         us: np.ndarray = None,
         init_magnitude: float = 0.01,
         bias_term: bool = True,
@@ -106,6 +107,13 @@ class LowRankAffineEigenvaluePMM(MultiModule):
             smoothing
                 Optional smoothing parameter. Set to ``0.0`` to disable
                 smoothing. Default is ``None``/``0.0`` (no smoothing).
+            lambdas
+                Optional array of shape `(input_size+1, rank)` (if
+                ``bias_term`` is ``True``) or `(input_size, rank)` (if
+                ``bias_term`` is ``False``), containing the `\lambda_k^i` real
+                coefficients used to construct the low-rank Hermitian matrices.
+                If not provided, the coefficients will be initialized randomly
+                when the module is compiled.
             us
                 Optional array of shape
                 ``(input_size+1, rank, matrix_size)`` (if ``bias_term``
@@ -135,6 +143,7 @@ class LowRankAffineEigenvaluePMM(MultiModule):
         self.num_eig = num_eig
         self.which = which
         self.smoothing = smoothing
+        self.lambdas = lambdas
         self.us = us
         self.init_magnitude = init_magnitude
         self.bias_term = bias_term
@@ -154,6 +163,7 @@ class LowRankAffineEigenvaluePMM(MultiModule):
                 matrix_size=matrix_size,
                 rank=rank,
                 smoothing=smoothing,
+                lambdas=lambdas,
                 us=us,
                 init_magnitude=init_magnitude,
                 bias_term=bias_term,
@@ -208,6 +218,7 @@ class LowRankAffineEigenvaluePMM(MultiModule):
                 matrix_size=self.matrix_size,
                 rank=self.rank,
                 smoothing=self.smoothing,
+                lambdas=self.lambdas,
                 us=self.us,
                 init_magnitude=self.init_magnitude,
                 bias_term=self.bias_term,

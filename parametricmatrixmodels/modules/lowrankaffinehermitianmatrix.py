@@ -29,9 +29,10 @@ class LowRankAffineHermitianMatrix(BaseModule):
              \left[M_i, \sum_k^j M_k\right]
 
     Each :math:`M_i` is a low-rank Hermitian matrix, which can be parametrized
-    as :math:`M_i = sum_k^r u_k^i (u_k^i)^H` where :math:`u_k^i` are a set of
-    :math:`r` complex vectors of size :math:`n`, and :math:`r` is the rank of
-    the matrix.
+    as :math:`M_i = \sum_k^r \lambda_i u_k^i (u_k^i)^H` where :math:`u_k^i`
+    are a set of :math:`r` complex vectors of size :math:`n`, :math:`\lambda_i`
+    are a set of :math:`r` real numbers, and :math:`r` is the rank of the
+    matrix.
 
     See Also
     --------
@@ -45,12 +46,13 @@ class LowRankAffineHermitianMatrix(BaseModule):
         matrix_size: int = None,
         rank: int = None,
         smoothing: float = None,
+        lambdas: np.ndarray = None,
         us: np.ndarray = None,
         init_magnitude: float = 1e-2,
         bias_term: bool = True,
         flatten: bool = False,
     ) -> None:
-        """
+        r"""
         Create an ``LowRankAffineHermitianMatrix`` module.
 
         Parameters
@@ -64,10 +66,18 @@ class LowRankAffineHermitianMatrix(BaseModule):
             smoothing
                 Optional smoothing parameter. Set to ``0.0`` to disable
                 smoothing. Default is ``None``/``0.0`` (no smoothing).
+            lambdas
+                Optional array of shape `(input_size+1, rank)` (if
+                ``bias_term`` is ``True``) or `(input_size, rank)` (if
+                ``bias_term`` is ``False``), containing the :math:`\lambda_k^i`
+                real coefficients used to construct the low-rank Hermitian
+                matrices. If not provided, the coefficients will be initialized
+                randomly when the module is compiled.
             us
                 Optional array of shape `(input_size+1, rank, matrix_size)` (if
                 ``bias_term`` is ``True``) or `(input_size, rank, matrix_size)`
-                (if ``bias_term`` is ``False``), containing the `u_k^i` complex
+                (if ``bias_term`` is ``False``), containing the :math:`u_k^i`
+                complex
                 vectors used to construct the low-rank Hermitian matrices. If
                 not provided, the vectors will be initialized randomly when the
                 module is compiled.
@@ -89,6 +99,17 @@ class LowRankAffineHermitianMatrix(BaseModule):
             matrix_size <= 0 or not isinstance(matrix_size, int)
         ):
             raise ValueError("matrix_size must be a positive integer")
+        if lambdas is not None:
+            if not isinstance(lambdas, np.ndarray):
+                raise ValueError("lambdas must be a numpy array")
+            matrix_size = matrix_size or lambdas.shape[1]
+            rank = rank or lambdas.shape[0]
+            if lambdas.shape != (lambdas.shape[0], rank):
+                raise ValueError(
+                    "lambdas must be a 2D array of shape (input_size"
+                    f" {'+1' if bias_term else ''}, rank) "
+                    f"[{(lambdas.shape[0], rank)}], got {lambdas.shape}"
+                )
         if us is not None:
             if not isinstance(us, np.ndarray):
                 raise ValueError("us must be a numpy array")
@@ -105,6 +126,7 @@ class LowRankAffineHermitianMatrix(BaseModule):
         self.rank = rank
         self.smoothing = smoothing if smoothing is not None else 0.0
         self.bias_term = bias_term
+        self.lambdas = lambdas
         self.us = us
         self.init_magnitude = init_magnitude
         self.flatten = flatten
@@ -120,13 +142,13 @@ class LowRankAffineHermitianMatrix(BaseModule):
         )
 
     def is_ready(self) -> bool:
-        return self.us is not None
+        return self.us is not None and self.lambdas is not None
 
     def get_num_trainable_floats(self) -> int | None:
         if not self.is_ready():
             return None
 
-        return 2 * self.us.size
+        return 2 * self.us.size + self.lambdas.size
 
     def _get_callable(self) -> Callable:
         def lr_affine_hermitian_matrix(
@@ -137,10 +159,11 @@ class LowRankAffineHermitianMatrix(BaseModule):
             rng: Any,
         ) -> tuple[np.ndarray, tuple[np.ndarray, ...]]:
 
-            us = params[0]
+            lambdas = params[0]
+            us = params[1]
 
             # compute Ms from us: M_i = sum_k^r u_k^i (u_k^i)^H
-            Ms = np.einsum("irk,irl->ikl", us, us.conj())
+            Ms = np.einsum("ir,irk,irl->ikl", lambdas.real, us, us.conj())
 
             # Hermiticity is guaranteed by the construction
 
@@ -175,14 +198,18 @@ class LowRankAffineHermitianMatrix(BaseModule):
 
         # if the module is already ready, just verify the input shape
         if self.is_ready():
-            if self.us.shape[0] != p:
+            if self.us.shape[0] != p or self.lambdas.shape[0] != p:
                 raise ValueError(
                     f"Input shape {input_shape} does not match the expected "
                     f"number of features {self.us.shape[0] - 1} "
                 )
             return
 
-        rng_ureal, rng_uimag = jax.random.split(rng, 2)
+        rng_lambdas, rng_ureal, rng_uimag = jax.random.split(rng, 3)
+
+        self.lambdas = self.init_magnitude * jax.random.normal(
+            rng_lambdas, (p, self.rank), dtype=np.float32
+        )
 
         self.us = self.init_magnitude * (
             jax.random.normal(
@@ -217,7 +244,7 @@ class LowRankAffineHermitianMatrix(BaseModule):
         }
 
     def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
-        if self.us is not None:
+        if self.us is not None or self.lambdas is not None:
             raise ValueError(
                 "Cannot set hyperparameters after the module has parameters"
             )
@@ -227,23 +254,34 @@ class LowRankAffineHermitianMatrix(BaseModule):
         )
 
     def get_params(self) -> tuple[np.ndarray, ...]:
-        return (self.us,)
+        return (
+            self.lambdas,
+            self.us,
+        )
 
     def set_params(self, params: tuple[np.ndarray, ...]) -> None:
         if not isinstance(params, tuple) or not all(
             isinstance(p, np.ndarray) for p in params
         ):
             raise ValueError("params must be a tuple of numpy arrays")
-        if len(params) != 1:
-            raise ValueError(f"Expected 1 parameter arrays, got {len(params)}")
+        if len(params) != 2:
+            raise ValueError(f"Expected 2 parameter arrays, got {len(params)}")
 
-        us = params[0]
+        lambdas = params[0]
+        us = params[1]
 
         expected_shape = (
             us.shape[0] if self.us is None else self.us.shape[0],
             self.rank,
             self.matrix_size,
         )
+
+        if lambdas.shape != (expected_shape[0], self.rank):
+            raise ValueError(
+                "lambdas must be a 2D array of shape (input_size"
+                f"{'+1' if self.bias_term else ''}, rank) "
+                f"[{(expected_shape[0], self.rank)}], got {lambdas.shape}"
+            )
 
         if us.shape != expected_shape:
             raise ValueError(
@@ -252,4 +290,5 @@ class LowRankAffineHermitianMatrix(BaseModule):
                 f" matrix_size) [{expected_shape}], got {us.shape}"
             )
 
+        self.lambdas = lambdas
         self.us = us

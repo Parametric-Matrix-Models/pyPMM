@@ -110,7 +110,9 @@ class LowRankAffineObservablePMM(MultiModule):
         output_size: int = None,
         centered: bool = True,
         bias_term: bool = True,
+        lambdaMs: np.ndarray = None,
         uMs: np.ndarray = None,
+        lambdaDs: np.ndarray = None,
         uDs: np.ndarray = None,
         b: np.ndarray = None,
         init_magnitude: float = 0.01,
@@ -159,6 +161,15 @@ class LowRankAffineObservablePMM(MultiModule):
             bias_term
                 If ``True``, include a trainable bias term :math:`b_k` in the
                 output. Default is ``True``.
+            lambdaMs
+                Optional array of shape ``(input_size+1, primary_rank)`` (if
+                ``affine_bias_matrix`` is ``True``) or
+                ``(input_size, primary_rank)`` (if
+                ``bias_term`` is ``False``), containing the `\lambda_k^i` real
+                coefficients used to construct the low-rank :math:`M_i`
+                matrices. If not provided, the coefficients will be initialized
+                randomly when the module is compiled. Default is ``None``
+                (random initialization).
             uMs
                 Optional array of shape
                 ``(input_size+1, primary_rank, matrix_size)`` (if
@@ -169,6 +180,13 @@ class LowRankAffineObservablePMM(MultiModule):
                 Hermitian matrices. If not provided, the vectors
                 will be initialized randomly when the module is compiled.
                 Default is ``None`` (random initialization).
+            lambdaDs
+                Optional array of shape ``(output_size, num_secondaries,
+                secondary_rank)`` containing the `\lambda_k^m` real
+                coefficients used to construct the low-rank :math:`D_{km}`
+                observable matrices. If not provided, the coefficients will be
+                initialized randomly when the module is compiled. Default is
+                ``None`` (random initialization).
             uDs
                 Optional array of shape
                 ``(output_size, num_secondaries, secondary_rank, matrix_size)``
@@ -213,7 +231,9 @@ class LowRankAffineObservablePMM(MultiModule):
         self.output_size = output_size
         self.centered = centered
         self.bias_term = bias_term
+        self.lambdaMs = lambdaMs
         self.uMs = uMs
+        self.lambdaDs = lambdaDs
         self.uDs = uDs
         self.b = b
         self.init_magnitude = init_magnitude
@@ -233,6 +253,7 @@ class LowRankAffineObservablePMM(MultiModule):
                 matrix_size=matrix_size,
                 rank=primary_rank,
                 smoothing=smoothing,
+                lambdas=lambdaMs,
                 us=uMs,
                 init_magnitude=init_magnitude,
                 bias_term=affine_bias_matrix,
@@ -247,6 +268,7 @@ class LowRankAffineObservablePMM(MultiModule):
                 rank=secondary_rank,
                 output_size=output_size,
                 centered=centered,
+                lambdas=lambdaDs,
                 us=uDs,
                 init_magnitude=init_magnitude,
             ),
@@ -316,6 +338,7 @@ class LowRankAffineObservablePMM(MultiModule):
                 matrix_size=self.matrix_size,
                 rank=self.primary_rank,
                 smoothing=self.smoothing,
+                lambdas=self.lambdaMs,
                 us=self.uMs,
                 init_magnitude=self.init_magnitude,
                 bias_term=self.affine_bias_matrix,
@@ -330,6 +353,7 @@ class LowRankAffineObservablePMM(MultiModule):
                 rank=self.secondary_rank,
                 output_size=self.output_size,
                 centered=self.centered,
+                lambdas=self.lambdaDs,
                 us=self.uDs,
                 init_magnitude=self.init_magnitude,
             ),
