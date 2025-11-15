@@ -583,6 +583,15 @@ class Model(object):
                 self._get_callable(), static_argnames=["training"]
             )
 
+        # make sure that we don't cast complex to float
+        if np.issubdtype(X.dtype, np.complexfloating) and not np.issubdtype(
+            dtype, np.complexfloating
+        ):
+            raise ValueError(
+                f"Cannot cast complex input dtype {X.dtype} to "
+                f"float output dtype {dtype}."
+            )
+
         X_ = X.astype(dtype)
 
         # make sure the dtype was converted, issue a warning if not
