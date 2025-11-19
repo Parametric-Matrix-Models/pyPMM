@@ -1,10 +1,11 @@
-from __future__ import annotations
-
 import jax
+from beartype import beartype
+from jaxtyping import jaxtyped
 
 from .activationbase import ActivationBase
 
 
+@jaxtyped(typechecker=beartype)
 class ReLU(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.relu``.
@@ -31,6 +32,7 @@ class ReLU(ActivationBase):
         return jax.nn.relu(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ReLU6(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.relu6``.
@@ -57,6 +59,7 @@ class ReLU6(ActivationBase):
         return jax.nn.relu6(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Sigmoid(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.sigmoid``.
@@ -83,6 +86,7 @@ class Sigmoid(ActivationBase):
         return jax.nn.sigmoid(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Softplus(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.softplus``.
@@ -109,6 +113,7 @@ class Softplus(ActivationBase):
         return jax.nn.softplus(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class SparsePlus(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.sparse_plus``.
@@ -135,6 +140,7 @@ class SparsePlus(ActivationBase):
         return jax.nn.sparse_plus(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class SparseSigmoid(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.sparse_sigmoid``.
@@ -161,6 +167,7 @@ class SparseSigmoid(ActivationBase):
         return jax.nn.sparse_sigmoid(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class SoftSign(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.soft_sign``.
@@ -187,6 +194,7 @@ class SoftSign(ActivationBase):
         return jax.nn.soft_sign(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class SiLU(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.silu``.
@@ -213,6 +221,7 @@ class SiLU(ActivationBase):
         return jax.nn.silu(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Swish(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.swish``.
@@ -239,6 +248,7 @@ class Swish(ActivationBase):
         return jax.nn.swish(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class LogSigmoid(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.log_sigmoid``.
@@ -265,6 +275,7 @@ class LogSigmoid(ActivationBase):
         return jax.nn.log_sigmoid(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class LeakyReLU(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.leaky_relu``.
@@ -291,6 +302,7 @@ class LeakyReLU(ActivationBase):
         return jax.nn.leaky_relu(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class HardSigmoid(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.hard_sigmoid``.
@@ -317,6 +329,7 @@ class HardSigmoid(ActivationBase):
         return jax.nn.hard_sigmoid(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class HardSiLU(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.hard_silu``.
@@ -343,6 +356,7 @@ class HardSiLU(ActivationBase):
         return jax.nn.hard_silu(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class HardSwish(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.hard_swish``.
@@ -369,6 +383,7 @@ class HardSwish(ActivationBase):
         return jax.nn.hard_swish(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class HardTanh(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.hard_tanh``.
@@ -395,6 +410,7 @@ class HardTanh(ActivationBase):
         return jax.nn.hard_tanh(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ELU(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.elu``.
@@ -421,6 +437,7 @@ class ELU(ActivationBase):
         return jax.nn.elu(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class CELU(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.celu``.
@@ -447,6 +464,7 @@ class CELU(ActivationBase):
         return jax.nn.celu(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class SELU(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.selu``.
@@ -473,6 +491,7 @@ class SELU(ActivationBase):
         return jax.nn.selu(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class GELU(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.gelu``.
@@ -499,6 +518,7 @@ class GELU(ActivationBase):
         return jax.nn.gelu(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class GLU(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.glu``.
@@ -525,6 +545,7 @@ class GLU(ActivationBase):
         return jax.nn.glu(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class SquarePlus(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.squareplus``.
@@ -551,6 +572,7 @@ class SquarePlus(ActivationBase):
         return jax.nn.squareplus(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Mish(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.mish``.
@@ -577,6 +599,7 @@ class Mish(ActivationBase):
         return jax.nn.mish(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Identity(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.identity``.
@@ -603,6 +626,7 @@ class Identity(ActivationBase):
         return jax.nn.identity(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Softmax(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.softmax``.
@@ -629,6 +653,7 @@ class Softmax(ActivationBase):
         return jax.nn.softmax(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class LogSoftmax(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.log_softmax``.
@@ -655,6 +680,7 @@ class LogSoftmax(ActivationBase):
         return jax.nn.log_softmax(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class LogSumExp(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.logsumexp``.
@@ -681,6 +707,7 @@ class LogSumExp(ActivationBase):
         return jax.nn.logsumexp(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Standardize(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.standardize``.
@@ -707,6 +734,7 @@ class Standardize(ActivationBase):
         return jax.nn.standardize(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class OneHot(ActivationBase):
     """
     Elementwise activation function for ``jax.nn.one_hot``.
@@ -733,6 +761,7 @@ class OneHot(ActivationBase):
         return jax.nn.one_hot(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Abs(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.abs``.
@@ -759,6 +788,7 @@ class Abs(ActivationBase):
         return jax.numpy.abs(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Absolute(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.absolute``.
@@ -785,6 +815,7 @@ class Absolute(ActivationBase):
         return jax.numpy.absolute(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ACos(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.acos``.
@@ -811,6 +842,7 @@ class ACos(ActivationBase):
         return jax.numpy.acos(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ACosh(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.acosh``.
@@ -837,6 +869,7 @@ class ACosh(ActivationBase):
         return jax.numpy.acosh(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class AMax(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.amax``.
@@ -863,6 +896,7 @@ class AMax(ActivationBase):
         return jax.numpy.amax(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class AMin(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.amin``.
@@ -889,6 +923,7 @@ class AMin(ActivationBase):
         return jax.numpy.amin(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Angle(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.angle``.
@@ -915,6 +950,7 @@ class Angle(ActivationBase):
         return jax.numpy.angle(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ArcCos(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.arccos``.
@@ -941,6 +977,7 @@ class ArcCos(ActivationBase):
         return jax.numpy.arccos(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ArcCosh(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.arccosh``.
@@ -967,6 +1004,7 @@ class ArcCosh(ActivationBase):
         return jax.numpy.arccosh(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ArcSin(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.arcsin``.
@@ -993,6 +1031,7 @@ class ArcSin(ActivationBase):
         return jax.numpy.arcsin(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ArcSinh(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.arcsinh``.
@@ -1019,6 +1058,7 @@ class ArcSinh(ActivationBase):
         return jax.numpy.arcsinh(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ArcTan(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.arctan``.
@@ -1045,6 +1085,7 @@ class ArcTan(ActivationBase):
         return jax.numpy.arctan(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ArcTan2(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.arctan2``.
@@ -1071,6 +1112,7 @@ class ArcTan2(ActivationBase):
         return jax.numpy.arctan2(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ArcTanh(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.arctanh``.
@@ -1097,6 +1139,7 @@ class ArcTanh(ActivationBase):
         return jax.numpy.arctanh(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ASin(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.asin``.
@@ -1123,6 +1166,7 @@ class ASin(ActivationBase):
         return jax.numpy.asin(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ASinh(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.asinh``.
@@ -1149,6 +1193,7 @@ class ASinh(ActivationBase):
         return jax.numpy.asinh(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ATan(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.atan``.
@@ -1175,6 +1220,7 @@ class ATan(ActivationBase):
         return jax.numpy.atan(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class ATanh(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.atanh``.
@@ -1201,6 +1247,7 @@ class ATanh(ActivationBase):
         return jax.numpy.atanh(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Cbrt(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.cbrt``.
@@ -1227,6 +1274,7 @@ class Cbrt(ActivationBase):
         return jax.numpy.cbrt(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Ceil(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.ceil``.
@@ -1253,6 +1301,7 @@ class Ceil(ActivationBase):
         return jax.numpy.ceil(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Clip(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.clip``.
@@ -1279,6 +1328,7 @@ class Clip(ActivationBase):
         return jax.numpy.clip(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Conj(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.conj``.
@@ -1305,6 +1355,7 @@ class Conj(ActivationBase):
         return jax.numpy.conj(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Conjugate(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.conjugate``.
@@ -1331,6 +1382,7 @@ class Conjugate(ActivationBase):
         return jax.numpy.conjugate(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Cos(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.cos``.
@@ -1357,6 +1409,7 @@ class Cos(ActivationBase):
         return jax.numpy.cos(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Cosh(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.cosh``.
@@ -1383,6 +1436,7 @@ class Cosh(ActivationBase):
         return jax.numpy.cosh(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Deg2Rad(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.deg2rad``.
@@ -1409,6 +1463,7 @@ class Deg2Rad(ActivationBase):
         return jax.numpy.deg2rad(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Degrees(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.degrees``.
@@ -1435,6 +1490,7 @@ class Degrees(ActivationBase):
         return jax.numpy.degrees(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Exp(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.exp``.
@@ -1461,6 +1517,7 @@ class Exp(ActivationBase):
         return jax.numpy.exp(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Exp2(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.exp2``.
@@ -1487,6 +1544,7 @@ class Exp2(ActivationBase):
         return jax.numpy.exp2(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Expm1(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.expm1``.
@@ -1513,6 +1571,7 @@ class Expm1(ActivationBase):
         return jax.numpy.expm1(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class FAbs(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.fabs``.
@@ -1539,6 +1598,7 @@ class FAbs(ActivationBase):
         return jax.numpy.fabs(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Fix(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.fix``.
@@ -1565,6 +1625,7 @@ class Fix(ActivationBase):
         return jax.numpy.fix(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class FloatPower(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.float_power``.
@@ -1591,6 +1652,7 @@ class FloatPower(ActivationBase):
         return jax.numpy.float_power(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Floor(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.floor``.
@@ -1617,6 +1679,7 @@ class Floor(ActivationBase):
         return jax.numpy.floor(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class FloorDivide(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.floor_divide``.
@@ -1643,6 +1706,7 @@ class FloorDivide(ActivationBase):
         return jax.numpy.floor_divide(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class FrExp(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.frexp``.
@@ -1669,6 +1733,7 @@ class FrExp(ActivationBase):
         return jax.numpy.frexp(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class I0(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.i0``.
@@ -1695,6 +1760,7 @@ class I0(ActivationBase):
         return jax.numpy.i0(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Imag(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.imag``.
@@ -1721,6 +1787,7 @@ class Imag(ActivationBase):
         return jax.numpy.imag(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Invert(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.invert``.
@@ -1747,6 +1814,7 @@ class Invert(ActivationBase):
         return jax.numpy.invert(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class LDExp(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.ldexp``.
@@ -1773,6 +1841,7 @@ class LDExp(ActivationBase):
         return jax.numpy.ldexp(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Log(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.log``.
@@ -1799,6 +1868,7 @@ class Log(ActivationBase):
         return jax.numpy.log(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Log10(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.log10``.
@@ -1825,6 +1895,7 @@ class Log10(ActivationBase):
         return jax.numpy.log10(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Log1p(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.log1p``.
@@ -1851,6 +1922,7 @@ class Log1p(ActivationBase):
         return jax.numpy.log1p(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Log2(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.log2``.
@@ -1877,6 +1949,7 @@ class Log2(ActivationBase):
         return jax.numpy.log2(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class NaNToNum(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.nan_to_num``.
@@ -1903,6 +1976,7 @@ class NaNToNum(ActivationBase):
         return jax.numpy.nan_to_num(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class NanToNum(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.nan_to_num``.
@@ -1929,6 +2003,7 @@ class NanToNum(ActivationBase):
         return jax.numpy.nan_to_num(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class NextAfter(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.nextafter``.
@@ -1955,6 +2030,7 @@ class NextAfter(ActivationBase):
         return jax.numpy.nextafter(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Packbits(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.packbits``.
@@ -1981,6 +2057,7 @@ class Packbits(ActivationBase):
         return jax.numpy.packbits(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Piecewise(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.piecewise``.
@@ -2007,6 +2084,7 @@ class Piecewise(ActivationBase):
         return jax.numpy.piecewise(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Positive(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.positive``.
@@ -2033,6 +2111,7 @@ class Positive(ActivationBase):
         return jax.numpy.positive(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Pow(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.pow``.
@@ -2059,6 +2138,7 @@ class Pow(ActivationBase):
         return jax.numpy.pow(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Power(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.power``.
@@ -2085,6 +2165,7 @@ class Power(ActivationBase):
         return jax.numpy.power(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Rad2Deg(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.rad2deg``.
@@ -2111,6 +2192,7 @@ class Rad2Deg(ActivationBase):
         return jax.numpy.rad2deg(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Radians(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.radians``.
@@ -2137,6 +2219,7 @@ class Radians(ActivationBase):
         return jax.numpy.radians(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Real(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.real``.
@@ -2163,6 +2246,7 @@ class Real(ActivationBase):
         return jax.numpy.real(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Reciprocal(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.reciprocal``.
@@ -2189,6 +2273,7 @@ class Reciprocal(ActivationBase):
         return jax.numpy.reciprocal(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class RInt(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.rint``.
@@ -2215,6 +2300,7 @@ class RInt(ActivationBase):
         return jax.numpy.rint(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Round(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.round``.
@@ -2241,6 +2327,7 @@ class Round(ActivationBase):
         return jax.numpy.round(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Sign(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.sign``.
@@ -2267,6 +2354,7 @@ class Sign(ActivationBase):
         return jax.numpy.sign(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Signbit(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.signbit``.
@@ -2293,6 +2381,7 @@ class Signbit(ActivationBase):
         return jax.numpy.signbit(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Sin(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.sin``.
@@ -2319,6 +2408,7 @@ class Sin(ActivationBase):
         return jax.numpy.sin(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Sinc(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.sinc``.
@@ -2345,6 +2435,7 @@ class Sinc(ActivationBase):
         return jax.numpy.sinc(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Sinh(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.sinh``.
@@ -2371,6 +2462,7 @@ class Sinh(ActivationBase):
         return jax.numpy.sinh(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Sqrt(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.sqrt``.
@@ -2397,6 +2489,7 @@ class Sqrt(ActivationBase):
         return jax.numpy.sqrt(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Square(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.square``.
@@ -2423,6 +2516,7 @@ class Square(ActivationBase):
         return jax.numpy.square(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Tan(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.tan``.
@@ -2449,6 +2543,7 @@ class Tan(ActivationBase):
         return jax.numpy.tan(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Tanh(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.tanh``.
@@ -2475,6 +2570,7 @@ class Tanh(ActivationBase):
         return jax.numpy.tanh(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Trunc(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.trunc``.
@@ -2501,6 +2597,7 @@ class Trunc(ActivationBase):
         return jax.numpy.trunc(x, *self.args, **self.kwargs)
 
 
+@jaxtyped(typechecker=beartype)
 class Unpackbits(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.unpackbits``.

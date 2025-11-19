@@ -1,8 +1,18 @@
-from __future__ import annotations
-
-from typing import Any, Callable
-
+import jax
 import jax.numpy as np
+from beartype import beartype
+from jaxtyping import jaxtyped
+
+from parametricmatrixmodels.typing import (
+    Any,
+    Data,
+    DataShape,
+    HyperParams,
+    ModuleCallable,
+    Params,
+    State,
+    Tuple,
+)
 
 from .basemodule import BaseModule
 
@@ -68,16 +78,7 @@ class ActivationBase(BaseModule):
         """
         raise NotImplementedError("Subclasses must implement the func method.")
 
-    def _get_callable(self) -> Callable[
-        [
-            tuple[np.ndarray, ...],
-            np.ndarray,
-            bool,
-            tuple[np.ndarray, ...],
-            Any,
-        ],
-        tuple[np.ndarray, tuple[np.ndarray, ...]],
-    ]:
+    def _get_callable(self) -> ModuleCallable:
         """
         Get the callable for the activation function.
 
@@ -87,12 +88,19 @@ class ActivationBase(BaseModule):
             expects
         """
 
-        return lambda params, input_NF, training, state, rng: (
-            self.func(input_NF),
-            state,
-        )
+        @jaxtyped(typechecker=beartype)
+        def callable(
+            params: Params,
+            data: Data,
+            training: bool,
+            state: State,
+            rng: Any,
+        ) -> Tuple[Data, State]:
+            return jax.tree.map(self.func, data), state
 
-    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
+        return callable
+
+    def compile(self, rng: Any, input_shape: DataShape) -> None:
         """
         Compile the activation function module. This method is a no-op for
         activation functions.
@@ -102,28 +110,26 @@ class ActivationBase(BaseModule):
         rng
             Random number generator state.
         input_shape
-            Shape of the input array.
+            Shape of the input arrays.
         """
         pass
 
-    def get_output_shape(
-        self, input_shape: tuple[int, ...]
-    ) -> tuple[int, ...]:
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
         """
         Get the output shape of the activation function given the input shape.
 
         Parameters
         ----------
         input_shape
-            Shape of the input array.
+            Shape of the input arrays.
 
         Returns
         -------
-            Output shape after applying the activation function.
+            Output shapes after applying the activation function.
         """
         return input_shape
 
-    def get_hyperparameters(self) -> dict[str, Any]:
+    def get_hyperparameters(self) -> HyperParams:
         """
         Get the hyperparameters of the activation function module.
 
@@ -136,7 +142,7 @@ class ActivationBase(BaseModule):
             "kwargs": self.kwargs,
         }
 
-    def get_params(self) -> tuple[np.ndarray, ...]:
+    def get_params(self) -> Params:
         """
         Get the parameters of the activation function module.
 
@@ -146,5 +152,5 @@ class ActivationBase(BaseModule):
         """
         return ()
 
-    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: Params) -> None:
         return

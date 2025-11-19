@@ -15,9 +15,10 @@ if os.path.exists(file):
     )
 
 imports = [
-    "from __future__ import annotations",
     "from .activationbase import ActivationBase",
     "import jax",
+    "from jaxtyping import jaxtyped",
+    "from beartype import beartype",
 ]
 
 funcs = {
@@ -142,6 +143,7 @@ def create_module(name: str, func: str) -> str:
         The class definition as a string.
     """
     return f"""
+@jaxtyped(typechecker=beartype)
 class {name}(ActivationBase):
     \"\"\"
     Elementwise activation function for ``{func}``.

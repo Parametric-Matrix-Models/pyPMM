@@ -1,8 +1,20 @@
-from __future__ import annotations
-
-from typing import Any, Callable
-
+import jax
 import jax.numpy as np
+from beartype import beartype
+from jaxtyping import jaxtyped
+
+from parametricmatrixmodels.typing import (
+    Any,
+    ArrayData,
+    ArrayDataShape,
+    Data,
+    DataShape,
+    HyperParams,
+    ModuleCallable,
+    Params,
+    State,
+    Tuple,
+)
 
 from .basemodule import BaseModule
 
@@ -13,7 +25,14 @@ class Reshape(BaseModule):
     batch dimension.
     """
 
-    def __init__(self, shape: tuple[int, ...] = None) -> None:
+    @staticmethod
+    def is_shape(obj: object) -> bool:
+        return obj is None or (
+            isinstance(obj, (tuple, list))
+            and all(isinstance(dim, int) for dim in obj)
+        )
+
+    def __init__(self, shape: DataShape = None) -> None:
         """
         Initialize a ``Reshape`` module.
 
@@ -22,8 +41,54 @@ class Reshape(BaseModule):
         shape
             The target shape to reshape the input to, by default None.
             If None, the input shape will remain unchanged.
-            Does not include the batch dimension.
+            Does not include the batch dimension. If the input to the module is
+            a PyTree, then ``shape`` should be a PyTree of matching structure.
+            Any ``None`` values in the PyTree will leave the corresponding leaf
+            arrays unchanged.
+
+        Examples
+        --------
+
+        .. code-block:: python
+
+            # Prepare to accept only bare array data (no PyTrees) and reshape
+            # to (2, 3)
+            reshape_module = Reshape(shape=(2, 3))
+
+            # Prepare to accept a PyTree of arrays with structure [*, (*, *)]
+            # and reshape the first leaf to (2, 3), leave the second leaf
+            # unchanged, and flatten the final leaf
+            reshape_module = Reshape(shape=[(2, 3), (None, (-1,))])
         """
+
+        # validate shape
+        # unless it is entirely an iterable of ints, none of the elements can
+        # be ints
+        if shape is None:
+            self.shape = shape
+            return
+        try:
+            len(shape)
+        except TypeError:
+            raise AssertionError(
+                "Shape must be a tuple, list, or PyTree of shapes."
+            )
+        if all(isinstance(dim, int) for dim in shape):
+            # shape is just an iterable of ints
+            pass
+        elif any(isinstance(dim, int) for dim in shape):
+            # shape is a PyTree, but not all the of the leaves are shapes
+            # (iterables themselves)
+            # e.g. shape = [(2, 3), 2, (4, 5)], the second element (2) is
+            # invalid and should be (2,) instead
+            raise AssertionError(
+                "If shape is a PyTree, all leaves must be shapes "
+                "(iterables of ints)."
+            )
+
+        # at this point shape is either an iterable of ints, or a PyTree of
+        # shapes or Nones
+
         self.shape = shape
 
     def name(self) -> str:
@@ -37,46 +102,123 @@ class Reshape(BaseModule):
 
     def _get_callable(
         self,
-    ) -> Callable[
-        [
-            tuple[np.ndarray, ...],
-            np.ndarray,
-            bool,
-            tuple[np.ndarray, ...],
-            Any,
-        ],
-        tuple[np.ndarray, tuple[np.ndarray, ...]],
-    ]:
-        return lambda params, input_NF, training, state, rng: (
-            (
-                input_NF.reshape(input_NF.shape[0], *self.shape)
-                if self.shape
-                else input_NF
-            ),
-            state,  # state is unchanged
+    ) -> ModuleCallable:
+
+        @jaxtyped(typechecker=beartype)
+        def reshape_array(
+            arr: ArrayData,
+            shape: ArrayDataShape | None,
+        ) -> ArrayData:
+            batch_dim = arr.shape[0]
+            if shape is None:
+                return arr
+            else:
+                return np.reshape(arr, (batch_dim, *shape))
+
+        @jaxtyped(typechecker=beartype)
+        def callable(
+            params: Params,
+            data: Data,
+            training: bool,
+            state: State,
+            rng: Any,
+        ) -> Tuple[Data, State]:
+            if self.shape is None:
+                return data, state
+            else:
+                reshaped_data = jax.tree.map(
+                    reshape_array,
+                    data,
+                    self.shape,
+                )
+                return reshaped_data, state
+
+        return callable
+
+    def validate_shape(self, input_shape: DataShape) -> None:
+        # check that input_shape and self.shape are compatible
+        if self.shape is None:
+            return
+
+        assert input_shape is not None, "Input shape must not be None."
+        assert not (None in input_shape), "Input shape must not contain None."
+        try:
+            len(input_shape)
+        except TypeError:
+            raise AssertionError(
+                "Input shape must be a tuple, list, or PyTree of shapes."
+            )
+
+        # if input_shape is an iterable of ints, convert to a single-element
+        # PyTree for consistency
+        if all(isinstance(dim, int) for dim in input_shape):
+            input_shape = (input_shape,)
+
+        # same for self.shape
+        if all(isinstance(dim, int) for dim in self.shape):
+            selfshape = (self.shape,)
+        else:
+            selfshape = self.shape
+
+        input_struct = jax.tree.structure(
+            input_shape, is_leaf=Reshape.is_shape
+        )
+        shape_struct = jax.tree.structure(selfshape, is_leaf=Reshape.is_shape)
+
+        assert input_struct == shape_struct, (
+            f"Input shape structure {input_struct} does not match target shape"
+            f" structure {shape_struct}"
         )
 
-    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
-        pass
+        def check_compatibility(
+            in_shape: ArrayDataShape,
+            target_shape: ArrayDataShape | None,
+        ) -> None:
+            if target_shape is None:
+                return
 
-    def get_output_shape(
-        self, input_shape: tuple[int, ...]
-    ) -> tuple[int, ...]:
-        # handle the special cases where self.shape is None or (-1,)
-        if self.shape is None:
-            return input_shape
-        elif self.shape == (-1,):
-            return (np.prod(np.array(input_shape)).item(),)
-        else:
-            return self.shape
+            in_size = np.prod(np.array(in_shape)).item()
+            if -1 in target_shape:
+                # make sure there is only one -1
+                assert (
+                    target_shape.count(-1) == 1
+                ), "Target shape can only contain one -1 dimension"
+                # infer the size of the -1 dimension
+                known_size = 1
+                for dim in target_shape:
+                    if dim != -1:
+                        known_size *= dim
+                inferred_dim = in_size // known_size
+                target_size = known_size * inferred_dim
+            else:
+                target_size = np.prod(np.array(target_shape)).item()
 
-    def get_hyperparameters(self) -> dict[str, Any]:
+            assert in_size == target_size, (
+                f"Input shape {in_shape} is not compatible with target shape"
+                f" {target_shape}"
+            )
+
+        jax.tree.map(
+            check_compatibility,
+            input_shape,
+            selfshape,
+            is_leaf=Reshape.is_shape,
+        )
+
+    def compile(self, rng: Any, input_shape: DataShape) -> None:
+        self.validate_shape(input_shape)
+
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
+        self.validate_shape(input_shape)
+        return self.shape if self.shape is not None else input_shape
+
+    def get_hyperparameters(self) -> HyperParams:
         return {
             "shape": self.shape,
         }
 
-    def get_params(self) -> tuple[np.ndarray, ...]:
+    def get_params(self) -> Params:
         return ()
 
-    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: Params) -> None:
         pass

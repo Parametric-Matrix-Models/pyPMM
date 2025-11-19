@@ -1,17 +1,31 @@
-from __future__ import annotations
-
-from typing import Any, Callable
-
 import jax
 import jax.numpy as np
+from beartype import beartype
+from jaxtyping import jaxtyped
+
+from parametricmatrixmodels.typing import (
+    Any,
+    Data,
+    DataShape,
+    HyperParams,
+    ModuleCallable,
+    State,
+    Tuple,
+    TupleParams,
+)
 
 from .basemodule import BaseModule
 
 
+@jaxtyped(typechecker=beartype)
 class Bias(BaseModule):
     r"""
     A simple bias module that adds a (trainable by default) bias array
     (default) or scalar to the input. Can be real (default) or complex-valued.
+
+    If the input is a ``PyTree`` of arrays, the same bias will be added to
+    each leaf array and therefore the bias shape must match the shape of each
+    leaf array (or be a scalar).
     """
 
     def __init__(
@@ -72,21 +86,55 @@ class Bias(BaseModule):
     def is_ready(self) -> bool:
         return self.bias is not None
 
-    def _get_callable(self) -> Callable:
-        return lambda params, input_NF, training, state, rng: (
-            input_NF + params[0],
-            state,  # state is not used in this module, return it unchanged
-        )
+    def _get_callable(self) -> ModuleCallable:
 
-    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
+        @jaxtyped(typechecker=beartype)
+        def callable(
+            params: TupleParams,
+            data: Data,
+            training: bool,
+            state: State,
+            rng: Any,
+        ) -> Tuple[Data, State]:
+            # tree map over data to add bias
+            bias = params[0]
+
+            def add_bias(x: np.ndarray) -> np.ndarray:
+                return x + bias
+
+            output = jax.tree.map(add_bias, data)
+            return output, state
+
+        return callable
+
+    def compile(self, rng: Any, input_shape: DataShape) -> None:
         # if the module is already ready, just verify the input shape
-        if self.is_ready():
-            if self.bias.shape != (1,) and self.bias.shape != input_shape:
+        if (
+            self.is_ready()
+            and self.bias.shape != (1,)
+            and self.bias.shape != ()
+        ):
+            # check if input shape is a single tuple (no PyTree)
+            if (
+                isinstance(input_shape, tuple)
+                and self.bias.shape != input_shape
+            ):
                 raise ValueError(
                     f"Bias shape {self.bias.shape} does not match input "
                     f"shape {input_shape}"
                 )
-            return
+            # else if the input shape is a PyTree of tuples, all shapes must
+            # match
+        elif any(
+            [
+                shape != self.bias.shape
+                for shape in jax.tree.leaves(input_shape)
+            ]
+        ):
+            raise ValueError(
+                f"Bias shape {self.bias.shape} does not match all input "
+                f"shapes {jax.tree.leaves(input_shape)}"
+            )
 
         shape = (1,) if self.scalar else input_shape
 
@@ -107,12 +155,10 @@ class Bias(BaseModule):
                 )
                 self.bias = real_part + 1j * imag_part
 
-    def get_output_shape(
-        self, input_shape: tuple[int, ...]
-    ) -> tuple[int, ...]:
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
         return input_shape
 
-    def get_hyperparameters(self) -> dict[str, Any]:
+    def get_hyperparameters(self) -> HyperParams:
         return {
             "init_magnitude": self.init_magnitude,
             "real": self.real,
@@ -120,13 +166,13 @@ class Bias(BaseModule):
             "trainable": self.trainable,
         }
 
-    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparams: HyperParams) -> None:
         super(Bias, self).set_hyperparameters(hyperparams)
 
-    def get_params(self) -> tuple[np.ndarray, ...]:
+    def get_params(self) -> TupleParams:
         return (self.bias,)
 
-    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: TupleParams) -> None:
         if not isinstance(params, tuple) or not all(
             isinstance(p, np.ndarray) for p in params
         ):

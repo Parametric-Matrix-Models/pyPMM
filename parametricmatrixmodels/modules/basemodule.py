@@ -5,17 +5,27 @@ other (optionally stateful and trainable) operations in JAX.
 Modules can be combined to create Models.
 """
 
-from __future__ import annotations
-
-from typing import Any, Callable
-
 import jax
 import jax.numpy as np
+from beartype import beartype
+from jaxtyping import jaxtyped
 from packaging.version import parse
 
 import parametricmatrixmodels as pmm
+from parametricmatrixmodels.typing import (
+    Any,
+    Data,
+    DataShape,
+    Dict,
+    HyperParams,
+    ModuleCallable,
+    Params,
+    State,
+    Tuple,
+)
 
 
+@jaxtyped(typechecker=beartype)
 class BaseModule(object):
     """
     Base class for all Modules. Custom modules should inherit from this class.
@@ -40,6 +50,14 @@ class BaseModule(object):
             "BaseModule is an abstract class and cannot be instantiated "
             "directly."
         )
+
+    def __init_subclass__(cls, **kwargs):
+        r"""
+        Ensures that all subclasses of BaseModule are also decorated with
+        ``@jaxtyped`` and ``@beartype``.
+        """
+        super().__init_subclass__(**kwargs)
+        jaxtyped(typechecker=beartype)(cls)
 
     def name(self) -> str:
         """
@@ -118,16 +136,7 @@ class BaseModule(object):
 
     def _get_callable(
         self,
-    ) -> Callable[
-        [
-            tuple[np.ndarray, ...],
-            np.ndarray,
-            bool,
-            tuple[np.ndarray, ...],
-            Any,
-        ],
-        tuple[np.ndarray, tuple[np.ndarray, ...]],
-    ]:
+    ) -> ModuleCallable:
         """
         Returns a ``jax.jit``-able and ``jax.grad``-able callable that
         represents the module's forward pass.
@@ -138,20 +147,34 @@ class BaseModule(object):
         .. code-block:: python
 
             module_callable(
-                params: tuple[np.ndarray, ...],
-                input_NF: np.ndarray[num_samples, num_features],
+                params: parametricmatrixmodels.typing.Params,
+                data: parametricmatrixmodels.typing.Data,
                 training: bool,
-                state: tuple[np.ndarray, ...],
-                rng: Any
+                state: parametricmatrixmodels.typing.State,
+                rng: Any,
             ) -> (
-                    output_NF: np.ndarray[num_samples, num_output_features],
-                    new_state: tuple[np.ndarray, ...]
+                output: parametricmatrixmodels.typing.Data,
+                new_state: parametricmatrixmodels.typing.State,
                 )
 
+
         That is, all hyperparameters are traced out and the callable depends
-        explicitly only on a ``tuple`` of parameter ``jax.numpy`` arrays,
-        the input array, the training flag, a state ``tuple`` of ``jax.numpy``
-        arrays, and a JAX rng key.
+        explicitly only on
+
+        * the module's parameters, as a PyTree with leaf nodes as JAX arrays,
+        * the input data, as a PyTree with leaf nodes as JAX arrays, each of
+            which has shape (num_samples, ...),
+        * the training flag, as a boolean,
+        * the module's state, as a PyTree with leaf nodes as JAX arrays
+
+        and returns
+
+        * the output data, as a PyTree with leaf nodes as JAX arrays, each of
+            which has shape (num_samples, ...),
+        * the new module state, as a PyTree with leaf nodes as JAX arrays. The
+            PyTree structure must match that of the input state and
+            additionally all leaf nodes must have the same shape as the input
+            state leaf nodes.
 
         The training flag will be traced out, so it doesn't need to be jittable
 
@@ -170,6 +193,10 @@ class BaseModule(object):
         --------
         __call__ : Calls the module with the current parameters and
             given input, state, and rng.
+        ModuleCallable : Typing for the callable returned by this method.
+        Params : Typing for the module parameters.
+        Data : Typing for the input and output data.
+        State : Typing for the module state.
         """
         raise NotImplementedError(
             "_get_callable method must be implemented in subclasses"
@@ -177,19 +204,21 @@ class BaseModule(object):
 
     def __call__(
         self,
-        input_NF: np.ndarray,
+        data: Data,
         training: bool = False,
-        state: tuple[np.ndarray, ...] = (),
+        state: State = (),
         rng: Any = None,
-    ) -> tuple[np.ndarray, tuple[np.ndarray, ...]]:
+    ) -> Tuple[Data, State]:
         """
         Call the module with the current parameters and given input, state, and
         rng.
 
         Parameters
         ----------
-        input_NF
-            Input array of shape (num_samples, num_features).
+        input
+            PyTree of input arrays of shape (num_samples, ...). Only the first
+            dimension (num_samples) is guaranteed to be the same for all input
+            arrays.
         training
             Whether the module is in training mode, by default False.
         state
@@ -212,6 +241,9 @@ class BaseModule(object):
         _get_callable : Returns a callable that can be used to
             compute the output and new state given the parameters, input,
             training flag, state, and rng.
+        Params : Typing for the module parameters.
+        Data : Typing for the input and output data.
+        State : Typing for the module state.
         """
         if not self.is_ready():
             raise ValueError("Module is not ready, call compile() first")
@@ -223,13 +255,13 @@ class BaseModule(object):
         # state, and rng
         return func(
             self.get_params(),
-            input_NF,
+            data,
             training,
             state,
             rng,
         )
 
-    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: DataShape) -> None:
         """
         Compile the module to be used with the given input shape.
 
@@ -251,42 +283,56 @@ class BaseModule(object):
         rng
             JAX random key.
         input_shape
-            Shape of the input data, e.g. ``(num_features,)``.
+            PyTree of input shape tuples, e.g. ``((num_features,),)``, to
+            compile the module for. All data passed to the module later must
+            have the same PyTree structure and shape in all leaf array
+            dimensions except the leading batch dimension.
+
 
         Raises
         ------
         NotImplementedError
             If the method is not implemented in the subclass.
+
+        See Also
+        --------
+        DataShape : Typing for the input shape.
+        get_output_shape : Get the output shape of the module
         """
         raise NotImplementedError(
             "compile method must be implemented in subclasses"
         )
 
-    def get_output_shape(
-        self, input_shape: tuple[int, ...]
-    ) -> tuple[int, ...]:
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
         """
         Get the output shape of the module given the input shape.
 
         Parameters
         ----------
         input_shape
-            Shape of the input data, e.g. ``(num_features,)``.
+            PyTree of input shape tuples, e.g. ``((num_features,),)``, to
+            get the output shape for.
 
         Returns
         -------
-            Shape of the output data, e.g. ``(num_output_features,)``.
+            PyTree of output shape tuples, e.g. ``((num_output_features,),)``,
+            corresponding to the output shape of the module for the given
+            input shape.
 
         Raises
         ------
         NotImplementedError
             If the method is not implemented in the subclass.
+
+        See Also
+        --------
+        DataShape : Typing for the input and output shape.
         """
         raise NotImplementedError(
             "get_output_shape method must be implemented in subclasses"
         )
 
-    def get_hyperparameters(self) -> dict[str, Any]:
+    def get_hyperparameters(self) -> HyperParams:
         """
         Get the hyperparameters of the module.
 
@@ -296,12 +342,19 @@ class BaseModule(object):
         Returns
         -------
             Dictionary containing the hyperparameters of the module.
+
+        See Also
+        --------
+        set_hyperparameters : Set the hyperparameters of the module.
+        HyperParams : Typing for the hyperparameters. Simply an alias for
+            Dict[str, Any].
+
         """
         raise NotImplementedError(
             "get_hyperparameters method must be implemented in subclasses"
         )
 
-    def set_hyperparameters(self, hyperparameters: dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparameters: HyperParams) -> None:
         """
         Set the hyperparameters of the module.
 
@@ -320,6 +373,12 @@ class BaseModule(object):
         ------
         TypeError
             If hyperparameters is not a dictionary.
+
+        See Also
+        --------
+        get_hyperparameters : Get the hyperparameters of the module.
+        HyperParams : Typing for the hyperparameters. Simply an alias for
+            Dict[str, Any].
         """
         if not isinstance(hyperparameters, dict):
             raise TypeError(
@@ -328,43 +387,56 @@ class BaseModule(object):
         for key, value in hyperparameters.items():
             setattr(self, key, value)
 
-    def get_params(self) -> tuple[np.ndarray, ...]:
+    def get_params(self) -> Params:
         """
         Get the current trainable parameters of the module. If the module has
         no trainable parameters, this method should return an empty tuple.
 
         Returns
         -------
-            Tuple of numpy arrays representing the module's parameters.
+            PyTree with leaf nodes as JAX arrays representing the module's
+            trainable parameters.
 
         Raises
         ------
         NotImplementedError
             If the method is not implemented in the subclass.
+
+        See Also
+        --------
+        set_params : Set the trainable parameters of the module.
+        Params : Typing for the module parameters.
+
         """
         raise NotImplementedError(
             "get_params method must be implemented in subclasses"
         )
 
-    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: Params) -> None:
         """
         Set the trainable parameters of the module.
 
         Parameters
         ----------
         params
-            Tuple of numpy arrays representing the new parameters.
+            PyTree with leaf nodes as JAX arrays representing the new
+            trainable parameters of the module.
 
         Raises
         ------
         NotImplementedError
             If the method is not implemented in the subclass.
+
+        See Also
+        --------
+        get_params : Get the trainable parameters of the module.
+        Params : Typing for the module parameters.
         """
         raise NotImplementedError(
             "set_params method must be implemented in subclasses"
         )
 
-    def get_state(self) -> tuple[np.ndarray, ...]:
+    def get_state(self) -> State:
         """
         Get the current state of the module.
 
@@ -377,11 +449,17 @@ class BaseModule(object):
 
         Returns
         -------
-            Tuple of numpy arrays representing the module's state.
+            PyTree with leaf nodes as JAX arrays representing the module's
+            state.
+
+        See Also
+        --------
+        set_state : Set the state of the module.
+        State : Typing for the module state.
         """
         return ()
 
-    def set_state(self, state: tuple[np.ndarray, ...]) -> None:
+    def set_state(self, state: State) -> None:
         """
         Set the state of the module.
 
@@ -390,7 +468,13 @@ class BaseModule(object):
         Parameters
         ----------
         state
-            Tuple of numpy arrays representing the new state.
+            PyTree with leaf nodes as JAX arrays representing the new
+            state of the module.
+
+        See Also
+        --------
+        get_state : Get the state of the module.
+        State : Typing for the module state.
         """
         pass
 
@@ -518,7 +602,7 @@ class BaseModule(object):
         self.set_precision(dtype)
         return self
 
-    def serialize(self) -> dict[str, Any]:
+    def serialize(self) -> Dict[str, Any]:
         """
         Serialize the module to a dictionary.
 
@@ -545,7 +629,7 @@ class BaseModule(object):
             "package_version": pmm.__version__,
         }
 
-    def deserialize(self, data: dict[str, Any]) -> None:
+    def deserialize(self, data: Dict[str, Any]) -> None:
         """
         Deserialize the module from a dictionary.
 

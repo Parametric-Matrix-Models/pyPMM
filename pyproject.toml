@@ -22,10 +22,16 @@ classifiers= [
 dependencies = [
     "jax",
     "dill",
+    "jaxtyping",
+    "beartype",
 ]
 dynamic = ["version"]
 
 [project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+]
 cuda = [
     "jax[cuda]",
 ]
@@ -64,7 +70,19 @@ line_length = 79
 [tool.flake8]
 extend-ignore = [
     "E203",  # Whitespace before ':'
+    "F722",  # Syntax error in forward annotation (https://docs.kidger.site/jaxtyping/faq/)
 ]
 per-file-ignores = [
     "__init__.py:E402,F401", # Import not at top of file, Unused import
     ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "-ra",  # show summary of all test outcomes
+]
