@@ -1,9 +1,19 @@
-from __future__ import annotations
-
-from typing import Any, Callable
-
 import jax
 import jax.numpy as np
+from beartype import beartype
+from jaxtyping import jaxtyped
+
+from parametricmatrixmodels.typing import (
+    Any,
+    ArrayData,
+    Data,
+    DataShape,
+    HyperParams,
+    ModuleCallable,
+    Params,
+    State,
+    Tuple,
+)
 
 from .basemodule import BaseModule
 
@@ -23,7 +33,7 @@ class PReLU(BaseModule):
     where :math:`a` is a learnable parameter that controls the slope of the
     negative part of the function. :math:`a` can be either a single parameter
     shared across all input features, or a separate parameter for each input
-    feature.
+    feature. Operates both on PyTrees and bare arrays.
 
     See Also
     --------
@@ -61,31 +71,73 @@ class PReLU(BaseModule):
         self.init_magnitude = init_magnitude
         self.real = real
 
-        self.a = None  # learnable parameter(s), will be set in compilation
-        self.input_shape = None  # input shape, will be set in compilation
+        self.a: Params | float | complex | None = (
+            None  # learnable parameter(s), will be set in compilation
+        )
+        self.input_shape: DataShape | None = (
+            None  # input shape, will be set in compilation
+        )
 
     def name(self) -> str:
-        return f"PReLU(real={self.real})"
+        return f"PReLU(real={self.real}, single={self.single_parameter})"
 
     def is_ready(self) -> bool:
         return (self.a is not None) and (self.input_shape is not None)
 
-    def _get_callable(self) -> Callable:
-        return lambda params, input_NF, training, state, rng: (
-            jax.nn.leaky_relu(
-                input_NF,
-                negative_slope=params[0],
-            ),
-            state,  # state is not used in this module, return it unchanged
-        )
+    def _get_callable(self) -> ModuleCallable:
+        @jaxtyped(typechecker=beartype)
+        def prelu_array(
+            arr: ArrayData,
+            a: np.ndarray | float | complex,
+        ) -> ArrayData:
+            return jax.nn.leaky_relu(
+                arr,
+                negative_slope=a,
+            )
 
-    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
-        # if the module is already ready, just verify the input shape
+        if self.single_parameter:
+
+            def module_callable(
+                params: Params,
+                input_data: Data,
+                training: bool,
+                state: State,
+                rng: Any,
+            ) -> Tuple[Data, State]:
+                a = params[0].squeeze()
+                return (
+                    jax.tree.map(lambda arr: prelu_array(arr, a), input_data),
+                    state,
+                )
+
+        else:
+
+            def module_callable(
+                params: Params,
+                input_data: Data,
+                training: bool,
+                state: State,
+                rng: Any,
+            ) -> Tuple[Data, State]:
+                return (
+                    jax.tree.map(
+                        prelu_array,
+                        input_data,
+                        params,
+                    ),
+                    state,
+                )
+
+        return module_callable
+
+    def compile(self, rng: Any, input_shape: DataShape) -> None:
+
+        # if the module is already ready, check the input shape
         if self.is_ready():
-            if input_shape != self.input_shape:
+            if self.input_shape != input_shape:
                 raise ValueError(
-                    f"Input shape mismatch: expected {self.input_shape}, "
-                    f"got {input_shape}"
+                    "PReLU module has already been compiled with a different "
+                    "input shape."
                 )
             return
 
@@ -96,30 +148,53 @@ class PReLU(BaseModule):
         else:
             a_shape = input_shape
 
-        rng_areal, rng_aimag = jax.random.split(rng)
+        def make_a(
+            key: Any,
+            shape: Tuple[int, ...],
+        ) -> np.ndarray:
 
-        if self.real:
-            self.a = self.init_magnitude * jax.random.normal(
-                rng_areal, a_shape
-            )
+            if self.real:
+                return self.init_magnitude * jax.random.normal(key, shape)
+            else:
+                rkey, ikey = jax.random.split(key)
+                return self.init_magnitude * (
+                    jax.random.normal(rkey, shape)
+                    + 1j * jax.random.normal(ikey, shape)
+                )
+
+        if self.single_parameter:
+            self.a = (make_a(rng, a_shape),)
         else:
-            self.a = self.init_magnitude * (
-                jax.random.normal(rng_areal, a_shape)
-                + 1j * jax.random.normal(rng_aimag, a_shape)
+            keys = jax.random.split(
+                rng,
+                len(
+                    jax.tree.leaves(
+                        input_shape,
+                        is_leaf=lambda x: isinstance(x, tuple)
+                        and all(isinstance(i, int) for i in x),
+                    )
+                ),
             )
+            keys = jax.tree.unflatten(
+                jax.tree.structure(
+                    input_shape,
+                    is_leaf=lambda x: isinstance(x, tuple)
+                    and all(isinstance(i, int) for i in x),
+                ),
+                keys,
+            )
+            self.a = jax.tree.map(make_a, keys, a_shape)
 
-    def get_output_shape(
-        self, input_shape: tuple[int, ...]
-    ) -> tuple[int, ...]:
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
         return input_shape
 
-    def get_hyperparameters(self) -> dict[str, Any]:
+    def get_hyperparameters(self) -> HyperParams:
         return {
             "single_parameter": self.single_parameter,
             "init_magnitude": self.init_magnitude,
         }
 
-    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparams: HyperParams) -> None:
         if self.a is not None:
             raise ValueError(
                 "Cannot set hyperparameters after the module has parameters"
@@ -127,36 +202,44 @@ class PReLU(BaseModule):
 
         super(PReLU, self).set_hyperparameters(hyperparams)
 
-    def get_params(self) -> tuple[np.ndarray, ...]:
-        return (self.a,)
+    def get_params(self) -> Params:
+        return self.a
 
-    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
-        if not isinstance(params, tuple) or not all(
-            isinstance(p, np.ndarray) for p in params
-        ):
-            raise ValueError("params must be a tuple of numpy arrays")
-        if len(params) != 1:
-            raise ValueError(f"Expected 1 parameter array, got {len(params)}")
-
-        self.a = params[0]
-
-        if np.iscomplexobj(self.a) and self.real:
-            raise ValueError(
-                "Parameter 'a' must be real-valued, but got complex-valued"
-                " array"
-            )
-
-        if self.input_shape is not None:
-            expected_shape = (
-                (1,) if self.single_parameter else self.input_shape
-            )
-            if self.a.shape != expected_shape:
-                raise ValueError(
-                    f"Parameter 'a' shape mismatch: expected {expected_shape},"
-                    f" got {self.a.shape}"
+    def set_params(self, params: Params) -> None:
+        # ensure the params match the expected shape
+        if self.is_ready():
+            if self.single_parameter:
+                expected_shape = (1,)
+                if len(params) != 1 or params[0].shape != expected_shape:
+                    raise ValueError(
+                        f"Expected single parameter of shape {expected_shape},"
+                        f" got {params}"
+                    )
+            else:
+                expected_shape = self.input_shape
+                param_structure = jax.tree.structure(
+                    params,
                 )
-        elif self.single_parameter and self.a.shape != (1,):
-            raise ValueError(
-                "Parameter 'a' shape mismatch: expected (1,), got"
-                f" {self.a.shape}"
-            )
+                expected_structure = jax.tree.structure(
+                    expected_shape,
+                    is_leaf=lambda x: isinstance(x, tuple)
+                    and all(isinstance(i, int) for i in x),
+                )
+                if param_structure != expected_structure:
+                    raise ValueError(
+                        "Expected parameters with structure"
+                        f" {expected_structure}, got {param_structure}"
+                    )
+
+                def check_shape(
+                    param: np.ndarray, shape: Tuple[int, ...]
+                ) -> None:
+                    if param.shape != shape:
+                        raise ValueError(
+                            f"Expected parameter of shape {shape}, got"
+                            f" {param.shape}"
+                        )
+
+                jax.tree.map(check_shape, params, expected_shape)
+
+        self.a = params

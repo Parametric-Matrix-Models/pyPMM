@@ -9,11 +9,13 @@ from .basemodule import BaseModule
 from .bias import Bias
 from .comment import Comment
 from .constant import Constant
+from .einsum import Einsum
 
 # from .eigensystem import Eigensystem
 # from .eigenvalues import Eigenvalues
 # from .eigenvectors import Eigenvectors
-# from .flatten import Flatten
+from .flatten import Flatten
+
 # from .func import Func
 # from .legacyaffineobservablepmm import LegacyAffineObservablePMM
 # from .linearnn import LinearNN
@@ -23,7 +25,7 @@ from .constant import Constant
 # from .lowranktransitionamplitudesum import LowRankTransitionAmplitudeSum
 # from .multimodule import MultiModule
 # from .nonnegativelinearnn import NonnegativeLinearNN
-# from .prelu import PReLU
+from .prelu import PReLU
 from .reshape import Reshape
 
 # from .subsetmodule import SubsetModule
@@ -50,14 +52,15 @@ __all__ = [  # noqa: F405
     # "Eigenvalues",
     # "Eigenvectors",
     # "Eigensystem",
-    # "Flatten",
+    "Einsum",
+    "Flatten",
     # "Func",
     # "LegacyAffineObservablePMM",
     # "LinearNN",
     # "NonnegativeLinearNN",
     "Reshape",
     # "SubsetModule",
-    # "PReLU",
+    "PReLU",
     # "MultiModule",
     # "LowRankAffineHermitianMatrix",
     # "LowRankAffineEigenvaluePMM",

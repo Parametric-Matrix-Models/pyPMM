@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from sys import version_info
-from typing import Any, Callable, TypeAlias
+from typing import Any, TypeAlias
 
 from jaxtyping import Array, Num, PyTree
 
@@ -15,9 +17,11 @@ if version_info >= (3, 9):
     List = list
     Dict = dict
     Tuple = tuple
+    Set = set
+    from beartype.typing import Callable, Type
 
 else:
-    from typing import Dict, List, Tuple
+    from typing import Callable, Dict, List, Set, Tuple, Type  # noqa: F401
 
 r"""
 This module also contains future-proofing type aliases to handle the PEP 484 /

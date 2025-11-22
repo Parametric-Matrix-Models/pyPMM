@@ -5,6 +5,8 @@ other (optionally stateful and trainable) operations in JAX.
 Modules can be combined to create Models.
 """
 
+from __future__ import annotations
+
 import jax
 import jax.numpy as np
 from beartype import beartype
@@ -25,7 +27,6 @@ from parametricmatrixmodels.typing import (
 )
 
 
-@jaxtyped(typechecker=beartype)
 class BaseModule(object):
     """
     Base class for all Modules. Custom modules should inherit from this class.
@@ -53,11 +54,16 @@ class BaseModule(object):
 
     def __init_subclass__(cls, **kwargs):
         r"""
-        Ensures that all subclasses of BaseModule are also decorated with
-        ``@jaxtyped`` and ``@beartype``.
+        Ensures that all methods of all subclasses of BaseModule are also
+        decorated with ``@jaxtyped(typechecker=beartype)``. This includes
+        "private" methods (those starting with an underscore).
         """
         super().__init_subclass__(**kwargs)
-        jaxtyped(typechecker=beartype)(cls)
+        for name, method in cls.__dict__.items():
+            if callable(method) and not hasattr(method, "__jaxtyped__"):
+                setattr(cls, name, jaxtyped(typechecker=beartype)(method))
+                # set the __jaxtyped__ attribute to avoid re-wrapping
+                getattr(cls, name).__jaxtyped__ = True
 
     def name(self) -> str:
         """
@@ -202,6 +208,7 @@ class BaseModule(object):
             "_get_callable method must be implemented in subclasses"
         )
 
+    @jaxtyped(typechecker=beartype)
     def __call__(
         self,
         data: Data,
@@ -261,6 +268,7 @@ class BaseModule(object):
             rng,
         )
 
+    @jaxtyped(typechecker=beartype)
     def compile(self, rng: Any, input_shape: DataShape) -> None:
         """
         Compile the module to be used with the given input shape.
@@ -303,6 +311,7 @@ class BaseModule(object):
             "compile method must be implemented in subclasses"
         )
 
+    @jaxtyped(typechecker=beartype)
     def get_output_shape(self, input_shape: DataShape) -> DataShape:
         """
         Get the output shape of the module given the input shape.
@@ -354,6 +363,7 @@ class BaseModule(object):
             "get_hyperparameters method must be implemented in subclasses"
         )
 
+    @jaxtyped(typechecker=beartype)
     def set_hyperparameters(self, hyperparameters: HyperParams) -> None:
         """
         Set the hyperparameters of the module.
@@ -412,6 +422,7 @@ class BaseModule(object):
             "get_params method must be implemented in subclasses"
         )
 
+    @jaxtyped(typechecker=beartype)
     def set_params(self, params: Params) -> None:
         """
         Set the trainable parameters of the module.
@@ -459,6 +470,7 @@ class BaseModule(object):
         """
         return ()
 
+    @jaxtyped(typechecker=beartype)
     def set_state(self, state: State) -> None:
         """
         Set the state of the module.
@@ -478,6 +490,7 @@ class BaseModule(object):
         """
         pass
 
+    @jaxtyped(typechecker=beartype)
     def set_precision(self, prec: np.dtype | str | int) -> None:
         """
         Set the precision of the module parameters and state.
@@ -564,6 +577,7 @@ class BaseModule(object):
         self.set_params(tuple(set_param_prec(p) for p in self.get_params()))
         self.set_state(tuple(set_param_prec(s) for s in self.get_state()))
 
+    @jaxtyped(typechecker=beartype)
     def astype(self, dtype: np.dtype | str) -> "BaseModule":
         """
         Convenience wrapper to set_precision using the dtype argument, returns
@@ -629,6 +643,7 @@ class BaseModule(object):
             "package_version": pmm.__version__,
         }
 
+    @jaxtyped(typechecker=beartype)
     def deserialize(self, data: Dict[str, Any]) -> None:
         """
         Deserialize the module from a dictionary.

@@ -1,15 +1,46 @@
-from __future__ import annotations
+import jax
+
+from parametricmatrixmodels.typing import (
+    Any,
+    DataShape,
+)
 
 from .reshape import Reshape
 
 
 class Flatten(Reshape):
     """
-    Module that flattens the input to 1D. Ignores the batch dimension.
+    Module that flattens the input to 1D. Ignores the batch dimension. Operates
+    on all leafs of a PyTree input.
     """
 
     def __init__(self) -> None:
-        super().__init__(shape=(-1,))
+        # initialize with shape=None, shape will be determined at compile time
+        # this accounts for both array and PyTree inputs
+        super().__init__(shape=None)
 
     def name(self) -> str:
         return "Flatten"
+
+    def compile(self, key: Any, input_shape: DataShape) -> None:
+        try:
+            len(input_shape)
+        except TypeError:
+            raise TypeError(
+                "Input shape must be a tuple, list, or PyTree of shapes."
+            )
+
+        # if input_shape is an iterable of ints, then the input is a single
+        # array
+        if all(isinstance(dim, int) for dim in input_shape):
+            self.shape = (-1,)
+            return
+
+        # construct the tree of output shapes (all (-1,))
+        input_shapes, input_struct = jax.tree.flatten(
+            input_shape, is_leaf=Reshape._is_shape
+        )
+        self.shape = jax.tree.unflatten(
+            input_struct,
+            [(-1,) for _ in input_shapes],
+        )

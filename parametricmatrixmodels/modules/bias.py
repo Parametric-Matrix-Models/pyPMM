@@ -17,7 +17,6 @@ from parametricmatrixmodels.typing import (
 from .basemodule import BaseModule
 
 
-@jaxtyped(typechecker=beartype)
 class Bias(BaseModule):
     r"""
     A simple bias module that adds a (trainable by default) bias array

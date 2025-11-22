@@ -4,6 +4,31 @@ import pytest
 import parametricmatrixmodels as pmm
 
 
+def test_reshape_init():
+    r"""
+    Test runtime type checking of Reshape module's __init__
+    """
+    # valid shape: tuple of ints
+    reshape_module = pmm.modules.Reshape(shape=(4, 3))  # noqa: F841
+
+    # valid shape: PyTree with leaves as tuple of ints
+    reshape_module = pmm.modules.Reshape(
+        shape=[(4, 3), [(2, 2), (2,)]]
+    )  # noqa: F841
+
+    # invalid shape: list instead of tuple
+    with pytest.raises(TypeError):
+        reshape_module = pmm.modules.Reshape(shape=[4, 3])  # noqa: F841
+
+    # invalid shape: tuple with non-int element
+    with pytest.raises(TypeError):
+        reshape_module = pmm.modules.Reshape(shape=(4, 3.0))  # noqa: F841
+
+    # invalid shape: raw int
+    with pytest.raises(TypeError):
+        reshape_module = pmm.modules.Reshape(shape=12)  # noqa: F841
+
+
 def test_reshape_array():
     r"""
     Test Reshape module for ArrayData

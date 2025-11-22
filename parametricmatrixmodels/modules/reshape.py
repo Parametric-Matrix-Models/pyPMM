@@ -26,7 +26,7 @@ class Reshape(BaseModule):
     """
 
     @staticmethod
-    def is_shape(obj: object) -> bool:
+    def _is_shape(obj: object) -> bool:
         return obj is None or (
             isinstance(obj, (tuple, list))
             and all(isinstance(dim, int) for dim in obj)
@@ -81,7 +81,7 @@ class Reshape(BaseModule):
             # (iterables themselves)
             # e.g. shape = [(2, 3), 2, (4, 5)], the second element (2) is
             # invalid and should be (2,) instead
-            raise AssertionError(
+            raise TypeError(
                 "If shape is a PyTree, all leaves must be shapes "
                 "(iterables of ints)."
             )
@@ -145,7 +145,7 @@ class Reshape(BaseModule):
         try:
             len(input_shape)
         except TypeError:
-            raise AssertionError(
+            raise TypeError(
                 "Input shape must be a tuple, list, or PyTree of shapes."
             )
 
@@ -161,9 +161,9 @@ class Reshape(BaseModule):
             selfshape = self.shape
 
         input_struct = jax.tree.structure(
-            input_shape, is_leaf=Reshape.is_shape
+            input_shape, is_leaf=Reshape._is_shape
         )
-        shape_struct = jax.tree.structure(selfshape, is_leaf=Reshape.is_shape)
+        shape_struct = jax.tree.structure(selfshape, is_leaf=Reshape._is_shape)
 
         assert input_struct == shape_struct, (
             f"Input shape structure {input_struct} does not match target shape"
@@ -202,7 +202,7 @@ class Reshape(BaseModule):
             check_compatibility,
             input_shape,
             selfshape,
-            is_leaf=Reshape.is_shape,
+            is_leaf=Reshape._is_shape,
         )
 
     def compile(self, rng: Any, input_shape: DataShape) -> None:
