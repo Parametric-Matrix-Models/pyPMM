@@ -55,7 +55,7 @@ https://beartype.readthedocs.io/en/latest/api_roar/#pep-585-deprecations
 #:                              "b": jnp.array([0.5]),
 #:                              "a": [jnp.array([[1.0]]), jnp.array([[2.0]])],
 #:                          }
-Params: TypeAlias = PyTree[Num[Array, "..."]]
+Params: TypeAlias = PyTree[Num[Array, "..."], "Params"]
 
 #: A special case of ``Params`` where the parameters are represented as a
 #: tuple of JAX arrays.
@@ -82,6 +82,9 @@ HyperParams: TypeAlias = Dict[str, Any]
 #: used. A module or model may take as input either a PyTree or a single JAX
 #: array, and may return either a PyTree or a single JAX array as output,
 #: regardless of the input type.
+#:
+#: The structure of the PyTree can change throughout evaluation, so it is not
+#: specified in the type alias.
 Data: TypeAlias = (
     PyTree[Num[Array, "batch_size ..."]] | Num[Array, "batch_size ..."]
 )
@@ -94,7 +97,7 @@ ArrayData: TypeAlias = Num[Array, "batch_size ..."]
 #: integers representing the shape of the corresponding leaf in a ``Data``
 #: PyTree, excluding the leading batch dimension. Alternatively, a single tuple
 #: of integers can be used to represent the shape of a single JAX array.
-DataShape: TypeAlias = PyTree[Tuple[int, ...]] | Tuple[int, ...]
+DataShape: TypeAlias = PyTree[Tuple[int | None, ...]] | Tuple[int | None, ...]
 
 #: A special case of ``DataShape`` where the input data shape is represented as
 #: a single tuple of integers.

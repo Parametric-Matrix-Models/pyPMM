@@ -3,82 +3,94 @@ from __future__ import annotations
 import random
 import sys
 import warnings
-from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 import jax
 import jax.numpy as np
 import numpy as onp
+from beartype import beartype
+from jaxtyping import jaxtyped
 from packaging.version import parse
 
 import parametricmatrixmodels as pmm
 
+from .model_util import (
+    ModelCallable,
+    ModelModules,
+    ModelParams,
+    ModelState,
+    autobatch,
+    safecast,
+    strfmt_pytree,
+)
 from .modules import BaseModule
 from .training import make_loss_fn, train
+from .typing import (
+    Any,
+    Callable,
+    Data,
+    DataShape,
+    Dict,
+    Tuple,
+)
 
 
-class Model(object):
+class Model(BaseModule):
     r"""
 
-    A Model is a sequence of modules that can be trained and evaluated. Inputs
-    are passed through each module in sequence to produce outputs.
+    Abstract base class for all models. Do not instantiate this class directly.
+
+    A ``Model`` is a PyTree of modules that can be trained and
+    evaluated. Inputs are passed through each module to produce
+    outputs. ``Model``s are also ``BaseModule``s, so they can be
+    nested inside other models.
 
     For confidence intervals or uncertainty quantification, wrap a trained
     model with ``ConformalModel``.
 
     See Also
     --------
+    jax.tree
+        PyTree utilities and concepts in JAX.
+    SequentialModel
+        A simple sequential model that chains modules together.
+    NonsequentialModel
+        A model that allows for non-sequential connections between modules.
     ConformalModel
         Wrap a trained model to produce confidence intervals.
-
     """
 
     def __repr__(self) -> str:
-
-        trainable_floats_num = self.get_num_trainable_floats()
-
-        # get number of modules in order to reserve whitespace
-        num_modules = len(self.modules)
-        mod_idx_width = len(str(num_modules - 1))
-
-        if trainable_floats_num is None:
-            num_trainable_floats = "(uninitialized)"
-        else:
-            num_trainable_floats = (
-                f"(trainable floats: {trainable_floats_num:,})"
+        return (
+            f"{self.name()}(\n"
+            + strfmt_pytree(
+                self.modules, indent=0, indentation=1, base_indent_str="  "
             )
-
-        rep = (
-            f"Model(input_shape={self.input_shape}, "
-            f"output_shape={self.output_shape}, ready={self.ready}) "
-            f"{num_trainable_floats}\n"
+            + "\n)"
         )
-        input_shape = self.input_shape if self.input_shape else None
-        for i, module in enumerate(self.modules):
-            input_shape = (
-                module.get_output_shape(input_shape) if input_shape else None
-            )
-            comment = module.name().startswith("#")
-            rep += f"\n{i:>{mod_idx_width}}: {module}" + (
-                f" -> {input_shape}" if input_shape and not comment else ""
-            )
-        return rep
 
     def __init__(
-        self, modules: list[BaseModule] | BaseModule = None, rng: Any = None
+        self,
+        modules: ModelModules | BaseModule | None = None,
+        rng: Any | int | None = None,
     ) -> None:
         """
-        Initialize the model with the input shape and a list of modules.
+        Initialize the model with a PyTree of modules and a random key.
 
         Parameters
         ----------
             modules
-                List of modules to initialize the model with. Default is an
-                empty list.
+                module(s) to initialize the model with. Default is None, which
+                will become an empty list.
             rng
                 Initial random key for the model. Default is None. If None, a
-                new random key will be generated using JAX's random.PRNGKey. If
+                new random key will be generated using JAX's ``random.key``. If
                 an integer is provided, it will be used as the seed to create
                 the key.
+
+        See Also
+        --------
+        ModelModules : Type alias for a PyTree of modules in a model.
+        jax.random.key : JAX function to create a random key.
         """
         self.modules = modules if modules is not None else []
         if isinstance(modules, BaseModule):
@@ -91,332 +103,231 @@ class Model(object):
             self.rng = rng
         self.reset()
 
-    def get_num_trainable_floats(self) -> Optional[int]:
+    def get_num_trainable_floats(self) -> int | None:
         num_trainable_floats = [
-            module.get_num_trainable_floats() for module in self.modules
+            module.get_num_trainable_floats()
+            for module in jax.tree.leaves(self.modules)
         ]
         if None in num_trainable_floats:
             return None
         else:
             return sum(num_trainable_floats)
 
+    def is_ready(self) -> bool:
+        return (
+            len(jax.tree.leaves(self.modules)) > 0
+            and all(
+                module.is_ready() for module in jax.tree.leaves(self.modules)
+            )
+            and self.input_shape is not None
+            and self.output_shape is not None
+        )
+
     def reset(self) -> None:
-        self.input_shape = None
-        self.output_shape = None
-        self.ready = False
-        self.parameter_counts = None
-        self.state_counts = None
-        self.callable = None
+        self.input_shape: DataShape | None = None
+        self.output_shape: DataShape | None = None
+        self.callable: ModelCallable | None = None
         self.grad_callable_params = None
         self.grad_callable_params_options = None
         self.grad_callable_inputs = None
         self.grad_callable_inputs_options = None
 
-    def append_module(self, module: BaseModule) -> None:
-        """
-        Append a module to the model.
-
-        Parameters
-        ----------
-            module : BaseModule
-                Module to append to the model.
-        """
-        self.modules.append(module)
-        self.reset()
-
-    def prepend_module(self, module: BaseModule) -> None:
-        """
-        Prepend a module to the model.
-
-        Parameters
-        ----------
-            module : BaseModule
-                Module to prepend to the model.
-        """
-        self.modules.insert(0, module)
-        self.reset()
-
-    def insert_module(self, module: BaseModule, index: int) -> None:
-        """
-        Insert a module at the given index in the model.
-
-        Parameters
-        ----------
-            module : BaseModule
-                Module to insert into the model.
-            index : int
-                Index at which to insert the module.
-        """
-        self.modules.insert(index, module)
-        self.reset()
-
-    def __add__(self, module: BaseModule) -> "Model":
-        """
-        Overload the + operator to append a module to the model.
-
-        Parameters
-        ----------
-            module : BaseModule
-                Module to append to the model.
-
-        Returns
-        -------
-            Model
-                The model with the appended module.
-        """
-        self.append_module(module)
-        return self
-
-    add = append_module
-    put = prepend_module
-    insert = insert_module
-
-    def remove_module(self, index: int) -> None:
-        """
-        Remove a module from the model at the given index.
-
-        Parameters
-        ----------
-            index : int
-                Index of the module to remove.
-        """
-        if index < 0 or index >= len(self.modules):
-            raise IndexError("Index out of range.")
-        del self.modules[index]
-        self.reset()
-
-    def pop_module(self) -> BaseModule:
-        """
-        Pop the last module from the model.
-
-        Returns
-        -------
-            BaseModule
-                The last module in the model
-        """
-        if not self.modules:
-            raise IndexError("No modules to pop.")
-        module = self.modules.pop()
-        self.reset()
-        return module
-
-    def __getitem__(
-        self, key: Union[int, np.ndarray, slice]
-    ) -> Union[List[BaseModule], BaseModule]:
-        """
-        Get the module at the given index.
-
-        Parameters
-        ----------
-            index : int
-                Index of the module to retrieve.
-
-        Returns
-        -------
-            BaseModule
-                The module at the specified index.
-        """
-        if isinstance(key, np.ndarray):
-            if key.ndim > 1:
-                raise ValueError(
-                    "Index array must be 1D. Use a boolean mask or a 1D array."
-                )
-            # the key can either be an index array or a boolean mask
-            if key.dtype == bool:
-                if len(key) != len(self.modules):
-                    raise ValueError(
-                        "Boolean mask length must match the number of modules."
-                    )
-                indices = np.where(key)[0]
-                return [self.modules[i] for i in indices]
-            elif key.dtype == int:
-                indices = key.flatten()
-                return [self.modules[i] for i in indices]
-            else:
-                raise ValueError(
-                    "Index array must be of type int or bool. "
-                    f"Got {key.dtype}."
-                )
-        elif isinstance(key, slice):
-            # return a slice of the modules
-            return self.modules[key]
-        elif isinstance(key, int):
-            if key < 0 or key >= len(self.modules):
-                raise IndexError("Index out of range.")
-            return self.modules[key]
-        else:
-            raise TypeError(
-                "Index must be an integer, a slice, or a 1D numpy array. "
-                f"Got {type(key)}."
-            )
-
     def compile(
         self,
-        rngkey: Optional[Union[Any, int]],
-        input_shape: Tuple[int, ...],
+        rng: Any | int | None,
+        input_shape: DataShape,
         verbose: bool = False,
     ) -> None:
-        """
-        Compile the model for training by compiling each module.
+        r"""
+        Compile the model for training by compiling each module. Must be
+        implemented by all subclasses.
 
         Parameters
         ----------
-            rngkey : Union[Any, int]
+            rng
                 Random key for initializing the model parameters. JAX PRNGKey
                 or integer seed.
-            input_shape : Tuple[int, ...]
+            input_shape
                 Shape of the input array, excluding the batch size.
                 For example, (input_features,) for a 1D input or
                 (input_height, input_width, input_channels) for a 3D input.
-            verbose : bool, optional
+            verbose
                 Print debug information during compilation. Default is False.
         """
 
-        if rngkey is None:
-            rngkey = random.randint(0, 2**32 - 1)
-
-        if isinstance(rngkey, int):
-            rngkey = jax.random.key(rngkey)
-
-        if verbose:
-            print(
-                f"Compiling model with input shape {input_shape} and "
-                f"{len(self.modules)} modules."
-            )
-
-        self.input_shape = input_shape
-        for i, module in enumerate(self.modules):
-            rngkey, modrng = jax.random.split(rngkey)
-            module.compile(modrng, input_shape)
-            input_shape = module.get_output_shape(input_shape)
-            if verbose:
-                print(f"({i}) {module.name()} output shape: {input_shape}")
-        self.output_shape = input_shape
-
-        # get number of parameter arrays for each module
-        self.parameter_counts = [
-            len(module.get_params()) for module in self.modules
-        ]
-        self.state_counts = [
-            len(module.get_state()) for module in self.modules
-        ]
-
-        self.ready = True
-
-    def get_output_shape(
-        self, input_shape: Tuple[int, ...]
-    ) -> Tuple[int, ...]:
-        """
-        Get the output shape of the model given an input shape.
-
-        Parameters
-        ----------
-            input_shape : Tuple[int, ...]
-                Shape of the input array, excluding the batch size.
-                For example, (input_features,) for a 1D input or
-                (input_height, input_width, input_channels) for a 3D input.
-
-        Returns
-        -------
-            Tuple[int, ...]
-                Shape of the output array after passing through the model.
-        """
-        for module in self.modules:
-            input_shape = module.get_output_shape(input_shape)
-
-        return input_shape
-
-    def get_params(self) -> Tuple[np.ndarray, ...]:
-        """
-        Get the parameters of the model as a Tuple of numpy arrays.
-
-        Returns
-        -------
-            Tuple[np.ndarray, ...]
-                numpy arrays representing the parameters of the model. The
-                order of the parameters should match the order in
-                which they are used in the _get_callable method.
-        """
-        if not self.ready:
-            raise RuntimeError("Model is not ready. Call compile() first.")
-
-        # parameter tuple must be flat
-        return tuple(
-            param for module in self.modules for param in module.get_params()
+        raise NotImplementedError(
+            f"{self.name()}.compile() not implemented. Must be implemented by "
+            "subclasses."
         )
 
-    def set_params(self, params: Tuple[np.ndarray, ...]) -> None:
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
         """
-        Set the parameters of the model from a Tuple of numpy arrays.
+        Get the output shape of the model given an input shape. Must be
+        implemented by all subclasses.
 
         Parameters
         ----------
-            params: Tuple[np.ndarray, ...]
-                numpy arrays representing the parameters of the model. The
-                order of the parameters should match the order in which
-                they are used in the _get_callable method.
-        """
-        if not self.ready:
-            raise RuntimeError("Model is not ready. Call compile() first.")
-
-        if len(params) != sum(self.parameter_counts):
-            raise ValueError(
-                f"Expected {sum(self.parameter_counts)} parameters, "
-                f"but got {len(params)}."
-            )
-
-        # set parameters for each module
-        param_index = 0
-        for module in self.modules:
-            count = len(module.get_params())
-            module.set_params(params[param_index : param_index + count])
-            param_index += count
-
-    def get_state(self) -> Tuple[np.ndarray, ...]:
-        """
-        Get the state of the model as a Tuple of numpy arrays.
+            input_shape
+                Shape of the input, excluding the batch dimension.
+                For example, (input_features,) for 1D bare-array input, or
+                (input_height, input_width, input_channels) for 3D bare-array
+                input, [(input_features1,), (input_features2,)] for a List
+                (PyTree) of 1D arrays, etc.
 
         Returns
         -------
-            Tuple[np.ndarray, ...]
-                numpy arrays representing the state of the model. The order of
-                the states should match the order in which they are used in
-                the _get_callable method.
+            output_shape
+                Shape of the output after passing through the model.
         """
-        if not self.ready:
-            raise RuntimeError("Model is not ready. Call compile() first.")
-
-        # state tuple must be flat
-        return tuple(
-            state for module in self.modules for state in module.get_state()
+        raise NotImplementedError(
+            f"{self.name()}.get_output_shape() not implemented. Must be"
+            " implemented by subclasses."
         )
 
-    def set_state(self, state: Tuple[np.ndarray, ...]) -> None:
+    def get_modules(self) -> ModelModules:
         """
-        Set the state of the model from a Tuple of numpy arrays.
+        Get the modules of the model.
+
+        Returns
+        -------
+            modules
+                PyTree of modules in the model. The structure of the PyTree
+                will match that of the modules in the model.
+
+        See Also
+        --------
+        ModelModules : Type alias for a PyTree of modules in a model.
+        """
+        return self.modules
+
+    def get_params(self) -> ModelParams:
+        """
+        Get the parameters of the model.
+
+        Returns
+        -------
+            params
+                PyTree of PyTrees of numpy arrays representing the parameters
+                of each module in the model. The structure of the PyTree will
+                be a composite structure where the upper level structure
+                matches that of the modules in the model, and the lower level
+                structure matches that of the parameters of each module.
+
+        See Also
+        --------
+        ModelParams : Type alias for a PyTree of parameters in a model.
+        get_modules : Get the modules of the model, in the same structure as
+            the parameters returned by this method.
+        set_params : Set the parameters of the model from a corresponding
+            PyTree of PyTrees of numpy arrays.
+        """
+        return jax.tree.map(lambda m: m.get_params(), self.modules)
+
+    def set_params(self, params: ModelParams) -> None:
+        """
+        Set the parameters of the model from a PyTree of PyTrees of numpy
+        arrays.
 
         Parameters
         ----------
-            state: Tuple[np.ndarray, ...]
-                numpy arrays representing the state of the model. The order of
-                the states should match the order in which they are used in
-                the _get_callable method.
-        """
-        if not self.ready:
-            raise RuntimeError("Model is not ready. Call compile() first.")
+            params
+                PyTree of PyTrees of numpy arrays representing the parameters
+                of each module in the model. The structure of the PyTree must
+                match that of the modules in the model, and the lower level
+                structure must match that of the parameters of each module.
 
-        if len(state) != sum(self.state_counts):
-            raise ValueError(
-                f"Expected {sum(self.state_counts)} states, "
-                f"but got {len(state)}."
+        See Also
+        --------
+        ModelParams : Type alias for a PyTree of parameters in a model.
+        get_modules : Get the modules of the model, in the same structure as
+            the parameters accepted by this method.
+        get_params : Get the parameters of the model, in the same structure
+            as the parameters accepted by this method.
+        """
+
+        if not self.is_ready():
+            raise RuntimeError(
+                f"{self.name()} is not ready. Call compile() first."
             )
 
-        # set state for each module
-        state_index = 0
-        for module in self.modules:
-            count = len(module.get_state())
-            module.set_state(state[state_index : state_index + count])
-            state_index += count
+        # this will fail if the structure of self.modules isn't a prefix of the
+        # structure of params
+        try:
+            jax.tree.map(lambda m, p: m.set_params(p), self.modules, params)
+        except ValueError as e:
+            raise ValueError(
+                "Structure of params does not match structure of modules. "
+                "The structure of the modules must be a prefix of the "
+                "structure of the params."
+            ) from e
+
+    def get_state(self) -> ModelState:
+        r"""
+        Get the state of the model. The state is a PyTree of PyTrees of numpy
+        arrays representing the state of each module in the model. The
+        structure of the PyTree will be a composite structure where the upper
+        level structure matches that of the modules in the model, and the lower
+        level structure matches that of the state of each module.
+
+        Returns
+            state
+                PyTree of PyTrees of numpy arrays representing the state of
+                each module in the model. The structure of the PyTree will be
+                a composite structure where the upper level structure matches
+                that of the modules in the model, and the lower level structure
+                matches that of the state of each module.
+
+        See Also
+        --------
+        ModelState : Type alias for a PyTree of states in a model.
+        get_modules : Get the modules of the model, in the same structure as
+            the state returned by this method.
+        set_state : Set the state of the model from a corresponding PyTree
+            of PyTrees of numpy arrays.
+        """
+
+        if not self.is_ready():
+            raise RuntimeError(
+                f"{self.name()} is not ready. Call compile() first."
+            )
+
+        return jax.tree.map(lambda m: m.get_state(), self.modules)
+
+    def set_state(self, state: ModelState) -> None:
+        r"""
+        Set the state of the model from a PyTree of PyTrees of numpy arrays.
+
+        Parameters
+        ----------
+            state
+                PyTree of PyTrees of numpy arrays representing the state of
+                each module in the model. The structure of the PyTree must
+                match that of the modules in the model, and the lower level
+                structure must match that of the state of each module.
+
+        See Also
+        --------
+        ModelState : Type alias for a PyTree of states in a model.
+        get_modules : Get the modules of the model, in the same structure as
+            the state accepted by this method.
+        get_state : Get the state of the model, in the same structure as
+            the state accepted by this method.
+        """
+        if not self.is_ready():
+            raise RuntimeError(
+                f"{self.name()} is not ready. Call compile() first."
+            )
+
+        # this will fail if the structure of self.modules isn't a prefix of the
+        # structure of state
+        try:
+            jax.tree.map(lambda m, s: m.set_state(s), self.modules, state)
+        except ValueError as e:
+            raise ValueError(
+                "Structure of state does not match structure of modules. "
+                "The structure of the modules must be a prefix of the "
+                "structure of the state."
+            ) from e
 
     def get_rng(self) -> Any:
         return self.rng
@@ -428,107 +339,100 @@ class Model(object):
         Parameters
         ----------
             rng : Any
-                Random key to set for the model. JAX PRNGKey or an integer seed
+                Random key to set for the model. JAX PRNGKey, integer seed, or
+                `None`. If None, a new random key will be generated using JAX's
+                ``random.key``. If an integer is provided, it will be used as
+                the seed to create the key.
         """
         if isinstance(rng, int):
             self.rng = jax.random.key(rng)
+        elif rng is None:
+            self.rng = jax.random.key(random.randint(0, 2**32 - 1))
         else:
             self.rng = rng
 
     def _get_callable(
         self,
-    ) -> Callable[
-        [
-            Tuple[np.ndarray, ...],
-            np.ndarray,
-            bool,
-            Tuple[np.ndarray, ...],
-            Any,
-        ],
-        Tuple[np.ndarray, Tuple[np.ndarray, ...]],
-    ]:
-        """
-        This method must return a jax-jittable and jax-gradable callable in the
-        form of
-        ```
-        (
-            params: Tuple[np.ndarray, ...],
-            input_NF: np.ndarray[num_samples, num_features],
-            training: bool,
-            state: Tuple[np.ndarray, ...],
-            rng: key<fry>
-        ) -> (
-                output_NF: np.ndarray[num_samples, num_output_features],
-                new_state: Tuple[np.ndarray, ...]
-            )
-        ```
+    ) -> ModelCallable:
+        r"""
+        Returns a ``jax.jit``-able and ``jax.grad``-able callable that
+        represents the model's forward pass.
+
+        This must be implemented by all subclasses.
+
+        This method must be implemented by all subclasses and must return a
+        ``jax-jit``-able and ``jax-grad``-able callable in the form of
+
+        .. code-block:: python
+
+            model_callable(
+                params: parametricmatrixmodels.model_util.ModelParams,
+                data: parametricmatrixmodels.typing.Data,
+                training: bool,
+                state: parametricmatrixmodels.model_util.ModelState,
+                rng: Any,
+            ) -> (
+                output: parametricmatrixmodels.typing.Data,
+                new_state: parametricmatrixmodels.model_util.ModelState,
+                )
+
+
         That is, all hyperparameters are traced out and the callable depends
-        explicitly only on a Tuple of parameter numpy arrays, the input array,
-        the training flag, a state Tuple of numpy arrays, and a JAX rng key.
+        explicitly only on
+
+        * the model's parameters, as a PyTree with leaf nodes as JAX arrays,
+        * the input data, as a PyTree with leaf nodes as JAX arrays, each of
+            which has shape (num_samples, ...),
+        * the training flag, as a boolean,
+        * the model's state, as a PyTree with leaf nodes as JAX arrays
+
+        and returns
+
+        * the output data, as a PyTree with leaf nodes as JAX arrays, each of
+            which has shape (num_samples, ...),
+        * the new model state, as a PyTree with leaf nodes as JAX arrays. The
+            PyTree structure must match that of the input state and
+            additionally all leaf nodes must have the same shape as the input
+            state leaf nodes.
 
         The training flag will be traced out, so it doesn't need to be jittable
+
+        Returns
+        -------
+            A callable that takes the model's parameters, input data,
+            training flag, state, and rng key and returns the output data and
+            new state.
+
+        Raises
+        ------
+        NotImplementedError
+            If the method is not implemented in the subclass.
+
+        See Also
+        --------
+        __call__ : Calls the model with the current parameters and
+            given input, state, and rng.
+        ModelCallable : Typing for the callable returned by this method.
+        Params : Typing for the model parameters.
+        Data : Typing for the input and output data.
+        State : Typing for the model state.
         """
-        if not self.ready:
-            raise RuntimeError("Model is not ready. Call compile() first.")
-
-        # get the callables for each module
-        module_callables = [module._get_callable() for module in self.modules]
-
-        # parameter tuple must be flattened, so we'll need to iterate over the
-        # parameter counts
-        # state tuple must also be flattened, so we'll need to iterate over the
-        # state counts
-        # jax will unroll this loop
-        def model_callable(
-            params: Tuple[np.ndarray],
-            X: np.ndarray,
-            training: bool = False,
-            states: Tuple[np.ndarray, ...] = (),
-            rng: Any = None,  # absolutely not optonal
-        ) -> np.ndarray:
-            param_index = 0
-            state_index = 0
-            # split rng key into a key for each module
-            rngs = jax.random.split(rng, len(self.modules))
-            for idx, param_count in enumerate(self.parameter_counts):
-                state_count = self.state_counts[idx]
-                module_params = tuple(
-                    params[param_index : param_index + param_count]
-                )
-                module_states = tuple(
-                    states[state_index : state_index + state_count]
-                )
-                module_rng = rngs[idx]
-
-                X, new_module_states = module_callables[idx](
-                    module_params, X, training, module_states, module_rng
-                )
-                # update the states
-                states = (
-                    states[:state_index]
-                    + new_module_states
-                    + states[state_index + state_count :]
-                )
-
-                # increment indices
-                param_index += param_count
-                state_index += state_count
-
-            return X, states
-
-        return model_callable
+        raise NotImplementedError(
+            f"{self.name()}._get_callable() not implemented. Must be"
+            " implemented by subclasses."
+        )
 
     def __call__(
         self,
-        X: np.ndarray,
-        dtype: Optional[Any] = np.float64,
-        rng: Any = None,
+        X: Data,
+        dtype: Any = np.float64,
+        rng: Any | int | None = None,
         return_state: bool = False,
         update_state: bool = False,
-        max_batch_size: int = None,
-    ) -> Tuple[np.ndarray, Tuple[np.ndarray, ...]] | np.ndarray:
+        max_batch_size: int | None = None,
+    ) -> Tuple[Data, ModelState] | Data:
         """
-        Call the model with the input array.
+        Call the model with the input data.
 
         Parameters
         ----------
@@ -564,73 +468,35 @@ class Model(object):
 
         Returns
         -------
-            np.ndarray
-                Output array of shape (batch_size, <output feature axes>).
-                For example, (batch_size, output_features) for a 1D output or
-                (batch_size, output_height, output_width, output_channels) for
-                a 3D output.
-            Tuple[np.ndarray, ...], optional
-                If return_state is True, the model will also return the state
-                of the model as a Tuple of numpy arrays. The order of the
-                states will match the order in which they are used in the
-                _get_callable method.
+            Data
+                Output data as a PyTree of JAX arrays, the structure and shape
+                of which is determined by the model's specific modules.
+            ModelState
+                If ``return_state`` is ``True``, the state of the model after
+                evaluation as a PyTree of PyTrees of JAX arrays, the structure
+                of which matches that of the model's modules.
         """
-        if not self.ready:
-            raise RuntimeError("Model is not ready. Call compile() first.")
+        if not self.is_ready():
+            raise RuntimeError(
+                f"{self.name()} is not ready. Call compile() first."
+            )
 
         if self.callable is None:
-            self.callable = jax.jit(
-                self._get_callable(), static_argnames=["training"]
-            )
+            self.callable = jax.jit(self._get_callable(), static_argnums=(2,))
 
-        # make sure that we don't cast complex to float
-        if np.issubdtype(X.dtype, np.complexfloating) and not np.issubdtype(
-            dtype, np.complexfloating
-        ):
-            raise ValueError(
-                f"Cannot cast complex input dtype {X.dtype} to "
-                f"float output dtype {dtype}."
-            )
-
-        X_ = X.astype(dtype)
-
-        # make sure the dtype was converted, issue a warning if not
-        if X_.dtype != dtype:
-            warnings.warn(
-                "While performing inference with model: "
-                f"Requested dtype ({dtype}) was not successfully applied. "
-                "This is most likely due to JAX_ENABLE_X64 not being set. "
-                "See accompanying JAX warning for more details.",
-                UserWarning,
-            )
+        # safecast input to requested dtype
+        X_ = safecast(X, dtype)
 
         if rng is None:
             rng = self.get_rng()
         elif isinstance(rng, int):
             rng = jax.random.key(rng)
 
-        if max_batch_size is not None and X_.shape[0] > max_batch_size:
-            # process in batches
-            outputs = []
-            new_states = []
-            num_batches = int(np.ceil(X_.shape[0] / max_batch_size))
-            for i in range(num_batches):
-                batch_X = X_[
-                    i * max_batch_size : (i + 1) * max_batch_size, ...
-                ]
-                out, new_state = self.callable(
-                    self.get_params(), batch_X, False, self.get_state(), rng
-                )
-                outputs.append(out)
-                new_states.append(new_state)
-            out = np.concatenate(outputs, axis=0)
-            # just take the state from the last batch
-            new_state = new_states[-1]
+        autobatched_callable = autobatch(self.callable, max_batch_size)
 
-        else:
-            out, new_state = self.callable(
-                self.get_params(), X_, False, self.get_state(), rng
-            )
+        out, new_state = autobatched_callable(
+            self.get_params(), X_, False, self.get_state(), rng
+        )
 
         if update_state:
             warnings.warn(
@@ -649,24 +515,19 @@ class Model(object):
 
     def grad_input(
         self,
-        X: np.ndarray,
-        dtype: Optional[Any] = np.float64,
-        rng: Any = None,
+        X: Data,
+        dtype: Any = np.float64,
+        rng: Any | int | None = None,
         return_state: bool = False,
         update_state: bool = False,
-        batched: bool = True,
-        fwd: bool = None,
-        max_batch_size: int = None,
-    ) -> Tuple[np.ndarray, Tuple[np.ndarray, ...]] | np.ndarray:
+        fwd: bool | None = None,
+        max_batch_size: int | None = None,
+    ) -> Tuple[Data, ModelState] | Data:
         r"""
         Doc TODO
 
         Parameters
         ----------
-        batched
-            If True, compute the jacobian for a batch of inputs, otherwise
-            inputs are ``jax.vmap``'d over. Default is ``True``. ``X`` must
-            always have a batch dimension.
         fwd
             If True, use ``jax.jacfwd``, otherwise use ``jax.jacrev``. Default
             is ``None``, which decides based on the input and output shapes.
@@ -674,45 +535,59 @@ class Model(object):
             If provided, the input will be split into batches of at most
             this size and processed sequentially to avoid OOM errors.
             Default is ``None``, which means the input will be processed in
-            a single batch. Only applies if ``batched=True``.
+            a single batch. If ``max_batch_size`` is set to ``1``, the gradient
+            will be computed one sample at a time without batching. This case
+            is particularly important for ``grad_input`` since the Jacobian
+            contains gradients across different batch samples and thus scales
+            with the square of the batch size.
         """
 
-        if not self.ready:
-            raise RuntimeError("Model is not ready. Call compile() first.")
+        if not self.is_ready():
+            raise RuntimeError(
+                f"{self.name()} is not ready. Call compile() first."
+            )
         if self.callable is None:
-            self.callable = jax.jit(
-                self._get_callable(), static_argnames=["training"]
-            )
+            self.callable = jax.jit(self._get_callable(), static_argnums=(2,))
 
-        fwd = (
-            fwd
-            if fwd is not None
-            else (
-                np.prod(np.array(self.input_shape))
-                < np.prod(np.array(self.output_shape))
-            )
+        def get_num_elems(count: int, arr: np.ndarray) -> int:
+            return count + arr.size
+
+        num_input_elems = jax.tree.reduce(
+            get_num_elems, self.input_shape, initializer=0
+        )
+        num_output_elems = jax.tree.reduce(
+            get_num_elems, self.output_shape, initializer=0
         )
 
-        if max_batch_size == 1:
-            batched = False
+        # if fwd is None, decide based on input and output sizes
+        # fwd is more efficient when the number of input elements is less
+        # than the number of output elements in general
+        fwd = fwd if fwd is not None else (num_input_elems < num_output_elems)
 
+        batched = (max_batch_size is None) or (max_batch_size > 1)
+
+        # prepare the grad callable if not already done
         if (self.grad_callable_inputs is None) or (
             self.grad_callable_inputs_options != (batched, fwd)
         ):
             self.grad_callable_inputs_options = (batched, fwd)
             if not batched:
                 # make non-batched version of the callable
+                def remove_batch_dim(x: np.ndarray) -> np.ndarray:
+                    return x[0, ...]
+
+                @jaxtyped(typechecker=beartype)
                 def callable_single(
-                    params: Tuple[np.ndarray, ...],
-                    x: np.ndarray,
+                    params: ModelParams,
+                    x: Data,
                     training: bool,
-                    states: Tuple[np.ndarray, ...],
+                    state: ModelState,
                     rng: Any,
-                ) -> np.ndarray:
-                    y, new_states = self.callable(
-                        params, x[None, ...], training, states, rng
+                ) -> Data:
+                    y, new_state = self.callable(
+                        params, x[None, ...], training, state, rng
                     )
-                    return y[0], new_states
+                    return jax.tree.map(remove_batch_dim, y), new_state
 
                 if fwd:
                     grad_single = jax.jacfwd(
@@ -724,85 +599,80 @@ class Model(object):
                     )
                 self.grad_callable_inputs = jax.jit(
                     jax.vmap(grad_single, in_axes=(None, 0, None, None, None)),
-                    static_argnames=["training"],
+                    static_argnums=(2,),
                 )
             else:
                 if fwd:
                     grad_callable_inputs_ = jax.jit(
                         jax.jacfwd(self.callable, argnums=1, has_aux=True),
-                        static_argnames=["training"],
+                        static_argnums=(2,),
                     )
                 else:
                     grad_callable_inputs_ = jax.jit(
                         jax.jacrev(self.callable, argnums=1, has_aux=True),
-                        static_argnames=["training"],
+                        static_argnums=(2,),
                     )
 
                 # take the diagonal (batch-wise jacobian)
-                def grad_callable_inputs(
-                    params: Tuple[np.ndarray, ...],
-                    X: np.ndarray,
-                    training: bool,
-                    states: Tuple[np.ndarray, ...],
-                    rng: Any,
-                ) -> Tuple[np.ndarray, Tuple[np.ndarray, ...]]:
-                    Y, new_states = grad_callable_inputs_(
-                        params, X, training, states, rng
-                    )
-                    # Y is (batch_size, output_dim1, output_dim2, ...,
-                    # batch_size, input_dim1, input_dim2, ...)
-                    # we want to take the diagonal along the two batch axes
-                    batch_size = X.shape[0]
-                    output_ndim = len(self.output_shape)
-                    input_ndim = len(self.input_shape)
+                @jaxtyped(typechecker=beartype)
+                def take_diag(
+                    arr: np.ndarray,
+                    input_shape: Tuple[int, ...],
+                    output_shape: Tuple[int, ...],
+                ) -> np.ndarray:
+                    batch_size = arr.shape[0]
+                    input_ndim = len(input_shape)
+                    output_ndim = len(output_shape)
                     diag_indices = (
                         (np.arange(batch_size),)
                         + (slice(None),) * output_ndim
                         + (np.arange(batch_size),)
                         + (slice(None),) * input_ndim
                     )
-                    return Y[diag_indices], new_states
+                    return arr[diag_indices]
+
+                @jaxtyped(typechecker=beartype)
+                def grad_callable_inputs(
+                    params: ModelParams,
+                    X: Data,
+                    training: bool,
+                    state: ModelState,
+                    rng: Any,
+                ) -> Tuple[Data, ModelState]:
+                    Y, new_states = grad_callable_inputs_(
+                        params, X, training, state, rng
+                    )
+                    # each leaf of Y is and array of shape
+                    # (batch_size, output_dim1, output_dim2, ...,
+                    # batch_size, input_dim1, input_dim2, ...)
+                    # we want to take the diagonal along the two batch axes
+
+                    Y_diag = jax.tree.map(
+                        take_diag,
+                        Y,
+                        self.input_shape,
+                        self.output_shape,
+                        is_leaf=lambda x: isinstance(x, tuple)
+                        and all(isinstance(i, int) for i in x),
+                    )
+                    return Y_diag, new_states
 
                 self.grad_callable_inputs = grad_callable_inputs
 
-        X_ = X.astype(dtype)
-        # make sure the dtype was converted, issue a warning if not
-        if X_.dtype != dtype:
-            warnings.warn(
-                "While performing inference with model: "
-                f"Requested dtype ({dtype}) was not successfully applied. "
-                "This is most likely due to JAX_ENABLE_X64 not being set. "
-                "See accompanying JAX warning for more details.",
-                UserWarning,
-            )
+        # safecast input to requested dtype
+        X_ = safecast(X, dtype)
+
         if rng is None:
             rng = self.get_rng()
         elif isinstance(rng, int):
             rng = jax.random.key(rng)
 
-        if self.grad_callable_inputs_options[0] and (
-            max_batch_size is not None and X_.shape[0] > max_batch_size
-        ):
-            # process in batches
-            grad_inputs = []
-            new_states = []
-            num_batches = int(np.ceil(X_.shape[0] / max_batch_size))
-            for i in range(num_batches):
-                batch_X = X_[
-                    i * max_batch_size : (i + 1) * max_batch_size, ...
-                ]
-                grad_inp, new_state = self.grad_callable_inputs(
-                    self.get_params(), batch_X, False, self.get_state(), rng
-                )
-                grad_inputs.append(grad_inp)
-                new_states.append(new_state)
-            grad_input_result = np.concatenate(grad_inputs, axis=0)
-            # just take the state from the last batch
-            new_state = new_states[-1]
-        else:
-            grad_input_result, new_state = self.grad_callable_inputs(
-                self.get_params(), X_, False, self.get_state(), rng
-            )
+        autobatched_grad_callable = autobatch(
+            self.grad_callable_inputs, max_batch_size
+        )
+        grad_input_result, new_state = autobatched_grad_callable(
+            self.get_params(), X_, False, self.get_state(), rng
+        )
 
         if update_state:
             warnings.warn(
@@ -818,17 +688,14 @@ class Model(object):
 
     def grad_params(
         self,
-        X: np.ndarray,
-        dtype: Optional[Any] = np.float64,
-        rng: Any = None,
+        X: Data,
+        dtype: Any = np.float64,
+        rng: Any | int | None = None,
         return_state: bool = False,
         update_state: bool = False,
-        fwd: bool = None,
-        max_batch_size: int = None,
-    ) -> (
-        Tuple[Tuple[np.ndarray, ...], Tuple[np.ndarray, ...]]
-        | Tuple[np.ndarray, ...]
-    ):
+        fwd: bool | None = None,
+        max_batch_size: int | None = None,
+    ) -> Tuple[ModelParams, ModelState] | ModelParams:
         r"""
         Doc TODO
 
@@ -841,24 +708,30 @@ class Model(object):
             If provided, the input will be split into batches of at most
             this size and processed sequentially to avoid OOM errors.
             Default is ``None``, which means the input will be processed in
-            a single batch.
+            a single batch. Only applies if ``batched=True``.
         """
 
-        if not self.ready:
-            raise RuntimeError("Model is not ready. Call compile() first.")
+        if not self.is_ready():
+            raise RuntimeError(
+                f"{self.name()} is not ready. Call compile() first."
+            )
         if self.callable is None:
-            self.callable = jax.jit(
-                self._get_callable(), static_argnames=["training"]
-            )
+            self.callable = jax.jit(self._get_callable(), static_argnums=(2,))
 
-        fwd = (
-            fwd
-            if fwd is not None
-            else (
-                np.prod(np.array(self.input_shape))
-                < np.prod(np.array(self.output_shape))
-            )
+        def get_num_elems(count: int, arr: np.ndarray) -> int:
+            return count + arr.size
+
+        num_input_elems = jax.tree.reduce(
+            get_num_elems, self.input_shape, initializer=0
         )
+        num_output_elems = jax.tree.reduce(
+            get_num_elems, self.output_shape, initializer=0
+        )
+
+        # if fwd is None, decide based on input and output sizes
+        # fwd is more efficient when the number of input elements is less
+        # than the number of output elements in general
+        fwd = fwd if fwd is not None else (num_input_elems < num_output_elems)
 
         if self.grad_callable_params is None or (
             self.grad_callable_params_options != fwd
@@ -867,55 +740,28 @@ class Model(object):
             if fwd:
                 self.grad_callable_params = jax.jit(
                     jax.jacfwd(self.callable, argnums=0, has_aux=True),
-                    static_argnames=["training"],
+                    static_argnums=(2,),
                 )
             else:
                 self.grad_callable_params = jax.jit(
                     jax.jacrev(self.callable, argnums=0, has_aux=True),
-                    static_argnames=["training"],
+                    static_argnums=(2,),
                 )
 
-        X_ = X.astype(dtype)
-        # make sure the dtype was converted, issue a warning if not
-        if X_.dtype != dtype:
-            warnings.warn(
-                "While performing inference with model: "
-                f"Requested dtype ({dtype}) was not successfully applied. "
-                "This is most likely due to JAX_ENABLE_X64 not being set. "
-                "See accompanying JAX warning for more details.",
-                UserWarning,
-            )
+        # safecast input to requested dtype
+        X_ = safecast(X, dtype)
+
         if rng is None:
             rng = self.get_rng()
         elif isinstance(rng, int):
             rng = jax.random.key(rng)
 
-        if max_batch_size is not None and X_.shape[0] > max_batch_size:
-            # process in batches
-            grad_params = []
-            new_states = []
-            num_batches = int(np.ceil(X_.shape[0] / max_batch_size))
-            for i in range(num_batches):
-                batch_X = X_[
-                    i * max_batch_size : (i + 1) * max_batch_size, ...
-                ]
-                grad_param, new_state = self.grad_callable_params(
-                    self.get_params(), batch_X, False, self.get_state(), rng
-                )
-                grad_params.append(grad_param)
-                new_states.append(new_state)
-            # concatenate the batch results
-            grad_params_result = tuple(
-                np.concatenate([gp[i] for gp in grad_params], axis=0)
-                for i in range(len(grad_params[0]))
-            )
-
-            # just take the state from the last batch
-            new_state = new_states[-1]
-        else:
-            grad_params_result, new_state = self.grad_callable_params(
-                self.get_params(), X_, False, self.get_state(), rng
-            )
+        autobatched_grad_callable = autobatch(
+            self.grad_callable_params, max_batch_size
+        )
+        grad_params_result, new_state = autobatched_grad_callable(
+            self.get_params(), X_, False, self.get_state(), rng
+        )
 
         if update_state:
             warnings.warn(
@@ -929,13 +775,13 @@ class Model(object):
         else:
             return grad_params_result
 
-    def set_precision(self, prec: Union[np.dtype, str, int]) -> None:
+    def set_precision(self, prec: np.dtype | str | int) -> None:
         """
         Set the precision of the model parameters and states.
 
         Parameters
         ----------
-            prec : Union[np.dtype, str, int]
+            prec
                 Precision to set for the model parameters and states.
                 Valid options are:
                 [for 32-bit precision (all options are equivalent)]
@@ -945,8 +791,10 @@ class Model(object):
                 - np.float64, np.complex128, "float64", "complex128"
                 - "double", "f64", "c128", 64
         """
-        if not self.ready:
-            raise RuntimeError("Model is not ready. Call compile() first.")
+        if not self.is_ready():
+            raise RuntimeError(
+                f"{self.name()} is not ready. Call compile() first."
+            )
 
         # convert precision to 32 or 64
         if prec in [
@@ -992,7 +840,7 @@ class Model(object):
             module.set_precision(prec)
 
     # alias for set_precision method that returns self
-    def astype(self, dtype: Union[np.dtype, str]) -> "Model":
+    def astype(self, dtype: np.dtype | str) -> "Model":
         """
         Convenience wrapper to set_precision using the dtype argument, returns
         self.
@@ -1003,12 +851,12 @@ class Model(object):
     def train(
         self,
         X: np.ndarray,
-        Y: Optional[np.ndarray] = None,
-        Y_unc: Optional[np.ndarray] = None,
-        X_val: Optional[np.ndarray] = None,
-        Y_val: Optional[np.ndarray] = None,
-        Y_val_unc: Optional[np.ndarray] = None,
-        loss_fn: Union[str, Callable] = "mse",
+        Y: np.ndarray | None = None,
+        Y_unc: np.ndarray | None = None,
+        X_val: np.ndarray | None = None,
+        Y_val: np.ndarray | None = None,
+        Y_val_unc: np.ndarray | None = None,
+        loss_fn: str | Callable = "mse",
         lr: float = 1e-3,
         batch_size: int = 32,
         num_epochs: int = 100,
@@ -1016,11 +864,11 @@ class Model(object):
         early_stopping_patience: int = 10,
         early_stopping_tolerance: float = 1e-6,
         # advanced options
-        initialization_seed: Optional[int] = None,
-        callback: Optional[Callable] = None,
-        unroll: Optional[int] = None,
+        initialization_seed: int | None = None,
+        callback: Callable | None = None,
+        unroll: int | None = None,
         verbose: bool = True,
-        batch_seed: Optional[int] = None,
+        batch_seed: int | None = None,
         b1: float = 0.9,
         b2: float = 0.999,
         eps: float = 1e-8,
@@ -1028,7 +876,7 @@ class Model(object):
     ) -> None:
 
         # check if the model is ready
-        if not self.ready:
+        if not self.is_ready():
             initialization_seed = initialization_seed or random.randint(
                 0, 2**32 - 1
             )
@@ -1168,14 +1016,14 @@ class Model(object):
         # set the final rng
         self.set_rng(final_model_rng)
 
-    def serialize(self) -> Dict[str, Union[Any, Dict[str, Any]]]:
+    def serialize(self) -> Dict[str, Any]:
         """
         Serialize the model to a dictionary. This is done by serializing the
         model's parameters/metadata and then serializing each module.
 
         Returns
         -------
-            Dict[str, Union[Any, Dict[str, Any]]]
+            Dict[str, Any]
         """
 
         module_fulltypenames = [str(type(module)) for module in self.modules]

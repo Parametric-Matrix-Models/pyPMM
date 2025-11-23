@@ -124,16 +124,16 @@ class Bias(BaseModule):
                 )
             # else if the input shape is a PyTree of tuples, all shapes must
             # match
-        elif any(
-            [
-                shape != self.bias.shape
-                for shape in jax.tree.leaves(input_shape)
-            ]
-        ):
-            raise ValueError(
-                f"Bias shape {self.bias.shape} does not match all input "
-                f"shapes {jax.tree.leaves(input_shape)}"
-            )
+            elif any(
+                [
+                    shape != self.bias.shape
+                    for shape in jax.tree.leaves(input_shape)
+                ]
+            ):
+                raise ValueError(
+                    f"Bias shape {self.bias.shape} does not match all input "
+                    f"shapes {jax.tree.leaves(input_shape)}"
+                )
 
         shape = (1,) if self.scalar else input_shape
 

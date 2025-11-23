@@ -19,8 +19,8 @@ def test_einsum_array():
     # testing with implicit indexing
     einsum_im = pmm.modules.Einsum("ij,ki", A)
 
-    einsum_ex.compile(key, d.shape)
-    einsum_im.compile(key, d.shape)
+    einsum_ex.compile(key, d.shape[1:])  # remove batch dim
+    einsum_im.compile(key, d.shape[1:])
 
     out_ex, _ = einsum_ex(d)
     out_im, _ = einsum_im(d)
@@ -28,6 +28,23 @@ def test_einsum_array():
     expected_out = np.einsum("aij,ki->ajk", d, A)
 
     assert np.allclose(out_ex, expected_out)
+    assert np.allclose(out_im, expected_out)
+
+    # repeat without specifying A during initialization
+    einsum_ex = pmm.modules.Einsum("ij,ki->jk", shapes=A.shape)
+    einsum_im = pmm.modules.Einsum("ij,ki", shapes=A.shape)
+
+    einsum_ex.compile(key, d.shape[1:])  # remove batch dim
+    einsum_im.compile(key, d.shape[1:])
+    out_ex, _ = einsum_ex(d)
+    out_im, _ = einsum_im(d)
+
+    Aex = einsum_ex.get_params()
+    Aim = einsum_im.get_params()
+
+    expected_out = np.einsum("aij,ki->ajk", d, Aex)
+    assert np.allclose(out_ex, expected_out)
+    expected_out = np.einsum("aij,ki->ajk", d, Aim)
     assert np.allclose(out_im, expected_out)
 
 
@@ -55,10 +72,12 @@ def test_einsum_pytree():
     # testing with implicit indexing
     einsum_im = pmm.modules.Einsum(("ij,ki", ("aj,ka", "aa,a")), A)
 
-    einsum_ex.compile(key, (d[0].shape, (d[1][0].shape, d[1][1].shape)))
-    einsum_im.compile(key, (d[0].shape, (d[1][0].shape, d[1][1].shape)))
-
-    print(einsum_ex._batch_einsum_str)
+    einsum_ex.compile(
+        key, (d[0].shape[1:], (d[1][0].shape[1:], d[1][1].shape[1:]))
+    )
+    einsum_im.compile(
+        key, (d[0].shape[1:], (d[1][0].shape[1:], d[1][1].shape[1:]))
+    )
 
     out_ex, _ = einsum_ex(d)
     out_im, _ = einsum_im(d)

@@ -18,7 +18,9 @@ from .flatten import Flatten
 
 # from .func import Func
 # from .legacyaffineobservablepmm import LegacyAffineObservablePMM
-# from .linearnn import LinearNN
+from .linearnn import LinearNN
+from .matmul import MatMul
+
 # from .lowrankaffineeigenvaluepmm import LowRankAffineEigenvaluePMM
 # from .lowrankaffinehermitianmatrix import LowRankAffineHermitianMatrix
 # from .lowrankaffineobservablepmm import LowRankAffineObservablePMM
@@ -56,7 +58,8 @@ __all__ = [  # noqa: F405
     "Flatten",
     # "Func",
     # "LegacyAffineObservablePMM",
-    # "LinearNN",
+    "LinearNN",
+    "MatMul",
     # "NonnegativeLinearNN",
     "Reshape",
     # "SubsetModule",

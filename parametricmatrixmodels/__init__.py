@@ -11,3 +11,6 @@ __version__ = _get_version()
 from . import modules, scalers, training, typing
 from .conformalizedmodel import ConformalizedModel
 from .model import Model
+from .sequentialmodel import SequentialModel
+
+from . import model_util  # isort: skip

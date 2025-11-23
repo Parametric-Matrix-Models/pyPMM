@@ -135,10 +135,12 @@ class Reshape(BaseModule):
 
         return callable
 
-    def validate_shape(self, input_shape: DataShape) -> None:
+    def validate_and_concretify_shape(
+        self, input_shape: DataShape
+    ) -> DataShape:
         # check that input_shape and self.shape are compatible
         if self.shape is None:
-            return
+            return input_shape
 
         assert input_shape is not None, "Input shape must not be None."
         assert not (None in input_shape), "Input shape must not contain None."
@@ -149,10 +151,13 @@ class Reshape(BaseModule):
                 "Input shape must be a tuple, list, or PyTree of shapes."
             )
 
+        promoted = False
+
         # if input_shape is an iterable of ints, convert to a single-element
         # PyTree for consistency
         if all(isinstance(dim, int) for dim in input_shape):
             input_shape = (input_shape,)
+            promoted = True
 
         # same for self.shape
         if all(isinstance(dim, int) for dim in self.shape):
@@ -170,10 +175,10 @@ class Reshape(BaseModule):
             f" structure {shape_struct}"
         )
 
-        def check_compatibility(
+        def check_compatibility_and_concretify(
             in_shape: ArrayDataShape,
             target_shape: ArrayDataShape | None,
-        ) -> None:
+        ) -> ArrayDataShape:
             if target_shape is None:
                 return
 
@@ -198,19 +203,30 @@ class Reshape(BaseModule):
                 f" {target_shape}"
             )
 
-        jax.tree.map(
-            check_compatibility,
+            if -1 in target_shape:
+                # replace -1 with inferred dimension
+                return tuple(
+                    inferred_dim if dim == -1 else dim for dim in target_shape
+                )
+            else:
+                return target_shape
+
+        concrete_shape = jax.tree.map(
+            check_compatibility_and_concretify,
             input_shape,
             selfshape,
             is_leaf=Reshape._is_shape,
         )
+        if promoted:
+            return concrete_shape[0]
+        else:
+            return concrete_shape
 
     def compile(self, rng: Any, input_shape: DataShape) -> None:
-        self.validate_shape(input_shape)
+        self.validate_and_concretify_shape(input_shape)
 
     def get_output_shape(self, input_shape: DataShape) -> DataShape:
-        self.validate_shape(input_shape)
-        return self.shape if self.shape is not None else input_shape
+        return self.validate_and_concretify_shape(input_shape)
 
     def get_hyperparameters(self) -> HyperParams:
         return {

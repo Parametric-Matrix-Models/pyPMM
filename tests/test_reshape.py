@@ -39,20 +39,26 @@ def test_reshape_array():
 
     new_shape = (4, 3)
     reshape_module = pmm.modules.Reshape(shape=new_shape)
-    reshape_module.validate_shape(in_arr.shape[1:])  # Validate shape
+    reshape_module.validate_and_concretify_shape(
+        in_arr.shape[1:]
+    )  # Validate shape
     out_arr, _ = reshape_module(in_arr)
     assert out_arr.shape == (batch_size, *new_shape)
 
     new_shape = (-1, 2)
     reshape_module = pmm.modules.Reshape(shape=new_shape)
-    reshape_module.validate_shape(in_arr.shape[1:])  # Validate shape
+    reshape_module.validate_and_concretify_shape(
+        in_arr.shape[1:]
+    )  # Validate shape
     out_arr, _ = reshape_module(in_arr)
     assert out_arr.shape == (batch_size, 6, 2)
 
     # test reshape with different number of dimensions
     new_shape = (2, 2, 3)
     reshape_module = pmm.modules.Reshape(shape=new_shape)
-    reshape_module.validate_shape(in_arr.shape[1:])  # Validate shape
+    reshape_module.validate_and_concretify_shape(
+        in_arr.shape[1:]
+    )  # Validate shape
     out_arr, _ = reshape_module(in_arr)
     assert out_arr.shape == (batch_size, *new_shape)
 
@@ -60,14 +66,16 @@ def test_reshape_array():
     new_shape = (5, 3)
     reshape_module = pmm.modules.Reshape(shape=new_shape)
     with pytest.raises(AssertionError):
-        reshape_module.validate_shape(in_arr.shape[1:])
+        reshape_module.validate_and_concretify_shape(in_arr.shape[1:])
     with pytest.raises(TypeError):
         out_arr, _ = reshape_module(in_arr)
 
     # test identity reshape
     new_shape = None
     reshape_module = pmm.modules.Reshape(shape=new_shape)
-    reshape_module.validate_shape(in_arr.shape[1:])  # Validate shape
+    reshape_module.validate_and_concretify_shape(
+        in_arr.shape[1:]
+    )  # Validate shape
     out_arr, _ = reshape_module(in_arr)
     assert out_arr.shape == in_arr.shape
 
@@ -84,7 +92,7 @@ def test_reshape_pytree():
 
     new_shape = [(4, 3), (4, 2)]
     reshape_module = pmm.modules.Reshape(shape=new_shape)
-    reshape_module.validate_shape(
+    reshape_module.validate_and_concretify_shape(
         [arr.shape[1:] for arr in in_data]
     )  # Validate shape
     out_data, _ = reshape_module(in_data)
@@ -94,7 +102,7 @@ def test_reshape_pytree():
     # test only one reshape
     new_shape = [(4, 3), None]
     reshape_module = pmm.modules.Reshape(shape=new_shape)
-    reshape_module.validate_shape(
+    reshape_module.validate_and_concretify_shape(
         [arr.shape[1:] for arr in in_data]
     )  # Validate shape
     out_data, _ = reshape_module(in_data)
@@ -104,7 +112,7 @@ def test_reshape_pytree():
     # test reshape with -1 and different number of dimensions
     new_shape = [(-1, 2), (8,)]
     reshape_module = pmm.modules.Reshape(shape=new_shape)
-    reshape_module.validate_shape(
+    reshape_module.validate_and_concretify_shape(
         [arr.shape[1:] for arr in in_data]
     )  # Validate shape
     out_data, _ = reshape_module(in_data)
@@ -115,7 +123,7 @@ def test_reshape_pytree():
     new_shape = [(5, 3), (4, 2)]
     reshape_module = pmm.modules.Reshape(shape=new_shape)
     with pytest.raises(AssertionError):
-        reshape_module.validate_shape(
+        reshape_module.validate_and_concretify_shape(
             [arr.shape[1:] for arr in in_data]
         )  # Validate shape
     with pytest.raises(TypeError):
@@ -124,7 +132,7 @@ def test_reshape_pytree():
     # test identity reshape
     new_shape = None
     reshape_module = pmm.modules.Reshape(shape=new_shape)
-    reshape_module.validate_shape(
+    reshape_module.validate_and_concretify_shape(
         [arr.shape[1:] for arr in in_data]
     )  # Validate shape
     out_data, _ = reshape_module(in_data)
@@ -135,7 +143,7 @@ def test_reshape_pytree():
     new_shape = [((4, 3),), (4, 2)]
     reshape_module = pmm.modules.Reshape(shape=new_shape)
     with pytest.raises(AssertionError):
-        reshape_module.validate_shape(
+        reshape_module.validate_and_concretify_shape(
             [arr.shape[1:] for arr in in_data]
         )  # Validate shape
     with pytest.raises(TypeError):
