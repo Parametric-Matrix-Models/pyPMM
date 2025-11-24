@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import jax
 from beartype import beartype
-from jaxtyping import Any, Array, PyTree, Shaped, jaxtyped
+from jaxtyping import Array, PyTree, Shaped, jaxtyped
+
+from .typing import Any
 
 
 @jaxtyped(typechecker=beartype)
