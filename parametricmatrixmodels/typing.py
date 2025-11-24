@@ -3,7 +3,7 @@ from __future__ import annotations
 from sys import version_info
 from typing import Any, TypeAlias
 
-from jaxtyping import Array, Num, PyTree
+from jaxtyping import Array, Inexact, Num, PyTree
 
 r"""
 Module for type aliases used throughout the ParametricMatrixModels package.
@@ -55,17 +55,17 @@ https://beartype.readthedocs.io/en/latest/api_roar/#pep-585-deprecations
 #:                              "b": jnp.array([0.5]),
 #:                              "a": [jnp.array([[1.0]]), jnp.array([[2.0]])],
 #:                          }
-Params: TypeAlias = PyTree[Num[Array, "..."], "Params"]
+Params: TypeAlias = PyTree[Inexact[Array, "..."], "Params"]
 
 #: A special case of ``Params`` where the parameters are represented as a
 #: tuple of JAX arrays.
-TupleParams: TypeAlias = Tuple[Num[Array, "..."], ...]
+TupleParams: TypeAlias = Tuple[Inexact[Array, "..."], ...]
 #: A special case of ``Params`` where the parameters are represented as a
 #: list of JAX arrays.
-ListParams: TypeAlias = List[Num[Array, "..."]]
+ListParams: TypeAlias = List[Inexact[Array, "..."]]
 #: A special case of ``Params`` where the parameters are represented as a
 #: dictionary of JAX arrays.
-DictParams: TypeAlias = Dict[str, Num[Array, "..."]]
+DictParams: TypeAlias = Dict[str, Inexact[Array, "..."]]
 
 #: A dictionary representing hyperparameters for model configuration.
 #: The keys are strings representing hyperparameter names, and the values
@@ -86,12 +86,12 @@ HyperParams: TypeAlias = Dict[str, Any]
 #: The structure of the PyTree can change throughout evaluation, so it is not
 #: specified in the type alias.
 Data: TypeAlias = (
-    PyTree[Num[Array, "batch_size ..."]] | Num[Array, "batch_size ..."]
+    PyTree[Inexact[Array, "batch_size ..."]] | Inexact[Array, "batch_size ..."]
 )
 
 #: A special case of ``Data`` where the input data is represented as a single
 #: JAX array.
-ArrayData: TypeAlias = Num[Array, "batch_size ..."]
+ArrayData: TypeAlias = Inexact[Array, "batch_size ..."]
 
 #: A PyTree representing the shape of input data. Each leaf is a tuple of
 #: integers representing the shape of the corresponding leaf in a ``Data``

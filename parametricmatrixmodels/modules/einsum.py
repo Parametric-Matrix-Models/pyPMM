@@ -1,7 +1,7 @@
 import jax
 import jax.numpy as np
 from beartype import beartype
-from jaxtyping import Array, Num, PyTree, jaxtyped
+from jaxtyping import Array, Inexact, PyTree, jaxtyped
 
 from parametricmatrixmodels.typing import (
     Any,
@@ -32,7 +32,7 @@ class Einsum(BaseModule):
     def __init__(
         self,
         einsum_str: PyTree[str] | str | None = None,
-        params: Params | Num[Array, "..."] = None,
+        params: Params | Inexact[Array, "..."] = None,
         shapes: (
             PyTree[Tuple[int, ...], "Params"] | Tuple[int, ...] | None
         ) = None,
@@ -232,7 +232,7 @@ class Einsum(BaseModule):
 
         @jaxtyped(typechecker=beartype)
         def einsum_callable(
-            params: Params | Num[Array, "..."],
+            params: Params | Inexact[Array, "..."],
             input_data: Data,
         ) -> Data:
             return jax.tree.map(

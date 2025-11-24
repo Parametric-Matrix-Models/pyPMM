@@ -4,25 +4,78 @@ import sys
 import warnings
 from functools import partial
 from time import time
-from typing import Callable
 
 import jax
 import jax.numpy as np
+from beartype import beartype
 from jax import grad, jit, lax
+from jaxtyping import Array, Float, Inexact, jaxtyped
+
+from .model_util import ModelParams, ModelState, ModelStruct
+from .tree_util import batch_leaves, random_permute_leaves
+from .typing import (
+    Any,
+    Callable,
+    Data,
+    PyTree,
+    Tuple,
+    TypeAlias,
+)
 
 """
     Complex Adam Optimizer in fully compiled JAX.
 """
 
+# type alias for a single parameter array
+ParamArray: TypeAlias = Inexact[Array, "..."]
+# type alias for real-valued parameter arrays
+RealParamArray: TypeAlias = Float[Array, "..."]
+# type alias for optimizer state
+OptimizerState: TypeAlias = Tuple[ParamArray, ParamArray, ParamArray]
+# type alias for real-valued optimizer state
+RealOptimizerState: TypeAlias = Tuple[
+    RealParamArray, RealParamArray, RealParamArray
+]
+# training_state contains:
+# (
+#   batch_rng,
+#   epoch,
+#   adam_state,
+#   best_adam_state,
+#   model_state,
+#   best_model_state,
+#   model_rng,
+#   best_model_rng,
+#   best_val_loss,
+#   patience
+# )
+TrainingState: TypeAlias = Tuple[
+    Any,
+    int,
+    OptimizerState,
+    OptimizerState,
+    ModelState,
+    ModelState,
+    Any,
+    Any,
+    float,
+    int,
+]
+
 
 class GracefulKiller:
     kill_now = False
 
-    def __init__(self):
+    def __init__(self) -> None:
         signal.signal(signal.SIGINT, self.exit_gracefully)
         signal.signal(signal.SIGTERM, self.exit_gracefully)
 
-    def exit_gracefully(self, *args):
+    def exit_gracefully(self, *args) -> None:
+        # if a second signal is received, exit immediately
+        if self.kill_now:
+            raise KeyboardInterrupt(
+                "Multiple termination signals received, exiting."
+            )
         self.kill_now = True
 
 
@@ -31,18 +84,22 @@ class ProgressBar:
     Simple console progress bar
     """
 
-    def __init__(self, total, length=40, extra_info=""):
+    def __init__(
+        self, total: int | float, length: int = 40, extra_info: str = ""
+    ) -> None:
         self.total = total
         self.length = length
         self.start(extra_info)
 
-    def start(self, extra_info=""):
+    def start(self, extra_info: str = "") -> None:
         self.last = 0
         self.starttime = time()  # estimate time remaining
         self.longest_str = 0
         self.extra_info = extra_info + (" | " if extra_info else "")
 
-    def update(self, raw_progress, dynamic_info=""):
+    def update(
+        self, raw_progress: int | float, dynamic_info: str = ""
+    ) -> None:
         if self.total <= 1e-9:
             return
         progress_frac = raw_progress / self.total
@@ -77,7 +134,7 @@ class ProgressBar:
             sys.stdout.flush()
             self.last = progress
 
-    def end(self, final_info=""):
+    def end(self, final_info: str = "") -> None:
         if self.total <= 1e-9:
             return
         disp = (
@@ -100,6 +157,7 @@ class ProgressBar:
         sys.stdout.flush()
 
 
+@jaxtyped(typechecker=beartype)
 def make_schedule(
     scalar_or_schedule: float | Callable[[int], float],
 ) -> Callable[[int], float]:
@@ -111,22 +169,42 @@ def make_schedule(
         raise TypeError(type(scalar_or_schedule))
 
 
-def adam(step_size, b1=0.9, b2=0.999, eps=1e-8, clip=np.inf):
+@jaxtyped(typechecker=beartype)
+def adam(
+    step_size: Callable[[int], float],
+    b1: float = 0.9,
+    b2: float = 0.999,
+    eps: float = 1e-8,
+    clip: float = np.inf,
+) -> Tuple[
+    Callable[[RealParamArray], RealOptimizerState],
+    Callable[[int, float, RealOptimizerState], RealOptimizerState],
+    Callable[[RealOptimizerState], RealParamArray],
+    Callable[[RealParamArray, RealOptimizerState], RealOptimizerState],
+]:
     """
-    Returns a function that computes the Adam update for real numbers.
+    Returns functions that computes the Adam update for real numbers.
     """
 
     step_size = make_schedule(step_size)
 
-    def init(x0):
+    @jaxtyped(typechecker=beartype)
+    def init(
+        x0: RealParamArray,
+    ) -> RealOptimizerState:
         """
         Initializes the Adam optimizer state.
         """
-        m = np.zeros_like(x0, dtype=np.float32)
-        v = np.zeros_like(x0, dtype=np.float32)
-        return x0.astype(np.float32), m, v
+        m = np.zeros_like(x0)
+        v = np.zeros_like(x0)
+        return x0, m, v
 
-    def update(i, dx, state):
+    @jaxtyped(typechecker=beartype)
+    def update(
+        i: int,
+        dx: float,
+        state: RealOptimizerState,
+    ) -> RealOptimizerState:
         """
         Computes the Adam update for real numbers.
         """
@@ -142,14 +220,18 @@ def adam(step_size, b1=0.9, b2=0.999, eps=1e-8, clip=np.inf):
         x = x - step_size(i) * m_hat / (np.sqrt(v_hat) + eps)
         return x, m, v
 
-    def get_params(state):
+    @jaxtyped(typechecker=beartype)
+    def get_params(state: RealOptimizerState) -> RealParamArray:
         """
         Returns the parameters from the optimizer state.
         """
         params, _, _ = state
         return params
 
-    def update_params_direct(new_params, state):
+    @jaxtyped(typechecker=beartype)
+    def update_params_direct(
+        new_params: RealParamArray, state: RealOptimizerState
+    ) -> RealOptimizerState:
         """
         Updates the parameters directly in the optimizer state.
         """
@@ -159,14 +241,27 @@ def adam(step_size, b1=0.9, b2=0.999, eps=1e-8, clip=np.inf):
     return init, update, get_params, update_params_direct
 
 
-def complex_adam(step_size, b1=0.9, b2=0.999, eps=1e-8, clip=np.inf):
+@jaxtyped(typechecker=beartype)
+def complex_adam(
+    step_size: Callable[[int], float],
+    b1: float = 0.9,
+    b2: float = 0.999,
+    eps: float = 1e-8,
+    clip: float = np.inf,
+) -> Tuple[
+    Callable[[ParamArray], OptimizerState],
+    Callable[[int, ParamArray, OptimizerState], OptimizerState],
+    Callable[[OptimizerState], ParamArray],
+    Callable[[ParamArray, OptimizerState], OptimizerState],
+]:
     """
-    Returns a function that computes the Adam update for complex numbers.
+    Returns functions that computes the Adam update for complex numbers.
     """
 
     step_size = make_schedule(step_size)
 
-    def init(x0):
+    @jaxtyped(typechecker=beartype)
+    def init(x0: ParamArray) -> OptimizerState:
         """
         Initializes the Adam optimizer state.
         """
@@ -174,7 +269,10 @@ def complex_adam(step_size, b1=0.9, b2=0.999, eps=1e-8, clip=np.inf):
         v = np.zeros_like(x0)
         return x0, m, v
 
-    def update(i, dx, state):
+    @jaxtyped(typechecker=beartype)
+    def update(
+        i: int, dx: ParamArray, state: OptimizerState
+    ) -> OptimizerState:
         """
         Computes the Adam update for complex numbers.
         """
@@ -204,14 +302,18 @@ def complex_adam(step_size, b1=0.9, b2=0.999, eps=1e-8, clip=np.inf):
 
         return x, m, v
 
-    def get_params(state):
+    @jaxtyped(typechecker=beartype)
+    def get_params(state: OptimizerState) -> ParamArray:
         """
         Returns the parameters from the optimizer state.
         """
         params, _, _ = state
         return params
 
-    def update_params_direct(new_params, state):
+    @jaxtyped(typechecker=beartype)
+    def update_params_direct(
+        new_params: ParamArray, state: OptimizerState
+    ) -> OptimizerState:
         """
         Updates the parameters directly in the optimizer state.
         """
@@ -221,17 +323,32 @@ def complex_adam(step_size, b1=0.9, b2=0.999, eps=1e-8, clip=np.inf):
     return init, update, get_params, update_params_direct
 
 
+@jaxtyped(typechecker=beartype)
 def _train_step(
-    update_fn,
-    adam_states,
-    get_params,
-    model_states,
-    model_rng,
-    i,
-    X_batch,
-    Y_batch,
-    Y_unc_batch,
-    grad_loss_fn,
+    update_fns: PyTree[
+        Callable[[int, ParamArray, OptimizerState], OptimizerState],
+        ModelStruct + " ...",
+    ],
+    adam_states: PyTree[OptimizerState, ModelStruct + " ..."],
+    get_params: PyTree[Callable[[OptimizerState], ParamArray], ModelStruct],
+    model_states: ModelState,
+    model_rng: Any,
+    i: int,
+    X_batch: Data,
+    Y_batch: Data,
+    Y_unc_batch: Data,
+    grad_loss_fn: Callable[
+        [
+            Data,
+            Data,
+            Data,
+            ModelParams,
+            bool,
+            ModelState,
+            Any,
+        ],
+        Tuple[ModelParams, ModelState],
+    ],
 ):
     """
     Performs a single training step.
@@ -245,14 +362,19 @@ def _train_step(
         X_batch,
         Y_batch,
         Y_unc_batch,
-        tuple(map(get_params, adam_states)),
+        jax.tree.map(get_params, adam_states),
         True,  # training mode
         model_states,
         model_rng,
     )
 
     return (
-        tuple(map(partial(update_fn, i), dparams, adam_states)),
+        jax.tree.map(
+            lambda ufn, dp, a_s: ufn(i, dp, a_s),
+            update_fns,
+            dparams,
+            adam_states,
+        ),
         new_states,
         new_model_rng,
     )
@@ -269,7 +391,7 @@ def _train_step(
         "batch_size",
         "val_batch_size",
         "start_epoch",
-        "num_epochs",
+        "epochs",
         "convergence_threshold",
         "early_stopping_patience",
         "early_stopping_tolerance",
@@ -278,33 +400,51 @@ def _train_step(
         "verbose",
     ),
 )
+@jaxtyped(typechecker=beartype)
 def _train(
-    batch_rng,
-    update_fn,  # static, jittable
-    adam_states,
-    get_params,  # static, jittable
-    update_params_direct,  # static, jittable
-    init_states,  # initial model states
-    init_rng,  # initial model rng
-    X,
-    Y,
-    Y_unc,  # uncertainty in the targets, if applicable
-    X_val,
-    Y_val,
-    Y_val_unc,  # uncertainty in the validation targets, if applicable
-    loss_fn,  # static, jittable
-    grad_loss_fn,  # static, jittable
-    batch_size,  # static [default should be the full dataset]
-    val_batch_size,  # static [default should be the full validation dataset]
-    start_epoch,  # static [default should be 0]
-    num_epochs,  # static [default should be 100]
-    convergence_threshold,  # static [default should be -np.inf]
-    early_stopping_patience,  # static [default should be 10]
-    early_stopping_tolerance,  # static [default should be -np.inf]
+    batch_rng: Any,
+    update_fn: PyTree[
+        Callable[[int, ParamArray, OptimizerState], OptimizerState],
+        ModelStruct + " ...",
+    ],  # static, jittable
+    adam_state: PyTree[OptimizerState, ModelStruct + " ..."],
+    get_params: PyTree[
+        Callable[[OptimizerState], ParamArray], ModelStruct
+    ],  # static, jittable
+    update_params_direct: PyTree[
+        Callable[[ParamArray, OptimizerState], OptimizerState], ModelStruct
+    ],  # static, jittable
+    init_state: ModelState,  # initial model state
+    init_rng: Any,  # initial model rng
+    X: Data,
+    Y: Data,
+    Y_unc: Data,  # uncertainty in the targets, if applicable
+    X_val: Data,
+    Y_val: Data,
+    Y_val_unc: Data,  # uncertainty in the validation targets, if applicable
+    loss_fn: Callable[
+        [Data, Data, Data, ModelParams, bool, ModelState, Any],
+        Tuple[float, ModelState],
+    ],  # static, jittable
+    grad_loss_fn: Callable[
+        [Data, Data, Data, ModelParams, bool, ModelState, Any],
+        Tuple[ModelParams, ModelState],
+    ],  # static, jittable
+    batch_size: int,  # static [default should be the full dataset]
+    val_batch_size: int,  # static [default should be the full val dataset]
+    start_epoch: int,  # static [default should be 0]
+    epochs: int,  # static [default should be 100]
+    target_loss: float,  # static [default should be -np.inf]
+    early_stopping_patience: float,  # static [default should be 100]
+    early_stopping_min_delta: float,  # static [default should be -np.inf]
     # advanced options
-    callback,  # static, jittable (rngkey, step, params) -> rngkey, params
-    unroll,  # static [default should be None, for unrolling the batch loop]
-    verbose,  # static [default should be True]
+    callback: Callable[
+        [Any, int, ModelParams], Tuple[Any, ModelParams]
+    ],  # static, jittable
+    unroll: (
+        int | None
+    ),  # static [default should be None, for unrolling the batch loop]
+    verbose: bool,  # static [default should be True]
 ):
     """
     Main training loop for the Adam optimizer. All non-jittable setup should be
@@ -312,24 +452,6 @@ def _train(
 
     Parameters
     ----------
-    rng : jax.random.PRNGKey
-        Random number generator key for JAX.
-    update_fn : list of callables
-        List of update functions for each parameter.
-    states : list of tuples
-        List of optimizer states for each parameter.
-    get_params : callable
-        Function that retrieves the parameters from the optimizer state.
-    update_params_direct : callable
-        Function that updates the parameters directly in the optimizer state.
-    X : array-like
-        (N_samples, (... feature dims ...)) training data.
-    Y : array-like
-        (N_samples, (... target dims ...)) training targets.
-    X_val : array-like
-        (N_samples, (... feature dims ...)) validation data.
-    Y_val : array-like
-        (N_samples, (... target dims ...)) validation targets.
     loss_fn : callable
         Function that computes the loss given the parameters and batch of data.
     grad_loss_fn : callable
@@ -341,16 +463,16 @@ def _train(
         Size of the validation batches.
     start_epoch : int
         Epoch to start training from. This is useful for resuming training.
-    num_epochs : int
+    epochs : int
         Total number of epochs to train for.
-    convergence_threshold : float
+    target_loss : float
         Threshold for convergence. If the validation loss is ever below this
         value, training will stop early. Set to -np.inf to disable.
     early_stopping_patience : int
         Number of epochs to wait for improvement before stopping training
         early. Ensure early_stopping_patience >> validation_freq. Must be > 0.
         To disable early stopping set early_stopping_tolerance to -np.inf.
-    early_stopping_tolerance : float
+    early_stopping_min_delta : float
         Minimum improvement in validation loss required to reset the patience
         counter. If the validation loss does not improve by at least this much,
         the patience counter will be decremented. Set to -np.inf to disable
@@ -367,10 +489,12 @@ def _train(
     """
 
     # since JAX arrays are static sizes, num_batches will be static
-    num_batches = X.shape[0] // batch_size
-    num_val_batches = X_val.shape[0] // val_batch_size
-    batch_remainder = X.shape[0] % batch_size
-    val_batch_remainder = X_val.shape[0] % val_batch_size
+    orig_batch_size = jax.tree.leaves(X)[0].shape[0]
+    orig_val_batch_size = jax.tree.leaves(X_val)[0].shape[0]
+    num_batches = orig_batch_size // batch_size
+    num_val_batches = orig_val_batch_size // val_batch_size
+    batch_remainder = orig_batch_size % batch_size
+    val_batch_remainder = orig_val_batch_size % val_batch_size
 
     total_val_batches = num_val_batches + (1 if val_batch_remainder > 0 else 0)
 
@@ -382,8 +506,20 @@ def _train(
         )
 
     # batch the loss function for validation
-    def batched_val_loss_fn(X, Y, Y_unc, params, states, model_rng, epoch_rng):
-        def batch_val_body_fn(batch_idx, batch_carry):
+    @jaxtyped(typechecker=beartype)
+    def batched_val_loss_fn(
+        X: Data,
+        Y: Data,
+        Y_unc: Data,
+        params: ModelParams,
+        state: ModelState,
+        model_rng: Any,
+        epoch_rng: Any,
+    ) -> float:
+        @jaxtyped(typechecker=beartype)
+        def batch_val_body_fn(
+            batch_idx: int, batch_carry: Tuple[Data, Data, Data, float]
+        ) -> Tuple[Data, Data, Data, float]:
             (
                 shuffled_val_X,
                 shuffled_val_Y,
@@ -391,34 +527,26 @@ def _train(
                 mean_val_loss,
             ) = batch_carry
 
-            X_val_batch = lax.dynamic_slice_in_dim(
-                shuffled_val_X,
-                batch_idx * val_batch_size,
-                val_batch_size,
-                axis=0,
+            # since all Data are arbitrary PyTrees, we slice each leaf
+            X_val_batch = batch_leaves(
+                shuffled_val_X, val_batch_size, batch_idx, axis=0
             )
-            Y_val_batch = lax.dynamic_slice_in_dim(
-                shuffled_val_Y,
-                batch_idx * val_batch_size,
-                val_batch_size,
-                axis=0,
+            Y_val_batch = batch_leaves(
+                shuffled_val_Y, val_batch_size, batch_idx, axis=0
             )
-            Y_unc_val_batch = lax.dynamic_slice_in_dim(
-                shuffled_val_Y_unc,
-                batch_idx * val_batch_size,
-                val_batch_size,
-                axis=0,
+            Y_unc_val_batch = batch_leaves(
+                shuffled_val_Y_unc, val_batch_size, batch_idx, axis=0
             )
 
             # Compute the loss for this batch
-            # do not update states or rng in validation mode
+            # do not update state or rng in validation mode
             val_loss, _ = loss_fn(
                 X_val_batch,
                 Y_val_batch,
                 Y_unc_val_batch,
                 params,
                 False,  # validation mode
-                states,
+                state,
                 model_rng,
             )
 
@@ -430,9 +558,15 @@ def _train(
             )
 
         # shuffle the validation data
-        shuffled_X_val = jax.random.permutation(epoch_rng, X_val)
-        shuffled_Y_val = jax.random.permutation(epoch_rng, Y_val)
-        shuffled_Y_unc_val = jax.random.permutation(epoch_rng, Y_val_unc)
+        # since all Data are arbitrary PyTrees, we map the permutation over
+        # the leaves
+        # so long as the key isn't changed, the permutation will be the same
+        # for all leaves
+        shuffled_X_val = random_permute_leaves(X_val, epoch_rng, axis=0)
+        shuffled_Y_val = random_permute_leaves(Y_val, epoch_rng, axis=0)
+        shuffled_Y_unc_val = random_permute_leaves(
+            Y_val_unc, epoch_rng, axis=0
+        )
 
         # scan over the validation batches
         _, _, _, mean_val_loss = lax.fori_loop(
@@ -451,34 +585,37 @@ def _train(
         # deal with possible remainder
         if val_batch_remainder > 0:
             # handle the last batch
-            X_val_batch = lax.dynamic_slice_in_dim(
+            X_val_batch = batch_leaves(
                 shuffled_X_val,
-                num_val_batches * val_batch_size,
-                val_batch_remainder,
+                val_batch_size,
+                num_val_batches,
+                length=val_batch_remainder,
                 axis=0,
             )
-            Y_val_batch = lax.dynamic_slice_in_dim(
+            Y_val_batch = batch_leaves(
                 shuffled_Y_val,
-                num_val_batches * val_batch_size,
-                val_batch_remainder,
+                val_batch_size,
+                num_val_batches,
+                length=val_batch_remainder,
                 axis=0,
             )
-            Y_unc_val_batch = lax.dynamic_slice_in_dim(
+            Y_unc_val_batch = batch_leaves(
                 shuffled_Y_unc_val,
-                num_val_batches * val_batch_size,
-                val_batch_remainder,
+                val_batch_size,
+                num_val_batches,
+                length=val_batch_remainder,
                 axis=0,
             )
 
             # Compute the loss for this batch
-            # do not update states or rng in validation mode
+            # do not update state or rng in validation mode
             val_loss, _ = loss_fn(
                 X_val_batch,
                 Y_val_batch,
                 Y_unc_val_batch,
                 params,
                 False,  # validation mode
-                states,
+                state,
                 model_rng,
             )
 
@@ -488,16 +625,16 @@ def _train(
         # return the mean validation loss
         return mean_val_loss
 
-    def start_progress_bar_callback(epoch):
+    def start_progress_bar_callback(epoch: int) -> int:
         """
         Callback to start the progress bar at the beginning of each epoch.
 
         Will be entirely skipped if verbose is False.
         """
-        pb.start(f"{epoch + 1}/{num_epochs}")
+        pb.start(f"{epoch + 1}/{epochs}")
         return 0
 
-    def update_progress_bar_callback(batch_idx):
+    def update_progress_bar_callback(batch_idx: int) -> int:
         """
         Callback to update the progress bar after each batch.
 
@@ -506,7 +643,9 @@ def _train(
         pb.update(batch_idx)
         return 0
 
-    def end_progress_bar_callback(val_loss, best_val_loss):
+    def end_progress_bar_callback(
+        val_loss: float, best_val_loss: float
+    ) -> int:
         """
         Callback to end the progress bar at the end of each epoch.
 
@@ -515,21 +654,27 @@ def _train(
         pb.end(f"{val_loss:.4e}/{best_val_loss:.4e}")
         return 0
 
-    def batch_body_fn(batch_idx, batch_carry):
+    @jaxtyped(typechecker=beartype)
+    def batch_body_fn(
+        batch_idx: int,
+        batch_carry: Tuple[
+            Data, Data, Data, OptimizerState, ModelState, Any, int
+        ],
+    ) -> Tuple[Data, Data, Data, OptimizerState, ModelState, Any, int]:
         """
         The part of the training loop that processes all batches in the dataset
 
         Each iteration of the body must execute in serial, and JAX will make
         sure of that, since batch_carry will update each loop, since it
-        contains the Adam states.
+        contains the Adam state.
         """
 
         (
             shuffled_X,
             shuffled_Y,
             shuffled_Y_unc,
-            adam_states_,
-            model_states_,
+            adam_state_,
+            model_state_,
             model_rng_,
             epoch,
         ) = batch_carry
@@ -541,25 +686,22 @@ def _train(
 
         # shuffled_X and shuffled_Y are the pre-shuffled data
         #   for this epoch (constant)
-        # adam_states are the current optimizer states
+        # adam_state are the current optimizer state
         # epoch is the current epoch number (constant)
 
-        X_batch = lax.dynamic_slice_in_dim(
-            shuffled_X, batch_idx * batch_size, batch_size, axis=0
-        )
-        Y_batch = lax.dynamic_slice_in_dim(
-            shuffled_Y, batch_idx * batch_size, batch_size, axis=0
-        )
-        Y_unc_batch = lax.dynamic_slice_in_dim(
-            shuffled_Y_unc, batch_idx * batch_size, batch_size, axis=0
+        # since all Data are arbitrary PyTrees, we slice each leaf
+        X_batch = batch_leaves(shuffled_X, batch_size, batch_idx, axis=0)
+        Y_batch = batch_leaves(shuffled_Y, batch_size, batch_idx, axis=0)
+        Y_unc_batch = batch_leaves(
+            shuffled_Y_unc, batch_size, batch_idx, axis=0
         )
 
         # Perform a single training step
-        new_adam_states, new_model_states, new_model_rng = _train_step(
+        new_adam_state, new_model_state, new_model_rng = _train_step(
             update_fn,
-            adam_states_,
+            adam_state_,
             get_params,
-            model_states_,
+            model_state_,
             model_rng_,
             epoch,
             X_batch,
@@ -572,13 +714,13 @@ def _train(
             shuffled_X,
             shuffled_Y,
             shuffled_Y_unc,
-            new_adam_states,
-            new_model_states,
+            new_adam_state,
+            new_model_state,
             new_model_rng,
             epoch,
         )
 
-    def epoch_cond_callback(training_state):
+    def epoch_cond_callback(training_state: TrainingState) -> bool:
         kill_now = killer.kill_now
 
         return not kill_now
@@ -587,19 +729,19 @@ def _train(
     # (
     #   batch_rng,
     #   epoch,
-    #   adam_states,
-    #   best_adam_states,
-    #   model_states,
-    #   best_model_states,
+    #   adam_state,
+    #   best_adam_state,
+    #   model_state,
+    #   best_model_state,
     #   model_rng,
     #   best_model_rng,
     #   best_val_loss,
     #   patience
     # )
 
-    def epoch_cond_fn(training_state):
+    def epoch_cond_fn(training_state: TrainingState) -> bool:
         """
-        Continue while the epoch is less than num_epochs, the solution has not
+        Continue while the epoch is less than epochs, the solution has not
         converged, and the patience has not run out.
         """
 
@@ -613,10 +755,10 @@ def _train(
         (
             batch_rng,
             epoch,
-            adam_states,
-            best_adam_states,
-            model_states,
-            best_model_states,
+            adam_state,
+            best_adam_state,
+            model_state,
+            best_model_state,
             model_rng,
             best_model_rng,
             best_val_loss,
@@ -624,12 +766,12 @@ def _train(
         ) = training_state
         return (
             cont
-            & (epoch < num_epochs)
-            & (best_val_loss > convergence_threshold)
+            & (epoch < epochs)
+            & (best_val_loss > target_loss)
             & (patience > 0)
         )
 
-    def epoch_body_fn(training_state):
+    def epoch_body_fn(training_state: TrainingState) -> TrainingState:
         """
         Iteration of the training loop for a single epoch. Handles shuffling,
         batching, validation, patience, and progress updates.
@@ -638,10 +780,10 @@ def _train(
         (
             batch_rng,
             epoch,
-            adam_states,
-            best_adam_states,
-            model_states,
-            best_model_states,
+            adam_state,
+            best_adam_state,
+            model_state,
+            best_model_state,
             model_rng,
             best_model_rng,
             best_val_loss,
@@ -652,9 +794,9 @@ def _train(
         batch_rng, epoch_rng = jax.random.split(batch_rng)
 
         # Shuffle the data for this epoch
-        shuffled_X = jax.random.permutation(epoch_rng, X)
-        shuffled_Y = jax.random.permutation(epoch_rng, Y)
-        shuffled_Y_unc = jax.random.permutation(epoch_rng, Y_unc)
+        shuffled_X = random_permute_leaves(X, epoch_rng, axis=0)
+        shuffled_Y = random_permute_leaves(Y, epoch_rng, axis=0)
+        shuffled_Y_unc = random_permute_leaves(Y_unc, epoch_rng, axis=0)
 
         # Initialize the progress bar
         if verbose:
@@ -668,43 +810,46 @@ def _train(
             shuffled_X,
             shuffled_Y,
             shuffled_Y_unc,
-            adam_states,
-            model_states,
+            adam_state,
+            model_state,
             model_rng,
             epoch,
         )
         batch_carry = lax.fori_loop(
             0, num_batches, batch_body_fn, batch_carry, unroll=unroll
         )
-        _, _, _, adam_states, model_states, model_rng, _ = batch_carry
+        _, _, _, adam_state, model_state, model_rng, _ = batch_carry
 
         # deal with possible remainder, again this may be traced out
         if batch_remainder > 0:
             # handle the last batch
-            X_batch = lax.dynamic_slice_in_dim(
+            X_batch = batch_leaves(
                 shuffled_X,
-                num_batches * batch_size,
-                batch_remainder,
+                batch_size,
+                num_batches,
+                length=batch_remainder,
                 axis=0,
             )
-            Y_batch = lax.dynamic_slice_in_dim(
+            Y_batch = batch_leaves(
                 shuffled_Y,
-                num_batches * batch_size,
-                batch_remainder,
+                batch_size,
+                num_batches,
+                length=batch_remainder,
                 axis=0,
             )
-            Y_unc_batch = lax.dynamic_slice_in_dim(
+            Y_unc_batch = batch_leaves(
                 shuffled_Y_unc,
-                num_batches * batch_size,
-                batch_remainder,
+                batch_size,
+                num_batches,
+                length=batch_remainder,
                 axis=0,
             )
 
-            adam_states, model_states, model_rng = _train_step(
+            adam_state, model_state, model_rng = _train_step(
                 update_fn,
-                adam_states,
+                adam_state,
                 get_params,
-                model_states,
+                model_state,
                 model_rng,
                 epoch,
                 X_batch,
@@ -714,22 +859,13 @@ def _train(
             )
 
         # Validation step
-        # val_loss, _ = loss_fn(
-        #    X_val,
-        #    Y_val,
-        #    Y_val_unc,
-        #    tuple(map(get_params, adam_states)),
-        #    False,  # validation mode
-        #    model_states,
-        #    model_rng,
-        # )
         batch_rng, epoch_rng = jax.random.split(batch_rng)
         val_loss = batched_val_loss_fn(
             X_val,
             Y_val,
             Y_val_unc,
-            tuple(map(get_params, adam_states)),
-            model_states,
+            jax.tree.map(get_params, adam_state),
+            model_state,
             model_rng,
             epoch_rng,
         )
@@ -737,7 +873,7 @@ def _train(
         # patience handling
         # decrease patience if the validation loss has not improved
         improved = (
-            val_loss <= best_val_loss - early_stopping_tolerance
+            val_loss <= best_val_loss - early_stopping_min_delta
         ).astype(np.int32)
 
         # linear update
@@ -745,16 +881,16 @@ def _train(
             (patience - 1) * (1 - improved)
         )
 
-        best_val_loss, best_adam_states, best_model_states, best_model_rng = (
+        best_val_loss, best_adam_state, best_model_state, best_model_rng = (
             lax.cond(
                 val_loss < best_val_loss,
                 lambda x, y: x,  # if the validation loss improved
                 lambda x, y: y,  # if the validation loss did not improve
-                (val_loss, adam_states, model_states, model_rng),
+                (val_loss, adam_state, model_state, model_rng),
                 (
                     best_val_loss,
-                    best_adam_states,
-                    best_model_states,
+                    best_adam_state,
+                    best_model_state,
                     best_model_rng,
                 ),
             )
@@ -766,18 +902,18 @@ def _train(
             )
 
         # Call the callback function
-        params = tuple(map(get_params, adam_states))
+        params = jax.tree.map(get_params, adam_state)
         batch_rng, params = callback(batch_rng, epoch, params)
-        adam_states = tuple(map(update_params_direct, params, adam_states))
+        adam_state = jax.tree.map(update_params_direct, params, adam_state)
 
         # Return the updated state for the next epoch
         return (
             batch_rng,
             epoch + 1,  # increment epoch
-            adam_states,
-            best_adam_states,
-            model_states,
-            best_model_states,
+            adam_state,
+            best_adam_state,
+            model_state,
+            best_model_state,
             model_rng,
             best_model_rng,
             best_val_loss,
@@ -789,9 +925,9 @@ def _train(
     #    X_val,
     #    Y_val,
     #    Y_val_unc,
-    #    tuple(map(get_params, adam_states)),
+    #    tuple(map(get_params, adam_state)),
     #    False,  # validation mode
-    #    init_states,
+    #    init_state,
     #    init_rng,
     # )
     init_rng, epoch_rng = jax.random.split(init_rng)
@@ -799,8 +935,8 @@ def _train(
         X_val,
         Y_val,
         Y_val_unc,
-        tuple(map(get_params, adam_states)),
-        init_states,
+        jax.tree.map(get_params, adam_state),
+        init_state,
         init_rng,
         epoch_rng,
     )
@@ -809,10 +945,10 @@ def _train(
     initial_while_state = (
         batch_rng,
         start_epoch,
-        adam_states,
-        adam_states,  # best_states starts as the initial states
-        init_states,  # initial model states
-        init_states,  # best model states starts as the initial states
+        adam_state,
+        adam_state,  # best_state starts as the initial state
+        init_state,  # initial model state
+        init_state,  # best model state starts as the initial state
         init_rng,  # initial model rng
         init_rng,  # best model rng starts as the initial rng
         val_loss,  # best_val_loss starts as the initial validation loss
@@ -824,10 +960,10 @@ def _train(
         epoch_cond_fn, epoch_body_fn, initial_while_state
     )
 
-    # Extract the best adam states, model states, model rng, and final epoch
+    # Extract the best adam state, model state, model rng, and final epoch
     return (
-        final_while_state[3],  # best adam_states
-        final_while_state[5],  # best model states
+        final_while_state[3],  # best adam_state
+        final_while_state[5],  # best model state
         final_while_state[7],  # best model rng
         final_while_state[1],  # final epoch
     )
@@ -835,7 +971,7 @@ def _train(
 
 def train(
     init_params,  # model parameters
-    init_states,  # model states
+    init_state,  # model state
     init_rng,  # model rng
     loss_fn,
     X,
@@ -846,7 +982,7 @@ def train(
     Y_val_unc=None,  # uncertainty in the validation targets, if applicable
     lr=1e-3,
     batch_size=32,
-    num_epochs=100,
+    epochs=100,
     convergence_threshold=1e-12,
     early_stopping_patience=10,
     early_stopping_tolerance=1e-6,
@@ -923,22 +1059,22 @@ def train(
         Y = np.zeros((X.shape[0], 1), dtype=X.dtype)
         loss_fn_unsupervised = loss_fn
 
-        def loss_fn(X, Y, params, training, states, rng):
+        def loss_fn(X, Y, params, training, state, rng):
             """
             Wrapper for the loss function that ignores Y.
             """
-            return loss_fn_unsupervised(X, params, training, states, rng)
+            return loss_fn_unsupervised(X, params, training, state, rng)
 
     if Y_unc is None:
         # if no uncertainty in the targets is provided, assume it is 1
         Y_unc = np.ones_like(Y)
         loss_fn_no_unc = loss_fn
 
-        def loss_fn(X, Y, Y_unc, params, training, states, rng):
+        def loss_fn(X, Y, Y_unc, params, training, state, rng):
             """
             Wrapper for the loss function that ignores Y_unc.
             """
-            return loss_fn_no_unc(X, Y, params, training, states, rng)
+            return loss_fn_no_unc(X, Y, params, training, state, rng)
 
         if Y_val is not None:
             Y_val_unc = np.ones_like(Y_val)
@@ -984,8 +1120,8 @@ def train(
         )
 
     # set up everything for the JAX trainer
-    # has_aux=True allows us to return the new states from the loss function
-    # this will return (gradients, new_states)
+    # has_aux=True allows us to return the new state from the loss function
+    # this will return (gradients, new_state)
     grad_loss_fn = grad(loss_fn, argnums=3, has_aux=True)
 
     # random key for JAX
@@ -1021,7 +1157,7 @@ def train(
             clip=clip,
         )
 
-    adam_states = tuple(map(init_fn, init_params))
+    adam_state = tuple(map(init_fn, init_params))
 
     # make sure the validation batch size isn't larger than the validation set
     if X_val.shape[0] < batch_size:
@@ -1036,43 +1172,41 @@ def train(
         val_batch_size = batch_size
 
     # train
-    final_adam_states, final_model_states, final_model_rng, final_epoch = (
-        _train(
-            batch_rng,
-            update_fn,
-            adam_states,
-            get_params,
-            update_params_direct,
-            init_states,  # initial model states
-            init_rng,  # initial model rng
-            X,
-            Y,
-            Y_unc,
-            X_val,
-            Y_val,
-            Y_val_unc,
-            loss_fn,
-            grad_loss_fn,
-            batch_size=batch_size,
-            val_batch_size=val_batch_size,
-            start_epoch=0,  # always start from 0
-            num_epochs=num_epochs,
-            convergence_threshold=convergence_threshold,
-            early_stopping_patience=early_stopping_patience,
-            early_stopping_tolerance=early_stopping_tolerance,
-            callback=callback,
-            unroll=unroll,
-            verbose=verbose,
-        )
+    final_adam_state, final_model_state, final_model_rng, final_epoch = _train(
+        batch_rng,
+        update_fn,
+        adam_state,
+        get_params,
+        update_params_direct,
+        init_state,  # initial model state
+        init_rng,  # initial model rng
+        X,
+        Y,
+        Y_unc,
+        X_val,
+        Y_val,
+        Y_val_unc,
+        loss_fn,
+        grad_loss_fn,
+        batch_size=batch_size,
+        val_batch_size=val_batch_size,
+        start_epoch=0,  # always start from 0
+        epochs=epochs,
+        convergence_threshold=convergence_threshold,
+        early_stopping_patience=early_stopping_patience,
+        early_stopping_tolerance=early_stopping_tolerance,
+        callback=callback,
+        unroll=unroll,
+        verbose=verbose,
     )
 
     # return the final parameters
     return (
-        tuple(map(get_params, final_adam_states)),
-        final_model_states,
+        tuple(map(get_params, final_adam_state)),
+        final_model_state,
         final_model_rng,
         final_epoch,
-        final_adam_states,
+        final_adam_state,
     )
 
 
@@ -1081,100 +1215,100 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
     Create a loss function based on the model function.
 
     The model function should take the input data, parameters, training flag,
-    states, and rng key and return the predicted output and new state.
+    state, and rng key and return the predicted output and new state.
 
-    The loss function will return (loss, new_states), and gradients can be
+    The loss function will return (loss, new_state), and gradients can be
     taken by passing `has_aux=True` to `jax.grad` or `jax.value_and_grad`.
     """
     if fn_name == "mse":
 
-        def loss_fn(X, Y, params, training, states, rng):
-            Y_pred, new_states = model_fn(X, params, training, states, rng)
-            return np.mean(np.abs(Y_pred - Y) ** 2), new_states
+        def loss_fn(X, Y, params, training, state, rng):
+            Y_pred, new_state = model_fn(X, params, training, state, rng)
+            return np.mean(np.abs(Y_pred - Y) ** 2), new_state
 
     elif fn_name == "mae":
 
-        def loss_fn(X, Y, params, training, states, rng):
-            Y_pred, new_states = model_fn(X, params, training, states, rng)
-            return np.mean(np.abs(Y_pred - Y)), new_states
+        def loss_fn(X, Y, params, training, state, rng):
+            Y_pred, new_state = model_fn(X, params, training, state, rng)
+            return np.mean(np.abs(Y_pred - Y)), new_state
 
     elif fn_name == "mse_unc":
         # MSE with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params, training, states, rng):
-            Y_pred, new_states = model_fn(X, params, training, states, rng)
+        def loss_fn(X, Y, Y_unc, params, training, state, rng):
+            Y_pred, new_state = model_fn(X, params, training, state, rng)
             # Y_unc is assumed to be the uncertainty in the targets
-            return np.mean(np.abs((Y_pred - Y) / Y_unc) ** 2), new_states
+            return np.mean(np.abs((Y_pred - Y) / Y_unc) ** 2), new_state
 
     elif fn_name == "mae_unc":
         # MAE with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params, training, states, rng):
-            Y_pred, new_states = model_fn(X, params, training, states, rng)
+        def loss_fn(X, Y, Y_unc, params, training, state, rng):
+            Y_pred, new_state = model_fn(X, params, training, state, rng)
             # Y_unc is assumed to be the uncertainty in the targets
-            return np.mean(np.abs((Y_pred - Y) / Y_unc)), new_states
+            return np.mean(np.abs((Y_pred - Y) / Y_unc)), new_state
 
     elif fn_name == "mre":
         # Mean relative error
-        def loss_fn(X, Y, params, training, states, rng):
-            Y_pred, new_states = model_fn(X, params, training, states, rng)
-            return np.mean(np.abs((Y_pred - Y) / (Y + 1e-4))), new_states
+        def loss_fn(X, Y, params, training, state, rng):
+            Y_pred, new_state = model_fn(X, params, training, state, rng)
+            return np.mean(np.abs((Y_pred - Y) / (Y + 1e-4))), new_state
 
     elif fn_name == "mre_unc":
         # Mean relative error with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params, training, states, rng):
-            Y_pred, new_states = model_fn(X, params, training, states, rng)
+        def loss_fn(X, Y, Y_unc, params, training, state, rng):
+            Y_pred, new_state = model_fn(X, params, training, state, rng)
             return (
                 np.mean(np.abs((Y_pred - Y) / (Y + 1e-4) / Y_unc)),
-                new_states,
+                new_state,
             )
 
     elif fn_name == "mrd":
         # mean relative difference
-        def loss_fn(X, Y, params, training, states, rng):
-            Y_pred, new_states = model_fn(X, params, training, states, rng)
+        def loss_fn(X, Y, params, training, state, rng):
+            Y_pred, new_state = model_fn(X, params, training, state, rng)
             return (
                 np.mean(np.abs((Y_pred - Y) / (2.0 * (Y + Y_pred) + 1e-4))),
-                new_states,
+                new_state,
             )
 
     elif fn_name == "mrd_unc":
         # mean relative difference with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params, training, states, rng):
-            Y_pred, new_states = model_fn(X, params, training, states, rng)
+        def loss_fn(X, Y, Y_unc, params, training, state, rng):
+            Y_pred, new_state = model_fn(X, params, training, state, rng)
             return (
                 np.mean(
                     np.abs(
                         (Y_pred - Y) / ((2.0 * (Y + Y_pred) + 1e-4) * Y_unc)
                     )
                 ),
-                new_states,
+                new_state,
             )
 
     elif fn_name == "mse_unsupervised":
 
-        def loss_fn(X, params, training, states, rng):
+        def loss_fn(X, params, training, state, rng):
             """
             Mean squared error loss function for unsupervised training.
             """
-            X_pred, new_states = model_fn(X, params, training, states, rng)
-            return np.mean(np.abs(X_pred - X) ** 2), new_states
+            X_pred, new_state = model_fn(X, params, training, state, rng)
+            return np.mean(np.abs(X_pred - X) ** 2), new_state
 
     elif fn_name == "mae_unsupervised":
 
-        def loss_fn(X, params, training, states, rng):
+        def loss_fn(X, params, training, state, rng):
             """
             Mean absolute error loss function for unsupervised training.
             """
-            X_pred, new_states = model_fn(X, params, training, states, rng)
-            return np.mean(np.abs(X_pred - X)), new_states
+            X_pred, new_state = model_fn(X, params, training, state, rng)
+            return np.mean(np.abs(X_pred - X)), new_state
 
     elif fn_name == "mre_unsupervised":
 
-        def loss_fn(X, params, training, states, rng):
+        def loss_fn(X, params, training, state, rng):
             """
             Mean relative error loss function for unsupervised training.
             """
-            X_pred, new_states = model_fn(X, params, training, states, rng)
-            return np.mean(np.abs((X_pred - X) / (X + 1e-4))), new_states
+            X_pred, new_state = model_fn(X, params, training, state, rng)
+            return np.mean(np.abs((X_pred - X) / (X + 1e-4))), new_state
 
     else:
         raise ValueError(f"Unknown loss function: {fn_name}")
@@ -1222,7 +1356,7 @@ if __name__ == "__main__":
 
     params_init = (A_init, b_init)
     # train the model
-    final_params, final_epoch, final_states = train(
+    final_params, final_epoch, final_state = train(
         params_init,
         loss_fn,
         X,
@@ -1231,7 +1365,7 @@ if __name__ == "__main__":
         Y_val,
         lr=1e-3,
         batch_size=32,
-        num_epochs=1000,
+        epochs=1000,
         convergence_threshold=1e-12,
         early_stopping_patience=10,
         early_stopping_tolerance=1e-6,

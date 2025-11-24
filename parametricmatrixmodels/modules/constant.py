@@ -3,7 +3,7 @@ from __future__ import annotations
 import jax
 import jax.numpy as np
 from beartype import beartype
-from jaxtyping import Array, Num, PyTree, jaxtyped
+from jaxtyping import Array, Inexact, PyTree, jaxtyped
 
 from parametricmatrixmodels.typing import (
     Any,
@@ -27,8 +27,8 @@ class Constant(BaseModule):
     def __init__(
         self,
         constant: (
-            PyTree[Num[Array, "..."], " Const"]
-            | Num[Array, "..."]
+            PyTree[Inexact[Array, "..."], " Const"]
+            | Inexact[Array, "..."]
             | float
             | complex
             | None

@@ -7,7 +7,7 @@ from typing import TypeAlias
 import jax
 import jax.numpy as np
 from beartype import beartype
-from jaxtyping import Array, Num, PyTree, PyTreeDef, jaxtyped
+from jaxtyping import Array, Inexact, Num, PyTree, PyTreeDef, jaxtyped
 
 from .modules import BaseModule
 from .typing import (
@@ -24,14 +24,29 @@ from .typing import (
 
 # type aliases for Models
 
+ModelStruct: str = " modelstruct"
+
+#: ModelParamsStruct is a type tag for PyTrees of model parameters. It really
+#: should be the composition of ModelStruct and "params" or " ..." but this
+#: doesn't work currently with jaxtyping due to unbound types in returns.
+#: See: https://github.com/patrick-kidger/jaxtyping/issues/357
+ModelParamsStruct: str = " modelparamsstruct"
+#: ModelStateStruct is a type tag for PyTrees of model states. It really
+#: should be the composition of ModelStruct and "state" or " ..." but this
+#: doesn't work currently with jaxtyping due to unbound types in returns.
+#: See: https://github.com/patrick-kidger/jaxtyping/issues/357
+ModelStateStruct: str = " modelstatestruct"
+
 #: Type alias for a PyTree of modules in a model.
-ModelModules: TypeAlias = PyTree[BaseModule, " moduletree"]
+ModelModules: TypeAlias = PyTree[BaseModule, ModelStruct]
 
 #: Type alias for a PyTree of parameters in a model.
-ModelParams: TypeAlias = PyTree[Num[Array, "..."]]
+ModelParams: TypeAlias = PyTree[Inexact[Array, "..."], ModelParamsStruct]
 
 #: Type alias for a PyTree of states in a model.
-ModelState: TypeAlias = PyTree[Num[Array, "..."]]
+ModelState: TypeAlias = PyTree[
+    Num[Array, "..."] | Tuple | List, ModelStateStruct
+]
 
 #: Type alias for the callable signature of a model's forward method. Similar
 #: (actually identical) to ModuleCallable, but suggestively uses ModelParams
@@ -131,7 +146,7 @@ def autobatch(
         training: bool,
         state: State | ModelState,
         rng: Any,
-    ) -> Tuple[Data, State] | Tuple[Data, ModelState]:
+    ) -> Tuple[Data, ModelState]:
 
         orig_batch_size = jax.tree.leaves(X)[0].shape[0]
 

@@ -18,7 +18,11 @@ def test_sequentialmodel_trivial():
     # test with array inputs
 
     batch_dim = 10
-    input_data = np.arange(0, batch_dim * 12).reshape((batch_dim, 3, 4))
+    input_data = (
+        np.arange(0, batch_dim * 12)
+        .reshape((batch_dim, 3, 4))
+        .astype(np.float64)
+    )
 
     model.compile(None, input_data.shape[1:])
 
@@ -47,8 +51,12 @@ def test_sequentialmodel_trivial():
     model = pmm.SequentialModel(modules)
 
     input_data = [
-        np.arange(batch_dim * 12).reshape((batch_dim, 3, 4)),
-        np.arange(batch_dim * 8).reshape((batch_dim, 2, 2, 2)),
+        np.arange(batch_dim * 12)
+        .reshape((batch_dim, 3, 4))
+        .astype(np.float64),
+        np.arange(batch_dim * 8)
+        .reshape((batch_dim, 2, 2, 2))
+        .astype(np.float64),
     ]
     model.compile(None, [data.shape[1:] for data in input_data])
 

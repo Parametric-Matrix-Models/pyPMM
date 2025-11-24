@@ -10,7 +10,11 @@ def test_flatten_array():
     """
 
     batch_size = 2
-    in_arr = np.arange(batch_size * 12).reshape((batch_size, 3, 4))
+    in_arr = (
+        np.arange(batch_size * 12)
+        .reshape((batch_size, 3, 4))
+        .astype(np.float32)
+    )
 
     flatten = pmm.modules.Flatten()
     flatten.compile(None, in_arr.shape[1:])  # Exclude batch dimension
@@ -25,8 +29,16 @@ def test_flatten_pytree():
     """
 
     batch_size = 2
-    in_arr_1 = np.arange(batch_size * 12).reshape((batch_size, 3, 4))
-    in_arr_2 = np.arange(batch_size * 8).reshape((batch_size, 2, 2, 2))
+    in_arr_1 = (
+        np.arange(batch_size * 12)
+        .reshape((batch_size, 3, 4))
+        .astype(np.float32)
+    )
+    in_arr_2 = (
+        np.arange(batch_size * 8)
+        .reshape((batch_size, 2, 2, 2))
+        .astype(np.float32)
+    )
     in_data = [in_arr_1, in_arr_2]
 
     flatten = pmm.modules.Flatten()

@@ -8,7 +8,7 @@ def _get_version():
 
 __version__ = _get_version()
 
-from . import modules, scalers, training, typing
+from . import modules, scalers, training, tree_util, typing
 from .conformalizedmodel import ConformalizedModel
 from .model import Model
 from .sequentialmodel import SequentialModel

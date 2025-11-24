@@ -35,7 +35,11 @@ def test_reshape_array():
     """
 
     batch_size = 2
-    in_arr = np.arange(batch_size * 12).reshape((batch_size, 3, 4))
+    in_arr = (
+        np.arange(batch_size * 12)
+        .reshape((batch_size, 3, 4))
+        .astype(np.float32)
+    )
 
     new_shape = (4, 3)
     reshape_module = pmm.modules.Reshape(shape=new_shape)
@@ -86,8 +90,16 @@ def test_reshape_pytree():
     """
 
     batch_size = 2
-    in_arr_1 = np.arange(batch_size * 12).reshape((batch_size, 3, 4))
-    in_arr_2 = np.arange(batch_size * 8).reshape((batch_size, 2, 2, 2))
+    in_arr_1 = (
+        np.arange(batch_size * 12)
+        .reshape((batch_size, 3, 4))
+        .astype(np.float32)
+    )
+    in_arr_2 = (
+        np.arange(batch_size * 8)
+        .reshape((batch_size, 2, 2, 2))
+        .astype(np.float32)
+    )
     in_data = [in_arr_1, in_arr_2]
 
     new_shape = [(4, 3), (4, 2)]
