@@ -237,8 +237,9 @@ def adam(
 
         m = b1 * m + (1 - b1) * dx
         v = b2 * v + (1 - b2) * dx**2
-        m_hat = (m / (1 - b1 ** (i + 1))).astype(x.dtype)
-        v_hat = (v / (1 - b2 ** (i + 1))).astype(x.dtype)
+        # explicit float32 to prevent upcasting in mixed precision
+        m_hat = m / np.float32(1 - b1 ** (i + 1))
+        v_hat = v / np.float32(1 - b2 ** (i + 1))
         x = x - step_size(i) * m_hat / (np.sqrt(v_hat) + eps)
         return OptimizerState(x, m, v)
 
@@ -318,9 +319,10 @@ def complex_adam(
             m = b1 * m + (1 - b1) * dx
             v = b2 * v + (1 - b2) * dx**2
 
-        m_hat = (m / (1 - b1 ** (i + 1))).astype(x.dtype)
-        v_hat = (v / (1 - b2 ** (i + 1))).astype(x.dtype)
-        x = x - (step_size(i) * m_hat / (np.sqrt(v_hat) + eps)).astype(x.dtype)
+        # explicit float32 to prevent upcasting in mixed precision
+        m_hat = m / np.float32(1 - b1 ** (i + 1))
+        v_hat = v / np.float32(1 - b2 ** (i + 1))
+        x = x - (step_size(i) * m_hat / (np.sqrt(v_hat) + eps))
 
         return OptimizerState(x, m, v)
 
