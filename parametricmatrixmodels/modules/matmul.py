@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import jax
 
-from parametricmatrixmodels.typing import (
+from ..tree_util import is_shape_leaf
+from ..typing import (
     Any,
     DataShape,
     HyperParams,
@@ -10,7 +11,6 @@ from parametricmatrixmodels.typing import (
     PyTree,
     Tuple,
 )
-
 from .einsum import Einsum
 
 
@@ -62,7 +62,7 @@ class MatMul(Einsum):
             output_dims = jax.tree.map(
                 lambda _: self.output_dims,
                 input_shape,
-                is_leaf=Einsum._is_shape,
+                is_leaf=is_shape_leaf,
             )
         else:
             output_dims = self.output_dims
@@ -78,11 +78,11 @@ class MatMul(Einsum):
 
         # assert that the structure of output_dims matches input_shape
         output_dims_struct = jax.tree.structure(
-            output_dims, is_leaf=Einsum._is_shape
+            output_dims, is_leaf=is_shape_leaf
         )
         input_shape_struct = jax.tree.structure(
             input_shape,
-            is_leaf=Einsum._is_shape,
+            is_leaf=is_shape_leaf,
         )
         if output_dims_struct != input_shape_struct:
             raise ValueError(
@@ -97,7 +97,7 @@ class MatMul(Einsum):
             lambda in_shape, out_dim: (in_shape[~0], out_dim[0]),
             input_shape,
             output_dims,
-            is_leaf=Einsum._is_shape,
+            is_leaf=is_shape_leaf,
         )
 
         # Construct the einsum string based on the input shape and output dims
@@ -120,7 +120,7 @@ class MatMul(Einsum):
             make_str,
             input_shape,
             output_dims,
-            is_leaf=Einsum._is_shape,
+            is_leaf=is_shape_leaf,
         )
 
         super().compile(rng, input_shape)

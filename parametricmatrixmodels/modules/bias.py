@@ -1,19 +1,19 @@
 import jax
 import jax.numpy as np
 from beartype import beartype
-from jaxtyping import jaxtyped
+from jaxtyping import Array, Inexact, PyTree, jaxtyped
 
-from parametricmatrixmodels.typing import (
+from ..tree_util import is_shape_leaf
+from ..typing import (
     Any,
     Data,
     DataShape,
     HyperParams,
     ModuleCallable,
+    Params,
     State,
     Tuple,
-    TupleParams,
 )
-
 from .basemodule import BaseModule
 
 
@@ -29,7 +29,13 @@ class Bias(BaseModule):
 
     def __init__(
         self,
-        bias: np.ndarray | float | complex | None = None,
+        bias: (
+            PyTree[Inexact[Array, "..."]]
+            | Inexact[Array, "..."]
+            | float
+            | complex
+            | None
+        ) = None,
         init_magnitude: float = 1e-2,
         real: bool = True,
         scalar: bool = False,
@@ -39,7 +45,8 @@ class Bias(BaseModule):
         Parameters
         ----------
         bias
-            Bias array or scalar. If None, it will be initialized randomly
+            Bias array, scalar, or PyTree of arrays. If None, the shape will be
+            inferred at compile time and values will be initialized randomly
         init_magnitude
             Magnitude for the random initialization of the bias.
             Default is ``1e-2``.
@@ -65,15 +72,23 @@ class Bias(BaseModule):
                 raise ValueError(
                     "If scalar is True, bias must be a scalar or None"
                 )
-            if not self.scalar and not isinstance(self.bias, np.ndarray):
+            if not self.scalar and not isinstance(
+                jax.tree.leaves(self.bias)[0], np.ndarray
+            ):
                 raise ValueError(
-                    "If scalar is False, bias must be a numpy array or None"
+                    "If scalar is False, bias must be a PyTree of numpy "
+                    "arrays, a numpy array, or None"
                 )
-            if self.real and not np.isrealobj(self.bias):
+            if self.real and not jax.tree.all(
+                jax.tree.map(np.isrealobj, self.bias)
+            ):
                 raise ValueError("Bias must be real-valued for a real module")
-            if not self.real and np.isrealobj(self.bias):
+            if not self.real and jax.tree.all(
+                jax.tree.map(np.isrealobj, self.bias)
+            ):
                 raise ValueError(
-                    "Bias must be complex-valued for a complex module"
+                    "Bias must have at least one complex-valued leaf for a"
+                    " complex module"
                 )
 
             if self.scalar:
@@ -87,72 +102,137 @@ class Bias(BaseModule):
 
     def _get_callable(self) -> ModuleCallable:
 
-        @jaxtyped(typechecker=beartype)
-        def callable(
-            params: TupleParams,
-            data: Data,
-            training: bool,
-            state: State,
-            rng: Any,
-        ) -> Tuple[Data, State]:
-            # tree map over data to add bias
-            bias = params[0]
+        if isinstance(self.bias, np.ndarray):
 
-            def add_bias(x: np.ndarray) -> np.ndarray:
-                return x + bias
+            @jaxtyped(typechecker=beartype)
+            def bias_callable(
+                params: Params,
+                data: Data,
+                training: bool,
+                state: State,
+                rng: Any,
+            ) -> Tuple[Data, State]:
+                # tree map over data to add bias
+                bias = params
 
-            output = jax.tree.map(add_bias, data)
-            return output, state
+                def add_bias(x: np.ndarray) -> np.ndarray:
+                    return x + bias
 
-        return callable
+                output = jax.tree.map(add_bias, data)
+                return output, state
+
+        else:
+
+            @jaxtyped(typechecker=beartype)
+            def bias_callable(
+                params: Params,
+                data: Data,
+                training: bool,
+                state: State,
+                rng: Any,
+            ) -> Tuple[Data, State]:
+                biases = params
+
+                def add_bias(x: np.ndarray, b: np.ndarray) -> np.ndarray:
+                    return x + b
+
+                output = jax.tree.map(add_bias, data, biases)
+                return output, state
+
+        return bias_callable
 
     def compile(self, rng: Any, input_shape: DataShape) -> None:
         # if the module is already ready, just verify the input shape
-        if (
-            self.is_ready()
-            and self.bias.shape != (1,)
-            and self.bias.shape != ()
-        ):
-            # check if input shape is a single tuple (no PyTree)
+        if self.is_ready():
             if (
-                isinstance(input_shape, tuple)
-                and self.bias.shape != input_shape
+                isinstance(self.bias, np.ndarray)
+                and self.bias.shape != (1,)
+                and self.bias.shape != ()
             ):
-                raise ValueError(
-                    f"Bias shape {self.bias.shape} does not match input "
-                    f"shape {input_shape}"
-                )
-            # else if the input shape is a PyTree of tuples, all shapes must
-            # match
-            elif any(
-                [
-                    shape != self.bias.shape
-                    for shape in jax.tree.leaves(input_shape)
-                ]
-            ):
-                raise ValueError(
-                    f"Bias shape {self.bias.shape} does not match all input "
-                    f"shapes {jax.tree.leaves(input_shape)}"
-                )
+                # check if input shape is a single tuple (no PyTree)
+                if (
+                    isinstance(input_shape, tuple)
+                    and all(isinstance(i, int) for i in input_shape)
+                    and self.bias.shape != input_shape
+                ):
+                    raise ValueError(
+                        f"Bias shape {self.bias.shape} does not match input "
+                        f"shape {input_shape}"
+                    )
+                # else if the input shape is a PyTree of tuples,
+                # all shapes must match
+                elif any(
+                    [
+                        shape != self.bias.shape
+                        for shape in jax.tree.leaves(
+                            input_shape, is_leaf=is_shape_leaf
+                        )
+                    ]
+                ):
+                    input_shapes_list = jax.tree.leaves(
+                        input_shape, is_leaf=is_shape_leaf
+                    )
+                    raise ValueError(
+                        f"Bias shape {self.bias.shape} does not match all "
+                        f"input leaf shapes {input_shapes_list}"
+                    )
+            else:
+                # pytree case
+                def check_shape(x: np.ndarray, s: Tuple[int, ...]) -> None:
+                    if x.shape != s:
+                        raise ValueError(
+                            f"Bias leaf shape {x.shape} does not match input "
+                            f"leaf shape {s}"
+                        )
 
-        shape = (1,) if self.scalar else input_shape
-
-        # otherwise, initialize the bias
-        subkey_real, subkey_imag = jax.random.split(rng, 2)
+                jax.tree.map(
+                    check_shape,
+                    self.bias,
+                    input_shape,
+                    is_leaf=is_shape_leaf,
+                )
 
         if self.bias is None:
-            if self.real:
-                self.bias = (
-                    jax.random.normal(subkey_real, shape) * self.init_magnitude
-                )
+            shape = (1,) if self.scalar else input_shape
+            # otherwise, initialize the bias
+            # bare array case
+            if isinstance(shape, tuple) and all(
+                isinstance(i, int) for i in shape
+            ):
+                if self.real:
+                    self.bias = self.init_magnitude * jax.random.normal(
+                        rng, shape
+                    )
+                else:
+                    rkey, ikey = jax.random.split(rng)
+                    self.bias = self.init_magnitude * (
+                        jax.random.normal(rkey, shape)
+                        + 1j * jax.random.normal(ikey, shape)
+                    )
             else:
-                real_part = (
-                    jax.random.normal(subkey_real, shape) * self.init_magnitude
+
+                def init_bias(s: Tuple[int, ...], k: Any) -> np.ndarray:
+                    if self.real:
+                        return self.init_magnitude * jax.random.normal(k, s)
+                    else:
+                        rkey, ikey = jax.random.split(k)
+                        return self.init_magnitude * (
+                            jax.random.normal(rkey, s)
+                            + 1j * jax.random.normal(ikey, s)
+                        )
+
+                keys = jax.random.split(
+                    rng, len(jax.tree.leaves(shape, is_leaf=is_shape_leaf))
                 )
-                imag_part = (
-                    jax.random.normal(subkey_imag, shape) * self.init_magnitude
+                keys = jax.tree.unflatten(
+                    jax.tree.structure(shape, is_leaf=is_shape_leaf), keys
                 )
-                self.bias = real_part + 1j * imag_part
+                self.bias = jax.tree.map(
+                    init_bias,
+                    shape,
+                    keys,
+                    is_leaf=is_shape_leaf,
+                )
 
     def get_output_shape(self, input_shape: DataShape) -> DataShape:
         return input_shape
@@ -168,28 +248,40 @@ class Bias(BaseModule):
     def set_hyperparameters(self, hyperparams: HyperParams) -> None:
         super(Bias, self).set_hyperparameters(hyperparams)
 
-    def get_params(self) -> TupleParams:
-        return (self.bias,)
+    def get_params(self) -> Params:
+        return self.bias
 
-    def set_params(self, params: TupleParams) -> None:
-        if not isinstance(params, tuple) or not all(
-            isinstance(p, np.ndarray) for p in params
+    def set_params(self, params: Params) -> None:
+        if self.bias is not None:
+            # ensure structure matches
+            param_struct = jax.tree.structure(params)
+            bias_struct = jax.tree.structure(self.bias)
+            if param_struct != bias_struct:
+                raise ValueError(
+                    "Structure of params does not match existing parameters. "
+                    f"Expected structure {bias_struct}, got {param_struct}"
+                )
+
+        if not jax.tree.all(
+            jax.tree.map(lambda p: isinstance(p, np.ndarray), params)
         ):
-            raise ValueError("params must be a tuple of numpy arrays")
-        if len(params) != 1:
-            raise ValueError(f"Expected 1 parameter array, got {len(params)}")
-        if self.real and not np.isrealobj(params[0]):
+            raise ValueError("All leaves must be numpy arrays")
+
+        if self.scalar and not (
+            isinstance(params, np.ndarray) and params.shape == (1,)
+        ):
             raise ValueError(
-                "Parameter array 0 must be real-valued for a real module"
-            )
-        if not self.real and np.isrealobj(params[0]):
-            raise ValueError(
-                "Parameter array 0 must be complex-valued for a complex module"
-            )
-        if self.scalar and params[0].shape != (1,):
-            raise ValueError(
-                "Parameter array 0 must be a scalar array with shape (1,),"
-                f" got {params[0].shape}"
+                "For scalar bias, params must be a single numpy array with "
+                f"shape (1,), got {params}"
             )
 
-        self.bias = params[0]
+        # check real/complex consistency
+        if self.real and not jax.tree.all(jax.tree.map(np.isrealobj, params)):
+            raise ValueError("Params must be real-valued for a real module")
+        if not self.real and jax.tree.all(jax.tree.map(np.isrealobj, params)):
+            raise ValueError(
+                "Params must have at least one complex-valued leaf for a "
+                "complex module"
+            )
+
+        self.bias = params

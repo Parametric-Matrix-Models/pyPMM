@@ -4,8 +4,10 @@ import random
 
 import jax
 
-# direct import to avoid circular import
 from ..sequentialmodel import SequentialModel
+
+# direct import to avoid circular import
+from ..tree_util import is_shape_leaf
 from ..typing import (
     Any,
     DataShape,
@@ -32,13 +34,6 @@ class LinearNN(SequentialModel):
     case of PyTrees, all operations are applied to each leaf array
     independently.
     """
-
-    @staticmethod
-    def _is_shape(obj: object) -> bool:
-        return obj is None or (
-            isinstance(obj, (tuple, list))
-            and all(isinstance(dim, int) for dim in obj)
-        )
 
     def __init__(
         self,
@@ -102,7 +97,7 @@ class LinearNN(SequentialModel):
             _out_features = jax.tree.map(
                 lambda _: _out_features,
                 input_shape,
-                is_leaf=LinearNN._is_shape,
+                is_leaf=is_shape_leaf,
             )
 
         # can't check for shapes as tuples of ints with bare output_dims since
@@ -116,10 +111,10 @@ class LinearNN(SequentialModel):
 
         # assert that the structure of output_dims matches input_shape
         output_features_structure = jax.tree.structure(
-            _out_features, is_leaf=LinearNN._is_shape
+            _out_features, is_leaf=is_shape_leaf
         )
         input_shape_structure = jax.tree.structure(
-            input_shape, is_leaf=LinearNN._is_shape
+            input_shape, is_leaf=is_shape_leaf
         )
         if output_features_structure != input_shape_structure:
             raise ValueError(

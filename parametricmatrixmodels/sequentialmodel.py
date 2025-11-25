@@ -312,7 +312,6 @@ class SequentialModel(Model):
         self,
         key: jax.tree_util.KeyPath | str | int | slice | None,
     ) -> BaseModule | PyTree[BaseModule]:
-        self.reset()
         if key is None:
             return self.modules
 

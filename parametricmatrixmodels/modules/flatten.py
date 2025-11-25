@@ -1,10 +1,10 @@
 import jax
 
-from parametricmatrixmodels.typing import (
+from ..tree_util import is_shape_leaf
+from ..typing import (
     Any,
     DataShape,
 )
-
 from .reshape import Reshape
 
 
@@ -38,7 +38,7 @@ class Flatten(Reshape):
 
         # construct the tree of output shapes (all (-1,))
         input_shapes, input_struct = jax.tree.flatten(
-            input_shape, is_leaf=Reshape._is_shape
+            input_shape, is_leaf=is_shape_leaf
         )
         self.shape = jax.tree.unflatten(
             input_struct,

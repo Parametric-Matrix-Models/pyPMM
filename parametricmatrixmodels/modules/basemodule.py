@@ -491,7 +491,7 @@ class BaseModule(object):
         pass
 
     @jaxtyped(typechecker=beartype)
-    def set_precision(self, prec: np.dtype | str | int) -> None:
+    def set_precision(self, prec: Any | str | int) -> None:
         """
         Set the precision of the module parameters and state.
 
@@ -574,8 +574,8 @@ class BaseModule(object):
             else:
                 return p.astype(np.float32 if prec == 32 else np.float64)
 
-        self.set_params(tuple(set_param_prec(p) for p in self.get_params()))
-        self.set_state(tuple(set_param_prec(s) for s in self.get_state()))
+        self.set_params(jax.tree.map(set_param_prec, self.get_params()))
+        self.set_state(jax.tree.map(set_param_prec, self.get_state()))
 
     @jaxtyped(typechecker=beartype)
     def astype(self, dtype: np.dtype | str) -> "BaseModule":
@@ -638,8 +638,8 @@ class BaseModule(object):
         return {
             "name": self.name(),
             "hyperparameters": self.get_hyperparameters(),
-            "params": {f"p{i}": p for i, p in enumerate(self.get_params())},
-            "state": {f"s{i}": s for i, s in enumerate(self.get_state())},
+            "params": self.get_params(),
+            "state": self.get_state(),
             "package_version": pmm.__version__,
         }
 
@@ -681,13 +681,11 @@ class BaseModule(object):
         self.set_hyperparameters(data.get("hyperparameters", {}))
 
         # if there are trainable parameters, set them
-        params_dict = data.get("params", {})
-        params = tuple(params_dict[f"p{i}"] for i in range(len(params_dict)))
-        if len(params) > 0:
+        params = data.get("params", None)
+        if params is not None:
             self.set_params(params)
 
         # if there are states, set them
-        state_dict = data.get("state", {})
-        state = tuple(state_dict[f"s{i}"] for i in range(len(state_dict)))
-        if len(state) > 0:
+        state = data.get("state", None)
+        if state is not None:
             self.set_state(state)

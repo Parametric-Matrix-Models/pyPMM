@@ -19,17 +19,19 @@ from .model_util import (
     ModelParams,
     ModelState,
     autobatch,
-    safecast,
-    strfmt_pytree,
 )
 from .modules import BaseModule
 from .training import make_loss_fn, train
+from .tree_util import safecast, strfmt_pytree
 from .typing import (
     Any,
+    Array,
     Callable,
     Data,
     DataShape,
     Dict,
+    Inexact,
+    PyTree,
     Tuple,
 )
 
@@ -425,7 +427,7 @@ class Model(BaseModule):
     def __call__(
         self,
         X: Data,
-        dtype: Any = np.float64,
+        dtype: Any | str = np.float64,
         rng: Any | int | None = None,
         return_state: bool = False,
         update_state: bool = False,
@@ -516,7 +518,7 @@ class Model(BaseModule):
     def grad_input(
         self,
         X: Data,
-        dtype: Any = np.float64,
+        dtype: Any | str = np.float64,
         rng: Any | int | None = None,
         return_state: bool = False,
         update_state: bool = False,
@@ -689,7 +691,7 @@ class Model(BaseModule):
     def grad_params(
         self,
         X: Data,
-        dtype: Any = np.float64,
+        dtype: Any | str = np.float64,
         rng: Any | int | None = None,
         return_state: bool = False,
         update_state: bool = False,
@@ -775,7 +777,7 @@ class Model(BaseModule):
         else:
             return grad_params_result
 
-    def set_precision(self, prec: np.dtype | str | int) -> None:
+    def set_precision(self, prec: Any | str | int) -> None:
         """
         Set the precision of the model parameters and states.
 
@@ -840,7 +842,7 @@ class Model(BaseModule):
             module.set_precision(prec)
 
     # alias for set_precision method that returns self
-    def astype(self, dtype: np.dtype | str) -> "Model":
+    def astype(self, dtype: Any | str | int) -> "Model":
         """
         Convenience wrapper to set_precision using the dtype argument, returns
         self.
@@ -850,25 +852,42 @@ class Model(BaseModule):
 
     def train(
         self,
-        X: np.ndarray,
-        Y: np.ndarray | None = None,
-        Y_unc: np.ndarray | None = None,
-        X_val: np.ndarray | None = None,
-        Y_val: np.ndarray | None = None,
-        Y_val_unc: np.ndarray | None = None,
+        X: PyTree[
+            Inexact[Array, "num_samples ?*features"], " InStruct"
+        ],  # in features
+        Y: (
+            PyTree[Inexact[Array, "num_samples ?*targets"], " OutStruct"]
+            | None
+        ) = None,  # targets
+        Y_unc: (
+            PyTree[Inexact[Array, "num_samples ?*targets"], " OutStruct"]
+            | None
+        ) = None,  # uncertainty in the targets, if applicable
+        X_val: (
+            PyTree[Inexact[Array, "num_val_samples ?*features"], " InStruct"]
+            | None
+        ) = None,  # validation in features
+        Y_val: (
+            PyTree[Inexact[Array, "num_val_samples ?*targets"], " OutStruct"]
+            | None
+        ) = None,  # validation targets
+        Y_val_unc: (
+            PyTree[Inexact[Array, "num_val_samples ?*targets"], " OutStruct"]
+            | None
+        ) = None,  # uncertainty in the validation targets, if applicable
         loss_fn: str | Callable = "mse",
         lr: float = 1e-3,
         batch_size: int = 32,
-        num_epochs: int = 100,
-        convergence_threshold: float = 1e-12,
-        early_stopping_patience: int = 10,
-        early_stopping_tolerance: float = 1e-6,
+        epochs: int = 100,
+        target_loss: float = -np.inf,
+        early_stopping_patience: int = 100,
+        early_stopping_min_delta: float = -np.inf,
         # advanced options
-        initialization_seed: int | None = None,
+        initialization_seed: Any | int | None = None,
         callback: Callable | None = None,
         unroll: int | None = None,
         verbose: bool = True,
-        batch_seed: int | None = None,
+        batch_rng: Any | int | None = None,
         b1: float = 0.9,
         b2: float = 0.999,
         eps: float = 1e-8,
@@ -877,46 +896,18 @@ class Model(BaseModule):
 
         # check if the model is ready
         if not self.is_ready():
-            initialization_seed = initialization_seed or random.randint(
-                0, 2**32 - 1
-            )
-            self.compile(jax.random.key(initialization_seed), X.shape[1:])
+            if initialization_seed is None:
+                initialization_seed = jax.random.key(
+                    random.randint(0, 2**32 - 1)
+                )
+            elif isinstance(initialization_seed, int):
+                initialization_seed = jax.random.key(initialization_seed)
 
-        # check if any of the model parameters are double precision and give a
-        # warning if so
-        if any(
-            (
-                np.issubdtype(np.asarray(param).dtype, np.float64)
-                or np.issubdtype(np.asarray(param).dtype, np.complex128)
-            )
-            for param in self.get_params()
-        ):
-            warnings.warn(
-                "Some parameters are double precision. "
-                "This may lead to significantly slower training on certain "
-                "backends. It is strongly recommended to use single precision "
-                "(float32/complex64) parameters for training. Set the "
-                "precision of the model with Model.set_precision.",
-                UserWarning,
+            self.compile(
+                initialization_seed, jax.tree.map(lambda x: x.shape[1:], X)
             )
 
-        # check dimensions
-        input_shape = X.shape[1:]
-        if input_shape != self.input_shape:
-            raise ValueError(
-                f"Input shape {input_shape} does not match model input shape "
-                f"{self.input_shape}."
-            )
-        if Y is not None and Y.shape[1:] != self.output_shape:
-            raise ValueError(
-                f"Output shape {Y.shape[1:]} does not match model output "
-                f"shape {self.output_shape}."
-            )
-        if Y is not None and X_val is not None and Y_val is None:
-            raise ValueError(
-                "Validation data Y_val must be provided if validation input "
-                "X_val is provided for supervised training."
-            )
+        # input validation happens in the training.train function
 
         # get callable, not jitted since the training function will
         # handle that
@@ -974,6 +965,12 @@ class Model(BaseModule):
                     "loss_fn(X, pred) -> err."
                 )
 
+        # check if any of the model parameters are complex
+        params = self.get_params()
+        any_complex = jax.tree_util.tree_reduce(
+            lambda acc, x: acc or np.iscomplexobj(x), params, initializer=False
+        )
+
         # train the model
         (
             final_params,
@@ -983,7 +980,7 @@ class Model(BaseModule):
             final_adam_states,
         ) = train(
             init_params=self.get_params(),
-            init_states=self.get_state(),
+            init_state=self.get_state(),
             init_rng=self.get_rng(),
             loss_fn=loss_fn_,
             X=X,
@@ -994,19 +991,19 @@ class Model(BaseModule):
             Y_val_unc=Y_val_unc,
             lr=lr,
             batch_size=batch_size,
-            num_epochs=num_epochs,
-            convergence_threshold=convergence_threshold,
+            epochs=epochs,
+            target_loss=target_loss,
             early_stopping_patience=early_stopping_patience,
-            early_stopping_tolerance=early_stopping_tolerance,
+            early_stopping_min_delta=early_stopping_min_delta,
             callback=callback,
             unroll=unroll,
             verbose=verbose,
-            batch_seed=batch_seed,
+            batch_rng=batch_rng,
             b1=b1,
             b2=b2,
             eps=eps,
             clip=clip,
-            real=False,
+            real=not any_complex,
         )
 
         # set the final parameters
@@ -1026,14 +1023,20 @@ class Model(BaseModule):
             Dict[str, Any]
         """
 
-        module_fulltypenames = [str(type(module)) for module in self.modules]
-        module_typenames = [
-            module.__class__.__name__ for module in self.modules
-        ]
-        module_modules = [module.__module__ for module in self.modules]
-        module_names = [module.name() for module in self.modules]
+        module_fulltypenames = jax.tree.map(
+            lambda m: str(type(m)), self.modules
+        )
+        module_typenames = jax.tree.map(
+            lambda m: m.__class__.__name__, self.modules
+        )
+        module_modules = jax.tree.map(lambda m: m.__module__, self.modules)
+        module_names = jax.tree.map(lambda m: m.name(), self.modules)
 
-        serialized_modules = [module.serialize() for module in self.modules]
+        serialized_modules = jax.tree.map(
+            lambda m: m.serialize(), self.modules
+        )
+
+        model_structure = jax.tree.structure(self.modules)
 
         # serialize rng key
         key_data = jax.random.key_data(self.get_rng())
@@ -1044,6 +1047,7 @@ class Model(BaseModule):
             "module_fulltypenames": module_fulltypenames,
             "module_names": module_names,
             "serialized_modules": serialized_modules,
+            "model_structure": model_structure,
             "key_data": key_data,
             "package_version": pmm.__version__,
         }
@@ -1074,18 +1078,27 @@ class Model(BaseModule):
         module_modules = data["module_modules"]
 
         # initialize the modules
-        self.modules = [
-            getattr(sys.modules[module_module], module_typename)()
-            for module_typename, module_module in zip(
-                module_typenames, module_modules
-            )
-        ]
+        self.modules = jax.tree.map(
+            lambda mod_name, mod_module: getattr(
+                sys.modules[mod_module], mod_name
+            )(),
+            module_typenames,
+            module_modules,
+        )
 
         # deserialize the modules
-        for module, serialized_module in zip(
-            self.modules, data["serialized_modules"]
-        ):
-            module.deserialize(serialized_module)
+        jax.tree.map(
+            lambda m, sm: m.deserialize(sm),
+            self.modules,
+            data["serialized_modules"],
+        )
+
+        # check that the structure matches
+        if jax.tree.structure(self.modules) != data["model_structure"]:
+            raise ValueError(
+                "Deserialized model structure does not match the expected "
+                "structure."
+            )
 
         # deserialize the rng key
         key = jax.random.wrap_key_data(data["key_data"])

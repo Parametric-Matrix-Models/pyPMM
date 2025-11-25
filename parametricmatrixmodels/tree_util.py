@@ -1,19 +1,368 @@
 from __future__ import annotations
 
-import jax
-from beartype import beartype
-from jaxtyping import Array, PyTree, Shaped, jaxtyped
+import warnings
 
-from .typing import Any
+import jax
+import jax.numpy as np
+from beartype import beartype
+from jaxtyping import Array, Integer, Num, PyTree, Shaped, jaxtyped
+
+from .typing import Any, Callable
+
+
+@jaxtyped(typechecker=beartype)
+def tree_mean(
+    pytree: PyTree[Num[Array, " *d"], " T"],
+) -> Num[Array, ""]:
+    r"""
+    Computes the mean of all elements in all leaves of a PyTree of arrays.
+
+    Parameters
+    ----------
+    pytree
+        A PyTree where each leaf is an array.
+
+    Returns
+    -------
+    The mean of all elements across all leaves in the PyTree.
+    """
+
+    leaves = jax.tree.leaves(pytree)
+    num_elements = sum(leaf.size for leaf in leaves)
+    total_sum = sum(np.sum(leaf) for leaf in leaves)
+    return total_sum / num_elements
+
+
+@jaxtyped(typechecker=beartype)
+def tree_add(
+    pytree1: PyTree[Num[Array, " *d"], " T"],
+    pytree2: PyTree[Num[Array, " *d"], " T"],
+) -> PyTree[Num[Array, " *d"], " T"]:
+    r"""
+    Computes the element-wise addition of two PyTrees of arrays with the same
+    structure.
+    Parameters
+    ----------
+    pytree1
+        The first PyTree where each leaf is an array.
+    pytree2
+        The second PyTree where each leaf is an array.
+    Returns
+    -------
+    A PyTree with the same structure as the inputs, where each leaf is the
+    element-wise addition of the corresponding leaves from the input PyTrees.
+    """
+    return jax.tree.map(lambda x, y: x + y, pytree1, pytree2)
+
+
+@jaxtyped(typechecker=beartype)
+def tree_sub(
+    pytree1: PyTree[Num[Array, " *d"], " T"],
+    pytree2: PyTree[Num[Array, " *d"], " T"],
+) -> PyTree[Num[Array, " *d"], " T"]:
+    r"""
+    Computes the element-wise subtraction of two PyTrees of arrays with the
+    same structure.
+    Parameters
+    ----------
+    pytree1
+        The first PyTree where each leaf is an array.
+    pytree2
+        The second PyTree where each leaf is an array.
+    Returns
+    -------
+    A PyTree with the same structure as the inputs, where each leaf is the
+    element-wise subtraction of the corresponding leaves from the input
+    PyTrees.
+    """
+    return jax.tree.map(lambda x, y: x - y, pytree1, pytree2)
+
+
+@jaxtyped(typechecker=beartype)
+def tree_mul(
+    pytree1: PyTree[Num[Array, " *d"], " T"],
+    pytree2: PyTree[Num[Array, " *d"], " T"],
+) -> PyTree[Num[Array, " *d"], " T"]:
+    r"""
+    Computes the element-wise multiplication of two PyTrees of arrays with the
+    same structure.
+    Parameters
+    ----------
+    pytree1
+        The first PyTree where each leaf is an array.
+    pytree2
+        The second PyTree where each leaf is an array.
+    Returns
+    -------
+    A PyTree with the same structure as the inputs, where each leaf is the
+    element-wise multiplication of the corresponding leaves from the input
+    PyTrees.
+    """
+    return jax.tree.map(lambda x, y: x * y, pytree1, pytree2)
+
+
+@jaxtyped(typechecker=beartype)
+def tree_div(
+    pytree1: PyTree[Num[Array, " *d"], " T"],
+    pytree2: PyTree[Num[Array, " *d"], " T"],
+) -> PyTree[Num[Array, " *d"], " T"]:
+    r"""
+    Computes the element-wise division of two PyTrees of arrays with the same
+    structure.
+    Parameters
+    ----------
+    pytree1
+        The first PyTree where each leaf is an array.
+    pytree2
+        The second PyTree where each leaf is an array.
+    Returns
+    -------
+    A PyTree with the same structure as the inputs, where each leaf is the
+    element-wise division of the corresponding leaves from the input PyTrees.
+    """
+    return jax.tree.map(lambda x, y: x / y, pytree1, pytree2)
+
+
+@jaxtyped(typechecker=beartype)
+def tree_neg(
+    pytree: PyTree[Num[Array, " *d"], " T"],
+) -> PyTree[Num[Array, " *d"], " T"]:
+    r"""
+    Computes the element-wise negation of all leaves of a PyTree of arrays.
+
+    Parameters
+    ----------
+    pytree
+        A PyTree where each leaf is an array.
+
+    Returns
+    -------
+    A PyTree with the same structure as the input, but with each leaf
+    negated.
+    """
+
+    return jax.tree.map(lambda x: -x, pytree)
+
+
+@jaxtyped(typechecker=beartype)
+def tree_abs(
+    pytree: PyTree[Num[Array, " *d"], " T"],
+) -> PyTree[Num[Array, " *d"], " T"]:
+    r"""
+    Computes the element-wise absolute value of all leaves of a PyTree of
+    arrays.
+
+    Parameters
+    ----------
+    pytree
+        A PyTree where each leaf is an array.
+
+    Returns
+    -------
+    A PyTree with the same structure as the input, but with each leaf
+    replaced by its absolute value.
+    """
+
+    return jax.tree.map(lambda x: np.abs(x), pytree)
+
+
+@jaxtyped(typechecker=beartype)
+def tree_abs_sqr(
+    pytree: PyTree[Num[Array, " *d"], " T"],
+) -> PyTree[Num[Array, " *d"], " T"]:
+    r"""
+    Computes the element-wise squared absolute value of all leaves of a
+    PyTree of arrays.
+
+    Parameters
+    ----------
+    pytree
+        A PyTree where each leaf is an array.
+
+    Returns
+    -------
+    A PyTree with the same structure as the input, but with each leaf
+    replaced by its squared absolute value.
+    """
+
+    return jax.tree.map(lambda x: np.abs(x) ** 2, pytree)
+
+
+@jaxtyped(typechecker=beartype)
+def tree_pow(
+    pytree: PyTree[Num[Array, " *d"], " T"],
+    exponent: float | int,
+) -> PyTree[Num[Array, " *d"], " T"]:
+    r"""
+    Raises all leaves of a PyTree of arrays to a specified power.
+
+    Parameters
+    ----------
+    pytree
+        A PyTree where each leaf is an array.
+    exponent
+        The power to which each leaf should be raised.
+
+    Returns
+    -------
+    A PyTree with the same structure as the input, but with each leaf
+    raised to the specified power.
+    """
+
+    return jax.tree.map(lambda x: np.power(x, exponent), pytree)
+
+
+@jaxtyped(typechecker=beartype)
+def tree_scalar_add(
+    pytree: PyTree[Num[Array, " *d"], " T"],
+    scalar: complex | float | int | Num[Array, ""],
+) -> PyTree[Num[Array, " *d"], " T"]:
+    r"""
+    Adds a scalar value to all leaves of a PyTree of arrays.
+
+    Parameters
+    ----------
+    pytree
+        A PyTree where each leaf is an array.
+    scalar
+        The scalar value to add to each leaf.
+
+    Returns
+    -------
+    A PyTree with the same structure as the input, but with the scalar
+    added to each leaf.
+    """
+
+    return jax.tree.map(lambda x: x + scalar, pytree)
+
+
+@jaxtyped(typechecker=beartype)
+def tree_scalar_mul(
+    pytree: PyTree[Num[Array, " *d"], " T"],
+    scalar: complex | float | int | Num[Array, ""],
+) -> PyTree[Num[Array, " *d"], " T"]:
+    r"""
+    Multiplies all leaves of a PyTree of arrays by a scalar value.
+
+    Parameters
+    ----------
+    pytree
+        A PyTree where each leaf is an array.
+    scalar
+        The scalar value to multiply each leaf by.
+
+    Returns
+    -------
+    A PyTree with the same structure as the input, but with each leaf
+    multiplied by the scalar.
+    """
+
+    return jax.tree.map(lambda x: x * scalar, pytree)
+
+
+@jaxtyped(typechecker=beartype)
+def tree_astype(
+    pytree: PyTree[Shaped[Array, " *d"], " T"],
+    dtype: Any | str,
+) -> PyTree[Shaped[Array, " *d"], " T"]:
+    r"""
+    Casts all leaves of a PyTree of arrays to a specified data type.
+
+    Parameters
+    ----------
+    pytree
+        A PyTree where each leaf is an array.
+    dtype
+        The target data type to which each leaf should be cast. Can be a
+        JAX numpy dtype or a string representing the dtype.
+
+    Returns
+    -------
+    A PyTree with the same structure as the input, but with each leaf
+    cast to the specified data type.
+    """
+
+    return jax.tree.map(lambda x: x.astype(dtype), pytree)
+
+
+def is_shape_leaf(obj: Any) -> bool:
+    """
+    Check if the given object is a shape leaf, i.e., a tuple of integers
+    representing the shape of an array.
+
+    Parameters
+    ----------
+    obj
+        The object to check.
+
+    Returns
+    -------
+    True if the object is a shape leaf, False otherwise.
+    """
+    if not isinstance(obj, tuple):
+        return False
+    return all(isinstance(dim, int) for dim in obj)
+
+
+@jaxtyped(typechecker=beartype)
+def shapes_equal(
+    pytree1: PyTree[Shaped[Array, "..."]],
+    pytree2: PyTree[Shaped[Array, "..."]],
+    axes: int | tuple[int, ...] | slice | None = None,
+) -> bool:
+    r"""
+    Checks if both the structure and the shapes of the leaves of two PyTrees
+    with array leaves match along the specified axes.
+
+    Parameters
+    ----------
+    pytree1
+        The first PyTree to compare.
+    pytree2
+        The second PyTree to compare.
+    axes
+        The axes along which to compare the shapes of the leaves. Can be an
+        integer, a tuple of integers, a slice, or None. If None, all axes
+        are compared.
+    Returns
+    -------
+    True if both the structure and the shapes of the leaves match along the
+    specified axes, False otherwise.
+    """
+
+    struct1 = jax.tree.structure(pytree1)
+    struct2 = jax.tree.structure(pytree2)
+    if struct1 != struct2:
+        return False
+
+    leaves1 = jax.tree.leaves(pytree1)
+    leaves2 = jax.tree.leaves(pytree2)
+    for leaf1, leaf2 in zip(leaves1, leaves2):
+        shape1 = leaf1.shape
+        shape2 = leaf2.shape
+        if axes is None:
+            if shape1 != shape2:
+                return False
+        elif isinstance(axes, slice):
+            if shape1[axes] != shape2[axes]:
+                return False
+        else:
+            if isinstance(axes, int):
+                axes = (axes,)
+            for axis in axes:
+                if shape1[axis] != shape2[axis]:
+                    return False
+
+    return True
 
 
 @jaxtyped(typechecker=beartype)
 def batch_leaves(
     pytree: PyTree[Shaped[Array, "..."], " T"],
-    batch_size: int,
-    batch_idx: int,
-    length: int | None = None,
-    axis: int = 0,
+    batch_size: int | Integer[Array, ""],
+    batch_idx: int | Integer[Array, ""],
+    length: int | Integer[Array, ""] | None = None,
+    axis: int | Integer[Array, ""] = 0,
 ) -> PyTree[Shaped[Array, "..."], " T"]:
     r"""
     Extracts a batch of values from all leaves of a PyTree of arrays.
@@ -47,7 +396,7 @@ def batch_leaves(
 
     start = batch_idx * batch_size
     length = length if length is not None else batch_size
-    return jax.tree_map(
+    return jax.tree.map(
         lambda x: jax.lax.dynamic_slice_in_dim(x, start, length, axis=axis),
         pytree,
     )
@@ -114,3 +463,174 @@ def random_permute_leaves(
             ),
             pytree,
         )
+
+
+@jaxtyped(typechecker=beartype)
+def safecast(X: Num[Array, "..."], dtype: Any) -> Num[Array, "..."]:
+    r"""
+    Safely cast input data to a specified dtype, ensuring that complex types
+    are not inadvertently cast to float types. And issues a warning if the
+    requested dtype was not successfully applied, usually due to JAX settings.
+
+    Parameters
+    ----------
+    X
+        Input data to be cast.
+    dtype
+        Desired data type for the output.
+    """
+
+    # make sure that we don't cast complex to float
+    def cast_with_complex_check(x: np.ndarray, dtype: Any) -> np.ndarray:
+        if np.issubdtype(x.dtype, np.complexfloating) and not np.issubdtype(
+            dtype, np.complexfloating
+        ):
+            raise ValueError(
+                f"Cannot cast complex input dtype {x.dtype} to "
+                f"float output dtype {dtype}."
+            )
+        return x.astype(dtype)
+
+    X_ = jax.tree.map(lambda x: cast_with_complex_check(x, dtype), X)
+
+    # make sure the dtype was converted, issue a warning if not
+    def check_cast(x: np.ndarray, dtype: Any) -> None:
+        if x.dtype != dtype:
+            warnings.warn(
+                f"Requested dtype ({dtype}) was not successfully applied. "
+                "This is most likely due to JAX_ENABLE_X64 not being set. "
+                "See accompanying JAX warning for more details.",
+                UserWarning,
+            )
+
+    jax.tree.map(lambda x: check_cast(x, dtype), X_)
+
+    return X_
+
+
+def strfmt_pytree(
+    tree: PyTree,
+    indent: int = 0,
+    indentation: int = 1,
+    max_leaf_chars: int | None = None,
+    base_indent_str: str = "",
+    is_leaf: Callable[[PyTree], bool] | None = None,
+) -> str:
+    """
+    Format a JAX PyTree into a nicely indented string representation.
+
+    Parameters
+    ----------
+        tree
+            An arbitrary JAX PyTree (dict, list, tuple, or leaf value)
+        indent
+            Current indentation level (used for recursion)
+        indentation
+            Number of spaces to indent for each level
+        max_leaf_chars
+            Maximum characters for leaf value representation before truncation
+        base_indent_str
+            Base indentation string to prepend to each line
+        is_leaf
+            Optional function to determine if a node is a leaf
+
+    Returns:
+        A formatted string representation of the PyTree
+    """
+    indent_str = " " * indent * indentation
+    next_indent_str = " " * (indent + 1) * indentation
+
+    def truncate_leaf(s: str) -> str:
+        """Truncate leaf representation if it exceeds max_leaf_chars."""
+        if max_leaf_chars is None:
+            return s
+        if len(s) > max_leaf_chars:
+            return s[: max_leaf_chars - 3] + "..."
+        return s
+
+    # handle custom leaf detection
+    if is_leaf is not None and is_leaf(tree):
+        ret_str = truncate_leaf(repr(tree))
+
+    # handle dictionaries
+    elif isinstance(tree, dict):
+        if not tree:
+            if indent == 0:
+                return base_indent_str + "{}"
+            else:
+                return "{}"
+
+        items = []
+        for key, value in tree.items():
+            formatted_value = strfmt_pytree(
+                value,
+                indent + 1,
+                indentation,
+                max_leaf_chars,
+                base_indent_str,
+                is_leaf,
+            )
+            items.append(
+                f"{base_indent_str}{next_indent_str}{key}: {formatted_value}"
+            )
+
+        ret_str = (
+            "{{\n" + ",\n".join(items) + f",\n{base_indent_str}{indent_str}}}"
+        )
+
+    # handle lists
+    elif isinstance(tree, list):
+        if not tree:
+            if indent == 0:
+                return base_indent_str + "[]"
+            else:
+                return "[]"
+
+        items = []
+        for item in tree:
+            formatted_item = strfmt_pytree(
+                item,
+                indent + 1,
+                indentation,
+                max_leaf_chars,
+                base_indent_str,
+                is_leaf,
+            )
+            items.append(f"{base_indent_str}{next_indent_str}{formatted_item}")
+
+        ret_str = (
+            "[\n" + ",\n".join(items) + f",\n{base_indent_str}{indent_str}]"
+        )
+
+    # handle tuples
+    elif isinstance(tree, tuple):
+        if not tree:
+            if indent == 0:
+                return base_indent_str + "()"
+            else:
+                return "()"
+
+        items = []
+        for item in tree:
+            formatted_item = strfmt_pytree(
+                item,
+                indent + 1,
+                indentation,
+                max_leaf_chars,
+                base_indent_str,
+                is_leaf,
+            )
+            items.append(f"{base_indent_str}{next_indent_str}{formatted_item}")
+
+        ret_str = (
+            "(\n" + ",\n".join(items) + f",\n{base_indent_str}{indent_str})"
+        )
+
+    # handle leaves
+    else:
+        ret_str = truncate_leaf(repr(tree))
+
+    if indent == 0:
+        return base_indent_str + ret_str
+    else:
+        return ret_str

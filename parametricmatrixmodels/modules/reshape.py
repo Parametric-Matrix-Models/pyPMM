@@ -3,7 +3,8 @@ import jax.numpy as np
 from beartype import beartype
 from jaxtyping import jaxtyped
 
-from parametricmatrixmodels.typing import (
+from ..tree_util import is_shape_leaf
+from ..typing import (
     Any,
     ArrayData,
     ArrayDataShape,
@@ -15,7 +16,6 @@ from parametricmatrixmodels.typing import (
     State,
     Tuple,
 )
-
 from .basemodule import BaseModule
 
 
@@ -165,10 +165,8 @@ class Reshape(BaseModule):
         else:
             selfshape = self.shape
 
-        input_struct = jax.tree.structure(
-            input_shape, is_leaf=Reshape._is_shape
-        )
-        shape_struct = jax.tree.structure(selfshape, is_leaf=Reshape._is_shape)
+        input_struct = jax.tree.structure(input_shape, is_leaf=is_shape_leaf)
+        shape_struct = jax.tree.structure(selfshape, is_leaf=is_shape_leaf)
 
         assert input_struct == shape_struct, (
             f"Input shape structure {input_struct} does not match target shape"
@@ -215,7 +213,7 @@ class Reshape(BaseModule):
             check_compatibility_and_concretify,
             input_shape,
             selfshape,
-            is_leaf=Reshape._is_shape,
+            is_leaf=is_shape_leaf,
         )
         if promoted:
             return concrete_shape[0]

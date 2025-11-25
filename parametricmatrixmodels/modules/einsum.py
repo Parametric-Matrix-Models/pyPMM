@@ -3,7 +3,8 @@ import jax.numpy as np
 from beartype import beartype
 from jaxtyping import Array, Inexact, PyTree, jaxtyped
 
-from parametricmatrixmodels.typing import (
+from ..tree_util import is_shape_leaf
+from ..typing import (
     Any,
     Data,
     DataShape,
@@ -12,7 +13,6 @@ from parametricmatrixmodels.typing import (
     Params,
     Tuple,
 )
-
 from .basemodule import BaseModule
 
 
@@ -21,13 +21,6 @@ class Einsum(BaseModule):
     Module that implements Einsum operations. Supports both bare arrays
     (``ArrayData``) and PyTrees of arrays (``Data``).
     """
-
-    @staticmethod
-    def _is_shape(obj: object) -> bool:
-        return obj is None or (
-            isinstance(obj, (tuple, list))
-            and all(isinstance(dim, int) for dim in obj)
-        )
 
     def __init__(
         self,
@@ -145,7 +138,7 @@ class Einsum(BaseModule):
                     validate_shape,
                     inferred_shapes,
                     shapes,
-                    is_leaf=Einsum._is_shape,
+                    is_leaf=is_shape_leaf,
                 )
 
             shapes = inferred_shapes
@@ -255,10 +248,10 @@ class Einsum(BaseModule):
 
             # assert that the tree structure of input_shape and shapes match
             input_shape_structure = jax.tree.structure(
-                input_shape, is_leaf=Einsum._is_shape
+                input_shape, is_leaf=is_shape_leaf
             )
             shapes_structure = jax.tree.structure(
-                self.shapes, is_leaf=Einsum._is_shape
+                self.shapes, is_leaf=is_shape_leaf
             )
             if input_shape_structure != shapes_structure:
                 raise ValueError(
@@ -285,17 +278,17 @@ class Einsum(BaseModule):
 
             rngs = jax.random.split(
                 rng,
-                len(jax.tree.leaves(self.shapes, is_leaf=Einsum._is_shape)),
+                len(jax.tree.leaves(self.shapes, is_leaf=is_shape_leaf)),
             )
             rngs = jax.tree.unflatten(
-                jax.tree.structure(self.shapes, is_leaf=Einsum._is_shape),
+                jax.tree.structure(self.shapes, is_leaf=is_shape_leaf),
                 rngs,
             )
             self.params = jax.tree.map(
                 initialize_param,
                 self.shapes,
                 rngs,
-                is_leaf=Einsum._is_shape,
+                is_leaf=is_shape_leaf,
             )
 
         # ensure the input_shapes are compatible with the einsum_str
@@ -312,7 +305,7 @@ class Einsum(BaseModule):
             validate_input_shape,
             self.einsum_str,
             input_shape,
-            is_leaf=Einsum._is_shape,
+            is_leaf=is_shape_leaf,
         )
 
         # to ensure the batch index ends up as the first index in the output
@@ -372,7 +365,7 @@ class Einsum(BaseModule):
         dummy_input = jax.tree.map(
             lambda shape: np.zeros((1,) + shape),
             input_shape,
-            is_leaf=Einsum._is_shape,
+            is_leaf=is_shape_leaf,
         )
         output = jax.tree.map(
             lambda s, p, x: np.einsum(s, x, p),
