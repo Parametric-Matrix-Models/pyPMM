@@ -33,6 +33,8 @@ def test_sequentialmodel_trivial():
 
     model.append(pmm.modules.Bias(0.5, scalar=True))
 
+    print(input_data.shape[1:])
+
     model.compile(None, input_data.shape[1:])
 
     output = model(input_data)

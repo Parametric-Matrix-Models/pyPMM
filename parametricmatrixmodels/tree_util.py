@@ -288,7 +288,7 @@ def tree_astype(
 def is_shape_leaf(obj: Any) -> bool:
     """
     Check if the given object is a shape leaf, i.e., a tuple of integers
-    representing the shape of an array.
+    representing the shape of an array, or None.
 
     Parameters
     ----------
@@ -299,6 +299,8 @@ def is_shape_leaf(obj: Any) -> bool:
     -------
     True if the object is a shape leaf, False otherwise.
     """
+    if obj is None:
+        return True
     if not isinstance(obj, tuple):
         return False
     return all(isinstance(dim, int) for dim in obj)
@@ -466,7 +468,9 @@ def random_permute_leaves(
 
 
 @jaxtyped(typechecker=beartype)
-def safecast(X: Num[Array, "..."], dtype: Any) -> Num[Array, "..."]:
+def safecast(
+    X: PyTree[Num[Array, "..."], " T"], dtype: Any
+) -> PyTree[Num[Array, "..."], " T"]:
     r"""
     Safely cast input data to a specified dtype, ensuring that complex types
     are not inadvertently cast to float types. And issues a warning if the

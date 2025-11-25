@@ -176,6 +176,10 @@ class Bias(BaseModule):
                         f"Bias shape {self.bias.shape} does not match all "
                         f"input leaf shapes {input_shapes_list}"
                     )
+            elif isinstance(self.bias, np.ndarray) and (
+                self.bias.shape == (1,) or self.bias.shape == ()
+            ):
+                pass
             else:
                 # pytree case
                 def check_shape(x: np.ndarray, s: Tuple[int, ...]) -> None:
