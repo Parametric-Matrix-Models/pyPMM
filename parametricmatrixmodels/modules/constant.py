@@ -102,6 +102,7 @@ class Constant(BaseModule):
         self.init_magnitude = init_magnitude
         self.real = real
 
+    @property
     def name(self) -> str:
         return (
             f"Constant({self.shape}, real={self.real},"

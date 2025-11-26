@@ -215,6 +215,7 @@ class Einsum(BaseModule):
 
         self._batch_einsum_str: PyTree[str] | str | None = None
 
+    @property
     def name(self) -> str:
         return f"Einsum(einsum_str={self.einsum_str})"
 

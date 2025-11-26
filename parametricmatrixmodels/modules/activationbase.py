@@ -40,6 +40,7 @@ class ActivationBase(BaseModule):
         self.args = args
         self.kwargs = kwargs
 
+    @property
     @abstractmethod
     def name(self) -> str:
         raise NotImplementedError("Subclasses must implement the name method.")

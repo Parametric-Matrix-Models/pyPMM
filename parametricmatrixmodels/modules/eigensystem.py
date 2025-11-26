@@ -94,6 +94,7 @@ class Eigensystem(BaseModule):
         self.num_eig = num_eig
         self.which = which.lower()
 
+    @property
     def name(self) -> str:
         if self.num_eig == 1 and self.which == "sa":
             return "Eigensystem(ground state)"

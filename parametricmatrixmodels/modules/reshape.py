@@ -91,6 +91,7 @@ class Reshape(BaseModule):
 
         self.shape = shape
 
+    @property
     def name(self) -> str:
         return f"Reshape(shape={self.shape})"
 

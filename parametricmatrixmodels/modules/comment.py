@@ -28,6 +28,7 @@ class Comment(BaseModule):
         """
         self.comment = comment
 
+    @property
     def name(self) -> str:
         return f"# {self.comment}" if self.comment else "#"
 

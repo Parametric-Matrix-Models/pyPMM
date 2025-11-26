@@ -96,6 +96,7 @@ class Bias(BaseModule):
             if self.scalar:
                 self.bias = np.array(self.bias).reshape((1,))
 
+    @property
     def name(self) -> str:
         return f"Bias(real={self.real})"
 

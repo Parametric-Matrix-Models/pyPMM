@@ -78,6 +78,7 @@ class PReLU(BaseModule):
             None  # input shape, will be set in compilation
         )
 
+    @property
     def name(self) -> str:
         return f"PReLU(real={self.real}, single={self.single_parameter})"
 

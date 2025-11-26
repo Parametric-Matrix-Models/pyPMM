@@ -68,6 +68,7 @@ class BaseModule(ABC):
                 # set the __jaxtyped__ attribute to avoid re-wrapping
                 getattr(cls, name).__jaxtyped__ = True
 
+    @property
     def name(self) -> str:
         """
         Returns the name of the module, unless overridden, this is the class
@@ -94,13 +95,13 @@ class BaseModule(ABC):
         ready = self.is_ready()
         if param_count is not None and ready:
             if param_count == 0:
-                return f"{self.name()}"
+                return f"{self.name}"
             else:
-                return f"{self.name()} (trainable floats: {param_count:,})"
+                return f"{self.name} (trainable floats: {param_count:,})"
         elif not ready:
-            return f"{self.name()} (uninitialized)"
+            return f"{self.name} (uninitialized)"
         else:
-            return f"{self.name()}"
+            return f"{self.name}"
 
     @abstractmethod
     def is_ready(self) -> bool:
@@ -646,7 +647,7 @@ class BaseModule(ABC):
         """
 
         return {
-            "name": self.name(),
+            "name": self.name,
             "hyperparameters": self.get_hyperparameters(),
             "params": self.get_params(),
             "state": self.get_state(),

@@ -125,7 +125,7 @@ class SequentialModel(Model):
             rng = jax.random.key(rng)
 
         if verbose:
-            print(f"Compiling {self.name()} for input shape {input_shape}.")
+            print(f"Compiling {self.name} for input shape {input_shape}.")
 
         self.input_shape = input_shape
 
@@ -229,7 +229,7 @@ class SequentialModel(Model):
 
         if not self.is_ready():
             raise RuntimeError(
-                f"{self.name()} is not ready. Call compile() first."
+                f"{self.name} is not ready. Call compile() first."
             )
 
         # get the callables for each module and put them in a PyTree with the

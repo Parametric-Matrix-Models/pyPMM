@@ -19,6 +19,7 @@ class Flatten(Reshape):
         # this accounts for both array and PyTree inputs
         super().__init__(shape=None)
 
+    @property
     def name(self) -> str:
         return "Flatten"
 

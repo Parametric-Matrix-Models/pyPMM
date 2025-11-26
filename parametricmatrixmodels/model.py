@@ -65,7 +65,7 @@ class Model(BaseModule):
 
     def __repr__(self) -> str:
         return (
-            f"{self.name()}(\n"
+            f"{self.name}(\n"
             + strfmt_pytree(
                 self.modules, indent=0, indentation=1, base_indent_str="  "
             )
@@ -161,7 +161,7 @@ class Model(BaseModule):
         """
 
         raise NotImplementedError(
-            f"{self.name()}.compile() not implemented. Must be implemented by "
+            f"{self.name}.compile() not implemented. Must be implemented by "
             "subclasses."
         )
 
@@ -186,7 +186,7 @@ class Model(BaseModule):
                 Shape of the output after passing through the model.
         """
         raise NotImplementedError(
-            f"{self.name()}.get_output_shape() not implemented. Must be"
+            f"{self.name}.get_output_shape() not implemented. Must be"
             " implemented by subclasses."
         )
 
@@ -253,7 +253,7 @@ class Model(BaseModule):
 
         if not self.is_ready():
             raise RuntimeError(
-                f"{self.name()} is not ready. Call compile() first."
+                f"{self.name} is not ready. Call compile() first."
             )
 
         # this will fail if the structure of self.modules isn't a prefix of the
@@ -294,7 +294,7 @@ class Model(BaseModule):
 
         if not self.is_ready():
             raise RuntimeError(
-                f"{self.name()} is not ready. Call compile() first."
+                f"{self.name} is not ready. Call compile() first."
             )
 
         return jax.tree.map(lambda m: m.get_state(), self.modules)
@@ -321,7 +321,7 @@ class Model(BaseModule):
         """
         if not self.is_ready():
             raise RuntimeError(
-                f"{self.name()} is not ready. Call compile() first."
+                f"{self.name} is not ready. Call compile() first."
             )
 
         # this will fail if the structure of self.modules isn't a prefix of the
@@ -425,7 +425,7 @@ class Model(BaseModule):
         State : Typing for the model state.
         """
         raise NotImplementedError(
-            f"{self.name()}._get_callable() not implemented. Must be"
+            f"{self.name}._get_callable() not implemented. Must be"
             " implemented by subclasses."
         )
 
@@ -485,7 +485,7 @@ class Model(BaseModule):
         """
         if not self.is_ready():
             raise RuntimeError(
-                f"{self.name()} is not ready. Call compile() first."
+                f"{self.name} is not ready. Call compile() first."
             )
 
         if self.callable is None:
@@ -551,7 +551,7 @@ class Model(BaseModule):
 
         if not self.is_ready():
             raise RuntimeError(
-                f"{self.name()} is not ready. Call compile() first."
+                f"{self.name} is not ready. Call compile() first."
             )
         if self.callable is None:
             self.callable = jax.jit(self._get_callable(), static_argnums=(2,))
@@ -720,7 +720,7 @@ class Model(BaseModule):
 
         if not self.is_ready():
             raise RuntimeError(
-                f"{self.name()} is not ready. Call compile() first."
+                f"{self.name} is not ready. Call compile() first."
             )
         if self.callable is None:
             self.callable = jax.jit(self._get_callable(), static_argnums=(2,))
@@ -800,7 +800,7 @@ class Model(BaseModule):
         """
         if not self.is_ready():
             raise RuntimeError(
-                f"{self.name()} is not ready. Call compile() first."
+                f"{self.name} is not ready. Call compile() first."
             )
 
         # convert precision to 32 or 64
