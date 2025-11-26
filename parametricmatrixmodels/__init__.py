@@ -8,9 +8,18 @@ def _get_version():
 
 __version__ = _get_version()
 
-from . import eigen_util, modules, scalers, training, tree_util, typing
+from . import (
+    eigen_util,
+    graph_util,
+    modules,
+    scalers,
+    training,
+    tree_util,
+    typing,
+)
 from .conformalizedmodel import ConformalizedModel
 from .model import Model
+from .nonsequentialmodel import NonSequentialModel
 from .sequentialmodel import SequentialModel
 
 from . import model_util  # isort: skip

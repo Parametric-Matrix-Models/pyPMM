@@ -67,7 +67,10 @@ class Model(BaseModule):
         return (
             f"{self.name}(\n"
             + strfmt_pytree(
-                self.modules, indent=0, indentation=1, base_indent_str="  "
+                self.modules,
+                indent=0,
+                indentation=1,
+                base_indent_str="  ",
             )
             + "\n)"
         )

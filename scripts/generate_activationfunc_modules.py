@@ -157,6 +157,7 @@ class {name}(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "{name}"
 

@@ -37,6 +37,7 @@ class Constant(BaseModule):
         shape: PyTree[Tuple[int, ...], " Const"] | None = None,
         init_magnitude: float = 1e-2,
         real: PyTree[bool, " Const"] | bool | None = None,
+        name: str = "Constant",
     ) -> None:
         """
         Parameters
@@ -58,6 +59,8 @@ class Constant(BaseModule):
             Whether the constant is real-valued if it is trainable and not
             provided. If ``None``, the type is inferred from the ``constant``
             parameter if provided. Must be set if ``constant`` is ``None``.
+        name
+            Custom name for this instance of the module.
         """
         # check if constant is a scalar
         if constant is not None and np.isscalar(constant):
@@ -101,11 +104,12 @@ class Constant(BaseModule):
         self.shape = shape
         self.init_magnitude = init_magnitude
         self.real = real
+        self._name = name
 
     @property
     def name(self) -> str:
         return (
-            f"Constant({self.shape}, real={self.real},"
+            f"{self._name}({self.shape}, real={self.real},"
             f" {'trainable' if self.trainable else 'fixed'})"
         )
 
@@ -226,6 +230,7 @@ class Constant(BaseModule):
             "shape": self.shape,
             "init_magnitude": self.init_magnitude,
             "real": self.real,
+            "_name": self._name,
         }
 
     def set_hyperparameters(self, hyperparams: HyperParams) -> None:

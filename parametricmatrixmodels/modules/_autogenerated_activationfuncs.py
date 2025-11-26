@@ -20,6 +20,7 @@ class ReLU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ReLU"
 
@@ -47,6 +48,7 @@ class ReLU6(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ReLU6"
 
@@ -74,6 +76,7 @@ class Sigmoid(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Sigmoid"
 
@@ -101,6 +104,7 @@ class Softplus(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Softplus"
 
@@ -128,6 +132,7 @@ class SparsePlus(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "SparsePlus"
 
@@ -155,6 +160,7 @@ class SparseSigmoid(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "SparseSigmoid"
 
@@ -182,6 +188,7 @@ class SoftSign(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "SoftSign"
 
@@ -209,6 +216,7 @@ class SiLU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "SiLU"
 
@@ -236,6 +244,7 @@ class Swish(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Swish"
 
@@ -263,6 +272,7 @@ class LogSigmoid(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "LogSigmoid"
 
@@ -290,6 +300,7 @@ class LeakyReLU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "LeakyReLU"
 
@@ -317,6 +328,7 @@ class HardSigmoid(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "HardSigmoid"
 
@@ -344,6 +356,7 @@ class HardSiLU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "HardSiLU"
 
@@ -371,6 +384,7 @@ class HardSwish(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "HardSwish"
 
@@ -398,6 +412,7 @@ class HardTanh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "HardTanh"
 
@@ -425,6 +440,7 @@ class ELU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ELU"
 
@@ -452,6 +468,7 @@ class CELU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "CELU"
 
@@ -479,6 +496,7 @@ class SELU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "SELU"
 
@@ -506,6 +524,7 @@ class GELU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "GELU"
 
@@ -533,6 +552,7 @@ class GLU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "GLU"
 
@@ -560,6 +580,7 @@ class SquarePlus(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "SquarePlus"
 
@@ -587,6 +608,7 @@ class Mish(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Mish"
 
@@ -614,6 +636,7 @@ class Identity(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Identity"
 
@@ -641,6 +664,7 @@ class Softmax(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Softmax"
 
@@ -668,6 +692,7 @@ class LogSoftmax(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "LogSoftmax"
 
@@ -695,6 +720,7 @@ class LogSumExp(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "LogSumExp"
 
@@ -722,6 +748,7 @@ class Standardize(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Standardize"
 
@@ -749,6 +776,7 @@ class OneHot(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "OneHot"
 
@@ -776,6 +804,7 @@ class Abs(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Abs"
 
@@ -803,6 +832,7 @@ class Absolute(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Absolute"
 
@@ -830,6 +860,7 @@ class ACos(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ACos"
 
@@ -857,6 +888,7 @@ class ACosh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ACosh"
 
@@ -884,6 +916,7 @@ class AMax(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "AMax"
 
@@ -911,6 +944,7 @@ class AMin(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "AMin"
 
@@ -938,6 +972,7 @@ class Angle(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Angle"
 
@@ -965,6 +1000,7 @@ class ArcCos(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ArcCos"
 
@@ -992,6 +1028,7 @@ class ArcCosh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ArcCosh"
 
@@ -1019,6 +1056,7 @@ class ArcSin(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ArcSin"
 
@@ -1046,6 +1084,7 @@ class ArcSinh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ArcSinh"
 
@@ -1073,6 +1112,7 @@ class ArcTan(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ArcTan"
 
@@ -1100,6 +1140,7 @@ class ArcTan2(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ArcTan2"
 
@@ -1127,6 +1168,7 @@ class ArcTanh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ArcTanh"
 
@@ -1154,6 +1196,7 @@ class ASin(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ASin"
 
@@ -1181,6 +1224,7 @@ class ASinh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ASinh"
 
@@ -1208,6 +1252,7 @@ class ATan(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ATan"
 
@@ -1235,6 +1280,7 @@ class ATanh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "ATanh"
 
@@ -1262,6 +1308,7 @@ class Cbrt(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Cbrt"
 
@@ -1289,6 +1336,7 @@ class Ceil(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Ceil"
 
@@ -1316,6 +1364,7 @@ class Clip(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Clip"
 
@@ -1343,6 +1392,7 @@ class Conj(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Conj"
 
@@ -1370,6 +1420,7 @@ class Conjugate(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Conjugate"
 
@@ -1397,6 +1448,7 @@ class Cos(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Cos"
 
@@ -1424,6 +1476,7 @@ class Cosh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Cosh"
 
@@ -1451,6 +1504,7 @@ class Deg2Rad(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Deg2Rad"
 
@@ -1478,6 +1532,7 @@ class Degrees(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Degrees"
 
@@ -1505,6 +1560,7 @@ class Exp(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Exp"
 
@@ -1532,6 +1588,7 @@ class Exp2(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Exp2"
 
@@ -1559,6 +1616,7 @@ class Expm1(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Expm1"
 
@@ -1586,6 +1644,7 @@ class FAbs(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "FAbs"
 
@@ -1613,6 +1672,7 @@ class Fix(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Fix"
 
@@ -1640,6 +1700,7 @@ class FloatPower(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "FloatPower"
 
@@ -1667,6 +1728,7 @@ class Floor(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Floor"
 
@@ -1694,6 +1756,7 @@ class FloorDivide(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "FloorDivide"
 
@@ -1721,6 +1784,7 @@ class FrExp(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "FrExp"
 
@@ -1748,6 +1812,7 @@ class I0(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "I0"
 
@@ -1775,6 +1840,7 @@ class Imag(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Imag"
 
@@ -1802,6 +1868,7 @@ class Invert(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Invert"
 
@@ -1829,6 +1896,7 @@ class LDExp(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "LDExp"
 
@@ -1856,6 +1924,7 @@ class Log(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Log"
 
@@ -1883,6 +1952,7 @@ class Log10(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Log10"
 
@@ -1910,6 +1980,7 @@ class Log1p(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Log1p"
 
@@ -1937,6 +2008,7 @@ class Log2(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Log2"
 
@@ -1964,6 +2036,7 @@ class NaNToNum(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "NaNToNum"
 
@@ -1991,6 +2064,7 @@ class NanToNum(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "NanToNum"
 
@@ -2018,6 +2092,7 @@ class NextAfter(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "NextAfter"
 
@@ -2045,6 +2120,7 @@ class Packbits(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Packbits"
 
@@ -2072,6 +2148,7 @@ class Piecewise(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Piecewise"
 
@@ -2099,6 +2176,7 @@ class Positive(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Positive"
 
@@ -2126,6 +2204,7 @@ class Pow(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Pow"
 
@@ -2153,6 +2232,7 @@ class Power(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Power"
 
@@ -2180,6 +2260,7 @@ class Rad2Deg(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Rad2Deg"
 
@@ -2207,6 +2288,7 @@ class Radians(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Radians"
 
@@ -2234,6 +2316,7 @@ class Real(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Real"
 
@@ -2261,6 +2344,7 @@ class Reciprocal(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Reciprocal"
 
@@ -2288,6 +2372,7 @@ class RInt(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "RInt"
 
@@ -2315,6 +2400,7 @@ class Round(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Round"
 
@@ -2342,6 +2428,7 @@ class Sign(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Sign"
 
@@ -2369,6 +2456,7 @@ class Signbit(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Signbit"
 
@@ -2396,6 +2484,7 @@ class Sin(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Sin"
 
@@ -2423,6 +2512,7 @@ class Sinc(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Sinc"
 
@@ -2450,6 +2540,7 @@ class Sinh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Sinh"
 
@@ -2477,6 +2568,7 @@ class Sqrt(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Sqrt"
 
@@ -2504,6 +2596,7 @@ class Square(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Square"
 
@@ -2531,6 +2624,7 @@ class Tan(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Tan"
 
@@ -2558,6 +2652,7 @@ class Tanh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Tanh"
 
@@ -2585,6 +2680,7 @@ class Trunc(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Trunc"
 
@@ -2612,6 +2708,7 @@ class Unpackbits(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
+    @property
     def name(self) -> str:
         basename = "Unpackbits"
 

@@ -137,13 +137,19 @@ class BaseModule(ABC):
             return None
         try:
             params = self.get_params()
-            if not params:
+            if params is None or len(jax.tree.leaves(params)) == 0:
                 return 0
-            return sum(
-                [(2 if np.iscomplexobj(p) else 1) * p.size for p in params]
+            # params is a PyTree, so we need to reduce over it
+            return jax.tree.reduce(
+                lambda s, p: s + (2 if np.iscomplexobj(p) else 1) * p.size,
+                params,
+                0,
             )
-        except Exception:
-            return None
+        except Exception as e:
+            # reraise
+            raise RuntimeError(
+                "Error while counting trainable floats: " + str(e)
+            ) from e
 
     @abstractmethod
     def _get_callable(
