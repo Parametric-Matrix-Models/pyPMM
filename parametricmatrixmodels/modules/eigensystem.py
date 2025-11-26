@@ -1,29 +1,36 @@
 from __future__ import annotations
 
-from typing import Any, Callable
-
 import jax
 import jax.numpy as np
+from beartype import beartype
+from jaxtyping import jaxtyped
 
-from ._eigensystems import select_eigenpairs_by_eigenvalue
+from ..eigen_util import (
+    select_eigenpairs_by_eigenvalue,
+    validate_eigensystem_input_shape,
+)
+from ..tree_util import is_shape_leaf
+from ..typing import (
+    Any,
+    ArrayData,
+    Data,
+    DataShape,
+    Dict,
+    ModuleCallable,
+    Params,
+    State,
+    Tuple,
+)
 from .basemodule import BaseModule
 
 
 class Eigensystem(BaseModule):
     r"""
     Module to compute selected eigenpairs of a symmetric (Hermitian) matrix.
+    Can be applied over PyTrees of matrices.
 
-    The output of this module for a single input sample is an array where each
-    column is an eigenvalue followed by its corresponding eigenvector, e.g.
-
-    .. math::
-
-        \begin{bmatrix}
-            \lambda_1 & \lambda_2 & \ldots \\
-            v_{1,1} & v_{2,1} & \ldots \\
-            v_{1,2} & v_{2,2} & \ldots \\
-            \vdots & \vdots & \ddots
-        \end{bmatrix}
+    The output of this module for a single input matrix is a Dictionary
+    (PyTree) keyed by 'eigenvalues' and 'eigenvectors'.
 
     See Also
     --------
@@ -38,15 +45,15 @@ class Eigensystem(BaseModule):
 
     def __init__(
         self,
-        num_eig: int = 1,
+        num_eig: int | None = 1,
         which: str = "SA",
     ) -> None:
         r"""
         Parameters
         ----------
         num_eig
-            Number of eigenpairs to compute. Must be a positive integer.
-            Default is 1.
+            Number of eigenpairs to compute. Must be a positive integer or
+            None. If None, all pairs are returned. Default is 1.
         which
             Which eigenpairs to return, by default "SA".
             Options are:
@@ -65,8 +72,10 @@ class Eigensystem(BaseModule):
             For magnitude 'which' options, the eigenpairs are returned in
             ascending eigenvalue magnitude order.
         """
-        if num_eig <= 0 or not isinstance(num_eig, int):
-            raise ValueError("num_eig must be a positive integer")
+        if num_eig is not None and (
+            num_eig <= 0 or not isinstance(num_eig, int)
+        ):
+            raise ValueError("num_eig must be a positive integer or None.")
         if which.lower() not in [
             "sa",
             "la",
@@ -84,12 +93,12 @@ class Eigensystem(BaseModule):
 
         self.num_eig = num_eig
         self.which = which.lower()
-        self.input_shape = None
-        self.output_shape = None
 
     def name(self) -> str:
         if self.num_eig == 1 and self.which == "sa":
             return "Eigensystem(ground state)"
+        elif self.num_eig is None:
+            return "Eigensystem(ALL, which={self.which.upper()})"
         else:
             return (
                 f"Eigensystem(num_eig={self.num_eig},"
@@ -97,80 +106,70 @@ class Eigensystem(BaseModule):
             )
 
     def is_ready(self) -> bool:
-        return self.input_shape is not None and self.output_shape is not None
+        return True
 
     def get_num_trainable_floats(self) -> int | None:
         return 0
 
-    def _get_callable(self) -> Callable[
-        [
-            tuple[np.ndarray, ...],
-            np.ndarray,
-            bool,
-            tuple[np.ndarray, ...],
-            Any,
-        ],
-        tuple[np.ndarray, tuple[np.ndarray, ...]],
-    ]:
-        def _callable(
-            params: tuple[np.ndarray, ...],
-            input_NF: np.ndarray,
+    def _get_callable(self) -> ModuleCallable:
+
+        @jaxtyped(typechecker=beartype)
+        def get_eigensystem(data: ArrayData) -> Dict[str, ArrayData]:
+            # compute all eigensystems over the batch dimension, then vmap to
+            # select the desired eigenpairs
+            E, V = jax.vmap(
+                select_eigenpairs_by_eigenvalue, in_axes=(0, 0, None, None)
+            )(*np.linalg.eigh(data), self.num_eig, self.which)
+            return {"eigenvalues": E, "eigenvectors": V}
+
+        @jaxtyped(typechecker=beartype)
+        def tree_map_get_eigensystem(
+            params: Params,
+            data: Data,
             training: bool,
-            state: tuple[np.ndarray, ...],
+            state: State,
             rng: Any,
-        ) -> tuple[np.ndarray, tuple[np.ndarray, ...]]:
-            E, V = (
-                jax.vmap(
-                    select_eigenpairs_by_eigenvalue, in_axes=(0, 0, None, None)
-                )(np.linalg.eigh(input_NF), self.num_eig, self.which),
+        ) -> Tuple[Data, State]:
+            # tree map over the data PyTree
+            return (
+                jax.tree.map(
+                    get_eigensystem,
+                    data,
+                ),
+                state,
             )
 
-            # E is (N_batch, num_eig)
-            # V is (N_batch, N_dim, num_eig)
-            # we want to stack along axis 1 so that the output is
-            # (N_batch, N_dim + 1, num_eig)
+        return tree_map_get_eigensystem
 
-            out = np.concatenate([E[:, None, :], V], axis=1)
-
-            return out, state
-
-        return _callable
-
-    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: DataShape) -> None:
         # ensure input shape is valid
-        if len(input_shape) != 2 or input_shape[0] != input_shape[1]:
-            raise ValueError(
-                f"Input shape must be a square matrix, got {input_shape}"
-            )
+        validate_eigensystem_input_shape(input_shape, self.num_eig)
 
-        self.input_shape = input_shape
-        self.output_shape = self.get_output_shape(input_shape)
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
+        validate_eigensystem_input_shape(input_shape, self.num_eig)
 
-    def get_output_shape(
-        self, input_shape: tuple[int, ...]
-    ) -> tuple[int, ...]:
-        if len(input_shape) != 2 or input_shape[0] != input_shape[1]:
-            raise ValueError(
-                f"Input shape must be a square matrix, got {input_shape}"
-            )
+        # the output is a PyTree with the original structure as a prefix to a
+        # two-keyed dictionary with 'eigenvalues' and 'eigenvectors'
+        def get_eigensystem_shape(
+            matrix_shape: Tuple[int, int],
+        ) -> Dict[str, Tuple[int, ...]]:
+            n = matrix_shape[-1]
+            k = self.num_eig if self.num_eig is not None else n
+            return {
+                "eigenvalues": (k,),
+                "eigenvectors": (n, k),
+            }
 
-        # returns an array where each column is an eigenvalue followed by its
-        # eigenvector, e.g.
-        # [ [eigval1, eigval2, ...],
-        # [ [eigvec1_comp1, eigvec2_comp1, ...],
-        #   [eigvec1_comp2, eigvec2_comp2, ...],
-        #   ...
-        # ]
-        # so out[0, :] are the eigenvalues and out[1:, :] are the eigenvectors
-
-        return (input_shape[0] + 1, self.num_eig)
+        return jax.tree.map(
+            get_eigensystem_shape,
+            input_shape,
+            is_leaf=is_shape_leaf,
+        )
 
     def get_hyperparameters(self) -> dict[str, Any]:
         return {
             "num_eig": self.num_eig,
             "which": self.which,
-            "input_shape": self.input_shape,
-            "output_shape": self.output_shape,
         }
 
     def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:

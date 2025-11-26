@@ -1,17 +1,29 @@
 from __future__ import annotations
 
-from typing import Any, Callable
-
 import jax
 import jax.numpy as np
+from beartype import beartype
+from jaxtyping import jaxtyped
 
-from ._eigensystems import select_eigenvalues
+from ..eigen_util import select_eigenvalues, validate_eigensystem_input_shape
+from ..tree_util import is_shape_leaf
+from ..typing import (
+    Any,
+    ArrayData,
+    Data,
+    DataShape,
+    ModuleCallable,
+    Params,
+    State,
+    Tuple,
+)
 from .basemodule import BaseModule
 
 
 class Eigenvalues(BaseModule):
     r"""
     Module to compute selected eigenvalues of a symmetric (Hermitian) matrix.
+    Can be applied over PyTrees of matrices.
 
     See Also
     --------
@@ -29,15 +41,15 @@ class Eigenvalues(BaseModule):
 
     def __init__(
         self,
-        num_eig: int = 1,
+        num_eig: int | None = 1,
         which: str = "SA",
     ) -> None:
         r"""
         Parameters
         ----------
         num_eig
-            Number of eigenvalues to compute. Must be a positive integer.
-            Default is 1.
+            Number of eigenvalues to compute. Must be a positive integer or
+            None. If None, all eigenvalues are returned. Default is 1.
         which
             Which eigenvalues to return, by default "SA".
             Options are:
@@ -57,8 +69,10 @@ class Eigenvalues(BaseModule):
             ascending magnitude order.
         """
 
-        if num_eig <= 0 or not isinstance(num_eig, int):
-            raise ValueError("num_eig must be a positive integer")
+        if num_eig is not None and (
+            num_eig <= 0 or not isinstance(num_eig, int)
+        ):
+            raise ValueError("num_eig must be a positive integer or None.")
         if which.lower() not in [
             "sa",
             "la",
@@ -80,6 +94,8 @@ class Eigenvalues(BaseModule):
     def name(self) -> str:
         if self.num_eig == 1 and self.which == "sa":
             return "Eigenvalues(ground state)"
+        elif self.num_eig is None:
+            return "Eigenvalues(ALL, which={self.which.upper()})"
         else:
             return (
                 f"Eigenvalues(num_eig={self.num_eig},"
@@ -92,34 +108,50 @@ class Eigenvalues(BaseModule):
     def get_num_trainable_floats(self) -> int | None:
         return 0
 
-    def _get_callable(self) -> Callable[
-        [
-            tuple[np.ndarray, ...],
-            np.ndarray,
-            bool,
-            tuple[np.ndarray, ...],
-            Any,
-        ],
-        tuple[np.ndarray, tuple[np.ndarray, ...]],
-    ]:
-        return lambda params, input_NF, training, state, rng: (
-            jax.vmap(select_eigenvalues, in_axes=(0, None, None))(
-                np.linalg.eigvalsh(input_NF), self.num_eig, self.which
-            ),
-            state,  # state is not used in this module, return it unchanged
-        )
+    def _get_callable(self) -> ModuleCallable:
 
-    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
-        # ensure input shape is valid
-        if len(input_shape) != 2 or input_shape[0] != input_shape[1]:
-            raise ValueError(
-                f"Input shape must be a square matrix, got {input_shape}"
+        @jaxtyped(typechecker=beartype)
+        def get_eigenvalues(data: ArrayData) -> ArrayData:
+            # compute all eigenvalues over the batch dimension, then vmap
+            # to select the desired eigenvalues
+            return jax.vmap(select_eigenvalues, in_axes=(0, None, None))(
+                np.linalg.eigvalsh(data),
+                self.num_eig,
+                self.which,
             )
 
-    def get_output_shape(
-        self, input_shape: tuple[int, ...]
-    ) -> tuple[int, ...]:
-        return (self.num_eig,)
+        @jaxtyped(typechecker=beartype)
+        def tree_map_get_eigenvalues(
+            params: Params,
+            data: Data,
+            training: bool,
+            state: State,
+            rng: Any,
+        ) -> Tuple[Data, State]:
+            # tree map over the data PyTree
+            return (
+                jax.tree.map(
+                    get_eigenvalues,
+                    data,
+                ),
+                state,  # state is not used in this module, return it unchanged
+            )
+
+        return tree_map_get_eigenvalues
+
+    def compile(self, rng: Any, input_shape: DataShape) -> None:
+        # ensure input shape is valid
+        validate_eigensystem_input_shape(input_shape, self.num_eig)
+
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
+        validate_eigensystem_input_shape(input_shape, self.num_eig)
+        return jax.tree.map(
+            lambda s: (
+                self.num_eig if self.num_eig is not None else input_shape[0],
+            ),
+            input_shape,
+            is_leaf=is_shape_leaf,
+        )
 
     def get_hyperparameters(self) -> dict[str, Any]:
         return {

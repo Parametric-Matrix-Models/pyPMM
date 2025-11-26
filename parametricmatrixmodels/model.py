@@ -3,6 +3,7 @@ from __future__ import annotations
 import random
 import sys
 import warnings
+from abc import abstractmethod
 
 import jax
 import jax.numpy as np
@@ -30,6 +31,7 @@ from .typing import (
     Data,
     DataShape,
     Dict,
+    HyperParams,
     Inexact,
     PyTree,
     Tuple,
@@ -134,6 +136,7 @@ class Model(BaseModule):
         self.grad_callable_inputs = None
         self.grad_callable_inputs_options = None
 
+    @abstractmethod
     def compile(
         self,
         rng: Any | int | None,
@@ -162,6 +165,7 @@ class Model(BaseModule):
             "subclasses."
         )
 
+    @abstractmethod
     def get_output_shape(self, input_shape: DataShape) -> DataShape:
         """
         Get the output shape of the model given an input shape. Must be
@@ -353,6 +357,7 @@ class Model(BaseModule):
         else:
             self.rng = rng
 
+    @abstractmethod
     def _get_callable(
         self,
     ) -> ModelCallable:
@@ -1012,6 +1017,32 @@ class Model(BaseModule):
         self.set_state(final_model_states)
         # set the final rng
         self.set_rng(final_model_rng)
+
+    def get_hyperparameters(self) -> HyperParams:
+        """
+        Get the hyperparameters of the model as a dictionary.
+
+        Returns
+        -------
+            Dict[str, Any]
+                Dictionary containing the hyperparameters of the model.
+        """
+        return {
+            "modules": self.modules,
+            "rng": self.rng,
+        }
+
+    def set_hyperparameters(self, hyperparams: HyperParams) -> None:
+        """
+        Set the hyperparameters of the model from a dictionary.
+
+        Parameters
+        ----------
+            hyperparams : Dict[str, Any]
+                Dictionary containing the hyperparameters of the model.
+        """
+        self.modules = hyperparams["modules"]
+        self.set_rng(hyperparams["rng"])
 
     def serialize(self) -> Dict[str, Any]:
         """

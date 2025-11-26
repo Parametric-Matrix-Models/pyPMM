@@ -7,6 +7,8 @@ Modules can be combined to create Models.
 
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
+
 import jax
 import jax.numpy as np
 from beartype import beartype
@@ -27,11 +29,12 @@ from parametricmatrixmodels.typing import (
 )
 
 
-class BaseModule(object):
+class BaseModule(ABC):
     """
     Base class for all Modules. Custom modules should inherit from this class.
     """
 
+    @abstractmethod
     def __init__(self) -> None:
         """
         BaseModule constructor, must be overridden by subclasses.
@@ -99,6 +102,7 @@ class BaseModule(object):
         else:
             return f"{self.name()}"
 
+    @abstractmethod
     def is_ready(self) -> bool:
         """
         Return True if the module is initialized and ready for training or
@@ -140,6 +144,7 @@ class BaseModule(object):
         except Exception:
             return None
 
+    @abstractmethod
     def _get_callable(
         self,
     ) -> ModuleCallable:
@@ -269,6 +274,7 @@ class BaseModule(object):
         )
 
     @jaxtyped(typechecker=beartype)
+    @abstractmethod
     def compile(self, rng: Any, input_shape: DataShape) -> None:
         """
         Compile the module to be used with the given input shape.
@@ -312,6 +318,7 @@ class BaseModule(object):
         )
 
     @jaxtyped(typechecker=beartype)
+    @abstractmethod
     def get_output_shape(self, input_shape: DataShape) -> DataShape:
         """
         Get the output shape of the module given the input shape.
@@ -341,6 +348,7 @@ class BaseModule(object):
             "get_output_shape method must be implemented in subclasses"
         )
 
+    @abstractmethod
     def get_hyperparameters(self) -> HyperParams:
         """
         Get the hyperparameters of the module.
@@ -397,6 +405,7 @@ class BaseModule(object):
         for key, value in hyperparameters.items():
             setattr(self, key, value)
 
+    @abstractmethod
     def get_params(self) -> Params:
         """
         Get the current trainable parameters of the module. If the module has
@@ -423,6 +432,7 @@ class BaseModule(object):
         )
 
     @jaxtyped(typechecker=beartype)
+    @abstractmethod
     def set_params(self, params: Params) -> None:
         """
         Set the trainable parameters of the module.

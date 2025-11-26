@@ -74,6 +74,10 @@ DictParams: TypeAlias = Dict[str, Inexact[Array, "..."]]
 #: models and modules to file will need to be overridden in subclasses.
 HyperParams: TypeAlias = Dict[str, Any]
 
+#: A special case of ``Data`` where the input data is represented as a single
+#: JAX array.
+ArrayData: TypeAlias = Inexact[Array, "batch_size ..."]
+
 #: A PyTree or JAX array representing input data. If a PyTree, each leaf is a
 #: numerical JAX array with a leading batch dimension. The batch dimension must
 #: not change during evaluation of a model or module, but all other dimensions,
@@ -85,23 +89,17 @@ HyperParams: TypeAlias = Dict[str, Any]
 #:
 #: The structure of the PyTree can change throughout evaluation, so it is not
 #: specified in the type alias.
-Data: TypeAlias = (
-    PyTree[Inexact[Array, "batch_size ..."]] | Inexact[Array, "batch_size ..."]
-)
+Data: TypeAlias = PyTree[Inexact[Array, "batch_size ..."]] | ArrayData
 
-#: A special case of ``Data`` where the input data is represented as a single
-#: JAX array.
-ArrayData: TypeAlias = Inexact[Array, "batch_size ..."]
+#: A special case of ``DataShape`` where the input data shape is represented as
+#: a single tuple of integers.
+ArrayDataShape: TypeAlias = Tuple[int | None, ...]
 
 #: A PyTree representing the shape of input data. Each leaf is a tuple of
 #: integers representing the shape of the corresponding leaf in a ``Data``
 #: PyTree, excluding the leading batch dimension. Alternatively, a single tuple
 #: of integers can be used to represent the shape of a single JAX array.
-DataShape: TypeAlias = PyTree[Tuple[int | None, ...]] | Tuple[int | None, ...]
-
-#: A special case of ``DataShape`` where the input data shape is represented as
-#: a single tuple of integers.
-ArrayDataShape: TypeAlias = Tuple[int, ...]
+DataShape: TypeAlias = PyTree[Tuple[int | None, ...]] | ArrayDataShape
 
 #: A PyTree representing the private and persistent state of a module. Each
 #: leaf is a numerical JAX array of arbitrary shape. The structure of the

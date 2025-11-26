@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 import jax
 import jax.numpy as np
 from beartype import beartype
@@ -38,6 +40,7 @@ class ActivationBase(BaseModule):
         self.args = args
         self.kwargs = kwargs
 
+    @abstractmethod
     def name(self) -> str:
         raise NotImplementedError("Subclasses must implement the name method.")
 
@@ -63,6 +66,7 @@ class ActivationBase(BaseModule):
         """
         return 0
 
+    @abstractmethod
     def func(self, x: np.ndarray) -> np.ndarray:
         """
         Apply the activation function to the input array.

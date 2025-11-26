@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import jax
 import jax.numpy as np
 from beartype import beartype

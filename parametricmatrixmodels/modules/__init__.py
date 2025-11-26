@@ -9,11 +9,10 @@ from .basemodule import BaseModule
 from .bias import Bias
 from .comment import Comment
 from .constant import Constant
+from .eigensystem import Eigensystem
+from .eigenvalues import Eigenvalues
+from .eigenvectors import Eigenvectors
 from .einsum import Einsum
-
-# from .eigensystem import Eigensystem
-# from .eigenvalues import Eigenvalues
-# from .eigenvectors import Eigenvectors
 from .flatten import Flatten
 
 # from .func import Func
@@ -51,9 +50,9 @@ __all__ = [  # noqa: F405
     "BaseModule",
     "Comment",
     "Constant",
-    # "Eigenvalues",
-    # "Eigenvectors",
-    # "Eigensystem",
+    "Eigenvalues",
+    "Eigenvectors",
+    "Eigensystem",
     "Einsum",
     "Flatten",
     # "Func",
