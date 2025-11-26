@@ -187,10 +187,6 @@ def test_eigensystem():
     m.compile(None, jax.tree.map(lambda n: (n, n), Ns))
     es_tree, _ = m(A_tree)
 
-    # transpose the tree so that the outer structure is a dict with keys
-    # "eigenvalues" and "eigenvectors", each containing a pytree
-    es_tree = jax.tree.transpose(jax.tree.structure(A_tree), None, es_tree)
-
     # expected eigenvalues and eigenvectors
     def expected(A):
         E, V = np.linalg.eigh(A)
@@ -200,10 +196,11 @@ def test_eigensystem():
         }
 
     expected_tree = jax.tree.map(expected, A_tree)
-    # transpose expected tree similarly
+    # transpose expected tree to match structure of es_tree
     expected_tree = jax.tree.transpose(
         jax.tree.structure(A_tree), None, expected_tree
     )
+
     assert jax.tree.all(
         jax.tree.map(
             lambda es, expected: np.allclose(es, expected),
@@ -225,10 +222,6 @@ def test_eigensystem():
     m.compile(None, jax.tree.map(lambda n: (n, n), Ns))
     es_tree = m(A_tree, dtype=np.complex64)
 
-    # transpose the tree so that the outer structure is a dict with keys
-    # "eigenvalues" and "eigenvectors", each containing a pytree
-    es_tree = jax.tree.transpose(jax.tree.structure(A_tree), None, es_tree)
-
     # expected eigenvalues and eigenvectors
     def expected(A):
         E, V = np.linalg.eigh(A)
@@ -239,7 +232,7 @@ def test_eigensystem():
 
     expected_tree = jax.tree.map(expected, A_tree)
 
-    # transpose expected tree similarly
+    # transpose expected tree to match structure of es_tree
     expected_tree = jax.tree.transpose(
         jax.tree.structure(A_tree), None, expected_tree
     )

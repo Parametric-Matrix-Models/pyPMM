@@ -131,13 +131,22 @@ class Eigensystem(BaseModule):
             rng: Any,
         ) -> Tuple[Data, State]:
             # tree map over the data PyTree
-            return (
-                jax.tree.map(
-                    get_eigensystem,
-                    data,
-                ),
-                state,
+            transposed = jax.tree.map(
+                get_eigensystem,
+                data,
             )
+
+            # transpose so that the output is a PyTree with the original
+            # structure as a suffix to a two-keyed dictionary with
+            # 'eigenvalues' and 'eigenvectors'
+            output = jax.tree.transpose(
+                outer_treedef=jax.tree.structure(data),
+                inner_treedef=jax.tree.structure(
+                    {"eigenvalues": "*", "eigenvectors": "*"}
+                ),
+                pytree_to_transpose=transposed,
+            )
+            return output, state
 
         return tree_map_get_eigensystem
 
@@ -148,7 +157,7 @@ class Eigensystem(BaseModule):
     def get_output_shape(self, input_shape: DataShape) -> DataShape:
         validate_eigensystem_input_shape(input_shape, self.num_eig)
 
-        # the output is a PyTree with the original structure as a prefix to a
+        # the output is a PyTree with the original structure as a suffix to a
         # two-keyed dictionary with 'eigenvalues' and 'eigenvectors'
         def get_eigensystem_shape(
             matrix_shape: Tuple[int, int],
@@ -160,10 +169,24 @@ class Eigensystem(BaseModule):
                 "eigenvectors": (n, k),
             }
 
-        return jax.tree.map(
+        # `transposed` has the same structure prefix as input_shape, but with
+        # the eigensystem shape as suffix
+        transposed = jax.tree.map(
             get_eigensystem_shape,
             input_shape,
             is_leaf=is_shape_leaf,
+        )
+
+        # transpose so that the output shape is composite structure of the
+        # eigensystem shape with the original structure as suffix
+        return jax.tree.transpose(
+            outer_treedef=jax.tree.structure(
+                input_shape, is_leaf=is_shape_leaf
+            ),
+            inner_treedef=jax.tree.structure(
+                {"eigenvalues": ("*",), "eigenvectors": ("*", "*")}
+            ),
+            pytree_to_transpose=transposed,
         )
 
     def get_hyperparameters(self) -> dict[str, Any]:
