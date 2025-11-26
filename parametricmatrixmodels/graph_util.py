@@ -1,4 +1,4 @@
-from .typing import List, Set
+from .typing import List, OrderedSet
 
 
 def resolve_connections(
@@ -7,14 +7,17 @@ def resolve_connections(
     end_key="output",
     max_recursion_depth=100,
 ):
+
     # this is a special case of a topological sort, since we can ignore
     # all nodes that are not on a path from start_key to end_key,
     # but we need to make sure that all nodes on all such paths are
     # included
-    visited: Set[str] = set()
+    visited: OrderedSet[str] = OrderedSet()
     topological_order: List[str] = []
 
-    def dfs(node: str, depth: int = 0, path: Set[str] | None = None) -> None:
+    def dfs(
+        node: str, depth: int = 0, path: OrderedSet[str] | None = None
+    ) -> None:
         if depth > max_recursion_depth:
             raise ValueError(
                 "Maximum recursion depth exceeded while resolving connections."

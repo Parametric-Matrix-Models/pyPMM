@@ -24,9 +24,9 @@ from .typing import (
     Dict,
     List,
     ModuleCallable,
+    OrderedSet,
     Params,
     PyTree,
-    Set,
     State,
     Tuple,
 )
@@ -376,7 +376,7 @@ class NonSequentialModel(Model):
         # we need to be careful, since now there can be multiple identical keys
         # we handle this in the values by using a set, and always add to the
         # value instead of overwriting
-        conn_stripped: Dict[str, Set[str]] = {}
+        conn_stripped: Dict[str, OrderedSet[str]] = {}
         for key, value in conn_separated.items():
             # special case for 'input' and 'output'
             if key.startswith("input") or key.startswith("output"):
@@ -385,7 +385,7 @@ class NonSequentialModel(Model):
             else:
                 stripped_key, _ = key.split(double_sep)
             if stripped_key not in conn_stripped:
-                conn_stripped[stripped_key] = set()
+                conn_stripped[stripped_key] = OrderedSet()
             for v in value:
                 stripped_v, _ = v.split(double_sep)
                 conn_stripped[stripped_key].add(stripped_v)
@@ -402,11 +402,11 @@ class NonSequentialModel(Model):
 
         # we want to reverse the connections to get the incoming edges for
         # each node, so we can traverse the graph from output to input
-        incoming_edges: Dict[str, Set[str]] = {}
+        incoming_edges: Dict[str, OrderedSet[str]] = {}
         for key, value in conn_stripped.items():
             for v in value:
                 if v not in incoming_edges:
-                    incoming_edges[v] = set()
+                    incoming_edges[v] = OrderedSet()
                 incoming_edges[v].add(key)
 
         # now is a good time to verify that 'output' is present as a key in the
