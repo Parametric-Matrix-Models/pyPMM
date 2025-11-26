@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from .typing import Callable, DataShape, ArrayDataShape
-from .tree_util import is_shape_leaf
-
-import jax.numpy as np
 import jax
+import jax.numpy as np
+
+from .tree_util import is_shape_leaf
+from .typing import ArrayDataShape, Callable, DataShape
 
 
 def validate_eigensystem_input_shape(
