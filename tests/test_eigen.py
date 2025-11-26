@@ -69,7 +69,7 @@ def test_eigenvalues():
     m.compile(None, jax.tree.map(lambda n: (n, n), Ns))
     evals_tree = m(A_tree, dtype=np.complex64)
     expected_tree = jax.tree.map(
-        lambda A: np.linalg.eigvalsh(A)[..., 0][..., None], A_tree
+        lambda A: np.linalg.eigvalsh(A)[..., 0:1], A_tree
     )
     assert jax.tree.all(
         jax.tree.map(
@@ -186,34 +186,34 @@ def test_eigensystem():
     m = pmm.modules.Eigensystem(num_eig=None)
     m.compile(None, jax.tree.map(lambda n: (n, n), Ns))
     es_tree, _ = m(A_tree)
-    evals_tree, evecs_tree = (
-        jax.tree.map(
-            lambda es: es["eigenvalues"],
-            es_tree,
-            is_leaf=lambda x: isinstance(x, dict),
-        ),
-        jax.tree.map(
-            lambda es: es["eigenvectors"],
-            es_tree,
-            is_leaf=lambda x: isinstance(x, dict),
-        ),
+
+    # transpose the tree so that the outer structure is a dict with keys
+    # "eigenvalues" and "eigenvectors", each containing a pytree
+    es_tree = jax.tree.transpose(jax.tree.structure(A_tree), None, es_tree)
+
+    # expected eigenvalues and eigenvectors
+    def expected(A):
+        E, V = np.linalg.eigh(A)
+        return {
+            "eigenvalues": E,
+            "eigenvectors": V,
+        }
+
+    expected_tree = jax.tree.map(expected, A_tree)
+    # transpose expected tree similarly
+    expected_tree = jax.tree.transpose(
+        jax.tree.structure(A_tree), None, expected_tree
     )
-    expected_evals_tree = jax.tree.map(lambda A: np.linalg.eigvalsh(A), A_tree)
-    expected_evecs_tree = jax.tree.map(lambda A: np.linalg.eigh(A)[1], A_tree)
     assert jax.tree.all(
         jax.tree.map(
-            lambda evals, expected: np.allclose(evals, expected),
-            evals_tree,
-            expected_evals_tree,
+            lambda es, expected: np.allclose(es, expected),
+            es_tree,
+            expected_tree,
         )
-    ), "Eigenvalues for pytree inputs do not match expected values"
-    assert jax.tree.all(
-        jax.tree.map(
-            lambda evecs, expected: np.allclose(evecs, expected),
-            evecs_tree,
-            expected_evecs_tree,
-        )
-    ), "Eigenvectors for pytree inputs do not match expected values"
+    ), (
+        "Eigenvalues and eigenvectors for pytree inputs do not match expected"
+        " values"
+    )
 
     # repeat previous test but with num_eig = 1, and the module as part of a
     # sequential model
@@ -224,33 +224,33 @@ def test_eigensystem():
     )
     m.compile(None, jax.tree.map(lambda n: (n, n), Ns))
     es_tree = m(A_tree, dtype=np.complex64)
-    evals_tree = jax.tree.map(
-        lambda es: es["eigenvalues"],
-        es_tree,
-        is_leaf=lambda x: isinstance(x, dict),
+
+    # transpose the tree so that the outer structure is a dict with keys
+    # "eigenvalues" and "eigenvectors", each containing a pytree
+    es_tree = jax.tree.transpose(jax.tree.structure(A_tree), None, es_tree)
+
+    # expected eigenvalues and eigenvectors
+    def expected(A):
+        E, V = np.linalg.eigh(A)
+        return {
+            "eigenvalues": E[..., 0:1],
+            "eigenvectors": V[..., 0:1],
+        }
+
+    expected_tree = jax.tree.map(expected, A_tree)
+
+    # transpose expected tree similarly
+    expected_tree = jax.tree.transpose(
+        jax.tree.structure(A_tree), None, expected_tree
     )
-    evecs_tree = jax.tree.map(
-        lambda es: es["eigenvectors"],
-        es_tree,
-        is_leaf=lambda x: isinstance(x, dict),
-    )
-    expected_evals_tree = jax.tree.map(
-        lambda A: np.linalg.eigvalsh(A)[..., 0][..., None], A_tree
-    )
-    expected_evecs_tree = jax.tree.map(
-        lambda A: np.linalg.eigh(A)[1][..., 0:1], A_tree
-    )
+
     assert jax.tree.all(
         jax.tree.map(
-            lambda evals, expected: np.allclose(evals, expected),
-            evals_tree,
-            expected_evals_tree,
+            lambda es, expected: np.allclose(es, expected),
+            es_tree,
+            expected_tree,
         )
-    ), "Lowest eigenvalues for pytree inputs do not match expected values"
-    assert jax.tree.all(
-        jax.tree.map(
-            lambda evecs, expected: np.allclose(evecs, expected),
-            evecs_tree,
-            expected_evecs_tree,
-        )
-    ), "Lowest eigenvectors for pytree inputs do not match expected values"
+    ), (
+        "Lowest eigenvalues and eigenvectors for pytree inputs do not match"
+        " expected values"
+    )
