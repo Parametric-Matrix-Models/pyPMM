@@ -3,6 +3,8 @@ import jax.numpy as np
 
 import parametricmatrixmodels as pmm
 
+jax.config.update("jax_enable_x64", True)
+
 
 def test_eigenvalues():
     r"""
@@ -14,7 +16,7 @@ def test_eigenvalues():
     N = 5
 
     # test with real array inputs
-    A = jax.random.normal(key, (batch_dim, N, N))
+    A = jax.random.normal(key, (batch_dim, N, N)).astype(np.float32)
     A = (A + np.swapaxes(A, -1, -2)) / 2  # make symmetric
 
     m = pmm.modules.Eigenvalues(num_eig=None)
@@ -38,7 +40,7 @@ def test_eigenvalues():
             rkey, (batch_dim, n, n)
         ) + 1j * jax.random.normal(ikey, (batch_dim, n, n))
         A = (A + np.swapaxes(np.conj(A), -1, -2)) / 2  # make Hermitian
-        return A
+        return A.astype(np.complex64)
 
     keys = jax.random.split(key, len(Ns))
 
@@ -87,7 +89,7 @@ def test_eigenvectors():
     batch_dim = 2
     N = 5
     # test with real array inputs
-    A = jax.random.normal(key, (batch_dim, N, N))
+    A = jax.random.normal(key, (batch_dim, N, N)).astype(np.float32)
     A = (A + np.swapaxes(A, -1, -2)) / 2  # make symmetric
     m = pmm.modules.Eigenvectors(num_eig=None)
     m.compile
@@ -108,7 +110,7 @@ def test_eigenvectors():
             rkey, (batch_dim, n, n)
         ) + 1j * jax.random.normal(ikey, (batch_dim, n, n))
         A = (A + np.swapaxes(np.conj(A), -1, -2)) / 2  # make Hermitian
-        return A
+        return A.astype(np.complex64)
 
     keys = jax.random.split(key, len(Ns))
     A_tree = [create_hermitian_matrix(N, k) for N, k in zip(Ns, keys)]
@@ -153,7 +155,7 @@ def test_eigensystem():
     batch_dim = 2
     N = 5
     # test with real array inputs
-    A = jax.random.normal(key, (batch_dim, N, N))
+    A = jax.random.normal(key, (batch_dim, N, N)).astype(np.float32)
     A = (A + np.swapaxes(A, -1, -2)) / 2  # make symmetric
     m = pmm.modules.Eigensystem(num_eig=None)
     m.compile(None, (N, N))
@@ -177,7 +179,7 @@ def test_eigensystem():
             rkey, (batch_dim, n, n)
         ) + 1j * jax.random.normal(ikey, (batch_dim, n, n))
         A = (A + np.swapaxes(np.conj(A), -1, -2)) / 2  # make Hermitian
-        return A
+        return A.astype(np.complex64)
 
     keys = jax.random.split(key, len(Ns))
     A_tree = [create_hermitian_matrix(N, k) for N, k in zip(Ns, keys)]
