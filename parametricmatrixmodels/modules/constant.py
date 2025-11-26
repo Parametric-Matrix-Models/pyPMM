@@ -114,7 +114,7 @@ class Constant(BaseModule):
     def _get_callable(self) -> ModuleCallable:
 
         @jaxtyped(typechecker=beartype)
-        def callable(
+        def const_callable(
             params: Params,
             data: Data,
             training: bool,
@@ -124,13 +124,8 @@ class Constant(BaseModule):
             # data is either ArrayData or a PyTree with ArrayData leaves
             # get the batch dimension in either case, which is the leading
             # dimension of any of the ArrayData leaves
-            # since this is both type- and dimension- sensitive, it will be
-            # traced out by JAX
-            if isinstance(data, np.ndarray):
-                batch_size = data.shape[0]
-            else:
-                sample_leaf = jax.tree.leaves(data)[0]
-                batch_size = sample_leaf.shape[0]
+            sample_leaf = jax.tree.leaves(data)[0]
+            batch_size = sample_leaf.shape[0]
 
             if self.trainable:
                 constant = params
@@ -146,7 +141,7 @@ class Constant(BaseModule):
             )
             return constant_broadcasted, state
 
-        return callable
+        return const_callable
 
     def compile(self, rng: Any, input_shape: DataShape) -> None:
         if not self.trainable and not self.is_ready():
