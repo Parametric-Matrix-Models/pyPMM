@@ -12,20 +12,12 @@ from beartype import beartype
 from jax import grad, jit, lax
 from jaxtyping import Array, Float, Inexact, Integer, jaxtyped
 
+from . import tree_util as pmm_tree_util
 from .model_util import ModelParams, ModelState
 from .tree_util import (
     batch_leaves,
     random_permute_leaves,
     shapes_equal,
-    tree_abs,
-    tree_abs_sqr,
-    tree_add,
-    tree_div,
-    tree_mean,
-    tree_mul,
-    tree_scalar_add,
-    tree_scalar_mul,
-    tree_sub,
 )
 from .typing import (
     Any,
@@ -1472,14 +1464,24 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
         def loss_fn(X, Y, params, training, state, rng):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # abs(Y_pred - Y) ** 2
-            return tree_mean(tree_abs_sqr(tree_sub(Y_pred, Y))), new_state
+            return (
+                pmm_tree_util.mean(
+                    pmm_tree_util.abs_sqr(pmm_tree_util.sub(Y_pred, Y))
+                ),
+                new_state,
+            )
 
     elif fn_name == "mae":
 
         def loss_fn(X, Y, params, training, state, rng):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # abs(Y_pred - Y)
-            return tree_mean(tree_abs(tree_sub(Y_pred, Y))), new_state
+            return (
+                pmm_tree_util.mean(
+                    pmm_tree_util.abs(pmm_tree_util.sub(Y_pred, Y))
+                ),
+                new_state,
+            )
 
     elif fn_name == "mse_unc":
         # MSE with uncertainty in the targets
@@ -1488,7 +1490,11 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
             # Y_unc is assumed to be the uncertainty in the targets
             # abs(Y_pred - Y) ** 2 / Y_unc
             return (
-                tree_mean(tree_abs_sqr(tree_div(tree_sub(Y_pred, Y), Y_unc))),
+                pmm_tree_util.mean(
+                    pmm_tree_util.abs_sqr(
+                        pmm_tree_util.div(pmm_tree_util.sub(Y_pred, Y), Y_unc)
+                    )
+                ),
                 new_state,
             )
 
@@ -1499,7 +1505,11 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
             # Y_unc is assumed to be the uncertainty in the targets
             # abs(Y_pred - Y) / Y_unc
             return (
-                tree_mean(tree_abs(tree_div(tree_sub(Y_pred, Y), Y_unc))),
+                pmm_tree_util.mean(
+                    pmm_tree_util.abs(
+                        pmm_tree_util.div(pmm_tree_util.sub(Y_pred, Y), Y_unc)
+                    )
+                ),
                 new_state,
             )
 
@@ -1509,9 +1519,12 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # abs((Y_pred - Y) / (Y + 1e-4))
             return (
-                tree_mean(
-                    tree_abs(
-                        tree_div(tree_sub(Y_pred, Y), tree_scalar_add(Y, 1e-4))
+                pmm_tree_util.mean(
+                    pmm_tree_util.abs(
+                        pmm_tree_util.div(
+                            pmm_tree_util.sub(Y_pred, Y),
+                            pmm_tree_util.scalar_add(Y, 1e-4),
+                        )
                     )
                 ),
                 new_state,
@@ -1523,12 +1536,12 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # abs((Y_pred - Y) / ((Y + 1e-4) * Y_unc))
             return (
-                tree_mean(
-                    tree_abs(
-                        tree_div(
-                            tree_sub(Y_pred, Y),
-                            tree_mul(
-                                tree_scalar_add(Y, 1e-4),
+                pmm_tree_util.mean(
+                    pmm_tree_util.abs(
+                        pmm_tree_util.div(
+                            pmm_tree_util.sub(Y_pred, Y),
+                            pmm_tree_util.mul(
+                                pmm_tree_util.scalar_add(Y, 1e-4),
                                 Y_unc,
                             ),
                         )
@@ -1543,13 +1556,13 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # abs((Y_pred - Y) / ((Y + Y_pred) * 2.0 + 1e-4))
             return (
-                tree_mean(
-                    tree_abs(
-                        tree_div(
-                            tree_sub(Y_pred, Y),
-                            tree_scalar_add(
-                                tree_scalar_mul(
-                                    tree_add(Y, Y_pred),
+                pmm_tree_util.mean(
+                    pmm_tree_util.abs(
+                        pmm_tree_util.div(
+                            pmm_tree_util.sub(Y_pred, Y),
+                            pmm_tree_util.scalar_add(
+                                pmm_tree_util.scalar_mul(
+                                    pmm_tree_util.add(Y, Y_pred),
                                     2.0,
                                 ),
                                 1e-4,
@@ -1566,14 +1579,14 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # abs((Y_pred - Y) / (((Y + Y_pred) * 2.0 + 1e-4) * Y_unc))
             return (
-                tree_mean(
-                    tree_abs(
-                        tree_div(
-                            tree_sub(Y_pred, Y),
-                            tree_mul(
-                                tree_scalar_add(
-                                    tree_scalar_mul(
-                                        tree_add(Y, Y_pred),
+                pmm_tree_util.mean(
+                    pmm_tree_util.abs(
+                        pmm_tree_util.div(
+                            pmm_tree_util.sub(Y_pred, Y),
+                            pmm_tree_util.mul(
+                                pmm_tree_util.scalar_add(
+                                    pmm_tree_util.scalar_mul(
+                                        pmm_tree_util.add(Y, Y_pred),
                                         2.0,
                                     ),
                                     1e-4,
@@ -1594,7 +1607,12 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
             """
             X_pred, new_state = model_fn(X, params, training, state, rng)
             # abs(X_pred - X) ** 2
-            return tree_mean(tree_abs_sqr(tree_sub(X_pred, X))), new_state
+            return (
+                pmm_tree_util.mean(
+                    pmm_tree_util.abs_sqr(pmm_tree_util.sub(X_pred, X))
+                ),
+                new_state,
+            )
 
     elif fn_name == "mae_unsupervised":
 
@@ -1604,7 +1622,12 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
             """
             X_pred, new_state = model_fn(X, params, training, state, rng)
             # abs(X_pred - X)
-            return tree_mean(tree_abs(tree_sub(X_pred, X))), new_state
+            return (
+                pmm_tree_util.mean(
+                    pmm_tree_util.abs(pmm_tree_util.sub(X_pred, X))
+                ),
+                new_state,
+            )
 
     elif fn_name == "mre_unsupervised":
 
@@ -1615,9 +1638,12 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
             X_pred, new_state = model_fn(X, params, training, state, rng)
             # abs((X_pred - X) / (X + 1e-4))
             return (
-                tree_mean(
-                    tree_abs(
-                        tree_div(tree_sub(X_pred, X), tree_scalar_add(X, 1e-4))
+                pmm_tree_util.mean(
+                    pmm_tree_util.abs(
+                        pmm_tree_util.div(
+                            pmm_tree_util.sub(X_pred, X),
+                            pmm_tree_util.scalar_add(X, 1e-4),
+                        )
                     )
                 ),
                 new_state,

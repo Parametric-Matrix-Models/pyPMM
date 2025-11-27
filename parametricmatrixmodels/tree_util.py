@@ -7,10 +7,10 @@ import jax.numpy as np
 from beartype import beartype
 from jaxtyping import Array, Integer, Num, PyTree, Shaped, jaxtyped
 
-from .typing import Any, Callable
+from .typing import Any, Callable, List, Tuple
 
 
-def tree_getitem_by_strpath(
+def getitem_by_strpath(
     pytree: PyTree[Any],
     strpath: str,
     separator: str = ".",
@@ -49,20 +49,20 @@ def tree_getitem_by_strpath(
     Examples
     --------
     >>> pytree = {'a': [1, 2, {'b': 3}], 'c': 4}
-    >>> tree_getitem_by_strpath(pytree, 'a.2.b')
+    >>> getitem_by_strpath(pytree, 'a.2.b')
     3
-    >>> tree_getitem_by_strpath(pytree, 'c', return_remainder=True)
+    >>> getitem_by_strpath(pytree, 'c', return_remainder=True)
     4, ''
 
     >>> pytree = {'a': [1, 2, 3], 'c': 4}
-    >>> tree_getitem_by_strpath(
+    >>> getitem_by_strpath(
     ...     pytree,
     ...     'a.2.b',
     ...     allow_early_return=True,
     ...     return_remainder=True
     ... )
     (3, 'b')
-    >>> tree_getitem_by_strpath(
+    >>> getitem_by_strpath(
     ...     pytree,
     ...     'a.2.b.0.c',
     ...     allow_early_return=True,
@@ -84,6 +84,10 @@ def tree_getitem_by_strpath(
         if isinstance(pytree, dict):
             next_pytree = pytree[key]
         elif isinstance(pytree, (list, tuple)):
+            if not key.isdigit():
+                raise KeyError(
+                    f"Expected integer index for list/tuple, got '{key}'"
+                )
             index = int(key)
             next_pytree = pytree[index]
         elif allow_early_return:
@@ -93,7 +97,7 @@ def tree_getitem_by_strpath(
                 return pytree
         else:
             raise TypeError(f"Unsupported pytree node type: {type(pytree)}")
-        return tree_getitem_by_strpath(
+        return getitem_by_strpath(
             next_pytree,
             rest[0] if rest else "",
             separator,
@@ -102,8 +106,280 @@ def tree_getitem_by_strpath(
         )
 
 
+def setitem_by_strpath(
+    pytree: PyTree[Any],
+    strpath: str,
+    value: Any,
+    separator: str = ".",
+) -> None:
+    r"""
+    Set an item in a pytree using a string path. Effectively the inverse of
+    ``jax.tree_util.keystr`` with ``simple=True``.
+    This function works recursively.
+    Parameters
+    ----------
+    pytree
+        The pytree in which to set the item.
+    strpath
+        The string path to the item, with keys/indexes separated by
+        ``separator``.
+    value
+        The value to set at the specified path.
+    separator
+        The separator used in the string path. Default is '.'.
+    Returns
+    -------
+        None. The pytree is modified in place.
+    """
+
+    if not strpath:
+        raise ValueError("strpath cannot be empty.")
+    else:
+        key, *rest = strpath.split(separator, 1)
+        if isinstance(pytree, dict):
+            if rest:
+                setitem_by_strpath(
+                    pytree[key],
+                    rest[0],
+                    value,
+                    separator,
+                )
+            else:
+                pytree[key] = value
+        elif isinstance(pytree, (list, tuple)):
+            if not key.isdigit():
+                raise KeyError(
+                    f"Expected integer index for list/tuple, got '{key}'"
+                )
+            index = int(key)
+            if rest:
+                setitem_by_strpath(
+                    pytree[index],
+                    rest[0],
+                    value,
+                    separator,
+                )
+            else:
+                pytree[index] = value
+        else:
+            raise TypeError(f"Unsupported pytree node type: {type(pytree)}")
+
+
+def extend_structure_from_strpaths(
+    base_pytree: PyTree[Any] | None,
+    strpaths: List[str] | Tuple[str, ...],
+    separator: str = ".",
+    fill_values: List[Any] | Tuple[Any, ...] | Any | None = None,
+) -> PyTree[Any]:
+    r"""
+    Extends the structure of a base pytree by adding new branches specified by
+    string paths. The new branches are initialized with given fill values or
+    None.
+
+    New branches are created as needed, with dictionaries for string keys and
+    lists for integer keys. Tuples are not created automatically; any tuples
+    that need to be extended in the base PyTree will have their type preserved
+    however.
+
+    Parameters
+    ----------
+    base_pytree
+        The base pytree to be extended. If None, an empty PyTree with structure
+        inferred from strpaths is created.
+    strpaths
+        A list or tuple of string paths specifying the new branches to be added
+    separator
+        The separator used in the string paths. Default is '.'.
+    fill_values
+        A list, tuple, or single value specifying the values to fill in the new
+        branches. If a single value is provided, it is used for all new
+        branches. Default is None.
+
+    Returns
+    -------
+        The extended pytree with new branches added.
+
+    Examples
+    --------
+    >>> base_pytree = {}
+    >>> strpaths = ['a.b.c', 'd.0.e']
+    >>> extended_pytree = extend_structure_from_strpaths(
+    ...     base_pytree,
+    ...     strpaths,
+    ... )
+    >>> extended_pytree
+    {'a': {'b': {'c': None}}, 'd': [ {'e': None} ]}
+
+    >>> base_pytree = {'x': 1}
+    >>> strpaths = ['y.z', 'y.w']
+    >>> extended_pytree = extend_structure_from_strpaths(
+    ...     base_pytree,
+    ...     strpaths,
+    ...     fill_values=42,
+    ... )
+    >>> extended_pytree
+    {'x': 1, 'y': {'z': 42, 'w': 42}}
+
+    >>> base_pytree = []
+    >>> strpaths = ['0.a', '1.1.2']
+    >>> fill_values = [10, 20]
+    >>> extended_pytree = extend_structure_from_strpaths(
+    ...     base_pytree,
+    ...     strpaths,
+    ...     fill_values=fill_values,
+    ... )
+    >>> extended_pytree
+    [ {'a': 10}, [ None, [None, None, 20] ] ]
+    """
+
+    # Normalize fill_values to a list
+    if isinstance(fill_values, tuple):
+        fill_values = list(fill_values)
+    elif isinstance(fill_values, list):
+        pass
+    else:
+        fill_values = [fill_values] * len(strpaths)
+
+    # validate fill_values length
+    if len(fill_values) != len(strpaths):
+        raise ValueError(
+            f"Length of fill_values ({len(fill_values)}) does not "
+            f"match length of strpaths ({len(strpaths)})."
+        )
+
+    # Initialize base_pytree if None
+    if base_pytree is None:
+        # infer type by looking at the first key of all strpaths
+        first_keys = [path.split(separator, 1)[0] for path in strpaths if path]
+        # if all first keys are integer format, use list
+        if all(key.isdigit() for key in first_keys):
+            base_pytree = []
+        else:
+            base_pytree = {}
+
+    # convert the base_pytree to a mutable structure if needed
+    base_tuple = False
+    if isinstance(base_pytree, tuple):
+        base_pytree = list(base_pytree)
+        base_tuple = True
+
+    # keep track all all tuple nodes that were converted to lists
+    # so we can convert them back at the end
+    # we need lists for mutability during construction
+    tuple_node_paths = []
+
+    for strpath, fill_value in zip(strpaths, fill_values):
+        current_node = base_pytree
+        current_path = ""
+        path_parts = strpath.split(separator)
+        for i, key in enumerate(path_parts):
+            current_path = separator.join(path_parts[:i])
+
+            # if current_node is a tuple, convert to list for mutability
+            # and insert it into the base_pytree
+            if isinstance(current_node, tuple):
+                tuple_node_paths.append(current_path)
+                current_node = list(current_node)
+                # set the converted list back into the base_pytree
+                setitem_by_strpath(
+                    base_pytree,
+                    current_path,
+                    current_node,
+                    separator,
+                )
+
+            is_last = i == len(path_parts) - 1
+            # determine if key is int or str
+            if isinstance(current_node, dict):
+                is_int_key = False
+            elif isinstance(current_node, list):
+                if not key.isdigit():
+                    raise KeyError(
+                        f"Expected integer index for list/tuple, got '{key}'"
+                    )
+                is_int_key = True
+                key = int(key)
+            else:
+                raise TypeError(
+                    f"Unsupported pytree node type: {type(current_node)}"
+                )
+
+            # create next node if it doesn't exist
+            if is_int_key:
+                # ensure list is long enough
+                while len(current_node) <= key:
+                    current_node.append(None)
+                if current_node[key] is None:
+                    if is_last:
+                        current_node[key] = fill_value
+                    else:
+                        # look ahead to determine next node type
+                        next_key = path_parts[i + 1]
+                        if next_key.isdigit():
+                            current_node[key] = []
+                        else:
+                            current_node[key] = {}
+                elif is_last and (
+                    current_node[key] != fill_value and fill_value is not None
+                ):
+                    # if the node already exists and is not the fill_value
+                    # and the fill_value is not None, we raise an error
+                    raise ValueError(
+                        f"Node at path '{current_path}' already exists "
+                        f"with value {current_node[key]}, cannot overwrite "
+                        f"with fill_value {fill_value}."
+                    )
+                current_node = current_node[key]
+            else:
+                if key not in current_node:
+                    if is_last:
+                        current_node[key] = fill_value
+                    else:
+                        # look ahead to determine next node type
+                        next_key = path_parts[i + 1]
+                        if next_key.isdigit():
+                            current_node[key] = []
+                        else:
+                            current_node[key] = {}
+                elif is_last and (
+                    current_node[key] != fill_value and fill_value is not None
+                ):
+                    # if the node already exists and is not the fill_value
+                    # and the fill_value is not None, we raise an error
+                    raise ValueError(
+                        f"Node at path '{current_path}' already exists "
+                        f"with value {current_node[key]}, cannot overwrite "
+                        f"with fill_value {fill_value}."
+                    )
+                current_node = current_node[key]
+
+    # convert any list nodes that correspond to tuple nodes in the
+    # original base_pytree back to tuples
+    for path in tuple_node_paths:
+        node = getitem_by_strpath(
+            base_pytree, path, separator, allow_early_return=False
+        )
+        if isinstance(node, list):
+            tuple_node = tuple(node)
+            setitem_by_strpath(
+                base_pytree,
+                path,
+                tuple_node,
+                separator,
+            )
+        else:
+            raise RuntimeError(
+                f"Expected list at path '{path}' to convert back to tuple, "
+                f"got {type(node)}"
+            )
+    # convert base_pytree back to tuple if needed
+    if base_tuple:
+        base_pytree = tuple(base_pytree)
+    return base_pytree
+
+
 @jaxtyped(typechecker=beartype)
-def tree_mean(
+def mean(
     pytree: PyTree[Num[Array, " *d"], " T"],
 ) -> Num[Array, ""]:
     r"""
@@ -126,7 +402,7 @@ def tree_mean(
 
 
 @jaxtyped(typechecker=beartype)
-def tree_add(
+def add(
     pytree1: PyTree[Num[Array, " *d"], " T"],
     pytree2: PyTree[Num[Array, " *d"], " T"],
 ) -> PyTree[Num[Array, " *d"], " T"]:
@@ -148,7 +424,7 @@ def tree_add(
 
 
 @jaxtyped(typechecker=beartype)
-def tree_sub(
+def sub(
     pytree1: PyTree[Num[Array, " *d"], " T"],
     pytree2: PyTree[Num[Array, " *d"], " T"],
 ) -> PyTree[Num[Array, " *d"], " T"]:
@@ -171,7 +447,7 @@ def tree_sub(
 
 
 @jaxtyped(typechecker=beartype)
-def tree_mul(
+def mul(
     pytree1: PyTree[Num[Array, " *d"], " T"],
     pytree2: PyTree[Num[Array, " *d"], " T"],
 ) -> PyTree[Num[Array, " *d"], " T"]:
@@ -194,7 +470,7 @@ def tree_mul(
 
 
 @jaxtyped(typechecker=beartype)
-def tree_div(
+def div(
     pytree1: PyTree[Num[Array, " *d"], " T"],
     pytree2: PyTree[Num[Array, " *d"], " T"],
 ) -> PyTree[Num[Array, " *d"], " T"]:
@@ -216,7 +492,7 @@ def tree_div(
 
 
 @jaxtyped(typechecker=beartype)
-def tree_neg(
+def neg(
     pytree: PyTree[Num[Array, " *d"], " T"],
 ) -> PyTree[Num[Array, " *d"], " T"]:
     r"""
@@ -237,7 +513,7 @@ def tree_neg(
 
 
 @jaxtyped(typechecker=beartype)
-def tree_abs(
+def abs(
     pytree: PyTree[Num[Array, " *d"], " T"],
 ) -> PyTree[Num[Array, " *d"], " T"]:
     r"""
@@ -259,7 +535,7 @@ def tree_abs(
 
 
 @jaxtyped(typechecker=beartype)
-def tree_abs_sqr(
+def abs_sqr(
     pytree: PyTree[Num[Array, " *d"], " T"],
 ) -> PyTree[Num[Array, " *d"], " T"]:
     r"""
@@ -281,7 +557,7 @@ def tree_abs_sqr(
 
 
 @jaxtyped(typechecker=beartype)
-def tree_pow(
+def pow(
     pytree: PyTree[Num[Array, " *d"], " T"],
     exponent: float | int,
 ) -> PyTree[Num[Array, " *d"], " T"]:
@@ -305,7 +581,7 @@ def tree_pow(
 
 
 @jaxtyped(typechecker=beartype)
-def tree_scalar_add(
+def scalar_add(
     pytree: PyTree[Num[Array, " *d"], " T"],
     scalar: complex | float | int | Num[Array, ""],
 ) -> PyTree[Num[Array, " *d"], " T"]:
@@ -329,7 +605,7 @@ def tree_scalar_add(
 
 
 @jaxtyped(typechecker=beartype)
-def tree_scalar_mul(
+def scalar_mul(
     pytree: PyTree[Num[Array, " *d"], " T"],
     scalar: complex | float | int | Num[Array, ""],
 ) -> PyTree[Num[Array, " *d"], " T"]:
@@ -353,7 +629,7 @@ def tree_scalar_mul(
 
 
 @jaxtyped(typechecker=beartype)
-def tree_astype(
+def astype(
     pytree: PyTree[Shaped[Array, " *d"], " T"],
     dtype: Any | str,
 ) -> PyTree[Shaped[Array, " *d"], " T"]:
@@ -377,7 +653,7 @@ def tree_astype(
     return jax.tree.map(lambda x: x.astype(dtype), pytree)
 
 
-def is_shape_leaf(obj: Any) -> bool:
+def is_shape_leaf(obj: Any, allow_none: bool = True) -> bool:
     """
     Check if the given object is a shape leaf, i.e., a tuple of integers
     representing the shape of an array, or None.
@@ -391,7 +667,7 @@ def is_shape_leaf(obj: Any) -> bool:
     -------
     True if the object is a shape leaf, False otherwise.
     """
-    if obj is None:
+    if allow_none and obj is None:
         return True
     if not isinstance(obj, tuple):
         return False

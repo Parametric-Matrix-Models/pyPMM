@@ -95,8 +95,8 @@ def test_sequentialmodel_train_pytree():
     model.compile(key, jax.tree.map(lambda x: x.shape[1:], X))
     model.astype(np.float32)
 
-    X_32 = pmm.tree_util.tree_astype(X, np.float32)
-    Y_32 = pmm.tree_util.tree_astype(Y, np.float32)
+    X_32 = pmm.tree_util.astype(X, np.float32)
+    Y_32 = pmm.tree_util.astype(Y, np.float32)
 
     model.train(
         X_32,
@@ -111,8 +111,8 @@ def test_sequentialmodel_train_pytree():
     # predict with 64-bit precision
     Y_pred = model.predict(X)
 
-    mse = pmm.tree_util.tree_mean(
-        pmm.tree_util.tree_abs_sqr(pmm.tree_util.tree_sub(Y, Y_pred))
+    mse = pmm.tree_util.mean(
+        pmm.tree_util.abs_sqr(pmm.tree_util.sub(Y, Y_pred))
     )
 
     if mse >= 1e-3:

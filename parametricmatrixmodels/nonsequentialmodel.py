@@ -7,7 +7,11 @@ import jax
 from beartype import beartype
 from jaxtyping import jaxtyped
 
-from .graph_util import resolve_connections
+from .graph_util import (
+    get_outer_connections_by_tree,
+    partition_connections_by_tree,
+    resolve_connections,
+)
 from .model import Model
 from .model_util import (
     ModelCallable,
@@ -16,7 +20,12 @@ from .model_util import (
     ModelState,
 )
 from .modules import BaseModule
-from .tree_util import is_shape_leaf, tree_getitem_by_strpath
+from .tree_util import (
+    extend_structure_from_strpaths,
+    getitem_by_strpath,
+    is_shape_leaf,
+    setitem_by_strpath,
+)
 from .typing import (
     Any,
     Data,
@@ -263,95 +272,6 @@ class NonSequentialModel(Model):
         self.separator = separator
         self.max_recursion_depth = max_recursion_depth
 
-    def get_split_connections(self) -> Dict[str, List[str]]:
-        # the zeroth step is to convert the connections dictionary mixed value
-        # types to uniform list types
-        conn: Dict[str, List[str]] = {}
-        for key, value in self.connections.items():
-            if isinstance(value, (list, tuple)):
-                conn[key] = list(value)
-            else:
-                conn[key] = [value]
-
-        # the first step is to separate the model tree structure from the
-        # structure of the IO of each module
-        # we replace the separator where this happens with a double separator
-        # so first we need to verify that the separator is not already doubled
-        # anywhere
-        double_sep = f"{self.separator}{self.separator}"
-        for key, value in conn.items():
-            if double_sep in key:
-                raise ValueError(
-                    f"Separator '{self.separator}' cannot appear "
-                    "consecutively in connection keys. Found in key '{key}'."
-                )
-            for v in value:
-                if double_sep in v:
-                    raise ValueError(
-                        f"Separator '{self.separator}' cannot appear "
-                        "consecutively in connection values. Found in value "
-                        f"'{v}'."
-                    )
-
-        # now we use tree_getitem_by_strpath with allow_early_return and
-        # return_remainder to separate the module tree structure from the
-        # module IO structure
-        conn_separated: Dict[str, List[str]] = {}
-        for key, value in conn.items():
-            if key == "input":
-                new_key = "input" + double_sep
-            elif key == "output":
-                raise ValueError(
-                    "'output' cannot be used as a key in the connections "
-                    "dictionary since it is reserved for model output."
-                )
-            else:
-                _, key_remainder = tree_getitem_by_strpath(
-                    self.modules,
-                    key,
-                    separator=self.separator,
-                    allow_early_return=True,
-                    return_remainder=True,
-                )
-                new_key = (
-                    key.removesuffix(key_remainder).removesuffix(
-                        self.separator
-                    )
-                    + double_sep
-                    + key_remainder
-                )
-            new_values = []
-            for v in value:
-                if v == "output":
-                    new_v = "output" + double_sep
-                    new_values.append(new_v)
-                    continue
-                elif v == "input":
-                    raise ValueError(
-                        "'input' cannot be used as a value in the "
-                        "connections dictionary since it is reserved for "
-                        "model input."
-                    )
-                else:
-                    _, v_remainder = tree_getitem_by_strpath(
-                        self.modules,
-                        v,
-                        separator=self.separator,
-                        allow_early_return=True,
-                        return_remainder=True,
-                    )
-                    new_v = (
-                        v.removesuffix(v_remainder).removesuffix(
-                            self.separator
-                        )
-                        + double_sep
-                        + v_remainder
-                    )
-                    new_values.append(new_v)
-            conn_separated[new_key] = new_values
-
-        return conn_separated
-
     def get_execution_order(self) -> List[str]:
         r"""
         Resolve the connections dictionary to find the execution order of
@@ -364,37 +284,19 @@ class NonSequentialModel(Model):
                 from the model input to the model output.
         """
 
-        conn_separated = self.get_split_connections()
-
-        double_sep = f"{self.separator}{self.separator}"
-
-        # now we have connections in the form
-        # { 'input.<path>..': ['<mod_path>..<io_path>', ...], ... }
-
-        # since the resolution of the graph's execution order depends only on
-        # the module tree structure, we can strip off the IO paths for this.
-        # we need to be careful, since now there can be multiple identical keys
-        # we handle this in the values by using a set, and always add to the
-        # value instead of overwriting
-        conn_stripped: Dict[str, OrderedSet[str]] = {}
-        for key, value in conn_separated.items():
-            # special case for 'input' and 'output'
-            if key.startswith("input") or key.startswith("output"):
-                # remove all IO paths here too
-                stripped_key = key.split(self.separator)[0]
-            else:
-                stripped_key, _ = key.split(double_sep)
-            if stripped_key not in conn_stripped:
-                conn_stripped[stripped_key] = OrderedSet()
-            for v in value:
-                stripped_v, _ = v.split(double_sep)
-                conn_stripped[stripped_key].add(stripped_v)
+        module_connections = get_outer_connections_by_tree(
+            self.connections,
+            self.modules,
+            separator=self.separator,
+            in_key="input",
+            out_key="output",
+        )
 
         # now we have connections in the form
         # { 'input': {'<mod_path>', ...}, ... }
 
         # now is a good time to verify that 'input' is present as a key
-        if "input" not in conn_stripped:
+        if "input" not in module_connections:
             raise ValueError(
                 "Connections must include 'input' as a key "
                 "denoting the model input."
@@ -403,7 +305,7 @@ class NonSequentialModel(Model):
         # we want to reverse the connections to get the incoming edges for
         # each node, so we can traverse the graph from output to input
         incoming_edges: Dict[str, OrderedSet[str]] = {}
-        for key, value in conn_stripped.items():
+        for key, value in module_connections.items():
             for v in value:
                 if v not in incoming_edges:
                     incoming_edges[v] = OrderedSet()
@@ -416,6 +318,11 @@ class NonSequentialModel(Model):
                 "Connections must include 'output' as a value "
                 "denoting the model output."
             )
+
+        # convert OrderedSets back to lists
+        incoming_edges = {
+            key: list(value) for key, value in incoming_edges.items()
+        }
 
         # now we resolve the execution order
         topo_order, visited = resolve_connections(
@@ -437,13 +344,34 @@ class NonSequentialModel(Model):
 
     def is_ready(self) -> bool:
         r"""
-        Check if the model is compiled and ready for use.
+        Check if the model is compiled and ready for use. Overrides the base
+        implementation since not all modules need to be ready, as some may
+        not appear in the execution order.
 
         Returns
         -------
             True if the model is compiled and ready, False otherwise.
         """
-        return self.execution_order is not None and super().is_ready()
+
+        # if the execution order is not set, the model is not ready
+        if self.execution_order is None:
+            return False
+
+        # if any module in the execution order is not ready, the model is not
+        # ready
+        for module_path in self.execution_order:
+            module = getitem_by_strpath(
+                self.modules,
+                module_path,
+                separator=self.separator,
+                allow_early_return=False,
+                return_remainder=False,
+            )
+            if not module.is_ready():
+                return False
+
+        # if the input or output shapes are not set, the model is not ready
+        return self.input_shape is not None and self.output_shape is not None
 
     def compile(
         self,
@@ -496,8 +424,10 @@ class NonSequentialModel(Model):
             )
             return
 
-        # first, resolve the execution order
+        # resolve the execution order
         self.execution_order = self.get_execution_order()
+
+        # for all modules that appear in the execution order, compile them
 
     def get_output_shape(self, input_shape: DataShape) -> DataShape:
         r"""
@@ -520,11 +450,146 @@ class NonSequentialModel(Model):
         """
         if self.is_ready():
             return self.output_shape
-        else:
-            shape = input_shape
-            for module in jax.tree.leaves(self.modules):
-                shape = module.get_output_shape(shape)
-            return shape
+
+        # get the execution order
+        execution_order = self.get_execution_order()
+        split_connections = partition_connections_by_tree(
+            self.connections,
+            self.modules,
+            separator=self.separator,
+            in_key="input",
+            out_key="output",
+        )
+        module_connections = get_outer_connections_by_tree(
+            self.connections,
+            self.modules,
+            separator=self.separator,
+            in_key="input",
+            out_key="output",
+        )
+
+        double_sep = f"{self.separator}{self.separator}"
+
+        # turn split connections into a mapping from modules to their input and
+        # output paths
+        module_input_paths: Dict[str, List[str]] = {}
+        module_output_paths: Dict[str, List[str]] = {}
+        for key, values in split_connections.items():
+            # the keys in split_connections are show the output paths
+            # the values show the input paths
+            # it is possible for the io path to be empty, in which case the
+            # entire module output or input is used
+            mod_out_path, out_io_path = key.split(double_sep)
+            module_output_paths.setdefault(mod_out_path, []).append(
+                out_io_path
+            )
+
+            for v in values:
+                mod_in_path, in_io_path = v.split(double_sep)
+                module_input_paths.setdefault(mod_in_path, []).append(
+                    in_io_path
+                )
+
+        r"""
+            Example
+            -------
+
+            Given modules like
+
+                >>> modules = {
+                ...     "M1": Module1(),
+                ...     "block": {
+                ...         "M2": Module2(),
+                ...         "M3": Module3()
+                ...     }
+                ... }
+
+            And connections like
+
+                >>> connections = {
+                ...     "input": ["M1", "block.M2.0", "block.M3.y"],
+                ...     "M1.a": ["block.M2.1", "block.M3.x"],
+                ...     "M1.b": "output",
+                ...     "block.M2.0": "output",
+                ...     "block.M3": "output"
+                ... }
+
+            The split connections will be
+
+                >>> split_connections = {
+                ...     "input..": ["M1..", "block.M2..0", "block.M3..y"],
+                ...     "M1..a": ["block.M2..1", "block.M3..x"],
+                ...     "M1..b": ["output.."],
+                ...     "block.M2..0": ["output.."],
+                ...     "block.M3..": ["output.."]
+                ... }
+
+            The module connections will be
+
+                >>> module_connections = {
+                ...     "input": ["M1", "block.M2", "block.M3"],
+                ...     "M1": ["block.M2", "block.M3", "output"],
+                ...     "block.M2": ["output"],
+                ...     "block.M3": ["output"]
+                ... }
+
+            The module input paths will be
+
+                >>> module_input_paths = {
+                ...     "M1": [""],
+                ...     "block.M2": ["0", "1"],
+                ...     "block.M3": ["y", "x"]
+                ...     "output": []
+                ... }
+
+
+
+
+
+
+
+        """
+
+        # the modules execute sequentially in the execution order and each
+        # return an arbitrary PyTree of arrays.
+        # since the inputs to each module can be arbitrary compositions of
+        # previous module outputs, we need to track the shapes of all
+        # intermediate outputs and assemble the inputs to each module
+
+        # first we make two empty PyTrees in the same shape as the modules, but
+        # only the ones in the execution order
+        input_shapes: PyTree[DataShape | None] = (
+            extend_structure_from_strpaths(
+                None,
+                execution_order,
+                separator=self.separator,
+            )
+        )
+        output_shapes: PyTree[DataShape | None] = (
+            extend_structure_from_strpaths(
+                None,
+                execution_order,
+                separator=self.separator,
+            )
+        )
+
+        # fill in the return shape from the "input" node
+        setitem_by_strpath(
+            input_shapes,
+            "input",
+            None,  # input node doesn't have any input
+            separator=self.separator,
+        )
+        setitem_by_strpath(
+            output_shapes,
+            "input",
+            input_shape,  # input node returns the model input shape
+            separator=self.separator,
+        )
+        # now we iterate through the execution order and build the shapes
+        for module_path in execution_order:
+            if module_path == "input" or module_path == "output":
+                continue
 
     def _get_callable(
         self,
