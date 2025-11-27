@@ -24,6 +24,7 @@ from .tree_util import (
     extend_structure_from_strpaths,
     getitem_by_strpath,
     is_shape_leaf,
+    make_mutable,
     setitem_by_strpath,
 )
 from .typing import (
@@ -33,7 +34,6 @@ from .typing import (
     Dict,
     List,
     ModuleCallable,
-    Params,
     PyTree,
     State,
     Tuple,
@@ -250,6 +250,8 @@ class NonSequentialModel(Model):
             JAX function to create string paths for PyTree KeyPaths in the
             format expected by the connections dictionary.
         """
+        modules = make_mutable(modules)
+
         super().__init__(
             modules=modules if modules is not None else {}, rng=rng
         )
@@ -336,6 +338,8 @@ class NonSequentialModel(Model):
         # if any module in the execution order is not ready, the model is not
         # ready
         for module_path in self.execution_order:
+            if module_path == "input" or module_path == "output":
+                continue
             module = getitem_by_strpath(
                 self.modules,
                 module_path,
@@ -386,6 +390,13 @@ class NonSequentialModel(Model):
 
         if self.is_ready():
             # just validate that the input shape matches the compiled one
+            assert jax.tree.structure(self.input_shape) == jax.tree.structure(
+                input_shape
+            ), (
+                f"{self.name} is already compiled with input shape "
+                f"{self.input_shape}, cannot recompile with different "
+                f"input shape {input_shape}."
+            )
             assert jax.tree.all(
                 jax.tree.map(
                     lambda a, b: a == b,
@@ -403,57 +414,69 @@ class NonSequentialModel(Model):
         # resolve the execution order
         self.execution_order = self.get_execution_order()
 
-        # for all modules that appear in the execution order, compile them
-        # TODO
+        if verbose:
+            print(f"{self.name} execution order:")
+            for i, module_path in enumerate(self.execution_order):
+                print(f"  {i}: {module_path}")
 
-    def get_output_shape(self, input_shape: DataShape) -> DataShape:
-        r"""
-        Get the output shape of the model given an input shape. Must be
-        implemented by all subclasses.
+        # set the input and output shapes
+        self.input_shape = input_shape
 
-        Parameters
-        ----------
+        input_progression, _, self.output_shape = self._get_shape_progression(
             input_shape
-                Shape of the input, excluding the batch dimension.
-                For example, (input_features,) for 1D bare-array input, or
-                (input_height, input_width, input_channels) for 3D bare-array
-                input, [(input_features1,), (input_features2,)] for a List
-                (PyTree) of 1D arrays, etc.
+        )
+
+        # for all modules that appear in the execution order, compile them
+        for module_path in self.execution_order:
+            if module_path == "input" or module_path == "output":
+                continue
+            rng, module_rng = jax.random.split(rng)
+            module = getitem_by_strpath(
+                self.modules,
+                module_path,
+                separator=self.separator,
+                allow_early_return=False,
+                return_remainder=False,
+            )
+
+            module_input_shape = getitem_by_strpath(
+                input_progression,
+                module_path,
+                separator=self.separator,
+                allow_early_return=False,
+                return_remainder=False,
+                is_leaf=is_shape_leaf,
+            )
+
+            if verbose:
+                print(
+                    f"Compiling module '{module_path}' with input shape "
+                    f"{module_input_shape}."
+                )
+
+            module.compile(
+                rng=module_rng,
+                input_shape=module_input_shape,
+            )
+
+    def _get_module_input_dependencies(
+        self,
+    ) -> Tuple[List[PyTree[str]], PyTree[str]]:
+        r"""
+        Get the input dependencies for each module in the execution order.
 
         Returns
         -------
-            output_shape
-                Shape of the output after passing through the model.
+            module_input_dependencies
+                List of PyTrees of str paths to the required inputs for each
+                module in the execution order. The first entry corresponds to
+                the "input" node and is None.
+            output_input_dependencies
+                PyTree of str paths to the required inputs for the "output"
+                node.
         """
-        if self.is_ready():
-            return self.output_shape
 
-        # get the execution order
         execution_order = self.get_execution_order()
-
-        # the modules execute sequentially in the execution order and each
-        # return an arbitrary PyTree of arrays.
-        # since the inputs to each module can be arbitrary compositions of
-        # previous module outputs, we need to track the shapes of all
-        # intermediate outputs and assemble the inputs to each module
-
-        # first we make an empty PyTree in the same shape as the modules, but
-        # only the ones in the execution order
-        output_shapes: PyTree[DataShape | None] = (
-            extend_structure_from_strpaths(
-                None,
-                execution_order,
-                separator=self.separator,
-            )
-        )
-
-        # fill in the return shape from the "input" node
-        setitem_by_strpath(
-            output_shapes,
-            "input",
-            input_shape,  # input node returns the model input shape
-            separator=self.separator,
-        )
 
         # place the connections into the module tree
         placed_conn, out_placed_conn = place_connections_in_tree(
@@ -476,8 +499,78 @@ class NonSequentialModel(Model):
             if mod_path != "input" and mod_path != "output"
         ]
 
+        return module_inputs, out_placed_conn
+
+    def _get_shape_progression(
+        self, input_shape: DataShape
+    ) -> Tuple[PyTree[DataShape | None], PyTree[DataShape | None], DataShape]:
+        r"""
+        Get the progression of output shapes through the model given an input
+        shape. The first entry is the model input shape, and the last entry is
+        the model output shape.
+
+        Parameters
+        ----------
+            input_shape
+                Shape of the input, excluding the batch dimension.
+                For example, (input_features,) for 1D bare-array input, or
+                (input_height, input_width, input_channels) for 3D bare-array
+                input, [(input_features1,), (input_features2,)] for a List
+                (PyTree) of 1D arrays, etc.
+        Returns
+        -------
+            input_shapes
+                PyTree of input shapes at each module in the execution order,
+                with the same structure as the modules in the execution order.
+            output_shapes
+                PyTree of output shapes at each module in the execution order,
+                with the same structure as the modules in the execution order.
+            output_shape
+                Shape of the output after passing through the model.
+
+        """
+
+        # get the execution order
+        execution_order = self.get_execution_order()
+
+        # the modules execute sequentially in the execution order and each
+        # return an arbitrary PyTree of arrays.
+        # since the inputs to each module can be arbitrary compositions of
+        # previous module outputs, we need to track the shapes of all
+        # intermediate outputs and assemble the inputs to each module
+
+        # first we make two empty PyTrees in the same shape as the modules, but
+        # only the ones in the execution order
+        input_shapes: PyTree[DataShape | None] = (
+            extend_structure_from_strpaths(
+                None,
+                execution_order,
+                separator=self.separator,
+            )
+        )
+        output_shapes: PyTree[DataShape | None] = (
+            extend_structure_from_strpaths(
+                None,
+                execution_order,
+                separator=self.separator,
+            )
+        )
+
+        # fill in the return shape from the "input" node
+        setitem_by_strpath(
+            output_shapes,
+            "input",
+            input_shape,  # input node returns the model input shape
+            separator=self.separator,
+            is_leaf=is_shape_leaf,
+        )
+
+        module_input_deps, out_input_deps = (
+            self._get_module_input_dependencies()
+        )
+
         # now we build the input and output shapes in execution order
-        for mod_path, req_in_paths in zip(execution_order, module_inputs):
+        for mod_path, req_in_paths in zip(execution_order, module_input_deps):
             if mod_path == "input" or mod_path == "output":
                 continue
             # mod_path is the path to the current module in self.modules
@@ -504,6 +597,14 @@ class NonSequentialModel(Model):
             if is_str:
                 in_shapes = in_shapes[0]
 
+            setitem_by_strpath(
+                input_shapes,
+                mod_path,
+                in_shapes,
+                separator=self.separator,
+                is_leaf=is_shape_leaf,
+            )
+
             module = getitem_by_strpath(
                 self.modules,
                 mod_path,
@@ -517,13 +618,13 @@ class NonSequentialModel(Model):
                 mod_path,
                 out_shape,
                 separator=self.separator,
+                is_leaf=is_shape_leaf,
             )
 
         # finally, get the output shape from the "output" node
-        # out_placed_conn is the set of paths that feed into the output node
         is_str = False
-        if isinstance(out_placed_conn, str):
-            out_placed_conn = [out_placed_conn]
+        if isinstance(out_input_deps, str):
+            out_input_deps = [out_input_deps]
             is_str = True
         out_shapes = [
             getitem_by_strpath(
@@ -534,11 +635,37 @@ class NonSequentialModel(Model):
                 return_remainder=False,
                 is_leaf=is_shape_leaf,
             )
-            for p in out_placed_conn
+            for p in out_input_deps
         ]
         if is_str:
             out_shapes = out_shapes[0]
-        return out_shapes
+
+        return input_shapes, output_shapes, out_shapes
+
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
+        r"""
+        Get the output shape of the model given an input shape. Must be
+        implemented by all subclasses.
+
+        Parameters
+        ----------
+            input_shape
+                Shape of the input, excluding the batch dimension.
+                For example, (input_features,) for 1D bare-array input, or
+                (input_height, input_width, input_channels) for 3D bare-array
+                input, [(input_features1,), (input_features2,)] for a List
+                (PyTree) of 1D arrays, etc.
+
+        Returns
+        -------
+            output_shape
+                Shape of the output after passing through the model.
+        """
+        if self.is_ready():
+            return self.output_shape
+
+        _, _, output_shape = self._get_shape_progression(input_shape)
+        return output_shape
 
     def _get_callable(
         self,
@@ -607,40 +734,32 @@ class NonSequentialModel(Model):
                 f"{self.name} is not ready. Call compile() first."
             )
 
-        # get the callables for each module and put them in a PyTree with the
-        # same structure
-        module_callables = jax.tree.map(
-            lambda m: m._get_callable(), self.modules
+        self.modules = make_mutable(self.modules)
+
+        # get the callables for each module in the execution order and put them
+        # in a PyTree with the same structure
+        module_callables: List[ModuleCallable | None] = [None] + [
+            getitem_by_strpath(
+                self.modules,
+                mod_path,
+                separator=self.separator,
+                allow_early_return=False,
+                return_remainder=False,
+            )._get_callable()
+            for mod_path in self.execution_order
+            if mod_path != "input" and mod_path != "output"
+        ]
+
+        # get the input dependencies for each module
+        module_input_deps, out_input_deps = (
+            self._get_module_input_dependencies()
         )
-        modules_structure = jax.tree.structure(self.modules)
+        out_is_str = isinstance(out_input_deps, str)
+        if out_is_str:
+            out_input_deps = [out_input_deps]
 
         @jaxtyped(typechecker=beartype)
-        def sequential(
-            carry: Tuple[Data, ModelState],
-            module_data: Tuple[ModuleCallable, Params, State, Any],
-            training: bool,
-        ) -> Tuple[Data, ModelState]:
-            # carry is (data, [flattened model state])
-            # module_data is (module_callable, module_params,
-            #                 module_state, module_rng)
-            (
-                module_callable,
-                module_params,
-                module_state,
-                module_rng,
-            ) = module_data
-            data, modelstate_flat = carry
-            output, new_module_state = module_callable(
-                module_params,
-                data,
-                training,
-                module_state,
-                module_rng,
-            )
-            return output, modelstate_flat + [new_module_state]
-
-        @jaxtyped(typechecker=beartype)
-        def model_callable(
+        def nonseq_callable(
             params: ModelParams,
             data: Data,
             training: bool,
@@ -648,39 +767,138 @@ class NonSequentialModel(Model):
             rng: Any,
         ) -> Tuple[Data, ModelState]:
 
-            # params, state, and module_callables are PyTrees with the same
-            # structure as self.modules
-
-            # split rng for each module, put in a PyTree with same structure
-            rngs = jax.random.split(rng, len(jax.tree.leaves(self.modules)))
-            rngs = jax.tree.unflatten(modules_structure, rngs)
-
-            # use jax.tree.reduce to sequentially apply each module
-            # then reconstruct the new state PyTree
-            # we apply reduce over the zipped module_callables, params,
-            # state, and rngs PyTrees
-
-            module_data = jax.tree.map(
-                lambda mc, mp, ms, mr: (mc, mp, ms, mr),
+            # initialize the intermediate outputs PyTree
+            intermediate_outputs: PyTree[Data] = (
+                extend_structure_from_strpaths(
+                    None,
+                    self.execution_order,
+                    separator=self.separator,
+                )
+            )
+            # set the model input
+            setitem_by_strpath(
+                intermediate_outputs,
+                "input",
+                data,
+                separator=self.separator,
+            )
+            new_state = state
+            # now execute each module in the execution order, assembling the
+            # inputs from the intermediate outputs
+            for mod_path, module_callable, req_in_paths in zip(
+                self.execution_order,
                 module_callables,
-                params,
-                state,
-                rngs,
+                module_input_deps,
+            ):
+                if mod_path == "input" or mod_path == "output":
+                    continue
+                # assemble the inputs for the module
+                is_str = False
+                if isinstance(req_in_paths, str):
+                    req_in_paths = [req_in_paths]
+                    is_str = True
+
+                in_data = [
+                    getitem_by_strpath(
+                        intermediate_outputs,
+                        p,
+                        separator=self.separator,
+                        allow_early_return=False,
+                        return_remainder=False,
+                        is_leaf=is_shape_leaf,
+                    )
+                    for p in req_in_paths
+                ]
+                if is_str:
+                    in_data = in_data[0]
+
+                module_params = getitem_by_strpath(
+                    params,
+                    mod_path,
+                    separator=self.separator,
+                    allow_early_return=False,
+                    return_remainder=False,
+                )
+                module_state = getitem_by_strpath(
+                    new_state,
+                    mod_path,
+                    separator=self.separator,
+                    allow_early_return=False,
+                    return_remainder=False,
+                )
+
+                # call the module
+                out_data, new_module_state = module_callable(
+                    module_params,
+                    in_data,
+                    training,
+                    module_state,
+                    rng,
+                )
+
+                # store the output
+                setitem_by_strpath(
+                    intermediate_outputs,
+                    mod_path,
+                    out_data,
+                    separator=self.separator,
+                )
+                # update the state
+                setitem_by_strpath(
+                    new_state,
+                    mod_path,
+                    new_module_state,
+                    separator=self.separator,
+                )
+            # assemble the model output from the intermediate outputs
+            out_data = [
+                getitem_by_strpath(
+                    intermediate_outputs,
+                    p,
+                    separator=self.separator,
+                    allow_early_return=False,
+                    return_remainder=False,
+                    is_leaf=is_shape_leaf,
+                )
+                for p in out_input_deps
+            ]
+            if out_is_str:
+                out_data = out_data[0]
+            return out_data, new_state
+
+        return nonseq_callable
+
+    def get_state(self) -> ModelState:
+        r"""
+        Get the state of all modules in the model as a PyTree.
+
+        Override of the base method in order to ignore modules that are not in
+        the execution order.
+
+        Returns
+        -------
+            A PyTree of the states of all modules in the model with the same
+            structure as the modules PyTree. Modules that are not in the
+            execution order will have state None.
+        """
+        if not self.is_ready():
+            raise RuntimeError(
+                f"{self.name} is not ready. Call compile() first."
             )
 
-            output, new_state_flat = jax.tree.reduce(
-                lambda ds, md: sequential(ds, md, training),
-                module_data,
-                initializer=(data, []),
-                is_leaf=lambda x: isinstance(x, tuple) and len(x) == 4,
-            )
+        # if the model is ready, then all the modules in the execution order
+        # are ready, and otherwise we can ignore them
 
-            # reconstruct new state PyTree
-            new_state = jax.tree.unflatten(modules_structure, new_state_flat)
+        def get_state_or_none(module: BaseModule) -> State:
+            if module.is_ready():
+                return module.get_state()
+            else:
+                return None
 
-            return output, new_state
-
-        return model_callable
+        return jax.tree.map(
+            get_state_or_none,
+            self.modules,
+        )
 
     # methods to modify the module list
     def __getitem__(
@@ -863,6 +1081,7 @@ class NonSequentialModel(Model):
             index
                 Index of the module to remove.
         Returns
+        -------
             The removed module.
         """
         self.reset()
@@ -896,6 +1115,7 @@ class NonSequentialModel(Model):
             key
                 Key or index of the module to remove.
         Returns
+        -------
             The removed module.
         """
         self.reset()

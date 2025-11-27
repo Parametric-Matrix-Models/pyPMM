@@ -279,6 +279,7 @@ class Model(BaseModule):
         level structure matches that of the state of each module.
 
         Returns
+        -------
             state
                 PyTree of PyTrees of numpy arrays representing the state of
                 each module in the model. The structure of the PyTree will be

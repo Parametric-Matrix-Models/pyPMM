@@ -488,6 +488,7 @@ class SequentialModel(Model):
             index
                 Index of the module to remove.
         Returns
+        -------
             The removed module.
         """
         self.reset()
@@ -521,6 +522,7 @@ class SequentialModel(Model):
             key
                 Key or index of the module to remove.
         Returns
+        -------
             The removed module.
         """
         self.reset()

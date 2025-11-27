@@ -3,6 +3,23 @@ import pytest
 from parametricmatrixmodels import tree_util
 
 
+def test_make_mutable():
+    r"""
+    Test make_mutable
+    """
+
+    immutable_tree = (
+        {"a": 0, "b": (1, 2)},
+        [3, 4, {"c": 5}],
+    )
+    mutable_tree = tree_util.make_mutable(immutable_tree)
+    expected_tree = [
+        {"a": 0, "b": [1, 2]},
+        [3, 4, {"c": 5}],
+    ]
+    assert mutable_tree == expected_tree
+
+
 def test_extend_tree():
     r"""
     Test extend_structure_from_strpaths

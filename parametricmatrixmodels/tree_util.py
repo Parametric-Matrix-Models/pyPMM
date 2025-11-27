@@ -10,6 +10,34 @@ from jaxtyping import Array, Integer, Num, PyTree, Shaped, jaxtyped
 from .typing import Any, Callable, List, Tuple
 
 
+def make_mutable(pytree: PyTree[Any]) -> PyTree[Any]:
+    r"""
+    Convert all tuples in a pytree to lists for mutability.
+
+    Parameters
+    ----------
+    pytree
+        The pytree to convert.
+
+    Returns
+    -------
+        A new pytree with all tuples converted to lists.
+    """
+
+    def _is_tuple(obj: Any) -> bool:
+        return isinstance(obj, tuple)
+
+    while not jax.tree.all(
+        jax.tree.map(lambda x: not _is_tuple(x), pytree, is_leaf=_is_tuple)
+    ):
+        pytree = jax.tree.map(
+            lambda x: list(x) if _is_tuple(x) else x,
+            pytree,
+            is_leaf=_is_tuple,
+        )
+    return pytree
+
+
 def getitem_by_strpath(
     pytree: PyTree[Any],
     strpath: str,
@@ -184,6 +212,11 @@ def setitem_by_strpath(
                     is_leaf,
                 )
             else:
+                if isinstance(pytree, tuple):
+                    raise TypeError(
+                        "Cannot set item in a tuple, as tuples are "
+                        "immutable. Consider converting to a list first."
+                    )
                 pytree[index] = value
         else:
             raise TypeError(f"Unsupported pytree node type: {type(pytree)}")

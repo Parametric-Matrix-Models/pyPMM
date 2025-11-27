@@ -153,3 +153,57 @@ class LinearNN(SequentialModel):
         self.modules = modules
 
         super().compile(rng, input_shape, verbose)
+
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
+        r"""
+        Get the output shape of the LinearNN module given the input shape.
+
+        Parameters
+        ----------
+        input_shape
+            Shape of the input array, excluding the batch size.
+
+        Returns
+        -------
+        DataShape
+            Shape of the output array, excluding the batch size.
+        """
+
+        if self.out_features is None:
+            raise ValueError(
+                "out_features must be specified before getting output shape."
+            )
+
+        _out_features = self.out_features
+
+        if isinstance(_out_features, int):
+            _out_features = jax.tree.map(
+                lambda _: _out_features,
+                input_shape,
+                is_leaf=is_shape_leaf,
+            )
+
+        # can't check for shapes as tuples of ints with bare output_dims since
+        # the entire thing would be a leaf
+        # so a bit of a hack, but we turn each output dim into a tuple of a
+        # single int
+        _out_features = jax.tree.map(
+            lambda dim: (dim,) if isinstance(dim, int) else dim,
+            _out_features,
+        )
+
+        # assert that the structure of output_dims matches input_shape
+        output_features_structure = jax.tree.structure(
+            _out_features, is_leaf=is_shape_leaf
+        )
+        input_shape_structure = jax.tree.structure(
+            input_shape, is_leaf=is_shape_leaf
+        )
+        if output_features_structure != input_shape_structure:
+            raise ValueError(
+                "The structure of input_shape and out_features must match. "
+                f"Got input_shape structure {input_shape_structure} and "
+                f"out_features structure {output_features_structure}."
+            )
+
+        return _out_features
