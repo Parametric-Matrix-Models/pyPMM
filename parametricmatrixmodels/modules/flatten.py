@@ -45,3 +45,20 @@ class Flatten(Reshape):
             input_struct,
             [(-1,) for _ in input_shapes],
         )
+
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
+        # if input_shape is an iterable of ints, then the input is a single
+        # array
+        if all(isinstance(dim, int) for dim in input_shape):
+            self.shape = (-1,)
+            return super().get_output_shape(input_shape)
+
+        # construct the tree of output shapes (all (-1,))
+        input_shapes, input_struct = jax.tree.flatten(
+            input_shape, is_leaf=is_shape_leaf
+        )
+        self.shape = jax.tree.unflatten(
+            input_struct,
+            [(-1,) for _ in input_shapes],
+        )
+        return super().get_output_shape(input_shape)

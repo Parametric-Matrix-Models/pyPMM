@@ -9,7 +9,7 @@ from jaxtyping import jaxtyped
 
 from .graph_util import (
     get_outer_connections_by_tree,
-    partition_connections_by_tree,
+    place_connections_in_tree,
     resolve_connections,
 )
 from .model import Model
@@ -33,7 +33,6 @@ from .typing import (
     Dict,
     List,
     ModuleCallable,
-    OrderedSet,
     Params,
     PyTree,
     State,
@@ -302,34 +301,11 @@ class NonSequentialModel(Model):
                 "denoting the model input."
             )
 
-        # we want to reverse the connections to get the incoming edges for
-        # each node, so we can traverse the graph from output to input
-        incoming_edges: Dict[str, OrderedSet[str]] = {}
-        for key, value in module_connections.items():
-            for v in value:
-                if v not in incoming_edges:
-                    incoming_edges[v] = OrderedSet()
-                incoming_edges[v].add(key)
-
-        # now is a good time to verify that 'output' is present as a key in the
-        # reversed connections
-        if "output" not in incoming_edges:
-            raise ValueError(
-                "Connections must include 'output' as a value "
-                "denoting the model output."
-            )
-
-        # convert OrderedSets back to lists
-        incoming_edges = {
-            key: list(value) for key, value in incoming_edges.items()
-        }
-
         # now we resolve the execution order
         topo_order, visited = resolve_connections(
-            incoming_edges,
+            module_connections,
             start_key="input",
             end_key="output",
-            max_recursion_depth=self.max_recursion_depth,
         )
 
         return topo_order
@@ -428,6 +404,7 @@ class NonSequentialModel(Model):
         self.execution_order = self.get_execution_order()
 
         # for all modules that appear in the execution order, compile them
+        # TODO
 
     def get_output_shape(self, input_shape: DataShape) -> DataShape:
         r"""
@@ -453,102 +430,6 @@ class NonSequentialModel(Model):
 
         # get the execution order
         execution_order = self.get_execution_order()
-        split_connections = partition_connections_by_tree(
-            self.connections,
-            self.modules,
-            separator=self.separator,
-            in_key="input",
-            out_key="output",
-        )
-        module_connections = get_outer_connections_by_tree(
-            self.connections,
-            self.modules,
-            separator=self.separator,
-            in_key="input",
-            out_key="output",
-        )
-
-        double_sep = f"{self.separator}{self.separator}"
-
-        # turn split connections into a mapping from modules to their input and
-        # output paths
-        module_input_paths: Dict[str, List[str]] = {}
-        module_output_paths: Dict[str, List[str]] = {}
-        for key, values in split_connections.items():
-            # the keys in split_connections are show the output paths
-            # the values show the input paths
-            # it is possible for the io path to be empty, in which case the
-            # entire module output or input is used
-            mod_out_path, out_io_path = key.split(double_sep)
-            module_output_paths.setdefault(mod_out_path, []).append(
-                out_io_path
-            )
-
-            for v in values:
-                mod_in_path, in_io_path = v.split(double_sep)
-                module_input_paths.setdefault(mod_in_path, []).append(
-                    in_io_path
-                )
-
-        r"""
-            Example
-            -------
-
-            Given modules like
-
-                >>> modules = {
-                ...     "M1": Module1(),
-                ...     "block": {
-                ...         "M2": Module2(),
-                ...         "M3": Module3()
-                ...     }
-                ... }
-
-            And connections like
-
-                >>> connections = {
-                ...     "input": ["M1", "block.M2.0", "block.M3.y"],
-                ...     "M1.a": ["block.M2.1", "block.M3.x"],
-                ...     "M1.b": "output",
-                ...     "block.M2.0": "output",
-                ...     "block.M3": "output"
-                ... }
-
-            The split connections will be
-
-                >>> split_connections = {
-                ...     "input..": ["M1..", "block.M2..0", "block.M3..y"],
-                ...     "M1..a": ["block.M2..1", "block.M3..x"],
-                ...     "M1..b": ["output.."],
-                ...     "block.M2..0": ["output.."],
-                ...     "block.M3..": ["output.."]
-                ... }
-
-            The module connections will be
-
-                >>> module_connections = {
-                ...     "input": ["M1", "block.M2", "block.M3"],
-                ...     "M1": ["block.M2", "block.M3", "output"],
-                ...     "block.M2": ["output"],
-                ...     "block.M3": ["output"]
-                ... }
-
-            The module input paths will be
-
-                >>> module_input_paths = {
-                ...     "M1": [""],
-                ...     "block.M2": ["0", "1"],
-                ...     "block.M3": ["y", "x"]
-                ...     "output": []
-                ... }
-
-
-
-
-
-
-
-        """
 
         # the modules execute sequentially in the execution order and each
         # return an arbitrary PyTree of arrays.
@@ -556,15 +437,8 @@ class NonSequentialModel(Model):
         # previous module outputs, we need to track the shapes of all
         # intermediate outputs and assemble the inputs to each module
 
-        # first we make two empty PyTrees in the same shape as the modules, but
+        # first we make an empty PyTree in the same shape as the modules, but
         # only the ones in the execution order
-        input_shapes: PyTree[DataShape | None] = (
-            extend_structure_from_strpaths(
-                None,
-                execution_order,
-                separator=self.separator,
-            )
-        )
         output_shapes: PyTree[DataShape | None] = (
             extend_structure_from_strpaths(
                 None,
@@ -575,21 +449,96 @@ class NonSequentialModel(Model):
 
         # fill in the return shape from the "input" node
         setitem_by_strpath(
-            input_shapes,
-            "input",
-            None,  # input node doesn't have any input
-            separator=self.separator,
-        )
-        setitem_by_strpath(
             output_shapes,
             "input",
             input_shape,  # input node returns the model input shape
             separator=self.separator,
         )
-        # now we iterate through the execution order and build the shapes
-        for module_path in execution_order:
-            if module_path == "input" or module_path == "output":
+
+        # place the connections into the module tree
+        placed_conn, out_placed_conn = place_connections_in_tree(
+            self.connections,
+            self.modules,
+            separator=self.separator,
+            in_key="input",
+            out_key="output",
+        )
+
+        module_inputs = [None] + [
+            getitem_by_strpath(
+                placed_conn,
+                mod_path,
+                separator=self.separator,
+                allow_early_return=False,
+                return_remainder=False,
+            )
+            for mod_path in execution_order
+            if mod_path != "input" and mod_path != "output"
+        ]
+
+        # now we build the input and output shapes in execution order
+        for mod_path, req_in_paths in zip(execution_order, module_inputs):
+            if mod_path == "input" or mod_path == "output":
                 continue
+            # mod_path is the path to the current module in self.modules
+            # req_in_paths is either a str or a list of str paths to the
+            # required inputs for the current module
+            # since we are in execution order, all required inputs will be
+            # available in output_shapes
+            is_str = False
+            if isinstance(req_in_paths, str):
+                req_in_paths = [req_in_paths]
+                is_str = True
+
+            in_shapes = [
+                getitem_by_strpath(
+                    output_shapes,
+                    p,
+                    separator=self.separator,
+                    allow_early_return=False,
+                    return_remainder=False,
+                    is_leaf=is_shape_leaf,
+                )
+                for p in req_in_paths
+            ]
+            if is_str:
+                in_shapes = in_shapes[0]
+
+            module = getitem_by_strpath(
+                self.modules,
+                mod_path,
+                separator=self.separator,
+                allow_early_return=False,
+                return_remainder=False,
+            )
+            out_shape = module.get_output_shape(in_shapes)
+            setitem_by_strpath(
+                output_shapes,
+                mod_path,
+                out_shape,
+                separator=self.separator,
+            )
+
+        # finally, get the output shape from the "output" node
+        # out_placed_conn is the set of paths that feed into the output node
+        is_str = False
+        if isinstance(out_placed_conn, str):
+            out_placed_conn = [out_placed_conn]
+            is_str = True
+        out_shapes = [
+            getitem_by_strpath(
+                output_shapes,
+                p,
+                separator=self.separator,
+                allow_early_return=False,
+                return_remainder=False,
+                is_leaf=is_shape_leaf,
+            )
+            for p in out_placed_conn
+        ]
+        if is_str:
+            out_shapes = out_shapes[0]
+        return out_shapes
 
     def _get_callable(
         self,

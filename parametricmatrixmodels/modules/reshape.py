@@ -25,13 +25,6 @@ class Reshape(BaseModule):
     batch dimension.
     """
 
-    @staticmethod
-    def _is_shape(obj: object) -> bool:
-        return obj is None or (
-            isinstance(obj, (tuple, list))
-            and all(isinstance(dim, int) for dim in obj)
-        )
-
     def __init__(self, shape: DataShape = None) -> None:
         """
         Initialize a ``Reshape`` module.
@@ -117,7 +110,7 @@ class Reshape(BaseModule):
                 return np.reshape(arr, (batch_dim, *shape))
 
         @jaxtyped(typechecker=beartype)
-        def callable(
+        def reshape_callable(
             params: Params,
             data: Data,
             training: bool,
@@ -134,7 +127,7 @@ class Reshape(BaseModule):
                 )
                 return reshaped_data, state
 
-        return callable
+        return reshape_callable
 
     def validate_and_concretify_shape(
         self, input_shape: DataShape

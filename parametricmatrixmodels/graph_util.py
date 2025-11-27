@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import uuid
+from collections import defaultdict, deque
 
-from .tree_util import getitem_by_strpath
+from .tree_util import extend_structure_from_strpaths, getitem_by_strpath
 from .typing import Any, Dict, List, OrderedSet, PyTree, Tuple
 
 
@@ -533,49 +534,228 @@ def partition_connections_by_tree(
     return conn_separated
 
 
+def place_connections_in_tree(
+    connections: Dict[str, List[str]],
+    tree: PyTree[Any],
+    separator: str = ".",
+    in_key: str = "input",
+    out_key: str = "output",
+) -> Tuple[PyTree[Any], PyTree[Any]]:
+    r"""
+    Place the concretized connections into a PyTree structure matching 'tree'.
+    Parameters
+    ----------
+        connections
+            Connections dictionary, will be concretized internally if needed.
+        tree
+            A PyTree representing the outer structure to separate.
+        separator
+            The string used to separate levels in the keypaths. Default is ".".
+    Returns
+    -------
+        A PyTree with the same structure as 'tree', with values from
+        'concrete_connections' placed at the appropriate leaves. And the
+        remainder structure with the end_key paths.
+
+    Examples
+    --------
+    Given a tree like
+        >>> tree = {
+        ...     "M1": "*",
+        ...     "M2": "*",
+        ... }
+
+    and concretized connections like
+        >>> concretized_connections = {
+        ...     "input": ["M1", "M2"],
+        ...     "M1": ["output.0"],
+        ...     "M2": ["output.1"]
+        ... }
+
+    this will (internally) reverse the connections to get
+        >>> reversed_connections = {
+        ...    "M1": ["input"],
+        ...    "M2": ["input"],
+        ...    "output.0": ["M1"],
+        ...    "output.1": ["M2"],
+        ... }
+
+    then place the paths into the original tree structure, and the
+    remainder with the end_key will be returned separately, with its
+    corresponding structure
+        >>> placed_tree = {
+        ...     "M1": ["input"],
+        ...     "M2": ["input"],
+        ... }
+        >>> output_remainder = [
+        ...     "M1",
+        ...     "M2",
+        ... ]
+
+    Further examples:
+        >>> tree = {"A": "*", "B": ("*", "*")}
+        >>> concretized_connections = {
+        ...     "input.0": ["A.0", "B.0", "B.1"],
+        ...     "input.1": ["A.1"],
+        ...     "B.0": ["A.2"],
+        ...     "B.1": ["output.x"],
+        ...     "A": ["output.y"],
+        ... }
+        >>> placed_tree, output_remainder = place_connections_in_tree(
+        ...     concretized_connections,
+        ...     tree,
+        ... )
+        >>> placed_tree
+        {
+            "A": ["input.0", "input.1", "B.0"],
+            "B": ("input.0", "input.0"),
+        }
+        >>> output_remainder
+        {
+            "x": "B.1",
+            "y": "A",
+        }
+    """
+
+    # first, concretize the connections
+    concretized_connections = concretize_connections(
+        connections,
+        tree,
+        separator=separator,
+        in_key=in_key,
+        out_key=out_key,
+    )
+    # reverse the connections
+    reversed_conn: Dict[str, List[str]] = {}
+    for key, values in concretized_connections.items():
+        for v in values:
+            reversed_conn.setdefault(v, []).append(key)
+
+    # if any reversed connection has multiple values, raise an error as this
+    # isn't possible after concretization
+    for key, values in reversed_conn.items():
+        if len(values) > 1:
+            raise RuntimeError(
+                "Invalid concretized connections: multiple sources for "
+                f"'{key}': {values}"
+            )
+
+    reversed_conn = {k: v[0] for k, v in reversed_conn.items()}
+
+    # infer the remainder structure
+    # search through the reversed_part_conn for all keys starting with out_key
+    output_keys = [k for k in reversed_conn if k.startswith(out_key)]
+
+    # if theres only a single output key, and that key is exactly out_key,
+    # then the remainder is just that value
+    is_str = len(output_keys) == 1 and output_keys[0] == out_key
+    # otherwise, the structure will be inferred when building the tree
+
+    if is_str:
+        output_remainder = reversed_conn[out_key]
+    else:
+        output_remainder = extend_structure_from_strpaths(
+            None,
+            [
+                k.removeprefix(f"{out_key}{separator}").strip(separator)
+                for k in output_keys
+            ],
+            separator=separator,
+            fill_values=[reversed_conn[k] for k in output_keys],
+        )
+
+    placed_tree = extend_structure_from_strpaths(
+        None,
+        [
+            k.strip(separator)
+            for k in reversed_conn
+            if not k.startswith(out_key + separator)
+        ],
+        separator=separator,
+        fill_values=[
+            reversed_conn[k]
+            for k in reversed_conn
+            if not k.startswith(out_key + separator)
+        ],
+    )
+
+    return placed_tree, output_remainder
+
+
 def resolve_connections(
-    incoming_edges,
-    start_key="input",
-    end_key="output",
-    max_recursion_depth=100,
-):
+    graph: Dict[str, List[str]],
+    start_key: str = "input",
+    end_key: str = "output",
+) -> Tuple[List[str], OrderedSet[str]]:
+    # breadth-first search
 
     # this is a special case of a topological sort, since we can ignore
     # all nodes that are not on a path from start_key to end_key,
     # but we need to make sure that all nodes on all such paths are
     # included
-    visited: OrderedSet[str] = OrderedSet()
     topological_order: List[str] = []
+    in_degree: Dict[str, int] = defaultdict(int)
+    reverse_graph: Dict[str, List[str]] = defaultdict(list)
+    reverse_in_degree: Dict[str, int] = defaultdict(int)
 
-    def dfs(
-        node: str, depth: int = 0, path: OrderedSet[str] | None = None
-    ) -> None:
-        if depth > max_recursion_depth:
-            raise ValueError(
-                "Maximum recursion depth exceeded while resolving connections."
-                " Possible uncaught cycle in connections?"
-            )
-        if path is not None and node in path:
-            raise ValueError(f"Cycle detected in connections at node '{node}'")
-        depth += 1
+    # make the reverse graph
+    for node, neighbors in graph.items():
+        for neighbor in neighbors:
+            reverse_graph[neighbor].append(node)
+            reverse_in_degree[node] += 1
+
+    for node, neighbors in graph.items():
+        for neighbor in neighbors:
+            in_degree[neighbor] += 1
+
+    # filter out nodes that are not reachable from start_key
+    visited: OrderedSet[str] = OrderedSet()
+    reachable: OrderedSet[str] = OrderedSet()
+    stack = [start_key]
+
+    while stack:
+        node = stack.pop()
         if node in visited:
-            depth -= 1
-            return
+            continue
         visited.add(node)
-        if node in incoming_edges:
-            for parent in incoming_edges[node]:
-                dfs(
-                    parent,
-                    depth,
-                    path={node} if path is None else path | {node},
-                )
-        topological_order.append(node)
-        depth -= 1
+        reachable.add(node)
 
-    dfs(end_key)
+        for neighbor in graph.get(node, []):
+            if neighbor not in visited:
+                stack.append(neighbor)
+
+    # filter out nodes that cannot reach end_key
+    visited.clear()
+    reverse_reachable: OrderedSet[str] = OrderedSet()
+    stack = [end_key]
+    while stack:
+        node = stack.pop()
+        if node in visited:
+            continue
+        visited.add(node)
+        reverse_reachable.add(node)
+
+        for neighbor in reverse_graph.get(node, []):
+            if neighbor not in visited:
+                stack.append(neighbor)
+
+    # intersect reachable and reverse_reachable
+    all_nodes = reachable & reverse_reachable
+
+    queue = deque([start_key])
+    while queue:
+        node = queue.popleft()
+        topological_order.append(node)
+
+        for neighbor in graph.get(node, []):
+            if neighbor not in all_nodes:
+                continue
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
 
     try:
-        validate_resolution(topological_order, start_key, end_key)
+        validate_resolution(topological_order, all_nodes, start_key, end_key)
     except RuntimeError as e:
         raise RuntimeError(
             "Failed to resolve connections into a valid topological order."
@@ -585,15 +765,20 @@ def resolve_connections(
 
 
 def validate_resolution(
-    order: List[str], start_key="input", end_key="output"
+    order: List[str],
+    all_nodes: OrderedSet[str],
+    start_key="input",
+    end_key="output",
 ) -> None:
     # ensure that order[0] is start_key, order[-1] is end_key,
     # and all nodes appear exactly once
+    if len(order) != len(all_nodes):
+        raise RuntimeError(
+            "Topological order contains a cycle or is missing nodes."
+        )
     if order[0] != start_key:
         raise RuntimeError(
             f"Topological order does not start with '{start_key}'"
         )
     if order[-1] != end_key:
         raise RuntimeError("Topological order does not end with '{end_key}'")
-    if len(order) != len(set(order)):
-        raise RuntimeError("Topological order contains duplicate nodes")

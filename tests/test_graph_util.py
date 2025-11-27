@@ -137,13 +137,24 @@ def test_concretize_paths():
     )
 
     # check manually to handle uuid
-    expected = [p.split(".") for p in expected]
-    concrete_paths = [p.split(".") for p in concrete_paths]
+    expected_l = [p.split(".") for p in expected]
+    concrete_paths_l = [p.split(".") for p in concrete_paths]
 
-    for path, conc_path in zip(expected, concrete_paths):
+    for path, conc_path in zip(expected_l, concrete_paths_l):
         assert compare_paths(
             path, conc_path
         ), f"Expected {path}, but got {conc_path}"
+
+    # test that calling again gives same result (idempotency)
+    concrete_paths_2 = graph_util.concretize_paths(
+        concrete_paths,
+        separator=".",
+    )
+
+    concrete_paths_2_l = [p.split(".") for p in concrete_paths_2]
+
+    for path1, path2 in zip(concrete_paths_l, concrete_paths_2_l):
+        assert path1 == path2, f"Expected {path1}, but got {path2}"
 
 
 def test_concretize_connections():
@@ -264,3 +275,14 @@ def test_concretize_connections():
     assert jax.tree.all(
         comparisons
     ), f"Expected {concretized_connections}, but got {result}"
+
+    # test idempotency with the final test only
+    result_2 = graph_util.concretize_connections(
+        result,
+        tree,
+        separator=".",
+        in_key="input",
+        out_key="output",
+    )
+    comparisons = jax.tree.map(compare_paths, result, result_2)
+    assert jax.tree.all(comparisons), f"Expected {result}, but got {result_2}"

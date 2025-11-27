@@ -49,7 +49,7 @@ class Comment(BaseModule):
     def compile(self, rng: Any, input_shape: DataShape) -> None:
         pass
 
-    def get_output_shape(self, input_shape: DataShape) -> tuple[int, ...]:
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
         return input_shape  # output shape is the same as input shape
 
     def get_hyperparameters(self) -> HyperParams:
