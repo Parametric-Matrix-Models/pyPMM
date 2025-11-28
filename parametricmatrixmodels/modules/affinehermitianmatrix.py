@@ -5,7 +5,7 @@ import jax.numpy as np
 from beartype import beartype
 from jaxtyping import Array, Inexact, jaxtyped
 
-from ..tree_util import is_shape_leaf
+from ..tree_util import is_shape_leaf, is_single_leaf
 from ..typing import (
     Any,
     Data,
@@ -21,7 +21,7 @@ from .basemodule import BaseModule
 
 
 class AffineHermitianMatrix(BaseModule):
-    """
+    r"""
     Module that builds a parametric hermitian matrix that is affine in the
     input features.
 
@@ -35,9 +35,9 @@ class AffineHermitianMatrix(BaseModule):
 
     .. math::
 
-        C &= i\\sum_{\\substack{i,j\\\\i\\neq j}} \\left[M_i, M_j\\right] \\\\
-          &= i\\sum_{\\substack{i\\\\i\\neq j}}
-             \\left[M_i, \\sum_k^j M_k\\right]
+        C &= i\sum_{\substack{i,j\\i\neq j}} \left[M_i, M_j\right] \\
+          &= i\sum_{\substack{i\\i\neq j}}
+             \left[M_i, \sum_k^j M_k\right]
 
     Only accepts PyTree data that has a single leaf array that is 1D, excluding
     the batch dimension. The PyTree structure is preserved in the output.
@@ -62,7 +62,7 @@ class AffineHermitianMatrix(BaseModule):
         self,
         matrix_size: int | None = None,
         smoothing: float | None = None,
-        Ms: Inexact[Array, "* n n"] | None = None,
+        Ms: Inexact[Array, "_ n n"] | None = None,
         init_magnitude: float = 1e-2,
         bias_term: bool = True,
     ) -> None:
@@ -210,29 +210,25 @@ class AffineHermitianMatrix(BaseModule):
 
     def compile(self, rng: Any, input_shape: DataShape) -> None:
 
-        leaves = jax.tree.leaves(input_shape, is_leaf=is_shape_leaf)
+        valid, leaf = is_single_leaf(
+            input_shape, ndim=1, is_leaf=is_shape_leaf
+        )
+
         # input shape must be a PyTree with a single leaf that is 1D
-        if len(leaves) != 1:
+        if not valid:
             raise ValueError(
-                "Input shape must be a PyTree with a single leaf array, got "
-                f"{len(leaves)} leaves: {input_shape}"
-            )
-        input_shape = leaves[0]
-        # input shape must be 1D
-        if len(input_shape) != 1:
-            raise ValueError(
-                f"Input shape must be 1D, got {len(input_shape)}D shape: "
-                f"{input_shape}"
+                "Input shape must be a PyTree with a single leaf consisting of"
+                " a 1D array, got: {input_shape}"
             )
 
         # number of matrices is number of features + 1 (bias) if bias is used
-        p = input_shape[0] + 1 if self.bias_term else input_shape[0]
+        p = leaf[0] + 1 if self.bias_term else leaf[0]
 
         # if the module is already ready, just verify the input shape
         if self.is_ready():
             if self.Ms.shape[0] != p:
                 raise ValueError(
-                    f"Input shape {input_shape} does not match the expected "
+                    f"Input shape {leaf} does not match the expected "
                     f"number of features {self.Ms.shape[0] - 1} "
                 )
             return
@@ -258,20 +254,16 @@ class AffineHermitianMatrix(BaseModule):
     def get_output_shape(self, input_shape: DataShape) -> DataShape:
         # return (n,n) with the same PyTree structure as input_shape, so long
         # as the input shape is valid
-        leaves = jax.tree.leaves(input_shape, is_leaf=is_shape_leaf)
-        if len(leaves) != 1:
+        valid, _ = is_single_leaf(input_shape, ndim=1, is_leaf=is_shape_leaf)
+        if not valid:
             raise ValueError(
-                "Input shape must be a PyTree with a single leaf array, got "
-                f"{len(leaves)} leaves: {input_shape}"
-            )
-        input_shape = leaves[0]
-        if len(input_shape) != 1:
-            raise ValueError(
-                f"Input shape must be 1D, got {len(input_shape)}D shape: "
-                f"{input_shape}"
+                "Input shape must be a PyTree with a single leaf consisting of"
+                " a 1D array, got: {input_shape}"
             )
         return jax.tree.map(
-            lambda x: (self.matrix_size, self.matrix_size), input_shape
+            lambda x: (self.matrix_size, self.matrix_size),
+            input_shape,
+            is_leaf=is_shape_leaf,
         )
 
     def get_hyperparameters(self) -> HyperParams:

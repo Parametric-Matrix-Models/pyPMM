@@ -10,6 +10,83 @@ from jaxtyping import Array, Integer, Num, PyTree, Shaped, jaxtyped
 from .typing import Any, Callable, List, Tuple
 
 
+def get_shapes(
+    pytree: PyTree[Shaped[Array, "..."]],
+    axes: int | Tuple[int, ...] | slice | None = None,
+) -> PyTree[Tuple[int, ...]]:
+    r"""
+    Get the shapes of all leaves in a PyTree of arrays, optionally selecting
+    specific axes.
+    """
+
+    def _get_shape(leaf: Shaped[Array, "..."]) -> Tuple[int, ...]:
+        shape = leaf.shape
+        if axes is None:
+            return shape
+        elif isinstance(axes, slice):
+            return shape[axes]
+        else:
+            if isinstance(axes, int):
+                axes_tuple = (axes,)
+            else:
+                axes_tuple = axes
+            return tuple(shape[axis] for axis in axes_tuple)
+
+    return jax.tree.map(_get_shape, pytree)
+
+
+def is_single_leaf(
+    pytree: PyTree[Any],
+    ndim: int | None = None,
+    shape: Tuple[int, ...] | None = None,
+    is_leaf: Callable[[Any], bool] | None = None,
+) -> Tuple[bool, Any]:
+    r"""
+    Check if a pytree consists of a single leaf node, optionally verifying
+    the leaf's number of dimensions and shape.
+    """
+    if ndim is not None and shape is not None:
+        if len(shape) != ndim:
+            raise ValueError(
+                f"Provided shape {shape} does not match provided ndim {ndim}."
+            )
+
+    leaves = jax.tree.leaves(pytree, is_leaf=is_leaf)
+    if len(leaves) != 1:
+        print("Pytree does not have a single leaf.")
+        return False, None
+
+    leaf = leaves[0]
+
+    if ndim is not None:
+        # if the leaf is an array, check its ndim
+        # otherwise, try to check len(leaf)
+        if hasattr(leaf, "ndim"):
+            if leaf.ndim != ndim:
+                return False, None
+        else:
+            if len(leaf) != ndim:
+                return False, None
+
+    if shape is not None:
+        # if the leaf is an array, check its shape
+        # otherwise, try to check tuple(leaf)
+        # if None in shape, skip that dimension
+        if hasattr(leaf, "shape"):
+            leaf_shape = leaf.shape
+        else:
+            leaf_shape = tuple(leaf)
+
+        if len(leaf_shape) != len(shape):
+            return False, None
+
+        for dim1, dim2 in zip(leaf_shape, shape):
+            if dim2 is not None and dim1 != dim2:
+                return False, None
+
+    return True, leaf
+
+
 def make_mutable(pytree: PyTree[Any]) -> PyTree[Any]:
     r"""
     Convert all tuples in a pytree to lists for mutability.
@@ -734,7 +811,7 @@ def is_shape_leaf(obj: Any, allow_none: bool = True) -> bool:
 @jaxtyped(typechecker=beartype)
 def has_uniform_leaf_shapes(
     pytree: PyTree[Shaped[Array, "..."]],
-    axes: int | tuple[int, ...] | slice | None = None,
+    axes: int | Tuple[int, ...] | slice | None = None,
 ) -> bool:
     r"""
     Checks if all leaves of a PyTree of arrays have the same shape along the
@@ -781,7 +858,7 @@ def has_uniform_leaf_shapes(
 def leaf_shapes_equal(
     pytree1: PyTree[Shaped[Array, "..."]],
     pytree2: PyTree[Shaped[Array, "..."]],
-    axes: int | tuple[int, ...] | slice | None = None,
+    axes: int | Tuple[int, ...] | slice | None = None,
 ) -> bool:
     r"""
     Checks if the shapes of the leaves of two PyTrees with array leaves match
@@ -829,7 +906,7 @@ def leaf_shapes_equal(
 def shapes_equal(
     pytree1: PyTree[Shaped[Array, "..."]],
     pytree2: PyTree[Shaped[Array, "..."]],
-    axes: int | tuple[int, ...] | slice | None = None,
+    axes: int | Tuple[int, ...] | slice | None = None,
 ) -> bool:
     r"""
     Checks if both the structure and the shapes of the leaves of two PyTrees

@@ -303,7 +303,10 @@ class SequentialModel(Model):
                 lambda ds, md: sequential(ds, md, training),
                 module_data,
                 initializer=(data, []),
-                is_leaf=lambda x: isinstance(x, tuple) and len(x) == 4,
+                is_leaf=lambda x: isinstance(x, tuple)
+                and len(x) == 4
+                and callable(x[0])
+                and isinstance(x[1], (jax.numpy.ndarray, list, tuple, dict)),
             )
 
             # reconstruct new state PyTree

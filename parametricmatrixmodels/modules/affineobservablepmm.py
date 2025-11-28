@@ -1,26 +1,32 @@
 from __future__ import annotations
 
 import warnings
-from typing import Any
 
+import jax
 import jax.numpy as np
 
+from ..sequentialmodel import SequentialModel
+from ..tree_util import is_shape_leaf, is_single_leaf
+from ..typing import (
+    Any,
+    DataShape,
+    HyperParams,
+)
 from .affinehermitianmatrix import AffineHermitianMatrix
-from .basemodule import BaseModule
 from .bias import Bias
 from .eigenvectors import Eigenvectors
-from .multimodule import MultiModule
+from .expectationvaluesum import ExpectationValueSum
 from .transitionamplitudesum import TransitionAmplitudeSum
 
 
-class AffineObservablePMM(MultiModule):
+class AffineObservablePMM(SequentialModel):
     r"""
     ``AffineObservablePMM`` is a module that implements a general regression
     model via the affine observable
     Parametric Matrix Model (PMM) using four primitive modules combined in a
-    MultiModule: a AffineHermitianMatrix module followed by an Eigenvectors
-    module followed by a TransitionAmplitudeSum module followed optionally by a
-    Bias module.
+    SequentialModel: a AffineHermitianMatrix module followed by an Eigenvectors
+    module followed by a TransitionAmplitudeSum module (or an
+    ExpectationValueSum) followed optionally by a Bias module.
 
     The Affine Observable PMM (AOPMM) is described in [1]_ and is summarized as
     follows:
@@ -51,6 +57,14 @@ class AffineObservablePMM(MultiModule):
                \left[\sum_{i,j=1}^r |v_i^H D_{km} v_j|^2 \right]
                 - \frac{r^2}{2} ||D_{km}||^2_2 \right)
 
+    or, if using expectation values instead of transition amplitudes,
+
+    .. math::
+
+        z_k = \sum_{m=1}^l \left(
+                \left[\sum_{i=1}^r v_i^H D_{km} v_i \right]
+                 - \frac{r}{2} ||D_{km}||^2_2 \right)
+
     where :math:`||\cdot||_2` is the operator 2-norm (largest singular value)
     so for Hermitian :math:`D`, :math:`||D||_2` is the largest absolute
     eigenvalue.
@@ -63,9 +77,10 @@ class AffineObservablePMM(MultiModule):
 
     .. warning::
         Even though the math shows that the centering term should be multiplied
-        by :math:`r^2`, in practice this doesn't work well and instead setting
-        the centering term to :math:`\frac{1}{2} ||D_{km}||^2_2` works much
-        better. This non-:math:`r^2` scaling is used here.
+        by :math:`r^2` or :math:`r`, in practice this doesn't work well and
+        instead setting the centering term to
+        :math:`\frac{1}{2} ||D_{km}||^2_2` works much
+        better. This non-:math:`r^2`/:math:`r` scaling is used here.
 
     See Also
     --------
@@ -76,6 +91,9 @@ class AffineObservablePMM(MultiModule):
         Module that computes the eigenvectors of a matrix.
     TransitionAmplitudeSum
         Module that computes the sum of transition amplitudes of eigenvectors
+        with trainable observable matrices.
+    ExpectationValueSum
+        Module that computes the sum of expectation values of eigenvectors
         with trainable observable matrices.
     Bias
         Module that adds a trainable bias term to the output.
@@ -102,6 +120,7 @@ class AffineObservablePMM(MultiModule):
         output_size: int = None,
         centered: bool = True,
         bias_term: bool = True,
+        use_expectation_values: bool = False,
         Ms: np.ndarray = None,
         Ds: np.ndarray = None,
         b: np.ndarray = None,
@@ -146,6 +165,9 @@ class AffineObservablePMM(MultiModule):
             bias_term
                 If ``True``, include a trainable bias term :math:`b_k` in the
                 output. Default is ``True``.
+            use_expectation_values
+                If ``True``, use expectation values instead of transition
+                amplitudes in the output calculation. Default is ``False``.
             Ms
                 Optional array of shape
                 ``(input_size+1, matrix_size, matrix_size)`` (if
@@ -196,13 +218,27 @@ class AffineObservablePMM(MultiModule):
         self.output_size = output_size
         self.centered = centered
         self.bias_term = bias_term
+        self.use_expectation_values = use_expectation_values
         self.Ms = Ms
         self.Ds = Ds
         self.b = b
         self.init_magnitude = init_magnitude
+        super().__init__()
+
+    def compile(
+        self,
+        rng: Any | int | None,
+        input_shape: DataShape,
+        verbose: bool = False,
+    ) -> None:
+        valid, _ = is_single_leaf(input_shape, is_leaf=is_shape_leaf)
+        if not valid:
+            raise ValueError(
+                "Input shape must be a PyTree with a single leaf."
+            )
 
         # raise a warning if smoothing is used with magnitude 'which'
-        if smoothing not in (None, 0.0) and "m" in which.lower():
+        if self.smoothing not in (None, 0.0) and "m" in self.which.lower():
             warnings.warn(
                 "Using smoothing with magnitude 'which' options may lead to "
                 "unexpected behavior, as the smoothing only guarantees that "
@@ -211,50 +247,71 @@ class AffineObservablePMM(MultiModule):
                 UserWarning,
             )
 
-        self.modules = (
+        self.modules = [
             AffineHermitianMatrix(
-                matrix_size=matrix_size,
-                smoothing=smoothing,
-                Ms=Ms,
-                init_magnitude=init_magnitude,
-                bias_term=affine_bias_matrix,
-                flatten=False,
+                matrix_size=self.matrix_size,
+                smoothing=self.smoothing,
+                Ms=self.Ms,
+                init_magnitude=self.init_magnitude,
+                bias_term=self.affine_bias_matrix,
             ),
             Eigenvectors(
-                num_eig=num_eig,
-                which=which,
+                num_eig=self.num_eig,
+                which=self.which,
             ),
-            TransitionAmplitudeSum(
-                num_observables=num_secondaries,
-                output_size=output_size,
-                centered=centered,
-                Ds=Ds,
-                init_magnitude=init_magnitude,
-            ),
-        )
+        ]
+        if self.use_expectation_values:
+            self.modules.append(
+                ExpectationValueSum(
+                    num_observables=self.num_secondaries,
+                    output_size=self.output_size,
+                    centered=self.centered,
+                    Ds=self.Ds,
+                    init_magnitude=self.init_magnitude,
+                ),
+            )
+        else:
+            self.modules.append(
+                TransitionAmplitudeSum(
+                    num_observables=self.num_secondaries,
+                    output_size=self.output_size,
+                    centered=self.centered,
+                    Ds=self.Ds,
+                    init_magnitude=self.init_magnitude,
+                ),
+            )
 
-        if bias_term:
-            self.modules += (
+        if self.bias_term:
+            self.modules.append(
                 Bias(
-                    bias=b,
-                    init_magnitude=init_magnitude,
+                    init_magnitude=self.init_magnitude,
                     real=True,
                     scalar=False,
                     trainable=True,
                 ),
             )
 
-        super(AffineObservablePMM, self).__init__(*self.modules)
+        self.modules = tuple(self.modules)
 
-    def name(self) -> str:
-        multistr = super(AffineObservablePMM, self).name()
+        super().compile(rng, input_shape, verbose)
 
-        namestr = f"AffineObservablePMM as {multistr}"
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
+        if self.output_size is None:
+            raise ValueError(
+                "output_size must be specified to determine output shape."
+            )
 
-        return namestr
+        valid, _ = is_single_leaf(input_shape, is_leaf=is_shape_leaf)
+        if not valid:
+            raise ValueError(
+                "Input shape must be a PyTree with a single leaf."
+            )
+        return jax.tree.map(
+            lambda s: (self.output_size,), input_shape, is_leaf=is_shape_leaf
+        )
 
-    def get_hyperparameters(self) -> dict[str, Any]:
-        data = {
+    def get_hyperparameters(self) -> HyperParams:
+        return {
             "matrix_size": self.matrix_size,
             "num_eig": self.num_eig,
             "which": self.which,
@@ -265,14 +322,11 @@ class AffineObservablePMM(MultiModule):
             "output_size": self.output_size,
             "centered": self.centered,
             "bias_term": self.bias_term,
+            "use_expectation_values": self.use_expectation_values,
+            **super().get_hyperparameters(),
         }
 
-        return {
-            **data,
-            **super(AffineObservablePMM, self).get_hyperparameters(),
-        }
-
-    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparams: HyperParams) -> None:
         self.matrix_size = hyperparams["matrix_size"]
         self.num_eig = hyperparams["num_eig"]
         self.which = hyperparams["which"]
@@ -283,48 +337,5 @@ class AffineObservablePMM(MultiModule):
         self.num_secondaries = hyperparams["num_secondaries"]
         self.output_size = hyperparams["output_size"]
         self.centered = hyperparams["centered"]
-        self.parameter_counts = hyperparams["parameter_counts"]
-        self.state_counts = hyperparams["state_counts"]
-        self.input_shape = hyperparams["input_shape"]
-        self.output_shape = hyperparams["output_shape"]
-
-        self.modules = (
-            AffineHermitianMatrix(
-                matrix_size=self.matrix_size,
-                smoothing=self.smoothing,
-                Ms=self.Ms,
-                init_magnitude=self.init_magnitude,
-                bias_term=self.affine_bias_matrix,
-                flatten=False,
-            ),
-            Eigenvectors(
-                num_eig=self.num_eig,
-                which=self.which,
-            ),
-            TransitionAmplitudeSum(
-                num_observables=self.num_secondaries,
-                output_size=self.output_size,
-                centered=self.centered,
-                Ds=self.Ds,
-                init_magnitude=self.init_magnitude,
-            ),
-        )
-
-        if self.bias_term:
-            self.modules += (
-                Bias(
-                    bias=self.b,
-                    init_magnitude=self.init_magnitude,
-                    real=True,
-                    scalar=False,
-                    trainable=True,
-                ),
-            )
-
-    def serialize(self) -> dict[str, Any]:
-        # revert to BaseModule serialization
-        return BaseModule.serialize(self)
-
-    def deserialize(self, data: dict[str, Any]) -> None:
-        # revert to BaseModule deserialization
-        BaseModule.deserialize(self, data)
+        self.use_expectation_values = hyperparams["use_expectation_values"]
+        super().set_hyperparameters(hyperparams)

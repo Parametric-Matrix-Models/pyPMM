@@ -6,7 +6,7 @@ import jax
 import jax.numpy as np
 
 from ..sequentialmodel import SequentialModel
-from ..tree_util import is_shape_leaf
+from ..tree_util import is_shape_leaf, is_single_leaf
 from ..typing import (
     Any,
     DataShape,
@@ -134,16 +134,6 @@ class AffineEigenvaluePMM(SequentialModel):
         self.init_magnitude = init_magnitude
         self.bias_term = bias_term
 
-        # raise a warning if smoothing is used with magnitude 'which'
-        if smoothing not in (None, 0.0) and "m" in which.lower():
-            warnings.warn(
-                "Using smoothing with magnitude 'which' options may lead to "
-                "unexpected behavior, as the smoothing only guarantees that "
-                "eigenvalues near each other algebraically are smoothed, not "
-                "across the spectrum.",
-                UserWarning,
-            )
-
         self.modules: Tuple[BaseModule] | None = None
 
         super().__init__()
@@ -154,8 +144,22 @@ class AffineEigenvaluePMM(SequentialModel):
         input_shape: DataShape,
         verbose: bool = False,
     ) -> None:
+        valid, _ = is_single_leaf(input_shape, is_leaf=is_shape_leaf)
+        if not valid:
+            raise ValueError(
+                "Input shape must be a PyTree with a single leaf."
+            )
         if self.matrix_size is None:
             raise ValueError("matrix_size must be specified before compiling.")
+        # raise a warning if smoothing is used with magnitude 'which'
+        if self.smoothing not in (None, 0.0) and "m" in self.which.lower():
+            warnings.warn(
+                "Using smoothing with magnitude 'which' options may lead to "
+                "unexpected behavior, as the smoothing only guarantees that "
+                "eigenvalues near each other algebraically are smoothed, not "
+                "across the spectrum.",
+                UserWarning,
+            )
 
         # Create the AffineHermitianMatrix module
         affine_module = AffineHermitianMatrix(
@@ -179,6 +183,11 @@ class AffineEigenvaluePMM(SequentialModel):
         super().compile(rng, input_shape, verbose=verbose)
 
     def get_output_shape(self, input_shape: DataShape) -> DataShape:
+        valid, _ = is_single_leaf(input_shape, is_leaf=is_shape_leaf)
+        if not valid:
+            raise ValueError(
+                "Input shape must be a PyTree with a single leaf."
+            )
         return jax.tree.map(
             lambda s: (self.num_eig,), input_shape, is_leaf=is_shape_leaf
         )
@@ -201,8 +210,4 @@ class AffineEigenvaluePMM(SequentialModel):
         self.smoothing = hyperparams["smoothing"]
         self.init_magnitude = hyperparams["init_magnitude"]
         self.bias_term = hyperparams["bias_term"]
-        self.parameter_counts = hyperparams["parameter_counts"]
-        self.state_counts = hyperparams["state_counts"]
-        self.input_shape = hyperparams["input_shape"]
-        self.output_shape = hyperparams["output_shape"]
         super().set_hyperparameters(hyperparams)

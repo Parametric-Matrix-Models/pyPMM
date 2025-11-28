@@ -19,9 +19,9 @@ from ..typing import (
 from .basemodule import BaseModule
 
 
-class TransitionAmplitudeSum(BaseModule):
+class ExpectationValueSum(BaseModule):
     r"""
-    A module that computes the sum of transition amplitudes of trainable
+    A module that computes the sum of expectation values of trainable
     observables given an input of state vectors. The output can be centered by
     subtracting half the operator norm squared of each observable.
 
@@ -34,7 +34,7 @@ class TransitionAmplitudeSum(BaseModule):
 
     .. math::
 
-        z_k = \sum_{i,j=1}^r &\left( \sum_{m=1}^l |v_i^H D_{km} v_j|^2\\
+        z_k = \sum_{i=1}^r &\left( \sum_{m=1}^l v_i^H D_{km} v_i\\
                              &\quad - \frac{1}{2} ||D_{km}||^2_2 \right)
 
     for :math:`k=1, \ldots, q`. This is equivalent to
@@ -42,8 +42,8 @@ class TransitionAmplitudeSum(BaseModule):
     .. math::
 
         z_k &= \sum_{m=1}^l \left(
-                \sum_{i,j=1}^r \left( |v_i^H D_{km} v_j|^2 \right)\\
-                &\quad - \frac{r^2}{2} ||D_{km}||^2_2 \right)
+                \sum_{i=1}^r \left( v_i^H D_{km} v_j^2 \right)\\
+                &\quad - \frac{r}{2} ||D_{km}||^2_2 \right)
 
     where :math:`||\cdot||_2` is the operator 2-norm (largest singular value)
     so for Hermitian :math:`D`, :math:`||D||_2` is the largest absolute
@@ -59,18 +59,18 @@ class TransitionAmplitudeSum(BaseModule):
 
     .. warning::
         Even though the math shows that the centering term should be multiplied
-        by :math:`r^2`, in practice this doesn't work well and instead setting
+        by :math:`r`, in practice this doesn't work well and instead setting
         the centering term to :math:`\frac{1}{2} ||D_{km}||^2_2` works much
-        better. This non-:math:`r^2` scaling is used here.
+        better. This non-:math:`r` scaling is used here.
 
     See Also
     --------
 
-    ExpectationValueSum
-        A similar module that computes the sum of expectation values (instead
-        of transition amplitudes) of trainable observables.
+    TransitionAmplitudeSum
+        A similar module that computes the sum of transition amplitudes
+        (instead of expectation values) of trainable observables.
 
-    LowRankTransitionAmplitudeSum
+    LowRankExpectationValueSum
         A similar module that uses low-rank observables to reduce the number of
         trainable parameters.
 
@@ -145,7 +145,7 @@ class TransitionAmplitudeSum(BaseModule):
     @property
     def name(self) -> str:
         return (
-            f"TransitionAmplitudeSum(output_size={self.output_size},"
+            f"ExpectationValueSum(output_size={self.output_size},"
             f" num_observables={self.num_observables},"
             f" centered={self.centered})"
         )
@@ -168,11 +168,10 @@ class TransitionAmplitudeSum(BaseModule):
         # function for a single input, which will be vmapped over for the batch
         def _single(Ds: np.ndarray, V: np.ndarray) -> np.ndarray:
 
-            Z = np.einsum("ai,klab,bj->klij", V.conj(), Ds, V)
-            Z = np.sum(np.abs(Z) ** 2, axis=(1, 2, 3))
+            Z = np.einsum("ai,klab,bi->k", V.conj(), Ds, V).real
 
             if self.centered:
-                # TODO: this doesn't use the predicted r^2 scaling, which
+                # TODO: this doesn't use the predicted r scaling, which
                 # doesn't work well in practice, why is this?
                 norm_term = 0.5 * np.sum(
                     np.linalg.norm(Ds, axis=(2, 3), ord=2) ** 2, axis=1
