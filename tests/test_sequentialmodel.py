@@ -33,8 +33,6 @@ def test_sequentialmodel_trivial():
 
     model.append(pmm.modules.Bias(0.5, scalar=True))
 
-    print(input_data.shape[1:])
-
     model.compile(None, input_data.shape[1:])
 
     output = model(input_data)
@@ -113,11 +111,11 @@ def test_sequentialmodel_linear():
         if len(params[i]) == 3:
             # no activation
             _, W, b = params[i]
-            x = np.dot(x, W) + b[0]
+            x = x @ W.T + b
         else:
             # relu activation
             _, W, b, _ = params[i]
-            x = np.maximum(np.dot(x, W) + b[0], 0)
+            x = np.maximum(x @ W.T + b, 0)
     expected_output = x
     assert output.shape == expected_output.shape
     assert np.allclose(output, expected_output)

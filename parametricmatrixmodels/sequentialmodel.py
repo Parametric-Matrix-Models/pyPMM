@@ -131,10 +131,16 @@ class SequentialModel(Model):
 
         for i, module in enumerate(jax.tree.leaves(self.modules)):
             rng, modrng = jax.random.split(rng)
-            module.compile(modrng, input_shape)
+            try:
+                module.compile(modrng, input_shape)
+            except Exception as e:
+                raise RuntimeError(
+                    f"Error compiling module {i} ({module.name}) "
+                    f"with input shape {input_shape}: {e}"
+                ) from e
             input_shape = module.get_output_shape(input_shape)
             if verbose:
-                print(f"  {i}: {module.name()} output shape: {input_shape}")
+                print(f"  {i}: {module.name} output shape: {input_shape}")
 
         self.output_shape = input_shape
 

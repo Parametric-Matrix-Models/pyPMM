@@ -4,9 +4,9 @@ import jax.numpy as np
 import parametricmatrixmodels as pmm
 
 
-def test_matmul_array():
+def test_matmul():
     r"""
-    Test MatMul module with array inputs.
+    Test MatMul module
     """
 
     # testing with bare arrays
@@ -14,55 +14,81 @@ def test_matmul_array():
     dkey, mkey = jax.random.split(key)
     d = jax.random.normal(dkey, (10, 4, 5))
 
-    matmul = pmm.modules.MatMul(3)
+    matmul = pmm.modules.MatMul(output_shape=3, trainable=True)
 
     matmul.compile(mkey, d.shape[1:])  # remove batch dimension
     out, _ = matmul(d)
 
     matrix = matmul.get_params()
-    expected_out = np.einsum("bij,jk->bik", d, matrix)
+    expected_out = np.einsum("ij,bjk->bik", matrix, d)
 
-    assert out.shape == (10, 4, 3)
+    assert out.shape == (10, 3, 5)
     assert np.allclose(out, expected_out)
 
-
-def test_matmul_pytree():
-    r"""
-    Test MatMul module with pytree inputs.
-    """
-
-    # testing with pytrees
-    key = jax.random.key(0)
-    dkey0, dkey1, dkey2, mkey = jax.random.split(key, 4)
+    # pytree of arrays, multiplied in flattened order with a fixed matrix
+    batch_dim = 10
     d = (
-        jax.random.normal(dkey0, (10, 4, 5)),
-        (
-            jax.random.normal(dkey1, (10, 4, 6)),
-            jax.random.normal(dkey2, (10, 6)),
-        ),
+        [
+            jax.random.normal(dkey, (10, 4, 5)),
+        ],
+        jax.random.normal(dkey, (10, 5, 3)),
+        {
+            "a": jax.random.normal(dkey, (10, 3, 2)),
+        },
     )
+    M = jax.random.normal(mkey, (4 * 5 * 3, 4))
 
-    matmul = pmm.modules.MatMul((3, (1, 4)))
+    matmul = pmm.modules.MatMul(params=M, trainable=False)
     matmul.compile(
-        mkey, jax.tree.map(lambda x: x.shape[1:], d)
+        None, jax.tree.map(lambda x: x.shape[1:], d)
     )  # remove batch dimension
 
     out, _ = matmul(d)
-
-    matrices = matmul.get_params()
-
-    expected_out = (
-        np.einsum("bij,jk->bik", d[0], matrices[0]),
-        (
-            np.einsum("bij,jk->bik", d[1][0], matrices[1][0]),
-            np.einsum("bi,ik->bk", d[1][1], matrices[1][1]),
-        ),
+    expected_out = np.einsum(
+        "ij,bjk,bkl,blm->bim", M, d[0][0], d[1], d[2]["a"]
     )
 
-    assert jax.tree.structure(out) == jax.tree.structure(expected_out)
+    assert out.shape == (10, 4 * 5 * 3, 2)
+    assert np.allclose(out, expected_out)
 
-    def check_shape_and_close(o, e):
-        assert o.shape == e.shape
-        assert np.allclose(o, e)
+    # pytree of arrays, multiplied in an order different from the flattened
+    # one, with a fixed vector at the end
+    d = (
+        [
+            jax.random.normal(dkey, (10, 5, 3)),
+        ],
+        jax.random.normal(dkey, (10, 3, 2)),
+        {
+            "a": jax.random.normal(dkey, (10, 4, 5)),
+        },
+    )
 
-    jax.tree.map(check_shape_and_close, out, expected_out)
+    path_order = ["2.a", "0.0", "1", ".."]
+
+    M = jax.random.normal(mkey, (2,))
+
+    matmul = pmm.modules.MatMul(
+        params=M, path_order=path_order, trainable=False
+    )
+    matmul.compile(
+        None, jax.tree.map(lambda x: x.shape[1:], d)
+    )  # remove batch dimension
+
+    out, _ = matmul(d)
+    expected_out = np.einsum(
+        "bij,bjk,bkl,l->bi",
+        d[2]["a"],
+        d[0][0],
+        d[1],
+        M,
+    )
+
+    # trainable matrix with input bare vector
+    d = jax.random.normal(dkey, (batch_dim, 6))
+    matmul = pmm.modules.MatMul(output_shape=4, trainable=True)
+    matmul.compile(mkey, d.shape[1:])  # remove batch dimension
+    out, _ = matmul(d)
+    matrix = matmul.get_params()
+    expected_out = np.einsum("ij,bj->bi", matrix, d)
+    assert out.shape == (batch_dim, 4)
+    assert np.allclose(out, expected_out)

@@ -687,9 +687,9 @@ def scalar_mul(
 
 @jaxtyped(typechecker=beartype)
 def astype(
-    pytree: PyTree[Shaped[Array, " *d"], " T"],
+    pytree: PyTree[Shaped[Array, "..."], " T"],
     dtype: Any | str,
-) -> PyTree[Shaped[Array, " *d"], " T"]:
+) -> PyTree[Shaped[Array, "..."], " T"]:
     r"""
     Casts all leaves of a PyTree of arrays to a specified data type.
 
@@ -729,6 +729,100 @@ def is_shape_leaf(obj: Any, allow_none: bool = True) -> bool:
     if not isinstance(obj, tuple):
         return False
     return all(isinstance(dim, int) for dim in obj)
+
+
+@jaxtyped(typechecker=beartype)
+def has_uniform_leaf_shapes(
+    pytree: PyTree[Shaped[Array, "..."]],
+    axes: int | tuple[int, ...] | slice | None = None,
+) -> bool:
+    r"""
+    Checks if all leaves of a PyTree of arrays have the same shape along the
+    specified axes. Returns False if any leaves are not arrays.
+
+    Parameters
+    ----------
+    pytree
+        The PyTree to check.
+    axes
+        The axes along which to check for uniformity. Can be an integer, a
+        tuple of integers, a slice, or None. If None, all axes are checked.
+    Returns
+    -------
+        True if all leaves have the same shape along the specified axes, False
+        otherwise.
+    """
+
+    leaves = jax.tree.leaves(pytree)
+    if not leaves:
+        return True
+    # check if any are not arrays
+    if any(not isinstance(leaf, np.ndarray) for leaf in leaves):
+        return False
+    reference_shape = leaves[0].shape
+    for leaf in leaves[1:]:
+        shape = leaf.shape
+        if axes is None:
+            if shape != reference_shape:
+                return False
+        elif isinstance(axes, slice):
+            if shape[axes] != reference_shape[axes]:
+                return False
+        else:
+            if isinstance(axes, int):
+                axes = (axes,)
+            for axis in axes:
+                if shape[axis] != reference_shape[axis]:
+                    return False
+    return True
+
+
+@jaxtyped(typechecker=beartype)
+def leaf_shapes_equal(
+    pytree1: PyTree[Shaped[Array, "..."]],
+    pytree2: PyTree[Shaped[Array, "..."]],
+    axes: int | tuple[int, ...] | slice | None = None,
+) -> bool:
+    r"""
+    Checks if the shapes of the leaves of two PyTrees with array leaves match
+    along the specified axes. First checks that both PyTrees have uniform leaf
+    shapes along the specified axes.
+
+    Parameters
+    ----------
+    pytree1
+        The first PyTree to compare.
+    pytree2
+        The second PyTree to compare.
+    axes
+        The axes along which to compare the shapes of the leaves. Can be an
+        integer, a tuple of integers, a slice, or None. If None, all axes
+        are compared.
+    Returns
+    -------
+    True if the shapes of the leaves match along the specified axes, False
+    otherwise.
+    """
+    if not has_uniform_leaf_shapes(
+        pytree1, axes
+    ) or not has_uniform_leaf_shapes(pytree2, axes):
+        return False
+
+    leaves1 = jax.tree.leaves(pytree1)
+    leaves2 = jax.tree.leaves(pytree2)
+    shape1 = leaves1[0].shape
+    shape2 = leaves2[0].shape
+    if axes is None:
+        return shape1 == shape2
+    elif isinstance(axes, slice):
+        return shape1[axes] == shape2[axes]
+    else:
+        if isinstance(axes, int):
+            axes = (axes,)
+        for axis in axes:
+            if shape1[axis] != shape2[axis]:
+                return False
+    return True
 
 
 @jaxtyped(typechecker=beartype)

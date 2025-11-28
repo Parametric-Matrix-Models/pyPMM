@@ -16,6 +16,7 @@ from . import tree_util as pmm_tree_util
 from .model_util import ModelParams, ModelState
 from .tree_util import (
     batch_leaves,
+    leaf_shapes_equal,
     random_permute_leaves,
     shapes_equal,
 )
@@ -1316,7 +1317,7 @@ def train(
 
     # check sizes
     # this should've already been caught by jaxtyping, but just in case
-    if Y is not None and not shapes_equal(X, Y, axes=0):
+    if Y is not None and not leaf_shapes_equal(X, Y, axes=0):
         raise ValueError(
             "X and Y must have the same number of samples (first dimension)."
         )
@@ -1325,7 +1326,7 @@ def train(
     if (
         X_val is not None
         and Y_val is not None
-        and not shapes_equal(X_val, Y_val, axes=0)
+        and not leaf_shapes_equal(X_val, Y_val, axes=0)
     ):
         raise ValueError(
             "X_val and Y_val must have the same number of samples (first"

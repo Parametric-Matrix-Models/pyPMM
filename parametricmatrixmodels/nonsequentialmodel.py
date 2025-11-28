@@ -454,10 +454,16 @@ class NonSequentialModel(Model):
                     f"{module_input_shape}."
                 )
 
-            module.compile(
-                rng=module_rng,
-                input_shape=module_input_shape,
-            )
+            try:
+                module.compile(
+                    rng=module_rng,
+                    input_shape=module_input_shape,
+                )
+            except Exception as e:
+                raise RuntimeError(
+                    f"Error compiling module '{module_path}' ({module.name}) "
+                    f"with input shape {module_input_shape}: {e}"
+                ) from e
 
     def _get_module_input_dependencies(
         self,

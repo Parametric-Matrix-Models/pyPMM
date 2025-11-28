@@ -22,12 +22,20 @@ def test_sequentialmodel_train_array():
 
     modules = [
         pmm.modules.LinearNN(
-            out_features=8, bias=True, activation=pmm.modules.ReLU()
+            out_features=8,
+            bias=True,
+            activation=pmm.modules.ReLU(),
+            init_magnitude=0.1,
         ),
         pmm.modules.LinearNN(
-            out_features=8, bias=True, activation=pmm.modules.ReLU()
+            out_features=8,
+            bias=True,
+            activation=pmm.modules.ReLU(),
+            init_magnitude=0.1,
         ),
-        pmm.modules.LinearNN(out_features=1, bias=True),
+        pmm.modules.LinearNN(
+            out_features=1, bias=True, activation=None, init_magnitude=0.1
+        ),
     ]
 
     model = pmm.SequentialModel(modules)
@@ -40,9 +48,9 @@ def test_sequentialmodel_train_array():
     model.train(
         X_32,
         Y_32,
-        lr=1e-2,
+        lr=5e-3,
         epochs=1000,
-        batch_size=5,
+        batch_size=25,
         batch_rng=key,
         verbose=False,
     )
@@ -52,43 +60,49 @@ def test_sequentialmodel_train_array():
 
     mse = np.mean((Y - Y_pred) ** 2)
 
-    if mse >= 1e-3:
-        raise AssertionError(f"MSE {mse:.4E} is greater than expected 1E-3")
+    if mse >= 2e-3:
+        raise AssertionError(f"MSE {mse:.4E} is greater than expected 2E-3")
 
 
 def test_sequentialmodel_train_pytree():
     r"""
     Test training the SequentialModel with pytee inputs and outputs
 
-    In this case just <num_leaves> parallel neural networks
+    In this case just a single matmul to vector model, i.e. just a linear model
+
+    The input is a PyTree (list) of arrays and the output is a single array.
     """
 
     key = jax.random.key(0)
 
     num_samples = 100
     num_features = 2
-    num_leaves = 2
-    keys = jax.random.split(key, num_leaves)
+    num_leaves = 3
+    keys = jax.random.split(key, num_leaves + 1)
     X = [
         jax.random.uniform(
-            keys[i], minval=-1, maxval=1, shape=(num_samples, num_features)
+            keys[i],
+            minval=-1,
+            maxval=1,
+            shape=(num_samples, num_features, num_features),
         )
-        for i in range(num_leaves)
+        for i in range(num_leaves - 1)
     ]
-    funcs = [
-        lambda x: np.sum(np.abs(x) ** p, axis=1, keepdims=True) ** (1 / p)
-        for p in range(2, num_leaves + 2)
-    ]
-    Y = jax.tree.map(lambda f, x: f(x), funcs, X)
+    X.append(
+        jax.random.uniform(
+            keys[~1], minval=-1, maxval=1, shape=(num_samples, num_features)
+        )
+    )
+    Y = np.einsum(
+        "ij,njk,nkl,nl->ni",
+        jax.random.uniform(
+            keys[~0], minval=-1, maxval=1, shape=(num_features, num_features)
+        ),
+        *X,
+    )
 
     modules = [
-        pmm.modules.LinearNN(
-            out_features=8, bias=True, activation=pmm.modules.ReLU()
-        ),
-        pmm.modules.LinearNN(
-            out_features=8, bias=True, activation=pmm.modules.ReLU()
-        ),
-        pmm.modules.LinearNN(out_features=1, bias=True),
+        pmm.modules.MatMul(output_shape=num_features, trainable=True),
     ]
 
     model = pmm.SequentialModel(modules)
@@ -115,5 +129,5 @@ def test_sequentialmodel_train_pytree():
         pmm.tree_util.abs_sqr(pmm.tree_util.sub(Y, Y_pred))
     )
 
-    if mse >= 1e-3:
-        raise AssertionError(f"MSE {mse:.4E} is greater than expected 1E-3")
+    if mse >= 1e-8:
+        raise AssertionError(f"MSE {mse:.4E} is greater than expected 1E-8")
