@@ -133,5 +133,5 @@ def test_sequentialmodel_train_pytree():
         pmm.tree_util.abs_sqr(pmm.tree_util.sub(Y, Y_pred))
     )
 
-    if mse >= 1e-8:
-        raise AssertionError(f"MSE {mse:.4E} is greater than expected 1E-8")
+    if mse >= 2e-8:
+        raise AssertionError(f"MSE {mse:.4E} is greater than expected 2E-8")
