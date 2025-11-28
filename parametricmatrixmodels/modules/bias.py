@@ -208,24 +208,28 @@ class Bias(BaseModule):
             ):
                 if self.real:
                     self.bias = self.init_magnitude * jax.random.normal(
-                        rng, shape
+                        rng, shape, dtype=np.float32
                     )
                 else:
                     rkey, ikey = jax.random.split(rng)
                     self.bias = self.init_magnitude * (
-                        jax.random.normal(rkey, shape)
-                        + 1j * jax.random.normal(ikey, shape)
+                        jax.random.normal(rkey, shape, dtype=np.complex64)
+                        + 1j
+                        * jax.random.normal(ikey, shape, dtype=np.complex64)
                     )
             else:
 
                 def init_bias(s: Tuple[int, ...], k: Any) -> np.ndarray:
                     if self.real:
-                        return self.init_magnitude * jax.random.normal(k, s)
+                        return self.init_magnitude * jax.random.normal(
+                            k, s, dtype=np.float32
+                        )
                     else:
                         rkey, ikey = jax.random.split(k)
                         return self.init_magnitude * (
-                            jax.random.normal(rkey, s)
-                            + 1j * jax.random.normal(ikey, s)
+                            jax.random.normal(rkey, s, dtype=np.complex64)
+                            + 1j
+                            * jax.random.normal(ikey, s, dtype=np.complex64)
                         )
 
                 keys = jax.random.split(

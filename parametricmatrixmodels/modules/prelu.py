@@ -155,12 +155,14 @@ class PReLU(BaseModule):
         ) -> np.ndarray:
 
             if self.real:
-                return self.init_magnitude * jax.random.normal(key, shape)
+                return self.init_magnitude * jax.random.normal(
+                    key, shape, dtype=np.float32
+                )
             else:
                 rkey, ikey = jax.random.split(key)
                 return self.init_magnitude * (
-                    jax.random.normal(rkey, shape)
-                    + 1j * jax.random.normal(ikey, shape)
+                    jax.random.normal(rkey, shape, dtype=np.complex64)
+                    + 1j * jax.random.normal(ikey, shape, dtype=np.complex64)
                 )
 
         if self.single_parameter:

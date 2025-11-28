@@ -1,21 +1,28 @@
 from __future__ import annotations
 
 import warnings
-from typing import Any
 
+import jax
 import jax.numpy as np
 
+from ..sequentialmodel import SequentialModel
+from ..tree_util import is_shape_leaf
+from ..typing import (
+    Any,
+    DataShape,
+    HyperParams,
+    Tuple,
+)
 from .affinehermitianmatrix import AffineHermitianMatrix
 from .basemodule import BaseModule
 from .eigenvalues import Eigenvalues
-from .multimodule import MultiModule
 
 
-class AffineEigenvaluePMM(MultiModule):
+class AffineEigenvaluePMM(SequentialModel):
     r"""
     ``AffineEigenvaluePMM`` is a module that implements the affine eigenvalue
     Parametric Matrix Model (PMM) using two primitive modules combined in a
-    MultiModule: an AffineHermitianMatrix module followed by an Eigenvalues
+    SequentialModel: an AffineHermitianMatrix module followed by an Eigenvalues
     module.
 
     The Affine Eigenvalue PMM (AEPMM) is described in [1]_ and is summarized as
@@ -43,8 +50,8 @@ class AffineEigenvaluePMM(MultiModule):
         trainable Hermitian matrices :math:`M_i` and input features.
     Eigenvalues
         Module that computes the eigenvalues of a matrix.
-    MultiModule
-        Module that combines multiple modules in sequence.
+    SequentialModel
+        Module and Model that evaluates multiple modules in sequence.
 
     References
     ----------
@@ -137,46 +144,57 @@ class AffineEigenvaluePMM(MultiModule):
                 UserWarning,
             )
 
-        self.modules = (
-            AffineHermitianMatrix(
-                matrix_size=matrix_size,
-                smoothing=smoothing,
-                Ms=Ms,
-                init_magnitude=init_magnitude,
-                bias_term=bias_term,
-                flatten=False,
-            ),
-            Eigenvalues(
-                num_eig=num_eig,
-                which=which,
-            ),
+        self.modules: Tuple[BaseModule] | None = None
+
+        super().__init__()
+
+    def compile(
+        self,
+        rng: Any | int | None,
+        input_shape: DataShape,
+        verbose: bool = False,
+    ) -> None:
+        if self.matrix_size is None:
+            raise ValueError("matrix_size must be specified before compiling.")
+
+        # Create the AffineHermitianMatrix module
+        affine_module = AffineHermitianMatrix(
+            matrix_size=self.matrix_size,
+            smoothing=self.smoothing,
+            Ms=self.Ms,
+            init_magnitude=self.init_magnitude,
+            bias_term=self.bias_term,
         )
 
-        super(AffineEigenvaluePMM, self).__init__(*self.modules)
+        # Create the Eigenvalues module
+        eigen_module = Eigenvalues(
+            num_eig=self.num_eig,
+            which=self.which,
+        )
 
-    def name(self) -> str:
-        multistr = super(AffineEigenvaluePMM, self).name()
+        # Set the modules in the SequentialModel
+        self.modules = (affine_module, eigen_module)
 
-        namestr = f"AffineEigenvaluePMM as {multistr}"
+        # Call the parent compile method
+        super().compile(rng, input_shape, verbose=verbose)
 
-        return namestr
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
+        return jax.tree.map(
+            lambda s: (self.num_eig,), input_shape, is_leaf=is_shape_leaf
+        )
 
-    def get_hyperparameters(self) -> dict[str, Any]:
-        data = {
+    def get_hyperparameters(self) -> HyperParams:
+        return {
             "matrix_size": self.matrix_size,
             "num_eig": self.num_eig,
             "which": self.which,
             "smoothing": self.smoothing,
             "init_magnitude": self.init_magnitude,
             "bias_term": self.bias_term,
+            **super().get_hyperparameters(),
         }
 
-        return {
-            **data,
-            **super(AffineEigenvaluePMM, self).get_hyperparameters(),
-        }
-
-    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparams: HyperParams) -> None:
         self.matrix_size = hyperparams["matrix_size"]
         self.num_eig = hyperparams["num_eig"]
         self.which = hyperparams["which"]
@@ -187,26 +205,4 @@ class AffineEigenvaluePMM(MultiModule):
         self.state_counts = hyperparams["state_counts"]
         self.input_shape = hyperparams["input_shape"]
         self.output_shape = hyperparams["output_shape"]
-
-        self.modules = (
-            AffineHermitianMatrix(
-                matrix_size=self.matrix_size,
-                smoothing=self.smoothing,
-                Ms=self.Ms,
-                init_magnitude=self.init_magnitude,
-                bias_term=self.bias_term,
-                flatten=False,
-            ),
-            Eigenvalues(
-                num_eig=self.num_eig,
-                which=self.which,
-            ),
-        )
-
-    def serialize(self) -> dict[str, Any]:
-        # revert to BaseModule serialization
-        return BaseModule.serialize(self)
-
-    def deserialize(self, data: dict[str, Any]) -> None:
-        # revert to BaseModule deserialization
-        BaseModule.deserialize(self, data)
+        super().set_hyperparameters(hyperparams)

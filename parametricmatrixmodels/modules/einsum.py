@@ -666,6 +666,11 @@ class Einsum(BaseModule):
                     is_leaf=lambda x: isinstance(x, np.ndarray),
                 )
             )
+
+            # convert all arrays to common dtype
+            dtype = np.result_type(*[a.dtype for a in arrays])
+            arrays = [a.astype(dtype) for a in arrays]
+
             output = np.einsum(concrete_einsum_str, *arrays)
 
             return output, state
@@ -717,14 +722,14 @@ class Einsum(BaseModule):
                 shape = tuple(dim_map[char] for char in s)
                 if self.real:
                     param_array = self.init_magnitude * jax.random.normal(
-                        keys[i], shape
+                        keys[i], shape, dtype=np.float32
                     )
                 else:
                     real_part = self.init_magnitude * jax.random.normal(
-                        rkeys[i], shape
+                        rkeys[i], shape, dtype=np.complex64
                     )
                     imag_part = self.init_magnitude * jax.random.normal(
-                        ikeys[i], shape
+                        ikeys[i], shape, dtype=np.complex64
                     )
                     param_array = real_part + 1j * imag_part
 

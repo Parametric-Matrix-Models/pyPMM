@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import random
-
 import jax
 
 from ..sequentialmodel import SequentialModel
@@ -11,6 +9,7 @@ from ..tree_util import is_shape_leaf
 from ..typing import (
     Any,
     DataShape,
+    HyperParams,
     List,
 )
 from .basemodule import BaseModule
@@ -57,6 +56,7 @@ class LinearNN(SequentialModel):
         self.activation = activation
         self.init_magnitude = init_magnitude
         self.real = real
+        super().__init__()
 
     def compile(
         self,
@@ -90,11 +90,6 @@ class LinearNN(SequentialModel):
             raise ValueError(
                 "LinearNN only supports input shapes with a single leaf array."
             )
-
-        if rng is None:
-            rng = random.randint(0, 2**32 - 1)
-        if isinstance(rng, int):
-            rng = jax.random.key(rng)
 
         modules: List[BaseModule] = [
             Flatten(),
@@ -144,3 +139,41 @@ class LinearNN(SequentialModel):
             )
 
         return (self.out_features,)
+
+    def get_hyperparameters(self) -> HyperParams:
+        r"""
+        Get the hyperparameters of the LinearNN module.
+
+        Returns
+        -------
+        HyperParams
+            A dictionary containing the hyperparameters of the module.
+        """
+
+        return {
+            "out_features": self.out_features,
+            "bias": self.bias,
+            "activation": self.activation,
+            "init_magnitude": self.init_magnitude,
+            "real": self.real,
+            **super().get_hyperparameters(),
+        }
+
+    def set_hyperparameters(self, hyperparams: HyperParams) -> None:
+        r"""
+        Set the hyperparameters of the LinearNN module.
+
+        Parameters
+        ----------
+        hyperparams
+            A dictionary containing the hyperparameters to set.
+        """
+
+        self.out_features = hyperparams.get("out_features", self.out_features)
+        self.bias = hyperparams.get("bias", self.bias)
+        self.activation = hyperparams.get("activation", self.activation)
+        self.init_magnitude = hyperparams.get(
+            "init_magnitude", self.init_magnitude
+        )
+        self.real = hyperparams.get("real", self.real)
+        super().set_hyperparameters(hyperparams)

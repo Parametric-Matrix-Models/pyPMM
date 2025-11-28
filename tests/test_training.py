@@ -11,10 +11,11 @@ def test_sequentialmodel_train_array():
     Test training the SequentialModel with array inputs and outputs
     """
 
-    key = jax.random.key(0)
+    key = jax.random.key(2)
 
     num_samples = 100
     num_features = 2
+    init_magnitude = 0.1
     X = np.linspace(-1, 1, num_samples * num_features).reshape(
         num_samples, num_features
     )
@@ -25,16 +26,19 @@ def test_sequentialmodel_train_array():
             out_features=8,
             bias=True,
             activation=pmm.modules.ReLU(),
-            init_magnitude=0.1,
+            init_magnitude=init_magnitude,
         ),
         pmm.modules.LinearNN(
             out_features=8,
             bias=True,
             activation=pmm.modules.ReLU(),
-            init_magnitude=0.1,
+            init_magnitude=init_magnitude,
         ),
         pmm.modules.LinearNN(
-            out_features=1, bias=True, activation=None, init_magnitude=0.1
+            out_features=1,
+            bias=True,
+            activation=None,
+            init_magnitude=init_magnitude,
         ),
     ]
 
@@ -48,9 +52,9 @@ def test_sequentialmodel_train_array():
     model.train(
         X_32,
         Y_32,
-        lr=5e-3,
+        lr=1e-2,
         epochs=1000,
-        batch_size=25,
+        batch_size=5,
         batch_rng=key,
         verbose=False,
     )
@@ -60,8 +64,8 @@ def test_sequentialmodel_train_array():
 
     mse = np.mean((Y - Y_pred) ** 2)
 
-    if mse >= 2e-3:
-        raise AssertionError(f"MSE {mse:.4E} is greater than expected 2E-3")
+    if mse >= 1e-3:
+        raise AssertionError(f"MSE {mse:.4E} is greater than expected 1E-3")
 
 
 def test_sequentialmodel_train_pytree():

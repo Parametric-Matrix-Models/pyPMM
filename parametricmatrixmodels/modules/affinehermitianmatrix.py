@@ -1,10 +1,21 @@
 from __future__ import annotations
 
-from typing import Any, Callable
-
 import jax
 import jax.numpy as np
+from beartype import beartype
+from jaxtyping import Array, Inexact, jaxtyped
 
+from ..tree_util import is_shape_leaf
+from ..typing import (
+    Any,
+    Data,
+    DataShape,
+    HyperParams,
+    ModuleCallable,
+    Params,
+    State,
+    Tuple,
+)
 from ._smoothing import exact_smoothing_matrix
 from .basemodule import BaseModule
 
@@ -28,6 +39,9 @@ class AffineHermitianMatrix(BaseModule):
           &= i\\sum_{\\substack{i\\\\i\\neq j}}
              \\left[M_i, \\sum_k^j M_k\\right]
 
+    Only accepts PyTree data that has a single leaf array that is 1D, excluding
+    the batch dimension. The PyTree structure is preserved in the output.
+
     See Also
     --------
     AffineEigenvaluePMM
@@ -46,12 +60,11 @@ class AffineHermitianMatrix(BaseModule):
 
     def __init__(
         self,
-        matrix_size: int = None,
-        smoothing: float = None,
-        Ms: np.ndarray = None,
+        matrix_size: int | None = None,
+        smoothing: float | None = None,
+        Ms: Inexact[Array, "* n n"] | None = None,
         init_magnitude: float = 1e-2,
         bias_term: bool = True,
-        flatten: bool = False,
     ) -> None:
         """
         Create an ``AffineHermitianMatrix`` module.
@@ -72,13 +85,8 @@ class AffineHermitianMatrix(BaseModule):
                 Optional initial magnitude of the random matrices, used when
                 initializing the module. Default is ``1e-2``.
             bias_term
-                If ``True``, include the bias term :math:`M_0` in the affine
-                matrix. Default is ``True``.
-            flatten
-                If ``True``, the *output* will be flattened to a 1D array.
-                Useful when combining with ``SubsetModule`` or other modules in
-                order to avoid ragged arrays. Default is ``False``.
-
+                If ``True``, include the bias term :math:`M_0` in the equation
+                for :math:`M(x)`. Default is ``True``.
         """
 
         # input validation
@@ -105,14 +113,13 @@ class AffineHermitianMatrix(BaseModule):
         self.bias_term = bias_term
         self.Ms = Ms  # matrices M0, M1, ..., Mp
         self.init_magnitude = init_magnitude
-        self.flatten = flatten
 
+    @property
     def name(self) -> str:
         return (
             f"AffineHermitianMatrix({self.matrix_size}x{self.matrix_size},"
-            f" smoothing={self.smoothing}"
-            f"{'' if self.bias_term else ', no bias'}"
-            f"{', FLATTENED' if self.flatten else ''})"
+            f"{'' if self.smoothing == 0.0 else f' smooth={self.smoothing}'}"
+            f"{'' if self.bias_term else ', no bias'})"
         )
 
     def is_ready(self) -> bool:
@@ -129,39 +136,88 @@ class AffineHermitianMatrix(BaseModule):
 
         return self.Ms.size
 
-    def _get_callable(self) -> Callable:
-        def affine_hermitian_matrix(
-            params: tuple[np.ndarray, ...],
-            input_NF: np.ndarray,
-            training: bool,
-            state: tuple[np.ndarray, ...],
-            rng: Any,
-        ) -> tuple[np.ndarray, tuple[np.ndarray, ...]]:
+    def _get_callable(self) -> ModuleCallable:
 
-            Ms = params[0]
+        if self.bias_term:
+
+            @jaxtyped(typechecker=beartype)
+            def make_affine_hermitian_matrix(
+                Ms: Inexact[Array, "p n n"],
+                features: Inexact[Array, "b p-1"],
+            ) -> Inexact[Array, "b n n"]:
+
+                # convert to common dtype, this should be traced out
+                dtype = np.result_type(Ms.dtype, features.dtype)
+                Ms = Ms.astype(dtype)
+                features = features.astype(dtype)
+
+                M = Ms[0][None, :, :] + np.einsum(
+                    "ni,ijk->njk", features, Ms[1:]
+                )
+
+                if self.smoothing != 0.0:
+                    M += (
+                        self.smoothing * exact_smoothing_matrix(Ms)[None, :, :]
+                    )
+                return M
+
+        else:
+
+            @jaxtyped(typechecker=beartype)
+            def make_affine_hermitian_matrix(
+                Ms: Inexact[Array, "p n n"],
+                features: Inexact[Array, "b p"],
+            ) -> Inexact[Array, "b n n"]:
+                # convert to common dtype, this should be traced out
+                dtype = np.result_type(Ms.dtype, features.dtype)
+                Ms = Ms.astype(dtype)
+                features = features.astype(dtype)
+
+                M = np.einsum("ni,ijk->njk", features, Ms)
+
+                if self.smoothing != 0.0:
+                    M += (
+                        self.smoothing * exact_smoothing_matrix(Ms)[None, :, :]
+                    )
+                return M
+
+        @jaxtyped(typechecker=beartype)
+        def affine_hermitian_matrix(
+            params: Params,
+            data: Data,
+            training: bool,
+            state: State,
+            rng: Any,
+        ) -> Tuple[Data, State]:
+
+            Ms = params
 
             # enforce Hermitian matrices
             Ms = (Ms + Ms.conj().transpose((0, 2, 1))) / 2.0
 
-            if self.bias_term:
-                M = Ms[0][None, :, :] + np.einsum(
-                    "ni,ijk->njk", input_NF.astype(Ms.dtype), Ms[1:]
-                )
-            else:
-                M = np.einsum("ni,ijk->njk", input_NF.astype(Ms.dtype), Ms)
+            # tree map over the data to preserve the PyTree structure
 
-            if self.smoothing != 0.0:
-                M += self.smoothing * exact_smoothing_matrix(Ms)[None, :, :]
+            # compile will have validated that there is only one leaf that is
+            # a 1D array, excluding the batch dimension
+            M = jax.tree.map(
+                lambda x: make_affine_hermitian_matrix(Ms, x),
+                data,
+            )
 
-            if self.flatten:
-                # preserve batch dimension
-                return (M.reshape(M.shape[0], -1), state)
-            else:
-                return (M, state)
+            return (M, state)
 
         return affine_hermitian_matrix
 
-    def compile(self, rng: Any, input_shape: tuple[int, ...]) -> None:
+    def compile(self, rng: Any, input_shape: DataShape) -> None:
+
+        leaves = jax.tree.leaves(input_shape, is_leaf=is_shape_leaf)
+        # input shape must be a PyTree with a single leaf that is 1D
+        if len(leaves) != 1:
+            raise ValueError(
+                "Input shape must be a PyTree with a single leaf array, got "
+                f"{len(leaves)} leaves: {input_shape}"
+            )
+        input_shape = leaves[0]
         # input shape must be 1D
         if len(input_shape) != 1:
             raise ValueError(
@@ -199,43 +255,49 @@ class AffineHermitianMatrix(BaseModule):
         # ensure the matrices are Hermitian
         self.Ms = (self.Ms + self.Ms.conj().transpose((0, 2, 1))) / 2.0
 
-    def get_output_shape(
-        self, input_shape: tuple[int, ...]
-    ) -> tuple[int, ...]:
-        if self.flatten:
-            return (self.matrix_size**2,)
-        else:
-            return (self.matrix_size, self.matrix_size)
+    def get_output_shape(self, input_shape: DataShape) -> DataShape:
+        # return (n,n) with the same PyTree structure as input_shape, so long
+        # as the input shape is valid
+        leaves = jax.tree.leaves(input_shape, is_leaf=is_shape_leaf)
+        if len(leaves) != 1:
+            raise ValueError(
+                "Input shape must be a PyTree with a single leaf array, got "
+                f"{len(leaves)} leaves: {input_shape}"
+            )
+        input_shape = leaves[0]
+        if len(input_shape) != 1:
+            raise ValueError(
+                f"Input shape must be 1D, got {len(input_shape)}D shape: "
+                f"{input_shape}"
+            )
+        return jax.tree.map(
+            lambda x: (self.matrix_size, self.matrix_size), input_shape
+        )
 
-    def get_hyperparameters(self) -> dict[str, Any]:
+    def get_hyperparameters(self) -> HyperParams:
         return {
             "matrix_size": self.matrix_size,
             "smoothing": self.smoothing,
             "init_magnitude": self.init_magnitude,
-            "flatten": self.flatten,
             "bias_term": self.bias_term,
         }
 
-    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
+    def set_hyperparameters(self, hyperparams: HyperParams) -> None:
         if self.Ms is not None:
             raise ValueError(
                 "Cannot set hyperparameters after the module has parameters"
             )
 
-        super(AffineHermitianMatrix, self).set_hyperparameters(hyperparams)
+        super().set_hyperparameters(hyperparams)
 
-    def get_params(self) -> tuple[np.ndarray, ...]:
-        return (self.Ms,)
+    def get_params(self) -> Params:
+        return self.Ms
 
-    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
-        if not isinstance(params, tuple) or not all(
-            isinstance(p, np.ndarray) for p in params
-        ):
-            raise ValueError("params must be a tuple of numpy arrays")
-        if len(params) != 1:
-            raise ValueError(f"Expected 1 parameter arrays, got {len(params)}")
+    def set_params(self, params: Params) -> None:
+        if not isinstance(params, np.ndarray):
+            raise ValueError("Params must be a numpy array")
 
-        Ms = params[0]
+        Ms = params
 
         expected_shape = (
             Ms.shape[0] if self.Ms is None else self.Ms.shape[0],

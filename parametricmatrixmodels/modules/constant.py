@@ -167,13 +167,14 @@ class Constant(BaseModule):
                 shape, real = sr
                 if real:
                     return self.init_magnitude * jax.random.normal(
-                        cur_key, shape
+                        cur_key, shape, dtype=np.float32
                     )
                 else:
                     rekey, imkey = jax.random.split(cur_key)
                     return self.init_magnitude * (
-                        jax.random.normal(rekey, shape)
-                        + 1j * jax.random.normal(imkey, shape)
+                        jax.random.normal(rekey, shape, dtype=np.complex64)
+                        + 1j
+                        * jax.random.normal(imkey, shape, dtype=np.complex64)
                     )
 
             keys = jax.random.split(

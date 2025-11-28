@@ -4,6 +4,8 @@ import pytest
 
 import parametricmatrixmodels as pmm
 
+jax.config.update("jax_enable_x64", True)
+
 
 def _string_check(s: str, expected: str) -> bool:
     assert s == expected, f"Expected {expected}, but got {s}"
@@ -217,6 +219,13 @@ def test_einsum():
     out_im, _ = einsum_im(d)
 
     params = einsum_ex.get_params()
+
+    # get common dtype
+    dtypes = [p.dtype for p in params]
+    dtypes += [v.dtype for v in jax.tree.leaves(d)]
+    dtype = np.result_type(*dtypes)
+    params = [p.astype(dtype) for p in params]
+    d = jax.tree.map(lambda x: x.astype(dtype), d)
 
     expected_out = np.einsum(
         "ij,jk,dab,dbc,dc->daik", *params, d["x"], d["y"][0], d["y"][1]

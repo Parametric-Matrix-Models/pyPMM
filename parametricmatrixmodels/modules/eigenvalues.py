@@ -12,6 +12,7 @@ from ..typing import (
     ArrayData,
     Data,
     DataShape,
+    HyperParams,
     ModuleCallable,
     Params,
     State,
@@ -154,17 +155,17 @@ class Eigenvalues(BaseModule):
             is_leaf=is_shape_leaf,
         )
 
-    def get_hyperparameters(self) -> dict[str, Any]:
+    def get_hyperparameters(self) -> HyperParams:
         return {
             "num_eig": self.num_eig,
             "which": self.which,
         }
 
-    def set_hyperparameters(self, hyperparams: dict[str, Any]) -> None:
-        super(Eigenvalues, self).set_hyperparameters(hyperparams)
+    def set_hyperparameters(self, hyperparams: HyperParams) -> None:
+        super().set_hyperparameters(hyperparams)
 
-    def get_params(self) -> tuple[np.ndarray, ...]:
+    def get_params(self) -> Params:
         return ()
 
-    def set_params(self, params: tuple[np.ndarray, ...]) -> None:
+    def set_params(self, params: Params) -> None:
         return
