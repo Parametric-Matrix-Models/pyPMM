@@ -8,6 +8,7 @@ from .affinehermitianmatrix import AffineHermitianMatrix
 from .affineobservablepmm import AffineObservablePMM
 from .bias import Bias
 from .comment import Comment
+from .concatenateleaves import ConcatenateLeaves
 from .constant import Constant
 from .eigensystem import Eigensystem
 from .eigenvalues import Eigenvalues
@@ -50,6 +51,7 @@ __all__ = [  # noqa: F405
     "AffineObservablePMM",
     "BaseModule",
     "Comment",
+    "ConcatenateLeaves",
     "Constant",
     "Eigenvalues",
     "Eigenvectors",

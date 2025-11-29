@@ -247,51 +247,54 @@ class AffineObservablePMM(SequentialModel):
                 UserWarning,
             )
 
-        self.modules = [
-            AffineHermitianMatrix(
-                matrix_size=self.matrix_size,
-                smoothing=self.smoothing,
-                Ms=self.Ms,
-                init_magnitude=self.init_magnitude,
-                bias_term=self.affine_bias_matrix,
-            ),
-            Eigenvectors(
-                num_eig=self.num_eig,
-                which=self.which,
-            ),
-        ]
-        if self.use_expectation_values:
-            self.modules.append(
-                ExpectationValueSum(
-                    num_observables=self.num_secondaries,
-                    output_size=self.output_size,
-                    centered=self.centered,
-                    Ds=self.Ds,
-                    init_magnitude=self.init_magnitude,
-                ),
-            )
-        else:
-            self.modules.append(
-                TransitionAmplitudeSum(
-                    num_observables=self.num_secondaries,
-                    output_size=self.output_size,
-                    centered=self.centered,
-                    Ds=self.Ds,
-                    init_magnitude=self.init_magnitude,
-                ),
-            )
+        # don't override existing modules if input shape hasn't changed
+        if input_shape != self.input_shape or self.modules is None:
 
-        if self.bias_term:
-            self.modules.append(
-                Bias(
+            self.modules = [
+                AffineHermitianMatrix(
+                    matrix_size=self.matrix_size,
+                    smoothing=self.smoothing,
+                    Ms=self.Ms,
                     init_magnitude=self.init_magnitude,
-                    real=True,
-                    scalar=False,
-                    trainable=True,
+                    bias_term=self.affine_bias_matrix,
                 ),
-            )
+                Eigenvectors(
+                    num_eig=self.num_eig,
+                    which=self.which,
+                ),
+            ]
+            if self.use_expectation_values:
+                self.modules.append(
+                    ExpectationValueSum(
+                        num_observables=self.num_secondaries,
+                        output_size=self.output_size,
+                        centered=self.centered,
+                        Ds=self.Ds,
+                        init_magnitude=self.init_magnitude,
+                    ),
+                )
+            else:
+                self.modules.append(
+                    TransitionAmplitudeSum(
+                        num_observables=self.num_secondaries,
+                        output_size=self.output_size,
+                        centered=self.centered,
+                        Ds=self.Ds,
+                        init_magnitude=self.init_magnitude,
+                    ),
+                )
 
-        self.modules = tuple(self.modules)
+            if self.bias_term:
+                self.modules.append(
+                    Bias(
+                        init_magnitude=self.init_magnitude,
+                        real=True,
+                        scalar=False,
+                        trainable=True,
+                    ),
+                )
+
+            self.modules = tuple(self.modules)
 
         super().compile(rng, input_shape, verbose)
 

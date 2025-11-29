@@ -58,7 +58,8 @@ class Constant(BaseModule):
         real
             Whether the constant is real-valued if it is trainable and not
             provided. If ``None``, the type is inferred from the ``constant``
-            parameter if provided. Must be set if ``constant`` is ``None``.
+            parameter if provided. If no ``constant`` is provided, the default
+            is ``True``.
         name
             Custom name for this instance of the module.
         """
@@ -71,6 +72,9 @@ class Constant(BaseModule):
                 "If 'constant' is None and 'trainable' is True, "
                 "'shape' must be provided."
             )
+
+        if constant is None and real is None and trainable:
+            real = jax.tree.map(lambda _: True, shape)
 
         if constant is not None:
             if shape is not None:
@@ -162,6 +166,9 @@ class Constant(BaseModule):
                     "'real' must be set if 'constant' is None "
                     "and 'trainable' is True."
                 )
+
+            if isinstance(self.real, bool):
+                self.real = jax.tree.map(lambda _: self.real, self.shape)
 
             def init_constant(cur_key, sr):
                 shape, real = sr

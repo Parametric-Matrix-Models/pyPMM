@@ -23,7 +23,7 @@ class Flatten(Reshape):
     def name(self) -> str:
         return "Flatten"
 
-    def compile(self, key: Any, input_shape: DataShape) -> None:
+    def compile(self, rng: Any, input_shape: DataShape) -> None:
         try:
             len(input_shape)
         except TypeError:

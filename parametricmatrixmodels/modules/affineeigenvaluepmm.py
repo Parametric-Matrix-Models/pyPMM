@@ -161,23 +161,24 @@ class AffineEigenvaluePMM(SequentialModel):
                 UserWarning,
             )
 
-        # Create the AffineHermitianMatrix module
-        affine_module = AffineHermitianMatrix(
-            matrix_size=self.matrix_size,
-            smoothing=self.smoothing,
-            Ms=self.Ms,
-            init_magnitude=self.init_magnitude,
-            bias_term=self.bias_term,
-        )
+        if self.input_shape != input_shape or self.modules is None:
+            # Create the AffineHermitianMatrix module
+            affine_module = AffineHermitianMatrix(
+                matrix_size=self.matrix_size,
+                smoothing=self.smoothing,
+                Ms=self.Ms,
+                init_magnitude=self.init_magnitude,
+                bias_term=self.bias_term,
+            )
 
-        # Create the Eigenvalues module
-        eigen_module = Eigenvalues(
-            num_eig=self.num_eig,
-            which=self.which,
-        )
+            # Create the Eigenvalues module
+            eigen_module = Eigenvalues(
+                num_eig=self.num_eig,
+                which=self.which,
+            )
 
-        # Set the modules in the SequentialModel
-        self.modules = (affine_module, eigen_module)
+            # Set the modules in the SequentialModel
+            self.modules = (affine_module, eigen_module)
 
         # Call the parent compile method
         super().compile(rng, input_shape, verbose=verbose)

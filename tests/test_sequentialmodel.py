@@ -119,3 +119,39 @@ def test_sequentialmodel_linear():
     expected_output = x
     assert output.shape == expected_output.shape
     assert np.allclose(output, expected_output)
+
+
+def test_sequential_save_load(tmp_path):
+    r"""
+    Test saving and loading a SequentialModel.
+    """
+
+    key = jax.random.key(0)
+
+    batch_dim = 10
+    input_data = jax.random.normal(key, (batch_dim, 4))
+
+    modules = [
+        pmm.modules.LinearNN(
+            out_features=8, bias=True, activation=pmm.modules.ReLU()
+        ),
+        pmm.modules.LinearNN(
+            out_features=8, bias=True, activation=pmm.modules.ReLU()
+        ),
+        pmm.modules.LinearNN(out_features=1, bias=True),
+    ]
+
+    model = pmm.SequentialModel(modules)
+
+    model.compile(key, input_data.shape[1:])
+    output = model(input_data)
+
+    save_path = tmp_path / "sequential_model.npz"
+    model.save(save_path)
+
+    loaded_model = pmm.SequentialModel.from_file(save_path)
+
+    loaded_model.compile(None, input_data.shape[1:])
+    loaded_output = loaded_model(input_data)
+
+    assert np.allclose(output, loaded_output)

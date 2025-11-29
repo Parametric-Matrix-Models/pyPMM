@@ -61,8 +61,5 @@ class Comment(BaseModule):
     def set_params(self, params: Params) -> None:
         pass
 
-    def get_state(self) -> State:
-        return ()
-
     def set_state(self, state: State) -> None:
         pass

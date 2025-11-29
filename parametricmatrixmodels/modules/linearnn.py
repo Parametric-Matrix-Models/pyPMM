@@ -91,30 +91,32 @@ class LinearNN(SequentialModel):
                 "LinearNN only supports input shapes with a single leaf array."
             )
 
-        modules: List[BaseModule] = [
-            Flatten(),
-            MatMul(
-                output_shape=self.out_features,
-                trainable=True,
-                init_magnitude=self.init_magnitude,
-                real=self.real,
-            ),
-        ]
-
-        if self.bias:
-            modules.append(
-                Bias(
+        if input_shape != self.input_shape or self.modules is None:
+            # don't overwrite modules if input shape hasn't changed
+            modules: List[BaseModule] = [
+                Flatten(),
+                MatMul(
+                    output_shape=self.out_features,
+                    trainable=True,
                     init_magnitude=self.init_magnitude,
                     real=self.real,
-                    scalar=False,
-                    trainable=True,
+                ),
+            ]
+
+            if self.bias:
+                modules.append(
+                    Bias(
+                        init_magnitude=self.init_magnitude,
+                        real=self.real,
+                        scalar=False,
+                        trainable=True,
+                    )
                 )
-            )
 
-        if self.activation is not None:
-            modules.append(self.activation)
+            if self.activation is not None:
+                modules.append(self.activation)
 
-        self.modules = modules
+            self.modules = modules
 
         super().compile(rng, input_shape, verbose)
 

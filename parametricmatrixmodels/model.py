@@ -4,6 +4,8 @@ import random
 import sys
 import warnings
 from abc import abstractmethod
+from pathlib import Path
+from typing import IO
 
 import jax
 import jax.numpy as np
@@ -254,11 +256,6 @@ class Model(BaseModule):
             as the parameters accepted by this method.
         """
 
-        if not self.is_ready():
-            raise RuntimeError(
-                f"{self.name} is not ready. Call compile() first."
-            )
-
         # this will fail if the structure of self.modules isn't a prefix of the
         # structure of params
         try:
@@ -296,11 +293,6 @@ class Model(BaseModule):
             of PyTrees of numpy arrays.
         """
 
-        if not self.is_ready():
-            raise RuntimeError(
-                f"{self.name} is not ready. Call compile() first."
-            )
-
         return jax.tree.map(lambda m: m.get_state(), self.modules)
 
     def set_state(self, state: ModelState) -> None:
@@ -323,20 +315,17 @@ class Model(BaseModule):
         get_state : Get the state of the model, in the same structure as
             the state accepted by this method.
         """
-        if not self.is_ready():
-            raise RuntimeError(
-                f"{self.name} is not ready. Call compile() first."
-            )
+
+        if state is None:
+            return
 
         # this will fail if the structure of self.modules isn't a prefix of the
         # structure of state
         try:
             jax.tree.map(lambda m, s: m.set_state(s), self.modules, state)
-        except ValueError as e:
+        except Exception as e:
             raise ValueError(
-                "Structure of state does not match structure of modules. "
-                "The structure of the modules must be a prefix of the "
-                "structure of the state."
+                "Unable to set model state, see inner exception for details."
             ) from e
 
     def get_rng(self) -> Any:
@@ -1045,8 +1034,13 @@ class Model(BaseModule):
             hyperparams : Dict[str, Any]
                 Dictionary containing the hyperparameters of the model.
         """
+        # reset input_shape and output_shape to force re-compilation
+        self.input_shape = None
+        self.output_shape = None
+
         self.modules = hyperparams["modules"]
         self.set_rng(hyperparams["rng"])
+        super().set_hyperparameters(hyperparams)
 
     def serialize(self) -> Dict[str, Any]:
         """
@@ -1065,7 +1059,7 @@ class Model(BaseModule):
             lambda m: m.__class__.__name__, self.modules
         )
         module_modules = jax.tree.map(lambda m: m.__module__, self.modules)
-        module_names = jax.tree.map(lambda m: m.name(), self.modules)
+        module_names = jax.tree.map(lambda m: m.name, self.modules)
 
         serialized_modules = jax.tree.map(
             lambda m: m.serialize(), self.modules
@@ -1085,6 +1079,7 @@ class Model(BaseModule):
             "model_structure": model_structure,
             "key_data": key_data,
             "package_version": pmm.__version__,
+            "self_serialized": super().serialize(),
         }
 
     def deserialize(self, data: Dict[str, Any]) -> None:
@@ -1109,16 +1104,13 @@ class Model(BaseModule):
             # or possibly handle version-specific deserialization
             pass
 
-        module_typenames = data["module_typenames"]
-        module_modules = data["module_modules"]
-
         # initialize the modules
         self.modules = jax.tree.map(
             lambda mod_name, mod_module: getattr(
                 sys.modules[mod_module], mod_name
             )(),
-            module_typenames,
-            module_modules,
+            data["module_typenames"],
+            data["module_modules"],
         )
 
         # deserialize the modules
@@ -1138,67 +1130,86 @@ class Model(BaseModule):
         # deserialize the rng key
         key = jax.random.wrap_key_data(data["key_data"])
         self.set_rng(key)
+        super().deserialize(data["self_serialized"])
 
-    def save(self, filename: str) -> None:
+    def save(self, file: str | IO | Path) -> None:
         """
         Save the model to a file.
 
         Parameters
         ----------
-            filename : str
-                Name of the file to save the model to.
+            file
+                File to save the model to.
         """
 
         # if everything serializes correctly, we can save the model with just
         # savez
         data = self.serialize()
 
-        filename = filename if filename.endswith(".npz") else filename + ".npz"
-        np.savez(filename, **data)
+        if isinstance(file, str):
+            file = file if file.endswith(".npz") else file + ".npz"
+        np.savez(file, **data)
 
-    def save_compressed(self, filename: str) -> None:
+    def save_compressed(self, file: str | IO | Path) -> None:
         """
         Save the model to a compressed file.
 
         Parameters
         ----------
-            filename : str
-                Name of the file to save the model to.
+            file
+                File to save the model to.
         """
         # if everything serializes correctly, we can save the model with just
         # savez_compressed
         data = self.serialize()
 
-        filename = filename if filename.endswith(".npz") else filename + ".npz"
+        if isinstance(file, str):
+            file = file if file.endswith(".npz") else file + ".npz"
 
         # jax.numpy doesn't have savez_compressed, so we use numpy
-        onp.savez_compressed(filename, **data)
+        onp.savez_compressed(file, **data)
 
-    def load(self, filename: str) -> None:
+    def load(self, file: str | IO | Path) -> None:
         """
         Load the model from a file. Supports both compressed and uncompressed
 
         Parameters
         ----------
-            filename : str
-                Name of the file to load the model from.
+            file
+                File to load the model from.
         """
-        filename = filename if filename.endswith(".npz") else filename + ".npz"
+        if isinstance(file, str):
+            file = file if file.endswith(".npz") else file + ".npz"
         # jax numpy load supports both compressed and uncompressed npz files
-        data = np.load(filename, allow_pickle=True)
+        data = np.load(file, allow_pickle=True)
+
+        # first convert data to a dictionary
+        data = {key: data[key] for key in data.files}
+
+        # then convert certain items back to lists or bare values
+        if isinstance(data["module_typenames"], (onp.ndarray, np.ndarray)):
+            data["module_typenames"] = data["module_typenames"].tolist()
+        if isinstance(data["module_modules"], (onp.ndarray, np.ndarray)):
+            data["module_modules"] = data["module_modules"].tolist()
+        if isinstance(data["serialized_modules"], (onp.ndarray, np.ndarray)):
+            data["serialized_modules"] = data["serialized_modules"].tolist()
+        if isinstance(data["model_structure"], (onp.ndarray, np.ndarray)):
+            data["model_structure"] = data["model_structure"].item()
+        if isinstance(data["self_serialized"], (onp.ndarray, np.ndarray)):
+            data["self_serialized"] = data["self_serialized"].item()
 
         # deserialize the model
         self.deserialize(data)
 
     @classmethod
-    def from_file(cls, filename: str) -> "Model":
+    def from_file(cls, file: str | IO | Path) -> "Model":
         """
         Load a model from a file and return an instance of the Model class.
 
         Parameters
         ----------
-            filename : str
-                Name of the file to load the model from.
+            file : str
+                File to load the model from.
 
         Returns
         -------
@@ -1206,5 +1217,5 @@ class Model(BaseModule):
                 An instance of the Model class with the loaded parameters.
         """
         model = cls()
-        model.load(filename)
+        model.load(file)
         return model

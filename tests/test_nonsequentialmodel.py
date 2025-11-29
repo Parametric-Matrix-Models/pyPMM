@@ -255,3 +255,54 @@ def test_nonsequentialmodel():
         batch_dim,
         2,
     ), f"Output shape mismatch, got {out.shape}"
+
+
+def test_nonsequential_save_load(tmp_path):
+    r"""
+    Test NonSequentialModel save and load functionality
+    """
+    key = jax.random.key(0)
+
+    modules = {
+        "L1": pmm.modules.LinearNN(out_features=8, bias=True),
+        "L2": [
+            pmm.modules.LinearNN(out_features=4, bias=True),
+            pmm.modules.LinearNN(out_features=4, bias=True),
+        ],
+        "L3": pmm.modules.LinearNN(out_features=2, bias=True),
+    }
+    connections = {
+        "input": "L1",
+        "L1": ["L2.0", "L2.1"],
+        "L2.0": "L3",
+        "L3": "output",
+    }
+
+    model = pmm.NonSequentialModel(
+        modules=modules,
+        connections=connections,
+    )
+
+    batch_dim = 10
+
+    in_data = jax.random.normal(key, (batch_dim, 6))
+
+    model.compile(
+        key, pmm.tree_util.get_shapes(in_data, slice(1, None)), verbose=True
+    )  # remove batch dim
+
+    out = model(in_data)
+
+    # Save the model
+    save_path = tmp_path / "nsm_model.npz"
+    model.save(save_path)
+    # Load the model
+    loaded_model = pmm.NonSequentialModel.from_file(save_path)
+    # Compile the loaded model
+    loaded_model.compile(
+        key, pmm.tree_util.get_shapes(in_data, slice(1, None)), verbose=True
+    )
+    # Get output from loaded model
+    loaded_out = loaded_model(in_data)
+    # Compare outputs
+    assert np.allclose(out, loaded_out), "Loaded model output mismatch"

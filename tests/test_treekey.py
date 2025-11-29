@@ -30,3 +30,10 @@ def test_treekey():
     out_leaves = jax.tree.leaves(out)
     for expected_leaf, out_leaf in zip(expected_leaves, out_leaves):
         assert np.allclose(expected_leaf, out_leaf)
+
+    # extract a single key into a bare array
+    tk = pmm.modules.TreeKey("0.b.c")
+    tk.compile(key, jax.tree.map(lambda x: x.shape[1:], data))
+    out, _ = tk(data)
+    expected_out = arr
+    assert np.allclose(expected_out, out)

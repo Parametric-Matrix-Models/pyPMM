@@ -173,10 +173,12 @@ class MatMul(Einsum):
 
         # get the list of input shapes in the order specified by path_order
         if self.path_order is None:
-            shape_list = [None] + jax.tree.leaves(
+            shape_list = jax.tree.leaves(
                 input_shape,
                 is_leaf=is_shape_leaf,
             )
+            if self.trainable or self.params is not None:
+                shape_list = [None] + shape_list
         else:
             # ensure there are no duplicates in path_order
             if len(set(self.path_order)) != len(self.path_order):

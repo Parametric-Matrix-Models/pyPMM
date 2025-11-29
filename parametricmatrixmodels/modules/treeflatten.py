@@ -28,7 +28,7 @@ class TreeFlatten(BaseModule):
     def name(self) -> str:
         return "TreeFlatten"
 
-    def compile(self, key: Any, input_shape: DataShape) -> None:
+    def compile(self, rng: Any, input_shape: DataShape) -> None:
         pass
 
     def is_ready(self) -> bool:

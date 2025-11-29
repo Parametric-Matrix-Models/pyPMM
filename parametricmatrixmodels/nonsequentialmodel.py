@@ -32,6 +32,7 @@ from .typing import (
     Data,
     DataShape,
     Dict,
+    HyperParams,
     List,
     ModuleCallable,
     PyTree,
@@ -68,7 +69,6 @@ class NonSequentialModel(Model):
         ) = None,
         rng: Any | int | None = None,
         separator: str = ".",
-        max_recursion_depth: int = 100,
     ) -> None:
         r"""
         Initialize a nonsequential model with a PyTree of modules and a
@@ -98,9 +98,6 @@ class NonSequentialModel(Model):
             separator
                 Separator string to use for denoting paths in the connections
                 dictionary. Default is ".".
-            max_recursion_depth
-                Maximum recursion depth for resolving the directed graph.
-                Default is 100.
 
         Examples
         --------
@@ -271,7 +268,6 @@ class NonSequentialModel(Model):
 
         self.execution_order: List[str] = None
         self.separator = separator
-        self.max_recursion_depth = max_recursion_depth
 
     def get_execution_order(self) -> List[str]:
         r"""
@@ -422,9 +418,38 @@ class NonSequentialModel(Model):
         # set the input and output shapes
         self.input_shape = input_shape
 
-        input_progression, _, self.output_shape = self._get_shape_progression(
-            input_shape
+        input_progression, output_progression, self.output_shape = (
+            self._get_shape_progression(input_shape)
         )
+
+        if verbose:
+            print(f"{self.name} input shape: {self.input_shape}")
+            # print progression of shapes through the execution order
+            print(f"{self.name} shape progression:")
+            for module_path in self.execution_order:
+                if module_path == "input" or module_path == "output":
+                    continue
+                module_input_shape = getitem_by_strpath(
+                    input_progression,
+                    module_path,
+                    separator=self.separator,
+                    allow_early_return=False,
+                    return_remainder=False,
+                    is_leaf=is_shape_leaf,
+                )
+                module_output_shape = getitem_by_strpath(
+                    output_progression,
+                    module_path,
+                    separator=self.separator,
+                    allow_early_return=False,
+                    return_remainder=False,
+                    is_leaf=is_shape_leaf,
+                )
+                print(
+                    f"  {module_path}: {module_input_shape} -> "
+                    f"{module_output_shape}"
+                )
+            print(f"{self.name} output shape: {self.output_shape}")
 
         # for all modules that appear in the execution order, compile them
         for module_path in self.execution_order:
@@ -456,8 +481,8 @@ class NonSequentialModel(Model):
 
             try:
                 module.compile(
-                    rng=module_rng,
-                    input_shape=module_input_shape,
+                    module_rng,
+                    module_input_shape,
                 )
             except Exception as e:
                 raise RuntimeError(
@@ -584,24 +609,17 @@ class NonSequentialModel(Model):
             # required inputs for the current module
             # since we are in execution order, all required inputs will be
             # available in output_shapes
-            is_str = False
-            if isinstance(req_in_paths, str):
-                req_in_paths = [req_in_paths]
-                is_str = True
-
-            in_shapes = [
-                getitem_by_strpath(
+            in_shapes = jax.tree.map(
+                lambda p: getitem_by_strpath(
                     output_shapes,
                     p,
                     separator=self.separator,
                     allow_early_return=False,
                     return_remainder=False,
                     is_leaf=is_shape_leaf,
-                )
-                for p in req_in_paths
-            ]
-            if is_str:
-                in_shapes = in_shapes[0]
+                ),
+                req_in_paths,
+            )
 
             setitem_by_strpath(
                 input_shapes,
@@ -618,7 +636,17 @@ class NonSequentialModel(Model):
                 allow_early_return=False,
                 return_remainder=False,
             )
-            out_shape = module.get_output_shape(in_shapes)
+            try:
+                out_shape = module.get_output_shape(in_shapes)
+            except Exception as e:
+                raise RuntimeError(
+                    f"Error getting output shape for module '{mod_path}' "
+                    f"({module.name}) with input shape {in_shapes}: {e}"
+                    "\nCurrent input shapes progression:"
+                    f"\n{input_shapes}"
+                    "\nCurrent output shapes progression:"
+                    f"\n{output_shapes}"
+                ) from e
             setitem_by_strpath(
                 output_shapes,
                 mod_path,
@@ -628,23 +656,17 @@ class NonSequentialModel(Model):
             )
 
         # finally, get the output shape from the "output" node
-        is_str = False
-        if isinstance(out_input_deps, str):
-            out_input_deps = [out_input_deps]
-            is_str = True
-        out_shapes = [
-            getitem_by_strpath(
+        out_shapes = jax.tree.map(
+            lambda p: getitem_by_strpath(
                 output_shapes,
                 p,
                 separator=self.separator,
                 allow_early_return=False,
                 return_remainder=False,
                 is_leaf=is_shape_leaf,
-            )
-            for p in out_input_deps
-        ]
-        if is_str:
-            out_shapes = out_shapes[0]
+            ),
+            out_input_deps,
+        )
 
         return input_shapes, output_shapes, out_shapes
 
@@ -760,9 +782,6 @@ class NonSequentialModel(Model):
         module_input_deps, out_input_deps = (
             self._get_module_input_dependencies()
         )
-        out_is_str = isinstance(out_input_deps, str)
-        if out_is_str:
-            out_input_deps = [out_input_deps]
 
         @jaxtyped(typechecker=beartype)
         def nonseq_callable(
@@ -799,24 +818,18 @@ class NonSequentialModel(Model):
                 if mod_path == "input" or mod_path == "output":
                     continue
                 # assemble the inputs for the module
-                is_str = False
-                if isinstance(req_in_paths, str):
-                    req_in_paths = [req_in_paths]
-                    is_str = True
 
-                in_data = [
-                    getitem_by_strpath(
+                in_data = jax.tree.map(
+                    lambda p: getitem_by_strpath(
                         intermediate_outputs,
                         p,
                         separator=self.separator,
                         allow_early_return=False,
                         return_remainder=False,
                         is_leaf=is_shape_leaf,
-                    )
-                    for p in req_in_paths
-                ]
-                if is_str:
-                    in_data = in_data[0]
+                    ),
+                    req_in_paths,
+                )
 
                 module_params = getitem_by_strpath(
                     params,
@@ -857,19 +870,17 @@ class NonSequentialModel(Model):
                     separator=self.separator,
                 )
             # assemble the model output from the intermediate outputs
-            out_data = [
-                getitem_by_strpath(
+            out_data = jax.tree.map(
+                lambda p: getitem_by_strpath(
                     intermediate_outputs,
                     p,
                     separator=self.separator,
                     allow_early_return=False,
                     return_remainder=False,
                     is_leaf=is_shape_leaf,
-                )
-                for p in out_input_deps
-            ]
-            if out_is_str:
-                out_data = out_data[0]
+                ),
+                out_input_deps,
+            )
             return out_data, new_state
 
         return nonseq_callable
@@ -905,6 +916,19 @@ class NonSequentialModel(Model):
             get_state_or_none,
             self.modules,
         )
+
+    def get_hyperparameters(self) -> HyperParams:
+        return {
+            "connections": self.connections,
+            "separator": self.separator,
+            **super().get_hyperparameters(),
+        }
+
+    def set_hyperparameters(self, hyperparams: HyperParams) -> None:
+        self.connections = hyperparams.get("connections", self.connections)
+        self.separator = hyperparams.get("separator", self.separator)
+
+        super().set_hyperparameters(hyperparams)
 
     # methods to modify the module list
     def __getitem__(

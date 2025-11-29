@@ -68,7 +68,7 @@ class TreeKey(BaseModule):
     def is_ready(self) -> bool:
         return True
 
-    def compile(self, key: Any, input_shape: DataShape) -> None:
+    def compile(self, rng: Any, input_shape: DataShape) -> None:
         # just validate that the keypaths are valid by attempting to get them
         self.get_output_shape(input_shape)
 
