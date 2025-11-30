@@ -123,6 +123,10 @@ funcs = {
 }
 
 
+def _test_name(module: pmm.modules.BaseModule) -> None:
+    _ = module.name  # just check that it runs without error
+
+
 def _test_array_accuracy(
     module: pmm.modules.BaseModule,
     arraydata: pmm.typing.ArrayData,
@@ -172,6 +176,9 @@ def test_activations():
 
     for name, (ModuleClass, jax_func, args, kwargs) in funcs.items():
         module = ModuleClass(*args, **kwargs)
+
+        # Test name property
+        _test_name(module)
 
         # Test with array input
         _test_array_accuracy(module, input_array, jax_func, args, kwargs)

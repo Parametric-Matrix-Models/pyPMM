@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import random
 import sys
+import uuid
 import warnings
 from abc import abstractmethod
 from pathlib import Path
@@ -35,6 +36,7 @@ from .typing import (
     Dict,
     HyperParams,
     Inexact,
+    List,
     PyTree,
     Tuple,
 )
@@ -80,6 +82,8 @@ class Model(BaseModule):
     def __init__(
         self,
         modules: ModelModules | BaseModule | None = None,
+        /,
+        *,
         rng: Any | int | None = None,
     ) -> None:
         """
@@ -146,6 +150,8 @@ class Model(BaseModule):
         self,
         rng: Any | int | None,
         input_shape: DataShape,
+        /,
+        *,
         verbose: bool = False,
     ) -> None:
         r"""
@@ -171,7 +177,7 @@ class Model(BaseModule):
         )
 
     @abstractmethod
-    def get_output_shape(self, input_shape: DataShape) -> DataShape:
+    def get_output_shape(self, input_shape: DataShape, /) -> DataShape:
         """
         Get the output shape of the model given an input shape. Must be
         implemented by all subclasses.
@@ -234,7 +240,7 @@ class Model(BaseModule):
         """
         return jax.tree.map(lambda m: m.get_params(), self.modules)
 
-    def set_params(self, params: ModelParams) -> None:
+    def set_params(self, params: ModelParams, /) -> None:
         """
         Set the parameters of the model from a PyTree of PyTrees of numpy
         arrays.
@@ -295,7 +301,7 @@ class Model(BaseModule):
 
         return jax.tree.map(lambda m: m.get_state(), self.modules)
 
-    def set_state(self, state: ModelState) -> None:
+    def set_state(self, state: ModelState, /) -> None:
         r"""
         Set the state of the model from a PyTree of PyTrees of numpy arrays.
 
@@ -331,7 +337,7 @@ class Model(BaseModule):
     def get_rng(self) -> Any:
         return self.rng
 
-    def set_rng(self, rng: Any) -> None:
+    def set_rng(self, rng: Any, /) -> None:
         """
         Set the random key for the model.
 
@@ -425,7 +431,9 @@ class Model(BaseModule):
     def __call__(
         self,
         X: Data,
-        dtype: Any | str = np.float64,
+        /,
+        *,
+        dtype: jax.typing.DTypeLike = np.float64,
         rng: Any | int | None = None,
         return_state: bool = False,
         update_state: bool = False,
@@ -516,7 +524,9 @@ class Model(BaseModule):
     def grad_input(
         self,
         X: Data,
-        dtype: Any | str = np.float64,
+        /,
+        *,
+        dtype: jax.type.DTypeLike = np.float64,
         rng: Any | int | None = None,
         return_state: bool = False,
         update_state: bool = False,
@@ -689,7 +699,9 @@ class Model(BaseModule):
     def grad_params(
         self,
         X: Data,
-        dtype: Any | str = np.float64,
+        /,
+        *,
+        dtype: jax.typing.DTypeLike = np.float64,
         rng: Any | int | None = None,
         return_state: bool = False,
         update_state: bool = False,
@@ -775,7 +787,7 @@ class Model(BaseModule):
         else:
             return grad_params_result
 
-    def set_precision(self, prec: Any | str | int) -> None:
+    def set_precision(self, prec: jax.typing.DTypeLike | str | int, /) -> None:
         """
         Set the precision of the model parameters and states.
 
@@ -840,7 +852,7 @@ class Model(BaseModule):
             module.set_precision(prec)
 
     # alias for set_precision method that returns self
-    def astype(self, dtype: Any | str | int) -> "Model":
+    def astype(self, dtype: jax.typing.DTypeLike | int, /) -> "Model":
         """
         Convenience wrapper to set_precision using the dtype argument, returns
         self.
@@ -853,10 +865,12 @@ class Model(BaseModule):
         X: PyTree[
             Inexact[Array, "num_samples ?*features"], " InStruct"
         ],  # in features
+        /,
         Y: (
             PyTree[Inexact[Array, "num_samples ?*targets"], " OutStruct"]
             | None
         ) = None,  # targets
+        *,
         Y_unc: (
             PyTree[Inexact[Array, "num_samples ?*targets"], " OutStruct"]
             | None
@@ -1011,6 +1025,269 @@ class Model(BaseModule):
         # set the final rng
         self.set_rng(final_model_rng)
 
+    # methods to modify the module list
+    def __getitem__(
+        self,
+        key: jax.tree_util.KeyPath | str | int | slice | None,
+    ) -> BaseModule | PyTree[BaseModule]:
+        if key is None:
+            return self.modules
+
+        elif isinstance(key, tuple):
+            # KeyPath is just Tuple[Any, ...]
+            curr = self.modules
+            for k in key:
+                curr = curr[k]
+            return curr
+
+        elif isinstance(key, (str, int, slice)):
+            if isinstance(key, str) and not isinstance(self.modules, Dict):
+                raise KeyError(
+                    f"Cannot access module '{key}' by name since "
+                    "modules are not stored in a "
+                    "dictionary."
+                )
+            elif isinstance(key, (int, slice)) and not isinstance(
+                self.modules,
+                (List, Tuple),
+            ):
+                raise KeyError(
+                    f"Cannot access module '{key}' by index since "
+                    "modules are not stored in a "
+                    "list or tuple."
+                )
+            return self.modules[key]
+
+        else:
+            raise TypeError(f"Invalid key type {type(key)} for module access.")
+
+    def __setitem__(
+        self,
+        key: jax.tree_util.KeyPath | str | int | slice | None,
+        module: BaseModule | List[BaseModule] | Tuple[BaseModule, ...],
+    ) -> None:
+        self.reset()
+        if key is None:
+            if isinstance(module, BaseModule):
+                self.modules = [module]
+            else:
+                self.modules = module
+
+        elif isinstance(key, tuple):
+            # KeyPath is just Tuple[Any, ...]
+            curr = self.modules
+            for k in key[:~0]:
+                curr = curr[k]
+            curr[key[~0]] = module
+
+        elif isinstance(key, str):
+            if not isinstance(self.modules, Dict):
+                raise KeyError(
+                    f"Cannot set module '{key}' by name since "
+                    "modules are not stored in a "
+                    "dictionary."
+                )
+            self.modules[key] = module
+        elif isinstance(key, (int, slice)):
+            if not isinstance(self.modules, (List, Tuple)):
+                raise KeyError(
+                    f"Cannot set module '{key}' by index since "
+                    "modules are not stored in a "
+                    "list or tuple."
+                )
+            self.modules[key] = module
+        else:
+            raise TypeError(f"Invalid key type {type(key)} for module access.")
+
+    def insert_module(
+        self,
+        index: int,
+        module: BaseModule,
+        /,
+        key: jax.tree_util.KeyPath | str | int | None = None,
+    ) -> None:
+        r"""
+        Insert a module at a specific index in the model.
+
+        Parameters
+        ----------
+            index
+                Index to insert the module at.
+            module
+                Module to insert.
+            key
+                Key to name the module if modules are stored in a dictionary.
+                If None and modules are stored in a dictionary, a UUID will be
+                generated and used as the key. Default is None. Ignored if
+                modules are stored in a list, tuple, or other structure.
+        """
+        self.reset()
+        if isinstance(self.modules, Dict):
+            if key is None:
+                key = str(uuid.uuid4().hex)
+            # create new dict with new module at index
+            items = list(self.modules.items())
+            items.insert(index, (key, module))
+            self.modules = Dict(items)
+        elif isinstance(self.modules, List):
+            self.modules.insert(index, module)
+        elif isinstance(self.modules, Tuple):
+            self.modules = (
+                self.modules[:index] + (module,) + self.modules[index:]
+            )
+        else:
+            raise TypeError(
+                "Cannot insert module to since "
+                "modules are not stored in a list, tuple, or "
+                "dictionary."
+            )
+
+    def append_module(
+        self,
+        module: BaseModule,
+        /,
+        key: jax.tree_util.KeyPath | str | int | None = None,
+    ) -> None:
+        r"""
+        Append a module to the end of the model.
+
+        Parameters
+        ----------
+            module
+                Module to append.
+            key
+                Key to name the module if modules are stored in a dictionary.
+                If None and modules are stored in a dictionary, a UUID will be
+                generated and used as the key. Default is None. Ignored if
+                modules are stored in a list, tuple, or other structure.
+        """
+        self.insert_module(
+            len(jax.tree.leaves(self.modules)),
+            module,
+            key=key,
+        )
+
+    def prepend_module(
+        self,
+        module: BaseModule,
+        /,
+        key: jax.tree_util.KeyPath | str | int | None = None,
+    ) -> None:
+        r"""
+        Prepend a module to the beginning of the model.
+
+        Parameters
+        ----------
+            module
+                Module to prepend.
+            key
+                Key to name the module if modules are stored in a dictionary.
+                If None and modules are stored in a dictionary, a UUID will be
+                generated and used as the key. Default is None. Ignored if
+                modules are stored in a list, tuple, or other structure.
+        """
+        self.insert_module(
+            0,
+            module,
+            key=key,
+        )
+
+    def pop_module_by_index(
+        self,
+        index: int,
+        /,
+    ) -> BaseModule:
+        r"""
+        Remove and return a module at a specific index in the model.
+        Parameters
+        ----------
+            index
+                Index of the module to remove.
+        Returns
+        -------
+            The removed module.
+        """
+        self.reset()
+        if isinstance(self.modules, Dict):
+            # create new dict without the module at index
+            items = list(self.modules.items())
+            key, module = items.pop(index)
+            self.modules = Dict(items)
+            return module
+        elif isinstance(self.modules, List):
+            return self.modules.pop(index)
+        elif isinstance(self.modules, Tuple):
+            module = self.modules[index]
+            self.modules = self.modules[:index] + self.modules[index + 1 :]
+            return module
+        else:
+            raise TypeError(
+                "Cannot pop module from since "
+                "modules are not stored in a list, tuple, or "
+                "dictionary."
+            )
+
+    def pop_module_by_key(
+        self,
+        key: jax.tree_util.KeyPath | str | int,
+        /,
+    ) -> BaseModule:
+        r"""
+        Remove and return a module by key or index in the model.
+        Parameters
+        ----------
+            key
+                Key or index of the module to remove.
+        Returns
+        -------
+            The removed module.
+        """
+        self.reset()
+        if isinstance(key, str):
+            if not isinstance(self.modules, Dict):
+                raise KeyError(
+                    f"Cannot pop module '{key}' by name since "
+                    "modules are not stored in a "
+                    "dictionary."
+                )
+            return self.modules.pop(key)
+        elif isinstance(key, int):
+            if not isinstance(self.modules, (List, Tuple)):
+                raise KeyError(
+                    f"Cannot pop module '{key}' by index since "
+                    "modules are not stored in a "
+                    "list or tuple."
+                )
+            return self.pop_module_by_index(key)
+        else:
+            raise TypeError(f"Invalid key type {type(key)} for module access.")
+
+    def __add__(self, other: BaseModule) -> Model:
+        r"""
+        Overload the + operator to append a module or model to the current
+        model.
+
+        Parameters
+        ----------
+            other
+                Module or model to append.
+
+        Returns
+        -------
+            New model with the other module or model appended.
+        """
+        new_model = self.__class__(modules=self.modules)
+        new_model.append_module(other)
+        return new_model
+
+    # aliases
+    append = append_module
+    prepend = prepend_module
+    insert = insert_module
+    add_module = append_module
+    add = append_module
+    pop = pop_module_by_key
+
     def get_hyperparameters(self) -> HyperParams:
         """
         Get the hyperparameters of the model as a dictionary.
@@ -1025,7 +1302,7 @@ class Model(BaseModule):
             "rng": self.rng,
         }
 
-    def set_hyperparameters(self, hyperparams: HyperParams) -> None:
+    def set_hyperparameters(self, hyperparams: HyperParams, /) -> None:
         """
         Set the hyperparameters of the model from a dictionary.
 
@@ -1082,7 +1359,7 @@ class Model(BaseModule):
             "self_serialized": super().serialize(),
         }
 
-    def deserialize(self, data: Dict[str, Any]) -> None:
+    def deserialize(self, data: Dict[str, Any], /) -> None:
         """
         Deserialize the model from a dictionary. This is done by deserializing
         the model's parameters/metadata and then deserializing each module.
@@ -1132,7 +1409,7 @@ class Model(BaseModule):
         self.set_rng(key)
         super().deserialize(data["self_serialized"])
 
-    def save(self, file: str | IO | Path) -> None:
+    def save(self, file: str | IO | Path, /) -> None:
         """
         Save the model to a file.
 
@@ -1150,7 +1427,7 @@ class Model(BaseModule):
             file = file if file.endswith(".npz") else file + ".npz"
         np.savez(file, **data)
 
-    def save_compressed(self, file: str | IO | Path) -> None:
+    def save_compressed(self, file: str | IO | Path, /) -> None:
         """
         Save the model to a compressed file.
 
@@ -1169,7 +1446,7 @@ class Model(BaseModule):
         # jax.numpy doesn't have savez_compressed, so we use numpy
         onp.savez_compressed(file, **data)
 
-    def load(self, file: str | IO | Path) -> None:
+    def load(self, file: str | IO | Path, /) -> None:
         """
         Load the model from a file. Supports both compressed and uncompressed
 
@@ -1202,7 +1479,7 @@ class Model(BaseModule):
         self.deserialize(data)
 
     @classmethod
-    def from_file(cls, file: str | IO | Path) -> "Model":
+    def from_file(cls, file: str | IO | Path, /) -> "Model":
         """
         Load a model from a file and return an instance of the Model class.
 

@@ -1,19 +1,44 @@
 from __future__ import annotations
 
-from typing import Tuple
-
+import jax
 import jax.numpy as np
 import numpy as onp
 from packaging.version import parse
 
 import parametricmatrixmodels as pmm
 
-from .model import Model
+from ..model import Model
+from ..model_util import (
+    ModelCallable,
+    ModelModules,
+    ModelParams,
+    ModelState,
+    autobatch,
+)
+from ..modules import BaseModule
+from ..training import make_loss_fn, train
+from ..tree_util import safecast, strfmt_pytree
+from ..typing import (
+    Any,
+    Array,
+    Callable,
+    Data,
+    DataShape,
+    Dict,
+    HyperParams,
+    Inexact,
+    PyTree,
+    Tuple,
+)
 
 
 class ConformalizedModel(object):
     r"""
     A wrapper class for conformalized prediction models.
+
+    Unlike other models and modules, ConformalizedModel is not a module and
+    cannot be nested inside other models. It is a wrapper around a trained
+    Model only.
 
     Confidence intervals (uncertainty quantification) is optionally provided by
     conformal prediction methods. A heuristic notion of uncertainty is
@@ -26,12 +51,12 @@ class ConformalizedModel(object):
     .. math::
 
         u(x) &= \left\Vert\frac{\partial f}{\partial\Theta}(x)
-                    \otimes \left|\Theta\right|\right\Vert_2^2 \\
+                    \odot \left|\Theta\right|\right\Vert_2^2 \\
              &\quad + \left\Vert\frac{\partial f}{\partial x}(x)
-                    \otimes
+                    \odot
                     \sigma\left(x_\mathrm{train}\right)\right\Vert_2^2\\
             &\quad + \left\Vert\frac{\partial f}{\partial x}(x)
-                    \otimes \Delta x\Vert_2^2
+                    \odot \Delta x\Vert_2^2
 
     where :math:`f` is the prediction function, :math:`\Theta` are the
     trainable parameters of the model, :math:`\sigma(x_\mathrm{train})` is the
@@ -49,14 +74,19 @@ class ConformalizedModel(object):
     See Also
     --------
     Model
-        A model formed from modules that can be trained and evaluated.
+        Abstract base class for models formed from modules that can be trained
+        and evaluated.
+    SequentialModel
+        A simple sequential model that stacks modules linearly.
+    NonsequentialModel
+        A flexible model that allows for arbitrary module connections.
     """
 
     def __init__(
         self,
         model: Model,
         alpha: float = 1 - 0.682689492137,
-        additional_data: dict = None,
+        additional_data: Dict[str, Any] = None,
     ):
         r"""
         Parameters
@@ -71,6 +101,11 @@ class ConformalizedModel(object):
             function, which corresponds to a 68% prediction interval, or one
             standard deviation for normally distributed data. Can be specified
             when calling the model, this is just a default value.
+        additional_data
+            A dictionary of additional data required for the uncertainty
+            heuristic. Currently, the standard deviation of the training inputs
+            must be provided with the key ``"std_X_train"``. Default is
+            ``None``.
         """
 
         self.model = model
@@ -81,15 +116,15 @@ class ConformalizedModel(object):
 
     def calibrate(
         self,
-        X_cal: np.ndarray,
-        Y_cal: np.ndarray,
-        X_cal_unc: np.ndarray = None,
-        alpha: float = None,
-        dtype: np.dtype = np.float64,
-        max_batch_size: int = None,
-        rng: np.ndarray = None,
+        X_cal: Data,
+        Y_cal: Data | None = None,
+        X_cal_unc: Data | None = None,
+        alpha: float | None = None,
+        dtype: jax.typing.DTypeLike = np.float64,
+        max_batch_size: int | None = None,
+        rng: Any | int | None = None,
         update_state: bool = False,
-        fwd: bool = None,
+        fwd: bool | None = None,
     ) -> float:
         r"""
         Calibrate the conformal prediction model on a calibration dataset.
@@ -103,11 +138,13 @@ class ConformalizedModel(object):
             alpha = self.default_alpha
         if not (0 < alpha < 1):
             raise ValueError("alpha must be in the range (0, 1).")
-        if X_cal.shape[0] != Y_cal.shape[0]:
-            raise ValueError(
-                "X_cal and Y_cal must have the same number of samples. "
-                f"Got {X_cal.shape[0]} and {Y_cal.shape[0]}."
-            )
+        if Y_cal is not None:
+            # supervised learning
+            if X_cal.shape[0] != Y_cal.shape[0]:
+                raise ValueError(
+                    "X_cal and Y_cal must have the same number of samples. "
+                    f"Got {X_cal.shape[0]} and {Y_cal.shape[0]}."
+                )
         if X_cal_unc is not None:
             if X_cal.shape != X_cal_unc.shape:
                 raise ValueError(
@@ -120,11 +157,17 @@ class ConformalizedModel(object):
                 "the calibration features. "
                 f"Got {self.model.input_shape} and {X_cal.shape[1:]}."
             )
-        if self.model.output_shape != Y_cal.shape[1:]:
+        if Y_cal is not None and self.model.output_shape != Y_cal.shape[1:]:
             raise ValueError(
                 "The output shape of the model must match the shape of "
                 "the calibration targets. "
                 f"Got {self.model.output_shape} and {Y_cal.shape[1:]}."
+            )
+        elif Y_cal is None and self.model.output_shape != X_cal.shape[1:]:
+            raise ValueError(
+                "For unsupervised calibration, the output shape of the model "
+                "must match the shape of the calibration features. "
+                f"Got {self.model.output_shape} and {X_cal.shape[1:]}."
             )
 
         # compute conformity scores
@@ -179,7 +222,7 @@ class ConformalizedModel(object):
         X: np.ndarray,
         X_unc: np.ndarray = None,
         alpha: float = None,
-        dtype: np.dtype = np.float64,
+        dtype: jax.typing.DTypeLike = np.float64,
         max_batch_size: int = None,
         rng: np.ndarray = None,
         update_state: bool = False,
@@ -256,7 +299,7 @@ class ConformalizedModel(object):
         self,
         X: np.ndarray,
         X_unc: np.ndarray = None,
-        dtype: np.dtype = np.float64,
+        dtype: jax.typing.DTypeLike = np.float64,
         max_batch_size: int = None,
         rng: np.ndarray = None,
         update_state: bool = False,

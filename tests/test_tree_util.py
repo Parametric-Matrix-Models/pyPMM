@@ -3,6 +3,20 @@ import pytest
 from parametricmatrixmodels import tree_util
 
 
+def test_strfmt_pytree():
+    r"""
+    Test strfmt_pytree
+    """
+
+    tree = {
+        "a": 0,
+        "b": [1, 2, {"c": (3,)}],
+    }
+
+    # just make sure it runs without error
+    _ = tree_util.strfmt_pytree(tree, max_leaf_chars=25)
+
+
 def test_make_mutable():
     r"""
     Test make_mutable

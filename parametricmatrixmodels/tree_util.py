@@ -765,7 +765,7 @@ def scalar_mul(
 @jaxtyped(typechecker=beartype)
 def astype(
     pytree: PyTree[Shaped[Array, "..."], " T"],
-    dtype: Any | str,
+    dtype: jax.typing.DTypeLike,
 ) -> PyTree[Shaped[Array, "..."], " T"]:
     r"""
     Casts all leaves of a PyTree of arrays to a specified data type.
@@ -1065,7 +1065,7 @@ def random_permute_leaves(
 
 @jaxtyped(typechecker=beartype)
 def safecast(
-    X: PyTree[Num[Array, "..."], " T"], dtype: Any
+    X: PyTree[Num[Array, "..."], " T"], dtype: jax.typing.DTypeLike
 ) -> PyTree[Num[Array, "..."], " T"]:
     r"""
     Safely cast input data to a specified dtype, ensuring that complex types
@@ -1081,7 +1081,9 @@ def safecast(
     """
 
     # make sure that we don't cast complex to float
-    def cast_with_complex_check(x: np.ndarray, dtype: Any) -> np.ndarray:
+    def cast_with_complex_check(
+        x: np.ndarray, dtype: jax.typing.DTypeLike
+    ) -> np.ndarray:
         if np.issubdtype(x.dtype, np.complexfloating) and not np.issubdtype(
             dtype, np.complexfloating
         ):
@@ -1094,7 +1096,7 @@ def safecast(
     X_ = jax.tree.map(lambda x: cast_with_complex_check(x, dtype), X)
 
     # make sure the dtype was converted, issue a warning if not
-    def check_cast(x: np.ndarray, dtype: Any) -> None:
+    def check_cast(x: np.ndarray, dtype: jax.typing.DTypeLike) -> None:
         if x.dtype != dtype:
             warnings.warn(
                 f"Requested dtype ({dtype}) was not successfully applied. "

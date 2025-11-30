@@ -224,6 +224,8 @@ class BaseModule(ABC):
     def __call__(
         self,
         data: Data,
+        /,
+        *,
         training: bool = False,
         state: State = (),
         rng: Any = None,
@@ -282,7 +284,7 @@ class BaseModule(ABC):
 
     @jaxtyped(typechecker=beartype)
     @abstractmethod
-    def compile(self, rng: Any, input_shape: DataShape) -> None:
+    def compile(self, rng: Any, input_shape: DataShape, /) -> None:
         """
         Compile the module to be used with the given input shape.
 
@@ -326,7 +328,7 @@ class BaseModule(ABC):
 
     @jaxtyped(typechecker=beartype)
     @abstractmethod
-    def get_output_shape(self, input_shape: DataShape) -> DataShape:
+    def get_output_shape(self, input_shape: DataShape, /) -> DataShape:
         """
         Get the output shape of the module given the input shape.
 
@@ -379,7 +381,7 @@ class BaseModule(ABC):
         )
 
     @jaxtyped(typechecker=beartype)
-    def set_hyperparameters(self, hyperparameters: HyperParams) -> None:
+    def set_hyperparameters(self, hyperparameters: HyperParams, /) -> None:
         """
         Set the hyperparameters of the module.
 
@@ -440,7 +442,7 @@ class BaseModule(ABC):
 
     @jaxtyped(typechecker=beartype)
     @abstractmethod
-    def set_params(self, params: Params) -> None:
+    def set_params(self, params: Params, /) -> None:
         """
         Set the trainable parameters of the module.
 
@@ -488,7 +490,7 @@ class BaseModule(ABC):
         return ()
 
     @jaxtyped(typechecker=beartype)
-    def set_state(self, state: State) -> None:
+    def set_state(self, state: State, /) -> None:
         """
         Set the state of the module.
 
@@ -508,7 +510,7 @@ class BaseModule(ABC):
         pass
 
     @jaxtyped(typechecker=beartype)
-    def set_precision(self, prec: Any | str | int) -> None:
+    def set_precision(self, prec: Any | str | int, /) -> None:
         """
         Set the precision of the module parameters and state.
 
@@ -595,7 +597,7 @@ class BaseModule(ABC):
         self.set_state(jax.tree.map(set_param_prec, self.get_state()))
 
     @jaxtyped(typechecker=beartype)
-    def astype(self, dtype: np.dtype | str) -> "BaseModule":
+    def astype(self, dtype: jax.typing.DTypeLike, /) -> "BaseModule":
         """
         Convenience wrapper to set_precision using the dtype argument, returns
         self.
@@ -661,7 +663,7 @@ class BaseModule(ABC):
         }
 
     @jaxtyped(typechecker=beartype)
-    def deserialize(self, data: Dict[str, Any]) -> None:
+    def deserialize(self, data: Dict[str, Any], /) -> None:
         """
         Deserialize the module from a dictionary.
 

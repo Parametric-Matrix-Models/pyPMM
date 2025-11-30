@@ -26,8 +26,8 @@ def test_nonsequentialmodel_graph(execution_number: int):
     }
 
     model = pmm.NonSequentialModel(
-        modules=modules,
-        connections=connections,
+        modules,
+        connections,
     )
 
     order = model.get_execution_order()
@@ -75,8 +75,8 @@ def test_nonsequentialmodel_output_shape():
     }
 
     model = pmm.NonSequentialModel(
-        modules=modules,
-        connections=connections,
+        modules,
+        connections,
     )
 
     output_shape = model.get_output_shape(((10, 5), (10, 3, 3, 3)))
@@ -91,7 +91,7 @@ def test_nonsequentialmodel_output_shape():
         "A": "C",
         "C": "output",
     }
-    model = pmm.NonSequentialModel(modules=modules, connections=connections)
+    model = pmm.NonSequentialModel(modules, connections)
     output_shape = model.get_output_shape((10, 5))
     assert output_shape == (
         10,
@@ -112,7 +112,7 @@ def test_nonsequentialmodel_output_shape():
         "1.R2": "1.F2",
         "1.F2": "output",
     }
-    model = pmm.NonSequentialModel(modules=modules, connections=connections)
+    model = pmm.NonSequentialModel(modules, connections)
     output_shape = model.get_output_shape((6,))
     assert output_shape == [
         (6,),
@@ -124,7 +124,7 @@ def test_nonsequentialmodel_output_shape():
         "input": "F",
         "F": "output",
     }
-    model = pmm.NonSequentialModel(modules=modules, connections=connections)
+    model = pmm.NonSequentialModel(modules, connections)
     output_shape = model.get_output_shape((10, 11))
     assert output_shape == (
         10 * 11,
@@ -148,7 +148,7 @@ def test_nonsequentialmodel_invalid_connections():
     }
 
     with pytest.raises(RuntimeError):
-        m = pmm.NonSequentialModel(modules=modules, connections=connections)
+        m = pmm.NonSequentialModel(modules, connections)
         m.get_execution_order()
 
     # no valid path from input to output
@@ -159,7 +159,7 @@ def test_nonsequentialmodel_invalid_connections():
         # missing connection to output
     }
     with pytest.raises(RuntimeError):
-        m = pmm.NonSequentialModel(modules=modules, connections=connections)
+        m = pmm.NonSequentialModel(modules, connections)
         m.get_execution_order()
 
     # connection to non-existing module
@@ -171,7 +171,7 @@ def test_nonsequentialmodel_invalid_connections():
         "B.1": "output",
     }
     with pytest.raises(KeyError):
-        m = pmm.NonSequentialModel(modules=modules, connections=connections)
+        m = pmm.NonSequentialModel(modules, connections)
         m.get_execution_order()
 
 
@@ -194,8 +194,8 @@ def test_nonsequentialmodel():
     }
 
     model = pmm.NonSequentialModel(
-        modules=modules,
-        connections=connections,
+        modules,
+        connections,
     )
 
     batch_dim = 10
@@ -234,8 +234,8 @@ def test_nonsequentialmodel():
     }
 
     model = pmm.NonSequentialModel(
-        modules=modules,
-        connections=connections,
+        modules,
+        connections,
     )
 
     batch_dim = 10
@@ -279,8 +279,8 @@ def test_nonsequential_save_load(tmp_path):
     }
 
     model = pmm.NonSequentialModel(
-        modules=modules,
-        connections=connections,
+        modules,
+        connections,
     )
 
     batch_dim = 10

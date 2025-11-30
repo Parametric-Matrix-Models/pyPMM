@@ -12,14 +12,14 @@ from . import (
     eigen_util,
     graph_util,
     modules,
-    scalers,
+    preprocessing,
     training,
     tree_util,
     typing,
 )
-from .conformalizedmodel import ConformalizedModel
 from .model import Model
 from .nonsequentialmodel import NonSequentialModel
 from .sequentialmodel import SequentialModel
 
 from . import model_util  # isort: skip
+from . import conformal  # isort: skip

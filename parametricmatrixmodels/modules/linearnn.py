@@ -118,7 +118,7 @@ class LinearNN(SequentialModel):
 
             self.modules = modules
 
-        super().compile(rng, input_shape, verbose)
+        super().compile(rng, input_shape, verbose=verbose)
 
     def get_output_shape(self, input_shape: DataShape) -> DataShape:
         r"""

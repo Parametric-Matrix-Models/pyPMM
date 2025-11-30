@@ -146,9 +146,7 @@ def test_integration(tmp_path):
         ),
     }
 
-    nsm = pmm.NonSequentialModel(
-        modules=modules, connections=connections, rng=key, separator="."
-    )
+    nsm = pmm.NonSequentialModel(modules, connections, rng=key, separator=".")
 
     nsm.compile(
         key, pmm.tree_util.get_shapes(data, slice(1, None)), verbose=True

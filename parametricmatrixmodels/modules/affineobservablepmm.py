@@ -296,7 +296,7 @@ class AffineObservablePMM(SequentialModel):
 
             self.modules = tuple(self.modules)
 
-        super().compile(rng, input_shape, verbose)
+        super().compile(rng, input_shape, verbose=verbose)
 
     def get_output_shape(self, input_shape: DataShape) -> DataShape:
         if self.output_size is None:

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import random
-import uuid
 
 import jax
 from beartype import beartype
@@ -19,11 +18,8 @@ from .typing import (
     Any,
     Data,
     DataShape,
-    Dict,
-    List,
     ModuleCallable,
     Params,
-    PyTree,
     State,
     Tuple,
 )
@@ -52,6 +48,8 @@ class SequentialModel(Model):
     def __init__(
         self,
         modules: ModelModules | BaseModule | None = None,
+        /,
+        *,
         rng: Any | int | None = None,
     ) -> None:
         r"""
@@ -94,12 +92,14 @@ class SequentialModel(Model):
             Equivalent to ``jax.tree.flatten(x)[0]``.
         """
         # no custom initialization needed for sequential model
-        super().__init__(modules=modules, rng=rng)
+        super().__init__(modules, rng=rng)
 
     def compile(
         self,
         rng: Any | int | None,
         input_shape: DataShape,
+        /,
+        *,
         verbose: bool = False,
     ) -> None:
         r"""
@@ -144,7 +144,7 @@ class SequentialModel(Model):
 
         self.output_shape = input_shape
 
-    def get_output_shape(self, input_shape: DataShape) -> DataShape:
+    def get_output_shape(self, input_shape: DataShape, /) -> DataShape:
         r"""
         Get the output shape of the model given an input shape. Must be
         implemented by all subclasses.
@@ -315,270 +315,3 @@ class SequentialModel(Model):
             return output, new_state
 
         return model_callable
-
-    # methods to modify the module list
-    def __getitem__(
-        self,
-        key: jax.tree_util.KeyPath | str | int | slice | None,
-    ) -> BaseModule | PyTree[BaseModule]:
-        if key is None:
-            return self.modules
-
-        elif isinstance(key, tuple):
-            # KeyPath is just Tuple[Any, ...]
-            curr = self.modules
-            for k in key:
-                curr = curr[k]
-            return curr
-
-        elif isinstance(key, (str, int, slice)):
-            if isinstance(key, str) and not isinstance(self.modules, Dict):
-                raise KeyError(
-                    f"Cannot access module '{key}' by name since "
-                    "SequentialModel modules are not stored in a "
-                    "dictionary."
-                )
-            elif isinstance(key, (int, slice)) and not isinstance(
-                self.modules,
-                (List, Tuple),
-            ):
-                raise KeyError(
-                    f"Cannot access module '{key}' by index since "
-                    "SequentialModel modules are not stored in a "
-                    "list or tuple."
-                )
-            return self.modules[key]
-
-        else:
-            raise TypeError(
-                f"Invalid key type {type(key)} for SequentialModel "
-                "module access."
-            )
-
-    def __setitem__(
-        self,
-        key: jax.tree_util.KeyPath | str | int | slice | None,
-        module: BaseModule | List[BaseModule] | Tuple[BaseModule, ...],
-    ) -> None:
-        self.reset()
-        if key is None:
-            if isinstance(module, BaseModule):
-                self.modules = [module]
-            else:
-                self.modules = module
-
-        elif isinstance(key, tuple):
-            # KeyPath is just Tuple[Any, ...]
-            curr = self.modules
-            for k in key[:~0]:
-                curr = curr[k]
-            curr[key[~0]] = module
-
-        elif isinstance(key, str):
-            if not isinstance(self.modules, Dict):
-                raise KeyError(
-                    f"Cannot set module '{key}' by name since "
-                    "SequentialModel modules are not stored in a "
-                    "dictionary."
-                )
-            self.modules[key] = module
-        elif isinstance(key, (int, slice)):
-            if not isinstance(self.modules, (List, Tuple)):
-                raise KeyError(
-                    f"Cannot set module '{key}' by index since "
-                    "SequentialModel modules are not stored in a "
-                    "list or tuple."
-                )
-            self.modules[key] = module
-        else:
-            raise TypeError(
-                f"Invalid key type {type(key)} for SequentialModel "
-                "module access."
-            )
-
-    def insert_module(
-        self,
-        index: int,
-        module: BaseModule,
-        key: jax.tree_util.KeyPath | str | int | None = None,
-    ) -> None:
-        r"""
-        Insert a module at a specific index in the model.
-
-        Parameters
-        ----------
-            index
-                Index to insert the module at.
-            module
-                Module to insert.
-            key
-                Key to name the module if modules are stored in a dictionary.
-                If None and modules are stored in a dictionary, a UUID will be
-                generated and used as the key. Default is None. Ignored if
-                modules are stored in a list, tuple, or other structure.
-        """
-        self.reset()
-        if isinstance(self.modules, Dict):
-            if key is None:
-                key = str(uuid.uuid4().hex)
-            # create new dict with new module at index
-            items = list(self.modules.items())
-            items.insert(index, (key, module))
-            self.modules = Dict(items)
-        elif isinstance(self.modules, List):
-            self.modules.insert(index, module)
-        elif isinstance(self.modules, Tuple):
-            self.modules = (
-                self.modules[:index] + (module,) + self.modules[index:]
-            )
-        else:
-            raise TypeError(
-                "Cannot insert module to SequentialModel since "
-                "modules are not stored in a list, tuple, or "
-                "dictionary."
-            )
-
-    def append_module(
-        self,
-        module: BaseModule,
-        key: jax.tree_util.KeyPath | str | int | None = None,
-    ) -> None:
-        r"""
-        Append a module to the end of the model.
-
-        Parameters
-        ----------
-            module
-                Module to append.
-            key
-                Key to name the module if modules are stored in a dictionary.
-                If None and modules are stored in a dictionary, a UUID will be
-                generated and used as the key. Default is None. Ignored if
-                modules are stored in a list, tuple, or other structure.
-        """
-        self.insert_module(
-            index=len(jax.tree.leaves(self.modules)),
-            module=module,
-            key=key,
-        )
-
-    def prepend_module(
-        self,
-        module: BaseModule,
-        key: jax.tree_util.KeyPath | str | int | None = None,
-    ) -> None:
-        r"""
-        Prepend a module to the beginning of the model.
-
-        Parameters
-        ----------
-            module
-                Module to prepend.
-            key
-                Key to name the module if modules are stored in a dictionary.
-                If None and modules are stored in a dictionary, a UUID will be
-                generated and used as the key. Default is None. Ignored if
-                modules are stored in a list, tuple, or other structure.
-        """
-        self.insert_module(
-            index=0,
-            module=module,
-            key=key,
-        )
-
-    def pop_module_by_index(
-        self,
-        index: int,
-    ) -> BaseModule:
-        r"""
-        Remove and return a module at a specific index in the model.
-        Parameters
-        ----------
-            index
-                Index of the module to remove.
-        Returns
-        -------
-            The removed module.
-        """
-        self.reset()
-        if isinstance(self.modules, Dict):
-            # create new dict without the module at index
-            items = list(self.modules.items())
-            key, module = items.pop(index)
-            self.modules = Dict(items)
-            return module
-        elif isinstance(self.modules, List):
-            return self.modules.pop(index)
-        elif isinstance(self.modules, Tuple):
-            module = self.modules[index]
-            self.modules = self.modules[:index] + self.modules[index + 1 :]
-            return module
-        else:
-            raise TypeError(
-                "Cannot pop module from SequentialModel since "
-                "modules are not stored in a list, tuple, or "
-                "dictionary."
-            )
-
-    def pop_module_by_key(
-        self,
-        key: jax.tree_util.KeyPath | str | int,
-    ) -> BaseModule:
-        r"""
-        Remove and return a module by key or index in the model.
-        Parameters
-        ----------
-            key
-                Key or index of the module to remove.
-        Returns
-        -------
-            The removed module.
-        """
-        self.reset()
-        if isinstance(key, str):
-            if not isinstance(self.modules, Dict):
-                raise KeyError(
-                    f"Cannot pop module '{key}' by name since "
-                    "SequentialModel modules are not stored in a "
-                    "dictionary."
-                )
-            return self.modules.pop(key)
-        elif isinstance(key, int):
-            if not isinstance(self.modules, (List, Tuple)):
-                raise KeyError(
-                    f"Cannot pop module '{key}' by index since "
-                    "SequentialModel modules are not stored in a "
-                    "list or tuple."
-                )
-            return self.pop_module_by_index(key)
-        else:
-            raise TypeError(
-                f"Invalid key type {type(key)} for SequentialModel "
-                "module access."
-            )
-
-    def __add__(self, other: BaseModule) -> SequentialModel:
-        r"""
-        Overload the + operator to append a module or model to the current
-        model.
-
-        Parameters
-        ----------
-            other
-                Module or model to append.
-
-        Returns
-        -------
-            New SequentialModel with the other module or model appended.
-        """
-        new_model = SequentialModel(modules=self.modules)
-        new_model.append_module(other)
-        return new_model
-
-    # aliases
-    append = append_module
-    prepend = prepend_module
-    insert = insert_module
-    add_module = append_module
-    add = append_module
-    pop = pop_module_by_key
