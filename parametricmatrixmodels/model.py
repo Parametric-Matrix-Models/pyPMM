@@ -17,6 +17,7 @@ from packaging.version import parse
 
 import parametricmatrixmodels as pmm
 
+from . import tree_util
 from .model_util import (
     ModelCallable,
     ModelModules,
@@ -26,7 +27,7 @@ from .model_util import (
 )
 from .modules import BaseModule
 from .training import make_loss_fn, train
-from .tree_util import safecast, strfmt_pytree
+from .tree_util import is_shape_leaf, safecast, strfmt_pytree
 from .typing import (
     Any,
     Array,
@@ -428,6 +429,22 @@ class Model(BaseModule):
             " implemented by subclasses."
         )
 
+    def _verify_input(self, X: Data) -> None:
+        if not self.is_ready():
+            raise RuntimeError(
+                f"{self.name} is not ready. Call compile() first."
+            )
+        # assert that the model was compiled for this input shape
+        if not tree_util.all_equal(
+            self.input_shape,
+            tree_util.get_shapes(X, axis=slice(1, None)),
+        ):
+            raise ValueError(
+                f"Input shape {tree_util.get_shapes(X, axis=slice(1, None))} "
+                f"does not match compiled input shape {self.input_shape}. "
+                "Please re-compile the model with the correct input shape."
+            )
+
     def __call__(
         self,
         X: Data,
@@ -488,6 +505,9 @@ class Model(BaseModule):
             raise RuntimeError(
                 f"{self.name} is not ready. Call compile() first."
             )
+
+        # assert that the model was compiled for this input shape
+        self._verify_input(X)
 
         if self.callable is None:
             self.callable = jax.jit(self._get_callable(), static_argnums=(2,))
@@ -579,6 +599,7 @@ class Model(BaseModule):
             raise RuntimeError(
                 f"{self.name} is not ready. Call compile() first."
             )
+        self._verify_input(X)
         if self.callable is None:
             self.callable = jax.jit(self._get_callable(), static_argnums=(2,))
 
@@ -652,23 +673,51 @@ class Model(BaseModule):
                         static_argnums=(2,),
                     )
 
+                output_ndims = jax.tree.map(
+                    lambda shape: len(shape),
+                    self.output_shape,
+                    is_leaf=is_shape_leaf,
+                )
+                input_ndims = jax.tree.map(
+                    lambda shape: len(shape),
+                    self.input_shape,
+                    is_leaf=is_shape_leaf,
+                )
+
                 # take the diagonal (batch-wise jacobian)
                 @jaxtyped(typechecker=beartype)
-                def take_diag(
-                    arr: np.ndarray,
-                    input_shape: Tuple[int, ...],
-                    output_shape: Tuple[int, ...],
-                ) -> np.ndarray:
-                    batch_size = arr.shape[0]
-                    input_ndim = len(input_shape)
-                    output_ndim = len(output_shape)
+                def inner_map_fn(
+                    input_ndim: int,
+                    Y_out: Inexact[Array, "batch ..."],
+                    output_ndim: int,
+                ) -> Inexact[Array, "batch ..."]:
+
+                    # Y_out is an array of shape (batch, <output dims>, batch,
+                    # <input dims>)
+
+                    batch_size = Y_out.shape[0]
                     diag_indices = (
                         (np.arange(batch_size),)
                         + (slice(None),) * output_ndim
                         + (np.arange(batch_size),)
                         + (slice(None),) * input_ndim
                     )
-                    return arr[diag_indices]
+                    return Y_out[diag_indices]
+
+                # map over output structure
+                @jaxtyped(typechecker=beartype)
+                def outer_map_fn(
+                    output_ndim: int,
+                    Y_out: PyTree[Inexact[Array, "batch ..."]],
+                    in_ndims: PyTree[int],
+                ) -> PyTree[Inexact[Array, "..."]]:
+                    return jax.tree.map(
+                        lambda in_ndim, y: inner_map_fn(
+                            in_ndim, y, output_ndim
+                        ),
+                        in_ndims,
+                        Y_out,
+                    )
 
                 @jaxtyped(typechecker=beartype)
                 def grad_callable_inputs(
@@ -681,18 +730,22 @@ class Model(BaseModule):
                     Y, new_states = grad_callable_inputs_(
                         params, X, training, state, rng
                     )
+                    # the structure of Y is a composite PyTree where
+                    # the outer structure matches that of the model output,
+                    # and the inner structure matches that of the input X
+                    # so we have to map over both structures to take the
+                    # diagonal
                     # each leaf of Y is and array of shape
                     # (batch_size, output_dim1, output_dim2, ...,
                     # batch_size, input_dim1, input_dim2, ...)
                     # we want to take the diagonal along the two batch axes
 
                     Y_diag = jax.tree.map(
-                        take_diag,
+                        lambda out_ndim, y: outer_map_fn(
+                            out_ndim, y, input_ndims
+                        ),
+                        output_ndims,
                         Y,
-                        self.input_shape,
-                        self.output_shape,
-                        is_leaf=lambda x: isinstance(x, tuple)
-                        and all(isinstance(i, int) for i in x),
                     )
                     return Y_diag, new_states
 
@@ -738,10 +791,10 @@ class Model(BaseModule):
         max_batch_size: int | None = None,
     ) -> (
         Tuple[
-            PyTree[Inexact[Array, "num_samples ..."], "... DataStruct"],
+            PyTree[Inexact[Array, "num_samples ..."] | Tuple[()] | None],
             ModelState,
         ]
-        | PyTree[Inexact[Array, "num_samples ..."], "... DataStruct"]
+        | PyTree[Inexact[Array, "num_samples ..."] | Tuple[()] | None]
     ):
         r"""
         Doc TODO
@@ -779,6 +832,7 @@ class Model(BaseModule):
             raise RuntimeError(
                 f"{self.name} is not ready. Call compile() first."
             )
+        self._verify_input(X)
         if self.callable is None:
             self.callable = jax.jit(self._get_callable(), static_argnums=(2,))
 
@@ -975,6 +1029,8 @@ class Model(BaseModule):
             self.compile(
                 initialization_seed, jax.tree.map(lambda x: x.shape[1:], X)
             )
+
+        self._verify_input(X)
 
         # input validation happens in the training.train function
 

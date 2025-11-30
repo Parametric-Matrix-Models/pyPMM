@@ -714,6 +714,49 @@ def abs_sqr(
 
 
 @jaxtyped(typechecker=beartype)
+def sqrt(
+    pytree: PyTree[Num[Array, " *d"], " T"],
+) -> PyTree[Num[Array, " *d"], " T"]:
+    r"""
+    Computes the element-wise square root of all leaves of a PyTree of arrays.
+
+    Parameters
+    ----------
+    pytree
+        A PyTree where each leaf is an array.
+
+    Returns
+    -------
+    A PyTree with the same structure as the input, but with each leaf
+    replaced by its square root.
+    """
+
+    return jax.tree.map(lambda x: np.sqrt(x), pytree)
+
+
+@jaxtyped(typechecker=beartype)
+def abs_sqrt(
+    pytree: PyTree[Num[Array, " *d"], " T"],
+) -> PyTree[Num[Array, " *d"], " T"]:
+    r"""
+    Computes the element-wise square root of the absolute value of all leaves
+    of a PyTree of arrays.
+
+    Parameters
+    ----------
+    pytree
+        A PyTree where each leaf is an array.
+
+    Returns
+    -------
+    A PyTree with the same structure as the input, but with each leaf
+    replaced by the square root of its absolute value.
+    """
+
+    return jax.tree.map(lambda x: np.sqrt(np.abs(x)), pytree)
+
+
+@jaxtyped(typechecker=beartype)
 def pow(
     pytree: PyTree[Num[Array, " *d"], " T"],
     exponent: float | int,

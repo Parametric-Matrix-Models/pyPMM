@@ -223,6 +223,8 @@ class ConformalizedModel(object):
         if self.qhats.get(alpha) is None:
             n = jax.tree.leaves(self.scores)[0].shape[0]
             qhat = jax.tree.map(
+                # TODO: is there a generalization of quantile for complex
+                # numbers?
                 lambda s: np.quantile(
                     s,
                     np.ceil((n + 1) * (1 - alpha)) / n,
@@ -400,6 +402,7 @@ class ConformalizedModel(object):
         # we map over the output leaves and reduce over the input leaves
         @jaxtyped(typechecker=beartype)
         def reduce_over_input_leaves(
+            out_shape: Tuple[int, ...],
             df_leaf_carry: Inexact[Array, "..."],
             df_leaf_dx_and_x: GradAndInput,
         ) -> Inexact[Array, "..."]:
@@ -414,7 +417,7 @@ class ConformalizedModel(object):
             scaled = df_leaf_dx * np.abs(x)
             # reshape to (n_samples, <output_shape>, -1)
             scaled_reshaped = scaled.reshape(
-                (scaled.shape[0],) + output_shape + (-1,)
+                (scaled.shape[0],) + out_shape + (-1,)
             )
             # and compute the squared abs sum over the last axis (all xs)
             sum_squares = np.sum(np.abs(scaled_reshaped) ** 2, axis=-1)
@@ -423,7 +426,7 @@ class ConformalizedModel(object):
 
         @jaxtyped(typechecker=beartype)
         def map_over_output_leaves(
-            grad_dtype: jax.typing.DTypeLike,
+            u_dtype: jax.typing.DTypeLike,
             y_leaf_shape: Tuple[int, ...],
             df_leaf_dxs: PyTree[Inexact[Array, "..."], " In"],
             xs: PyTree[Inexact[Array, "..."], " In"],
@@ -447,10 +450,12 @@ class ConformalizedModel(object):
             )
             # now we reduce over the x leaves
             dy_leaf = jax.tree.reduce(
-                reduce_over_input_leaves,
+                lambda acc, dfdx: reduce_over_input_leaves(
+                    y_leaf_shape, acc, dfdx
+                ),
                 df_leaf_dx_and_xs,
                 initializer=np.zeros(
-                    (n_samples,) + y_leaf_shape, dtype=grad_dtype
+                    (n_samples,) + y_leaf_shape, dtype=u_dtype
                 ),
             )
             return dy_leaf
@@ -475,14 +480,15 @@ class ConformalizedModel(object):
         # ie sum over all params of |df/dTheta_i * |Theta_i||^2
         params = self.model.get_params()
 
-        grad_dtype = np.result_type(*jax.tree.leaves(df_dparams))
+        # TODO: u_dtype should match the output dtype of the model, not the
+        # gradient
+        u_dtype = dtype
 
         # total uncertainty from the sensitivity to parameters
         dy_params = jax.tree.map(
-            lambda y, df, x: map_over_output_leaves(grad_dtype, y, df, x),
+            lambda y, df: map_over_output_leaves(u_dtype, y, df, params),
             output_shape,
             df_dparams,
-            params,
             is_leaf=is_shape_leaf,
         )
 
@@ -499,28 +505,26 @@ class ConformalizedModel(object):
         # l2 norm of df/dx scaled by std of training inputs
         # i.e. sum over all input features of |df/dx_i * std_X_train_i|^2
         dy_train = jax.tree.map(
-            lambda y, df, x: map_over_output_leaves(grad_dtype, y, df, x),
+            lambda y, df: map_over_output_leaves(u_dtype, y, df, std_X_train),
             output_shape,
             df_dx,
-            std_X_train,
             is_leaf=is_shape_leaf,
         )
 
-        u_x = dy_params + dy_train
+        u_x = tree_util.add(dy_params, dy_train)
 
         if X_unc is not None:
             # l2 norm of df/dx scaled by uncertainty in inputs
             dy_input = jax.tree.map(
-                lambda y, df, x: map_over_output_leaves(grad_dtype, y, df, x),
+                lambda y, df: map_over_output_leaves(u_dtype, y, df, X_unc),
                 output_shape,
                 df_dx,
-                X_unc,
                 is_leaf=is_shape_leaf,
             )
 
-            u_x = u_x + dy_input
+            u_x = tree_util.add(u_x, dy_input)
 
-        u_x = np.sqrt(u_x)
+        u_x = tree_util.abs_sqrt(u_x)
 
         return u_x
 
