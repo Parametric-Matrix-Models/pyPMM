@@ -3,7 +3,7 @@ from __future__ import annotations
 from sys import version_info
 from typing import Any, TypeAlias
 
-from jaxtyping import Array, Inexact, Num, PyTree
+from jaxtyping import Array, Complex, Inexact, Num, PyTree, Real
 from ordered_set import OrderedSet  # noqa: F401
 
 r"""
@@ -90,6 +90,29 @@ ArrayData: TypeAlias = Inexact[Array, "batch_size ..."]
 #: The structure of the PyTree can change throughout evaluation, so it is not
 #: specified in the type alias.
 Data: TypeAlias = PyTree[Inexact[Array, "batch_size ..."]] | ArrayData
+
+#: A PyTree with guaranteed structure and shape and only numerical arrays
+DataFixed: TypeAlias = PyTree[Inexact[Array, "batch_size ?*d"], "DataFixed"]
+#: A PyTree with guaranteed structure and shape and only numerical arrays
+#: with no batch
+BatchlessDataFixed: TypeAlias = PyTree[Inexact[Array, "?*d"], "DataFixed"]
+
+
+#: A PyTree with guaranteed structure and shape and only Reals
+RealDataFixed: TypeAlias = PyTree[
+    Real[Array, "batch_size ?*d"], "RealDataFixed"
+]
+#: A PyTree with guaranteed structure and shape and only Reals with no batch
+BatchlessRealDataFixed: TypeAlias = PyTree[Real[Array, "?*d"], "RealDataFixed"]
+#: A PyTree with guaranteed structure and shape and only Complex numbers
+ComplexDataFixed: TypeAlias = PyTree[
+    Complex[Array, "batch_size ?*d"], "ComplexDataFixed"
+]
+#: A PyTree with guaranteed structure and shape and only Complex numbers with
+#: no batch
+BatchlessComplexDataFixed: TypeAlias = PyTree[
+    Complex[Array, "?*d"], "ComplexDataFixed"
+]
 
 #: A special case of ``DataShape`` where the input data shape is represented as
 #: a single tuple of integers.

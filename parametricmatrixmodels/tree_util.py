@@ -33,6 +33,31 @@ def all_equal(
     return True
 
 
+def all_close(
+    pytree1: PyTree[Any],
+    pytree2: PyTree[Any],
+    rtol: float = 1e-05,
+    atol: float = 1e-08,
+) -> bool:
+    r"""
+    Check if two pytrees are close in structure and content.
+    """
+    struct1 = jax.tree.structure(pytree1)
+    struct2 = jax.tree.structure(pytree2)
+    if struct1 != struct2:
+        return False
+    leaves1 = jax.tree.leaves(pytree1)
+    leaves2 = jax.tree.leaves(pytree2)
+    for leaf1, leaf2 in zip(leaves1, leaves2):
+        if isinstance(leaf1, np.ndarray) and isinstance(leaf2, np.ndarray):
+            if not np.allclose(leaf1, leaf2, rtol=rtol, atol=atol):
+                return False
+        else:
+            if leaf1 != leaf2:
+                return False
+    return True
+
+
 def get_shapes(
     pytree: PyTree[Shaped[Array, "..."]],
     axis: int | Tuple[int, ...] | slice | None = None,
