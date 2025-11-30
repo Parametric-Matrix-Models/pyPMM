@@ -150,7 +150,7 @@ class FuncBase(BaseModule):
                 "batch dimension."
             ) from e
 
-        output_shape = get_shapes(dummy_output, axes=slice(1, None))
+        output_shape = get_shapes(dummy_output, axis=slice(1, None))
 
         return output_shape
 

@@ -1,31 +1,28 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 import jax
 import jax.numpy as np
-import numpy as onp
-from packaging.version import parse
+from beartype import beartype
+from jaxtyping import jaxtyped
 
-import parametricmatrixmodels as pmm
-
+from .. import tree_util
 from ..model import Model
-from ..model_util import (
-    ModelCallable,
-    ModelModules,
-    ModelParams,
-    ModelState,
-    autobatch,
+from ..model_util import ModelState
+from ..tree_util import (
+    all_equal,
+    get_shapes,
+    has_uniform_leaf_shapes,
+    is_shape_leaf,
+    shapes_equal,
+    uniform_leaf_shapes_equal,
 )
-from ..modules import BaseModule
-from ..training import make_loss_fn, train
-from ..tree_util import safecast, strfmt_pytree
 from ..typing import (
     Any,
     Array,
-    Callable,
     Data,
-    DataShape,
     Dict,
-    HyperParams,
     Inexact,
     PyTree,
     Tuple,
@@ -50,13 +47,13 @@ class ConformalizedModel(object):
 
     .. math::
 
-        u(x) &= \left\Vert\frac{\partial f}{\partial\Theta}(x)
+        u(x)^2 &= \left\Vert\frac{\partial f}{\partial\Theta}(x)
                     \odot \left|\Theta\right|\right\Vert_2^2 \\
              &\quad + \left\Vert\frac{\partial f}{\partial x}(x)
                     \odot
                     \sigma\left(x_\mathrm{train}\right)\right\Vert_2^2\\
             &\quad + \left\Vert\frac{\partial f}{\partial x}(x)
-                    \odot \Delta x\Vert_2^2
+                    \odot \Delta x\right\Vert_2^2
 
     where :math:`f` is the prediction function, :math:`\Theta` are the
     trainable parameters of the model, :math:`\sigma(x_\mathrm{train})` is the
@@ -86,7 +83,7 @@ class ConformalizedModel(object):
         self,
         model: Model,
         alpha: float = 1 - 0.682689492137,
-        additional_data: Dict[str, Any] = None,
+        additional_data: Dict[str, Any] | None = None,
     ):
         r"""
         Parameters
@@ -140,34 +137,41 @@ class ConformalizedModel(object):
             raise ValueError("alpha must be in the range (0, 1).")
         if Y_cal is not None:
             # supervised learning
-            if X_cal.shape[0] != Y_cal.shape[0]:
+            if not uniform_leaf_shapes_equal(X_cal, Y_cal, axis=0):
                 raise ValueError(
                     "X_cal and Y_cal must have the same number of samples. "
-                    f"Got {X_cal.shape[0]} and {Y_cal.shape[0]}."
+                    "I.e. the leading dimension (axis 0) across all leaves "
+                    "of the pytrees must be the same."
                 )
         if X_cal_unc is not None:
-            if X_cal.shape != X_cal_unc.shape:
+            if not shapes_equal(X_cal, X_cal_unc):
                 raise ValueError(
-                    "X_cal and X_cal_unc must have the same shape. "
-                    f"Got {X_cal.shape} and {X_cal_unc.shape}."
+                    "X_cal and X_cal_unc must have the same shape."
                 )
-        if self.model.input_shape != X_cal.shape[1:]:
+        if not all_equal(
+            self.model.input_shape, get_shapes(X_cal, slice(1, None))
+        ):
             raise ValueError(
-                "The input shape of the model must match the shape of "
-                "the calibration features. "
-                f"Got {self.model.input_shape} and {X_cal.shape[1:]}."
+                "The input shape of the model must match the shape of the"
+                f" calibration features. Got {self.model.input_shape} and"
+                f" {get_shapes(X_cal, slice(1, None))}."
             )
-        if Y_cal is not None and self.model.output_shape != Y_cal.shape[1:]:
+        if Y_cal is not None and not all_equal(
+            self.model.output_shape, get_shapes(Y_cal, slice(1, None))
+        ):
             raise ValueError(
-                "The output shape of the model must match the shape of "
-                "the calibration targets. "
-                f"Got {self.model.output_shape} and {Y_cal.shape[1:]}."
+                "The output shape of the model must match the shape of the"
+                f" calibration targets. Got {self.model.output_shape} and"
+                f" {get_shapes(Y_cal, slice(1, None))}."
             )
-        elif Y_cal is None and self.model.output_shape != X_cal.shape[1:]:
+        elif Y_cal is None and not all_equal(
+            self.model.output_shape, get_shapes(X_cal, slice(1, None))
+        ):
             raise ValueError(
-                "For unsupervised calibration, the output shape of the model "
-                "must match the shape of the calibration features. "
-                f"Got {self.model.output_shape} and {X_cal.shape[1:]}."
+                "For unsupervised calibration, the output shape of the model"
+                " must match the shape of the calibration features. Got"
+                f" {self.model.output_shape} and"
+                f" {get_shapes(X_cal, slice(1, None))}."
             )
 
         # compute conformity scores
@@ -189,7 +193,16 @@ class ConformalizedModel(object):
             max_batch_size=max_batch_size,
         )
 
-        self.scores = np.abs(Y_cal - Y_cal_pred) / u_cal
+        # s = |Y - Y_pred| / u
+
+        if Y_cal is None:
+            self.scores = tree_util.div(
+                tree_util.abs(tree_util.sub(X_cal, Y_cal_pred)), u_cal
+            )
+        else:
+            self.scores = tree_util.div(
+                tree_util.abs(tree_util.sub(Y_cal, Y_cal_pred)), u_cal
+            )
 
     def get_qhat(
         self,
@@ -208,10 +221,14 @@ class ConformalizedModel(object):
             )
 
         if self.qhats.get(alpha) is None:
-            n = self.scores.shape[0]
-            qhat = np.quantile(
+            n = jax.tree.leaves(self.scores)[0].shape[0]
+            qhat = jax.tree.map(
+                lambda s: np.quantile(
+                    s,
+                    np.ceil((n + 1) * (1 - alpha)) / n,
+                    axis=0,
+                ),
                 self.scores,
-                np.ceil((n + 1) * (1 - alpha)) / n,
             )
             self.qhats[alpha] = qhat
 
@@ -219,20 +236,18 @@ class ConformalizedModel(object):
 
     def __call__(
         self,
-        X: np.ndarray,
-        X_unc: np.ndarray = None,
-        alpha: float = None,
+        X: Data,
+        X_unc: Data | None = None,
+        alpha: float | None = None,
         dtype: jax.typing.DTypeLike = np.float64,
-        max_batch_size: int = None,
-        rng: np.ndarray = None,
+        max_batch_size: int | None = None,
+        rng: Any | int | None = None,
         update_state: bool = False,
         return_state: bool = False,
-        fwd: bool = None,
+        fwd: bool | None = None,
     ) -> (
-        Tuple[np.ndarray, Tuple[np.ndarray, np.ndarray]]
-        | Tuple[
-            np.ndarray, Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, ...]
-        ]
+        Tuple[Data, Tuple[Data, Data]]
+        | Tuple[Data, Tuple[Data, Data], ModelState]
     ):
         r"""
         <DOC TODO>
@@ -244,11 +259,13 @@ class ConformalizedModel(object):
         if not (0 < alpha < 1):
             raise ValueError("alpha must be in the range (0, 1).")
 
-        if self.model.input_shape != X.shape[1:]:
+        if not all_equal(
+            self.model.input_shape, get_shapes(X, slice(1, None))
+        ):
             raise ValueError(
-                "The input shape of the model must match the shape of "
-                "the input features. "
-                f"Got {self.model.input_shape} and {X.shape[1:]}."
+                "The input shape of the model must match the shape of the"
+                f" input features. Got {self.model.input_shape} and"
+                f" {get_shapes(X, slice(1, None))}."
             )
         if self.scores is None:
             raise ValueError(
@@ -256,24 +273,14 @@ class ConformalizedModel(object):
                 "predictions. Please call the `calibrate` method."
             )
 
-        if return_state:
-            Y_pred, state = self.model(
-                X,
-                dtype=dtype,
-                rng=rng,
-                return_state=return_state,
-                update_state=update_state,
-                max_batch_size=max_batch_size,
-            )
-        else:
-            Y_pred = self.model(
-                X,
-                dtype=dtype,
-                rng=rng,
-                return_state=return_state,
-                update_state=update_state,
-                max_batch_size=max_batch_size,
-            )
+        Y_pred, state = self.model(
+            X,
+            dtype=dtype,
+            rng=rng,
+            return_state=True,
+            update_state=update_state,
+            max_batch_size=max_batch_size,
+        )
 
         u_x = self._uncertainty_heuristic(
             X,
@@ -287,8 +294,10 @@ class ConformalizedModel(object):
 
         qhat = self.get_qhat(alpha=alpha)
 
-        lower = Y_pred - qhat * u_x
-        upper = Y_pred + qhat * u_x
+        # lower = Y_pred - qhat * u_x
+        # upper = Y_pred + qhat * u_x
+        lower = tree_util.sub(Y_pred, tree_util.mul(qhat, u_x))
+        upper = tree_util.add(Y_pred, tree_util.mul(qhat, u_x))
 
         if return_state:
             return Y_pred, (lower, upper), state
@@ -297,14 +306,14 @@ class ConformalizedModel(object):
 
     def _uncertainty_heuristic(
         self,
-        X: np.ndarray,
-        X_unc: np.ndarray = None,
+        X: Data,
+        X_unc: Data | None = None,
         dtype: jax.typing.DTypeLike = np.float64,
-        max_batch_size: int = None,
-        rng: np.ndarray = None,
+        max_batch_size: int | None = None,
+        rng: Any | int | None = None,
         update_state: bool = False,
-        fwd: bool = None,
-    ) -> np.ndarray:
+        fwd: bool | None = None,
+    ) -> Data:
         r"""
         The uncertainty heuristic used to compute conformity scores for
         conformal prediction.
@@ -346,11 +355,18 @@ class ConformalizedModel(object):
         """
 
         # input validation
+        # ensure X has uniform leading axis
+        if not has_uniform_leaf_shapes(X, axis=0):
+            raise ValueError(
+                "X must have uniform leading axis (axis 0) across all "
+                "leaves of the pytree."
+            )
+
         if X_unc is not None:
-            if X.shape != X_unc.shape:
+            if not shapes_equal(X, X_unc):
                 raise ValueError(
                     "X and X_unc must have the same shape. "
-                    f"Got {X.shape} and {X_unc.shape}."
+                    f"Got {get_shapes(X)} and {get_shapes(X_unc)}."
                 )
 
         if self.additional_data.get("std_X_train") is None:
@@ -363,15 +379,87 @@ class ConformalizedModel(object):
 
         std_X_train = self.additional_data["std_X_train"]
 
-        if std_X_train.shape != X.shape[1:]:
+        if not all_equal(
+            get_shapes(std_X_train), get_shapes(X, slice(1, None))
+        ):
             raise ValueError(
-                "The standard deviation of the training inputs "
-                "must have the same shape as the input features. "
-                f"Got {std_X_train.shape} and {X.shape[1:]}."
+                "The standard deviation of the training inputs must have the"
+                " same shape as the input features (excluding batch"
+                f" dimension). Got {get_shapes(std_X_train)} and"
+                f" {get_shapes(X, slice(1, None))}."
             )
 
+        n_samples = jax.tree.leaves(X)[0].shape[0]
         output_shape = self.model.output_shape
 
+        # to compute the sensitivity in the output to each of the input types
+        # (features, inputs via training, and inputs via uncertainty), we need
+        # map over the PyTree structure of the model's output and reduce over
+        # the PyTree structure of the input (model params, input data, etc)
+
+        # we map over the output leaves and reduce over the input leaves
+        @jaxtyped(typechecker=beartype)
+        def reduce_over_input_leaves(
+            df_leaf_carry: Inexact[Array, "..."],
+            df_leaf_dx_and_x: GradAndInput,
+        ) -> Inexact[Array, "..."]:
+            # df_leaf_carry is the accumulated sum over x leaves which has
+            # shape (n_samples, <output_shape>)
+            # df_leaf_dx_and_x is a GradAndInput object containing
+            # (df_leaf_dx, x) for a single x leaf
+            df_leaf_dx, x = df_leaf_dx_and_x
+            # df_leaf_dx has shape (n_samples, <output_shape>, <x_shape>)
+            # x has shape (<x_shape>,)
+            # we scale df_leaf_dx by abs(x)
+            scaled = df_leaf_dx * np.abs(x)
+            # reshape to (n_samples, <output_shape>, -1)
+            scaled_reshaped = scaled.reshape(
+                (scaled.shape[0],) + output_shape + (-1,)
+            )
+            # and compute the squared abs sum over the last axis (all xs)
+            sum_squares = np.sum(np.abs(scaled_reshaped) ** 2, axis=-1)
+            # accumulate
+            return df_leaf_carry + sum_squares
+
+        @jaxtyped(typechecker=beartype)
+        def map_over_output_leaves(
+            grad_dtype: jax.typing.DTypeLike,
+            y_leaf_shape: Tuple[int, ...],
+            df_leaf_dxs: PyTree[Inexact[Array, "..."], " In"],
+            xs: PyTree[Inexact[Array, "..."], " In"],
+        ) -> Data:
+            # y_leaf_shape is the model output shape for the given leaf
+            # which is <output_shape>
+            # df_leaf_dxs is a PyTree with the same structure as xs
+            # representing the gradient of this particular output leaf w.r.t.
+            # each x leaf. each leaf of df_leaf_dxs has shape
+            # (n_samples, <output_shape>, <x_shape>)
+            # where <x_shape> varies per leaf
+            # xs is a PyTree with the same structure as df_leaf_dxs
+            # and each leaf has shape <x_shape>, matching the corresponding
+            # leaf of df_leaf_dxs
+
+            # now we zip (map) together the leaves of df_leaf_dxs and
+            # xs so that we can call reduce over them (reduce only takes a
+            # single tree, unlike map)
+            df_leaf_dx_and_xs = jax.tree.map(
+                lambda d, p: GradAndInput(d, p), df_leaf_dxs, xs
+            )
+            # now we reduce over the x leaves
+            dy_leaf = jax.tree.reduce(
+                reduce_over_input_leaves,
+                df_leaf_dx_and_xs,
+                initializer=np.zeros(
+                    (n_samples,) + y_leaf_shape, dtype=grad_dtype
+                ),
+            )
+            return dy_leaf
+
+        # df/dTheta
+        # will have the composite structure where the upper level structure is
+        # the same as the model's output structure and the lower level
+        # is the structure of the model's parameters. Each leaf will have shape
+        # (n_samples, <output_shape>, <param_shape>)
         df_dparams = self.model.grad_params(
             X,
             dtype=dtype,
@@ -383,22 +471,20 @@ class ConformalizedModel(object):
         )
 
         # l2 norm over params, scaled by abs(params)
+        # dy_params = || df/dTheta * |Theta| ||_2^2
+        # ie sum over all params of |df/dTheta_i * |Theta_i||^2
         params = self.model.get_params()
-        dy_dparams = np.array(
-            [
-                np.linalg.norm(
-                    (dp * np.abs(p)).reshape(
-                        (dp.shape[0],) + output_shape + (-1,)
-                    ),
-                    ord=2,
-                    axis=-1,
-                )
-                ** 2
-                for dp, p in zip(df_dparams, params)
-            ]
-        ).sum(
-            axis=0
-        )  # shape (n_samples, <output_shape>)
+
+        grad_dtype = np.result_type(*jax.tree.leaves(df_dparams))
+
+        # total uncertainty from the sensitivity to parameters
+        dy_params = jax.tree.map(
+            lambda y, df, x: map_over_output_leaves(grad_dtype, y, df, x),
+            output_shape,
+            df_dparams,
+            params,
+            is_leaf=is_shape_leaf,
+        )
 
         df_dx = self.model.grad_input(
             X,
@@ -406,39 +492,33 @@ class ConformalizedModel(object):
             max_batch_size=max_batch_size,
             rng=rng,
             fwd=fwd,
-            batched=(max_batch_size != 1),
             update_state=update_state,
             return_state=False,
         )
 
         # l2 norm of df/dx scaled by std of training inputs
-        dy_dx_train = (
-            np.linalg.norm(
-                (df_dx * std_X_train).reshape(
-                    (df_dx.shape[0],) + output_shape + (-1,)
-                ),
-                ord=2,
-                axis=-1,
-            )
-            ** 2
-        )  # shape (n_samples, <output_shape>)
+        # i.e. sum over all input features of |df/dx_i * std_X_train_i|^2
+        dy_train = jax.tree.map(
+            lambda y, df, x: map_over_output_leaves(grad_dtype, y, df, x),
+            output_shape,
+            df_dx,
+            std_X_train,
+            is_leaf=is_shape_leaf,
+        )
 
-        u_x = dy_dparams + dy_dx_train
+        u_x = dy_params + dy_train
 
         if X_unc is not None:
             # l2 norm of df/dx scaled by uncertainty in inputs
-            dy_dx_unc = (
-                np.linalg.norm(
-                    (df_dx * np.abs(X_unc)).reshape(
-                        (df_dx.shape[0],) + output_shape + (-1,)
-                    ),
-                    ord=2,
-                    axis=-1,
-                )
-                ** 2
+            dy_input = jax.tree.map(
+                lambda y, df, x: map_over_output_leaves(grad_dtype, y, df, x),
+                output_shape,
+                df_dx,
+                X_unc,
+                is_leaf=is_shape_leaf,
             )
 
-            u_x = u_x + dy_dx_unc
+            u_x = u_x + dy_input
 
         u_x = np.sqrt(u_x)
 
@@ -521,3 +601,14 @@ class ConformalizedModel(object):
         raise NotImplementedError(
             "Loading of ConformalizedModel is not yet implemented."
         )
+
+
+# data class for zipped grad and input (so that it becomes a leaf in PyTrees)
+@dataclass
+class GradAndInput:
+    grad: Inexact[Array, "..."]
+    x: Inexact[Array, "..."]
+
+    def __iter__(self):
+        yield self.grad
+        yield self.x

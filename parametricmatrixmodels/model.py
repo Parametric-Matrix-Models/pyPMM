@@ -523,7 +523,7 @@ class Model(BaseModule):
 
     def grad_input(
         self,
-        X: Data,
+        X: PyTree[Inexact[Array, "num_samples ..."], " DataStruct"],
         /,
         *,
         dtype: jax.type.DTypeLike = np.float64,
@@ -532,7 +532,13 @@ class Model(BaseModule):
         update_state: bool = False,
         fwd: bool | None = None,
         max_batch_size: int | None = None,
-    ) -> Tuple[Data, ModelState] | Data:
+    ) -> (
+        Tuple[
+            PyTree[Inexact[Array, "num_samples ..."], "... DataStruct"],
+            ModelState,
+        ]
+        | PyTree[Inexact[Array, "num_samples ..."], "... DataStruct"]
+    ):
         r"""
         Doc TODO
 
@@ -550,6 +556,23 @@ class Model(BaseModule):
             is particularly important for ``grad_input`` since the Jacobian
             contains gradients across different batch samples and thus scales
             with the square of the batch size.
+
+        Returns
+        -------
+            PyTree
+                Gradient of the model output with respect to the input data,
+                as a PyTree of JAX arrays, the structure of which matches that
+                of the output structure of the model composed above the input
+                data structure. Each leaf array will have shape
+                (num_samples, output_dim1, output_dim2, ..., input_dim1,
+                input_dim2, ...), where the output dimensions correspond to
+                the shape of the model output for that leaf, and the input
+                dimensions correspond to the shape of the input data for that
+                leaf.
+            ModelState
+                If ``return_state`` is ``True``, the state of the model after
+                evaluation as a PyTree of PyTrees of JAX arrays, the structure
+                of which matches that of the model's modules.
         """
 
         if not self.is_ready():
@@ -559,26 +582,32 @@ class Model(BaseModule):
         if self.callable is None:
             self.callable = jax.jit(self._get_callable(), static_argnums=(2,))
 
-        def get_num_elems(count: int, arr: np.ndarray) -> int:
-            return count + arr.size
+        def get_num_elems(count: int, shape: Tuple[int, ...]) -> int:
+            return count + onp.prod(shape)
 
-        num_input_elems = jax.tree.reduce(
-            get_num_elems, self.input_shape, initializer=0
-        )
-        num_output_elems = jax.tree.reduce(
-            get_num_elems, self.output_shape, initializer=0
-        )
+        if self.grad_callable_inputs is None and fwd is None:
+            num_input_elems = jax.tree.reduce(
+                get_num_elems, self.input_shape, initializer=0
+            )
+            num_output_elems = jax.tree.reduce(
+                get_num_elems, self.output_shape, initializer=0
+            )
 
-        # if fwd is None, decide based on input and output sizes
-        # fwd is more efficient when the number of input elements is less
-        # than the number of output elements in general
-        fwd = fwd if fwd is not None else (num_input_elems < num_output_elems)
+            # if fwd is None, decide based on input and output sizes
+            # fwd is more efficient when the number of input elements is less
+            # than the number of output elements in general
+            fwd = (
+                fwd
+                if fwd is not None
+                else (num_input_elems < num_output_elems)
+            )
 
         batched = (max_batch_size is None) or (max_batch_size > 1)
 
         # prepare the grad callable if not already done
         if (self.grad_callable_inputs is None) or (
-            self.grad_callable_inputs_options != (batched, fwd)
+            fwd is not None
+            and (self.grad_callable_inputs_options != (batched, fwd))
         ):
             self.grad_callable_inputs_options = (batched, fwd)
             if not batched:
@@ -698,7 +727,7 @@ class Model(BaseModule):
 
     def grad_params(
         self,
-        X: Data,
+        X: PyTree[Inexact[Array, "num_samples ..."], " DataStruct"],
         /,
         *,
         dtype: jax.typing.DTypeLike = np.float64,
@@ -707,7 +736,13 @@ class Model(BaseModule):
         update_state: bool = False,
         fwd: bool | None = None,
         max_batch_size: int | None = None,
-    ) -> Tuple[ModelParams, ModelState] | ModelParams:
+    ) -> (
+        Tuple[
+            PyTree[Inexact[Array, "num_samples ..."], "... DataStruct"],
+            ModelState,
+        ]
+        | PyTree[Inexact[Array, "num_samples ..."], "... DataStruct"]
+    ):
         r"""
         Doc TODO
 
@@ -721,6 +756,23 @@ class Model(BaseModule):
             this size and processed sequentially to avoid OOM errors.
             Default is ``None``, which means the input will be processed in
             a single batch. Only applies if ``batched=True``.
+        Returns
+        -------
+            PyTree
+                Gradient of the model output with respect to the model
+                parameters, as a PyTree of PyTrees of JAX arrays, the upper
+                level structure of which matches that of the model's modules,
+                and the lower level structure of which matches that of the
+                parameters of each module. Each leaf array will have shape
+                (num_samples, output_dim1, output_dim2, ..., param_dim1,
+                param_dim2, ...), where the output dimensions correspond to
+                the shape of the model output for that leaf, and the param
+                dimensions correspond to the shape of the parameter for that
+                leaf.
+            ModelState
+                If ``return_state`` is ``True``, the state of the model after
+                evaluation as a PyTree of PyTrees of JAX arrays, the structure
+                of which matches that of the model's modules.
         """
 
         if not self.is_ready():
@@ -730,23 +782,28 @@ class Model(BaseModule):
         if self.callable is None:
             self.callable = jax.jit(self._get_callable(), static_argnums=(2,))
 
-        def get_num_elems(count: int, arr: np.ndarray) -> int:
-            return count + arr.size
+        def get_num_elems(count: int, shape: Tuple[int, ...]) -> int:
+            return count + onp.prod(shape)
 
-        num_input_elems = jax.tree.reduce(
-            get_num_elems, self.input_shape, initializer=0
-        )
-        num_output_elems = jax.tree.reduce(
-            get_num_elems, self.output_shape, initializer=0
-        )
+        if self.grad_callable_params is None and fwd is None:
+            num_input_elems = jax.tree.reduce(
+                get_num_elems, self.input_shape, initializer=0
+            )
+            num_output_elems = jax.tree.reduce(
+                get_num_elems, self.output_shape, initializer=0
+            )
 
-        # if fwd is None, decide based on input and output sizes
-        # fwd is more efficient when the number of input elements is less
-        # than the number of output elements in general
-        fwd = fwd if fwd is not None else (num_input_elems < num_output_elems)
+            # if fwd is None, decide based on input and output sizes
+            # fwd is more efficient when the number of input elements is less
+            # than the number of output elements in general
+            fwd = (
+                fwd
+                if fwd is not None
+                else (num_input_elems < num_output_elems)
+            )
 
         if self.grad_callable_params is None or (
-            self.grad_callable_params_options != fwd
+            fwd is not None and (self.grad_callable_params_options != fwd)
         ):
             self.grad_callable_params_options = fwd
             if fwd:

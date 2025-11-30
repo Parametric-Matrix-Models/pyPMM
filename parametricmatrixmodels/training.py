@@ -16,9 +16,9 @@ from . import tree_util as pmm_tree_util
 from .model_util import ModelParams, ModelState
 from .tree_util import (
     batch_leaves,
-    leaf_shapes_equal,
     random_permute_leaves,
     shapes_equal,
+    uniform_leaf_shapes_equal,
 )
 from .typing import (
     Any,
@@ -1317,7 +1317,7 @@ def train(
 
     # check sizes
     # this should've already been caught by jaxtyping, but just in case
-    if Y is not None and not leaf_shapes_equal(X, Y, axes=0):
+    if Y is not None and not uniform_leaf_shapes_equal(X, Y, axis=0):
         raise ValueError(
             "X and Y must have the same number of samples (first dimension)."
         )
@@ -1326,7 +1326,7 @@ def train(
     if (
         X_val is not None
         and Y_val is not None
-        and not leaf_shapes_equal(X_val, Y_val, axes=0)
+        and not uniform_leaf_shapes_equal(X_val, Y_val, axis=0)
     ):
         raise ValueError(
             "X_val and Y_val must have the same number of samples (first"
@@ -1338,12 +1338,12 @@ def train(
         and not shapes_equal(Y_val, Y_val_unc)
     ):
         raise ValueError("Y_val_unc must have the same shape as Y_val.")
-    if not shapes_equal(X, X_val, axes=slice(1, None)):
+    if not shapes_equal(X, X_val, axis=slice(1, None)):
         raise ValueError(
             "X and X_val must have the same shape (except for the first"
             " dimension)."
         )
-    if Y is not None and not shapes_equal(Y, Y_val, axes=slice(1, None)):
+    if Y is not None and not shapes_equal(Y, Y_val, axis=slice(1, None)):
         raise ValueError(
             "Y and Y_val must have the same shape (except for the first"
             " dimension)."

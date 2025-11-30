@@ -10,9 +10,32 @@ from jaxtyping import Array, Integer, Num, PyTree, Shaped, jaxtyped
 from .typing import Any, Callable, List, Tuple
 
 
+def all_equal(
+    pytree1: PyTree[Any],
+    pytree2: PyTree[Any],
+) -> bool:
+    r"""
+    Check if two pytrees are equal in structure and content.
+    """
+    struct1 = jax.tree.structure(pytree1)
+    struct2 = jax.tree.structure(pytree2)
+    if struct1 != struct2:
+        return False
+    leaves1 = jax.tree.leaves(pytree1)
+    leaves2 = jax.tree.leaves(pytree2)
+    for leaf1, leaf2 in zip(leaves1, leaves2):
+        if isinstance(leaf1, np.ndarray) and isinstance(leaf2, np.ndarray):
+            if not np.array_equal(leaf1, leaf2):
+                return False
+        else:
+            if leaf1 != leaf2:
+                return False
+    return True
+
+
 def get_shapes(
     pytree: PyTree[Shaped[Array, "..."]],
-    axes: int | Tuple[int, ...] | slice | None = None,
+    axis: int | Tuple[int, ...] | slice | None = None,
 ) -> PyTree[Tuple[int, ...]]:
     r"""
     Get the shapes of all leaves in a PyTree of arrays, optionally selecting
@@ -21,16 +44,16 @@ def get_shapes(
 
     def _get_shape(leaf: Shaped[Array, "..."]) -> Tuple[int, ...]:
         shape = leaf.shape
-        if axes is None:
+        if axis is None:
             return shape
-        elif isinstance(axes, slice):
-            return shape[axes]
+        elif isinstance(axis, slice):
+            return shape[axis]
         else:
-            if isinstance(axes, int):
-                axes_tuple = (axes,)
+            if isinstance(axis, int):
+                tuple_axis = (axis,)
             else:
-                axes_tuple = axes
-            return tuple(shape[axis] for axis in axes_tuple)
+                tuple_axis = axis
+            return tuple(shape[ax] for ax in tuple_axis)
 
     return jax.tree.map(_get_shape, pytree)
 
@@ -537,9 +560,9 @@ def mean(
 
 @jaxtyped(typechecker=beartype)
 def add(
-    pytree1: PyTree[Num[Array, " *d"], " T"],
-    pytree2: PyTree[Num[Array, " *d"], " T"],
-) -> PyTree[Num[Array, " *d"], " T"]:
+    pytree1: PyTree[Num[Array, "..."], " T"],
+    pytree2: PyTree[Num[Array, "..."], " T"],
+) -> PyTree[Num[Array, "..."], " T"]:
     r"""
     Computes the element-wise addition of two PyTrees of arrays with the same
     structure.
@@ -559,9 +582,9 @@ def add(
 
 @jaxtyped(typechecker=beartype)
 def sub(
-    pytree1: PyTree[Num[Array, " *d"], " T"],
-    pytree2: PyTree[Num[Array, " *d"], " T"],
-) -> PyTree[Num[Array, " *d"], " T"]:
+    pytree1: PyTree[Num[Array, "..."], " T"],
+    pytree2: PyTree[Num[Array, "..."], " T"],
+) -> PyTree[Num[Array, "..."], " T"]:
     r"""
     Computes the element-wise subtraction of two PyTrees of arrays with the
     same structure.
@@ -582,9 +605,9 @@ def sub(
 
 @jaxtyped(typechecker=beartype)
 def mul(
-    pytree1: PyTree[Num[Array, " *d"], " T"],
-    pytree2: PyTree[Num[Array, " *d"], " T"],
-) -> PyTree[Num[Array, " *d"], " T"]:
+    pytree1: PyTree[Num[Array, "..."], " T"],
+    pytree2: PyTree[Num[Array, "..."], " T"],
+) -> PyTree[Num[Array, "..."], " T"]:
     r"""
     Computes the element-wise multiplication of two PyTrees of arrays with the
     same structure.
@@ -605,9 +628,9 @@ def mul(
 
 @jaxtyped(typechecker=beartype)
 def div(
-    pytree1: PyTree[Num[Array, " *d"], " T"],
-    pytree2: PyTree[Num[Array, " *d"], " T"],
-) -> PyTree[Num[Array, " *d"], " T"]:
+    pytree1: PyTree[Num[Array, "..."], " T"],
+    pytree2: PyTree[Num[Array, "..."], " T"],
+) -> PyTree[Num[Array, "..."], " T"]:
     r"""
     Computes the element-wise division of two PyTrees of arrays with the same
     structure.
@@ -764,9 +787,9 @@ def scalar_mul(
 
 @jaxtyped(typechecker=beartype)
 def astype(
-    pytree: PyTree[Shaped[Array, "..."], " T"],
+    pytree: PyTree[Shaped[Array, " ?*d"], " T"],
     dtype: jax.typing.DTypeLike,
-) -> PyTree[Shaped[Array, "..."], " T"]:
+) -> PyTree[Shaped[Array, " ?*d"], " T"]:
     r"""
     Casts all leaves of a PyTree of arrays to a specified data type.
 
@@ -811,7 +834,7 @@ def is_shape_leaf(obj: Any, allow_none: bool = True) -> bool:
 @jaxtyped(typechecker=beartype)
 def has_uniform_leaf_shapes(
     pytree: PyTree[Shaped[Array, "..."]],
-    axes: int | Tuple[int, ...] | slice | None = None,
+    axis: int | Tuple[int, ...] | slice | None = None,
 ) -> bool:
     r"""
     Checks if all leaves of a PyTree of arrays have the same shape along the
@@ -821,7 +844,7 @@ def has_uniform_leaf_shapes(
     ----------
     pytree
         The PyTree to check.
-    axes
+    axis
         The axes along which to check for uniformity. Can be an integer, a
         tuple of integers, a slice, or None. If None, all axes are checked.
     Returns
@@ -839,26 +862,26 @@ def has_uniform_leaf_shapes(
     reference_shape = leaves[0].shape
     for leaf in leaves[1:]:
         shape = leaf.shape
-        if axes is None:
+        if axis is None:
             if shape != reference_shape:
                 return False
-        elif isinstance(axes, slice):
-            if shape[axes] != reference_shape[axes]:
+        elif isinstance(axis, slice):
+            if shape[axis] != reference_shape[axis]:
                 return False
         else:
-            if isinstance(axes, int):
-                axes = (axes,)
-            for axis in axes:
-                if shape[axis] != reference_shape[axis]:
+            if isinstance(axis, int):
+                axis = (axis,)
+            for ax in axis:
+                if shape[ax] != reference_shape[ax]:
                     return False
     return True
 
 
 @jaxtyped(typechecker=beartype)
-def leaf_shapes_equal(
+def uniform_leaf_shapes_equal(
     pytree1: PyTree[Shaped[Array, "..."]],
     pytree2: PyTree[Shaped[Array, "..."]],
-    axes: int | Tuple[int, ...] | slice | None = None,
+    axis: int | Tuple[int, ...] | slice | None = None,
 ) -> bool:
     r"""
     Checks if the shapes of the leaves of two PyTrees with array leaves match
@@ -871,7 +894,7 @@ def leaf_shapes_equal(
         The first PyTree to compare.
     pytree2
         The second PyTree to compare.
-    axes
+    axis
         The axes along which to compare the shapes of the leaves. Can be an
         integer, a tuple of integers, a slice, or None. If None, all axes
         are compared.
@@ -881,23 +904,23 @@ def leaf_shapes_equal(
     otherwise.
     """
     if not has_uniform_leaf_shapes(
-        pytree1, axes
-    ) or not has_uniform_leaf_shapes(pytree2, axes):
+        pytree1, axis
+    ) or not has_uniform_leaf_shapes(pytree2, axis):
         return False
 
     leaves1 = jax.tree.leaves(pytree1)
     leaves2 = jax.tree.leaves(pytree2)
     shape1 = leaves1[0].shape
     shape2 = leaves2[0].shape
-    if axes is None:
+    if axis is None:
         return shape1 == shape2
-    elif isinstance(axes, slice):
-        return shape1[axes] == shape2[axes]
+    elif isinstance(axis, slice):
+        return shape1[axis] == shape2[axis]
     else:
-        if isinstance(axes, int):
-            axes = (axes,)
-        for axis in axes:
-            if shape1[axis] != shape2[axis]:
+        if isinstance(axis, int):
+            axis = (axis,)
+        for ax in axis:
+            if shape1[ax] != shape2[ax]:
                 return False
     return True
 
@@ -906,7 +929,7 @@ def leaf_shapes_equal(
 def shapes_equal(
     pytree1: PyTree[Shaped[Array, "..."]],
     pytree2: PyTree[Shaped[Array, "..."]],
-    axes: int | Tuple[int, ...] | slice | None = None,
+    axis: int | Tuple[int, ...] | slice | None = None,
 ) -> bool:
     r"""
     Checks if both the structure and the shapes of the leaves of two PyTrees
@@ -918,7 +941,7 @@ def shapes_equal(
         The first PyTree to compare.
     pytree2
         The second PyTree to compare.
-    axes
+    axis
         The axes along which to compare the shapes of the leaves. Can be an
         integer, a tuple of integers, a slice, or None. If None, all axes
         are compared.
@@ -938,17 +961,17 @@ def shapes_equal(
     for leaf1, leaf2 in zip(leaves1, leaves2):
         shape1 = leaf1.shape
         shape2 = leaf2.shape
-        if axes is None:
+        if axis is None:
             if shape1 != shape2:
                 return False
-        elif isinstance(axes, slice):
-            if shape1[axes] != shape2[axes]:
+        elif isinstance(axis, slice):
+            if shape1[axis] != shape2[axis]:
                 return False
         else:
-            if isinstance(axes, int):
-                axes = (axes,)
-            for axis in axes:
-                if shape1[axis] != shape2[axis]:
+            if isinstance(axis, int):
+                axis = (axis,)
+            for ax in axis:
+                if shape1[ax] != shape2[ax]:
                     return False
 
     return True
