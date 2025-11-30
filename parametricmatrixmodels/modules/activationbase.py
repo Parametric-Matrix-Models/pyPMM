@@ -41,9 +41,21 @@ class ActivationBase(BaseModule):
         self.kwargs = kwargs
 
     @property
-    @abstractmethod
     def name(self) -> str:
-        raise NotImplementedError("Subclasses must implement the name method.")
+        """
+        Get the name of the activation function module.
+
+        Returns
+        -------
+            Name of the activation function module.
+        """
+        if self.args or self.kwargs:
+            return (
+                f"{self.__class__.__name__}(args={self.args},"
+                f" kwargs={self.kwargs})"
+            )
+        else:
+            return self.__class__.__name__
 
     def is_ready(self) -> bool:
         """

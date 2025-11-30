@@ -20,15 +20,6 @@ class ReLU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "ReLU"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.relu(x, *self.args, **self.kwargs)
 
@@ -47,15 +38,6 @@ class ReLU6(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "ReLU6"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.relu6(x, *self.args, **self.kwargs)
@@ -76,15 +58,6 @@ class Sigmoid(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Sigmoid"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.sigmoid(x, *self.args, **self.kwargs)
 
@@ -103,15 +76,6 @@ class Softplus(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Softplus"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.softplus(x, *self.args, **self.kwargs)
@@ -132,15 +96,6 @@ class SparsePlus(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "SparsePlus"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.sparse_plus(x, *self.args, **self.kwargs)
 
@@ -159,15 +114,6 @@ class SparseSigmoid(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "SparseSigmoid"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.sparse_sigmoid(x, *self.args, **self.kwargs)
@@ -188,15 +134,6 @@ class SoftSign(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "SoftSign"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.soft_sign(x, *self.args, **self.kwargs)
 
@@ -215,15 +152,6 @@ class SiLU(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "SiLU"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.silu(x, *self.args, **self.kwargs)
@@ -244,15 +172,6 @@ class Swish(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Swish"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.swish(x, *self.args, **self.kwargs)
 
@@ -271,15 +190,6 @@ class LogSigmoid(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "LogSigmoid"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.log_sigmoid(x, *self.args, **self.kwargs)
@@ -300,15 +210,6 @@ class LeakyReLU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "LeakyReLU"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.leaky_relu(x, *self.args, **self.kwargs)
 
@@ -327,15 +228,6 @@ class HardSigmoid(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "HardSigmoid"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.hard_sigmoid(x, *self.args, **self.kwargs)
@@ -356,15 +248,6 @@ class HardSiLU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "HardSiLU"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.hard_silu(x, *self.args, **self.kwargs)
 
@@ -383,15 +266,6 @@ class HardSwish(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "HardSwish"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.hard_swish(x, *self.args, **self.kwargs)
@@ -412,15 +286,6 @@ class HardTanh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "HardTanh"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.hard_tanh(x, *self.args, **self.kwargs)
 
@@ -439,15 +304,6 @@ class ELU(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "ELU"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.elu(x, *self.args, **self.kwargs)
@@ -468,15 +324,6 @@ class CELU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "CELU"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.celu(x, *self.args, **self.kwargs)
 
@@ -495,15 +342,6 @@ class SELU(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "SELU"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.selu(x, *self.args, **self.kwargs)
@@ -524,15 +362,6 @@ class GELU(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "GELU"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.gelu(x, *self.args, **self.kwargs)
 
@@ -551,15 +380,6 @@ class GLU(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "GLU"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.glu(x, *self.args, **self.kwargs)
@@ -580,15 +400,6 @@ class SquarePlus(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "SquarePlus"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.squareplus(x, *self.args, **self.kwargs)
 
@@ -607,15 +418,6 @@ class Mish(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Mish"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.mish(x, *self.args, **self.kwargs)
@@ -636,15 +438,6 @@ class Identity(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Identity"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.identity(x, *self.args, **self.kwargs)
 
@@ -663,15 +456,6 @@ class Softmax(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Softmax"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.softmax(x, *self.args, **self.kwargs)
@@ -692,15 +476,6 @@ class LogSoftmax(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "LogSoftmax"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.log_softmax(x, *self.args, **self.kwargs)
 
@@ -719,15 +494,6 @@ class LogSumExp(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "LogSumExp"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.logsumexp(x, *self.args, **self.kwargs)
@@ -748,15 +514,6 @@ class Standardize(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Standardize"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.standardize(x, *self.args, **self.kwargs)
 
@@ -775,15 +532,6 @@ class OneHot(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "OneHot"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.nn.one_hot(x, *self.args, **self.kwargs)
@@ -804,15 +552,6 @@ class Abs(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Abs"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.abs(x, *self.args, **self.kwargs)
 
@@ -831,15 +570,6 @@ class Absolute(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Absolute"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.absolute(x, *self.args, **self.kwargs)
@@ -860,15 +590,6 @@ class ACos(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "ACos"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.acos(x, *self.args, **self.kwargs)
 
@@ -887,15 +608,6 @@ class ACosh(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "ACosh"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.acosh(x, *self.args, **self.kwargs)
@@ -916,15 +628,6 @@ class AMax(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "AMax"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.amax(x, *self.args, **self.kwargs)
 
@@ -943,15 +646,6 @@ class AMin(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "AMin"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.amin(x, *self.args, **self.kwargs)
@@ -972,15 +666,6 @@ class Angle(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Angle"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.angle(x, *self.args, **self.kwargs)
 
@@ -999,15 +684,6 @@ class ArcCos(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "ArcCos"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.arccos(x, *self.args, **self.kwargs)
@@ -1028,15 +704,6 @@ class ArcCosh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "ArcCosh"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.arccosh(x, *self.args, **self.kwargs)
 
@@ -1055,15 +722,6 @@ class ArcSin(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "ArcSin"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.arcsin(x, *self.args, **self.kwargs)
@@ -1084,15 +742,6 @@ class ArcSinh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "ArcSinh"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.arcsinh(x, *self.args, **self.kwargs)
 
@@ -1111,15 +760,6 @@ class ArcTan(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "ArcTan"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.arctan(x, *self.args, **self.kwargs)
@@ -1140,15 +780,6 @@ class ArcTan2(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "ArcTan2"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.arctan2(x, *self.args, **self.kwargs)
 
@@ -1167,15 +798,6 @@ class ArcTanh(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "ArcTanh"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.arctanh(x, *self.args, **self.kwargs)
@@ -1196,15 +818,6 @@ class ASin(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "ASin"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.asin(x, *self.args, **self.kwargs)
 
@@ -1223,15 +836,6 @@ class ASinh(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "ASinh"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.asinh(x, *self.args, **self.kwargs)
@@ -1252,15 +856,6 @@ class ATan(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "ATan"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.atan(x, *self.args, **self.kwargs)
 
@@ -1279,15 +874,6 @@ class ATanh(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "ATanh"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.atanh(x, *self.args, **self.kwargs)
@@ -1308,15 +894,6 @@ class Cbrt(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Cbrt"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.cbrt(x, *self.args, **self.kwargs)
 
@@ -1335,15 +912,6 @@ class Ceil(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Ceil"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.ceil(x, *self.args, **self.kwargs)
@@ -1364,15 +932,6 @@ class Clip(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Clip"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.clip(x, *self.args, **self.kwargs)
 
@@ -1391,15 +950,6 @@ class Conj(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Conj"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.conj(x, *self.args, **self.kwargs)
@@ -1420,15 +970,6 @@ class Conjugate(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Conjugate"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.conjugate(x, *self.args, **self.kwargs)
 
@@ -1447,15 +988,6 @@ class Cos(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Cos"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.cos(x, *self.args, **self.kwargs)
@@ -1476,15 +1008,6 @@ class Cosh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Cosh"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.cosh(x, *self.args, **self.kwargs)
 
@@ -1503,15 +1026,6 @@ class Deg2Rad(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Deg2Rad"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.deg2rad(x, *self.args, **self.kwargs)
@@ -1532,15 +1046,6 @@ class Degrees(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Degrees"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.degrees(x, *self.args, **self.kwargs)
 
@@ -1559,15 +1064,6 @@ class Exp(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Exp"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.exp(x, *self.args, **self.kwargs)
@@ -1588,15 +1084,6 @@ class Exp2(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Exp2"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.exp2(x, *self.args, **self.kwargs)
 
@@ -1615,15 +1102,6 @@ class Expm1(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Expm1"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.expm1(x, *self.args, **self.kwargs)
@@ -1644,15 +1122,6 @@ class FAbs(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "FAbs"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.fabs(x, *self.args, **self.kwargs)
 
@@ -1671,15 +1140,6 @@ class Fix(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Fix"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.fix(x, *self.args, **self.kwargs)
@@ -1700,15 +1160,6 @@ class FloatPower(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "FloatPower"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.float_power(x, *self.args, **self.kwargs)
 
@@ -1727,15 +1178,6 @@ class Floor(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Floor"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.floor(x, *self.args, **self.kwargs)
@@ -1756,15 +1198,6 @@ class FloorDivide(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "FloorDivide"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.floor_divide(x, *self.args, **self.kwargs)
 
@@ -1783,15 +1216,6 @@ class FrExp(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "FrExp"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.frexp(x, *self.args, **self.kwargs)
@@ -1812,15 +1236,6 @@ class I0(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "I0"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.i0(x, *self.args, **self.kwargs)
 
@@ -1839,15 +1254,6 @@ class Imag(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Imag"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.imag(x, *self.args, **self.kwargs)
@@ -1868,15 +1274,6 @@ class Invert(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Invert"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.invert(x, *self.args, **self.kwargs)
 
@@ -1895,15 +1292,6 @@ class LDExp(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "LDExp"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.ldexp(x, *self.args, **self.kwargs)
@@ -1924,15 +1312,6 @@ class Log(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Log"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.log(x, *self.args, **self.kwargs)
 
@@ -1951,15 +1330,6 @@ class Log10(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Log10"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.log10(x, *self.args, **self.kwargs)
@@ -1980,15 +1350,6 @@ class Log1p(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Log1p"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.log1p(x, *self.args, **self.kwargs)
 
@@ -2007,15 +1368,6 @@ class Log2(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Log2"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.log2(x, *self.args, **self.kwargs)
@@ -2036,15 +1388,6 @@ class NaNToNum(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "NaNToNum"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.nan_to_num(x, *self.args, **self.kwargs)
 
@@ -2063,15 +1406,6 @@ class NanToNum(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "NanToNum"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.nan_to_num(x, *self.args, **self.kwargs)
@@ -2092,15 +1426,6 @@ class NextAfter(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "NextAfter"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.nextafter(x, *self.args, **self.kwargs)
 
@@ -2119,15 +1444,6 @@ class Packbits(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Packbits"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.packbits(x, *self.args, **self.kwargs)
@@ -2148,15 +1464,6 @@ class Piecewise(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Piecewise"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.piecewise(x, *self.args, **self.kwargs)
 
@@ -2175,15 +1482,6 @@ class Positive(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Positive"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.positive(x, *self.args, **self.kwargs)
@@ -2204,15 +1502,6 @@ class Pow(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Pow"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.pow(x, *self.args, **self.kwargs)
 
@@ -2231,15 +1520,6 @@ class Power(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Power"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.power(x, *self.args, **self.kwargs)
@@ -2260,15 +1540,6 @@ class Rad2Deg(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Rad2Deg"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.rad2deg(x, *self.args, **self.kwargs)
 
@@ -2287,15 +1558,6 @@ class Radians(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Radians"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.radians(x, *self.args, **self.kwargs)
@@ -2316,15 +1578,6 @@ class Real(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Real"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.real(x, *self.args, **self.kwargs)
 
@@ -2343,15 +1596,6 @@ class Reciprocal(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Reciprocal"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.reciprocal(x, *self.args, **self.kwargs)
@@ -2372,15 +1616,6 @@ class RInt(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "RInt"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.rint(x, *self.args, **self.kwargs)
 
@@ -2399,15 +1634,6 @@ class Round(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Round"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.round(x, *self.args, **self.kwargs)
@@ -2428,15 +1654,6 @@ class Sign(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Sign"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.sign(x, *self.args, **self.kwargs)
 
@@ -2455,15 +1672,6 @@ class Signbit(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Signbit"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.signbit(x, *self.args, **self.kwargs)
@@ -2484,15 +1692,6 @@ class Sin(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Sin"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.sin(x, *self.args, **self.kwargs)
 
@@ -2511,15 +1710,6 @@ class Sinc(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Sinc"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.sinc(x, *self.args, **self.kwargs)
@@ -2540,15 +1730,6 @@ class Sinh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Sinh"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.sinh(x, *self.args, **self.kwargs)
 
@@ -2567,15 +1748,6 @@ class Sqrt(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Sqrt"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.sqrt(x, *self.args, **self.kwargs)
@@ -2596,15 +1768,6 @@ class Square(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Square"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.square(x, *self.args, **self.kwargs)
 
@@ -2623,15 +1786,6 @@ class Tan(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Tan"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.tan(x, *self.args, **self.kwargs)
@@ -2652,15 +1806,6 @@ class Tanh(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Tanh"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.tanh(x, *self.args, **self.kwargs)
 
@@ -2680,15 +1825,6 @@ class Trunc(ActivationBase):
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
 
-    @property
-    def name(self) -> str:
-        basename = "Trunc"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
-
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.trunc(x, *self.args, **self.kwargs)
 
@@ -2707,15 +1843,6 @@ class Unpackbits(ActivationBase):
         self.args = args
         self.kwargs = kwargs
         super().__init__(*args, **kwargs)
-
-    @property
-    def name(self) -> str:
-        basename = "Unpackbits"
-
-        if self.args or self.kwargs:
-            return f"{basename}(args={self.args}, kwargs={self.kwargs})"
-        else:
-            return basename
 
     def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
         return jax.numpy.unpackbits(x, *self.args, **self.kwargs)
