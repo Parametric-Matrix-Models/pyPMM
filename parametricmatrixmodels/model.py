@@ -959,8 +959,7 @@ class Model(BaseModule):
                 "complex128 data types."
             )
 
-        for module in self.modules:
-            module.set_precision(prec)
+        jax.tree.map(lambda m: m.set_precision(prec), self.modules)
 
     # alias for set_precision method that returns self
     def astype(self, dtype: jax.typing.DTypeLike | int, /) -> "Model":
@@ -999,7 +998,7 @@ class Model(BaseModule):
             | None
         ) = None,  # uncertainty in the validation targets, if applicable
         loss_fn: str | Callable = "mse",
-        lr: float = 1e-3,
+        lr: float | Callable[[int], float] = 1e-3,
         batch_size: int = 32,
         epochs: int = 100,
         target_loss: float = -np.inf,

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import jax
 import jax.numpy as np
-from jaxtyping import Array, Real
+from jaxtyping import Array, PyTree, Real
 
 from ..typing import (
     Any,
@@ -26,8 +26,14 @@ class MinMaxScaler(Scaler):
         feature_range: (
             Real[Array, "2"]
             | Tuple[
-                float | int | BatchlessRealDataFixed,
-                float | int | BatchlessRealDataFixed,
+                float
+                | int
+                | BatchlessRealDataFixed
+                | PyTree[float | int, "RealDataFixed"],
+                float
+                | int
+                | BatchlessRealDataFixed
+                | PyTree[float | int, "RealDataFixed"],
             ]
             | List[float | int | BatchlessRealDataFixed]
         ) = (0.0, 1.0),

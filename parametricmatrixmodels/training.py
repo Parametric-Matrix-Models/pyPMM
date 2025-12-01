@@ -431,14 +431,24 @@ def _train(
     ],  # static, jittable
     init_state: ModelState,  # initial model state
     init_rng: Any,  # initial model rng
-    X: Data,
-    Y: Data | None,
-    Y_unc: Data | None,  # uncertainty in the targets, if applicable
-    X_val: Data,
-    Y_val: Data | None,
-    Y_val_unc: (
-        Data | None
-    ),  # uncertainty in the validation targets, if applicable
+    X: PyTree[
+        Inexact[Array, "num_samples ?*features"], " InStruct"
+    ],  # in features
+    Y: PyTree[
+        Inexact[Array, "num_samples ?*targets"], " OutStruct"
+    ],  # targets
+    Y_unc: PyTree[
+        Inexact[Array, "num_samples ?*targets"], " OutStruct"
+    ],  # uncertainty in the targets, if applicable
+    X_val: PyTree[
+        Inexact[Array, "num_val_samples ?*features"], " InStruct"
+    ],  # validation in features
+    Y_val: PyTree[
+        Inexact[Array, "num_val_samples ?*targets"], " OutStruct"
+    ],  # validation targets
+    Y_val_unc: PyTree[
+        Inexact[Array, "num_val_samples ?*targets"], " OutStruct"
+    ],  # uncertainty in the validation targets, if applicable
     loss_fn: Callable[
         [Data, Data, Data, ModelParams, bool, ModelState, Any],
         Tuple[float, ModelState],
@@ -1131,7 +1141,7 @@ def train(
         PyTree[Inexact[Array, "num_val_samples ?*targets"], " OutStruct"]
         | None
     ) = None,  # uncertainty in the validation targets, if applicable
-    lr: float = 1e-3,
+    lr: float | Callable[[int], float] = 1e-3,
     batch_size: int = 32,
     epochs: int = 100,
     target_loss: float = 1e-12,

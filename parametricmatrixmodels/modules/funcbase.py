@@ -146,7 +146,7 @@ class FuncBase(BaseModule):
             raise RuntimeError(
                 "Failed to compute output shape in `get_output_shape`. "
                 "Make sure the function `f` can handle F32 inputs with shape "
-                f"{input_w_batch_shape}, which includes a leading size-1 "
+                f"{get_shapes(dummy_input)}, which includes a leading size-1 "
                 "batch dimension."
             ) from e
 
