@@ -233,7 +233,9 @@ def adam(
         # explicit float32 to prevent upcasting in mixed precision
         m_hat = m / np.float32(1 - b1 ** (i + 1))
         v_hat = v / np.float32(1 - b2 ** (i + 1))
-        x = x - step_size(i) * m_hat / (np.sqrt(v_hat) + eps)
+        x = x - step_size(i).astype(np.float32) * m_hat / (
+            np.sqrt(v_hat) + eps
+        )
         return OptimizerState(x, m, v)
 
     @jaxtyped(typechecker=beartype)
@@ -315,7 +317,9 @@ def complex_adam(
         # explicit float32 to prevent upcasting in mixed precision
         m_hat = m / np.float32(1 - b1 ** (i + 1))
         v_hat = v / np.float32(1 - b2 ** (i + 1))
-        x = x - (step_size(i) * m_hat / (np.sqrt(v_hat) + eps))
+        x = x - (
+            step_size(i).astype(np.float32) * m_hat / (np.sqrt(v_hat) + eps)
+        )
 
         return OptimizerState(x, m, v)
 
