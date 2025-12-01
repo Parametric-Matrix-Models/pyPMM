@@ -1,0 +1,56 @@
+﻿TreeFlatten
+===========
+
+``parametricmatrixmodels.modules.TreeFlatten``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: TreeFlatten
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__, _abc_impl
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~TreeFlatten.astype
+      
+         ~TreeFlatten.compile
+      
+         ~TreeFlatten.deserialize
+      
+         ~TreeFlatten.get_hyperparameters
+      
+         ~TreeFlatten.get_num_trainable_floats
+      
+         ~TreeFlatten.get_output_shape
+      
+         ~TreeFlatten.get_params
+      
+         ~TreeFlatten.get_state
+      
+         ~TreeFlatten.is_ready
+      
+         ~TreeFlatten.serialize
+      
+         ~TreeFlatten.set_hyperparameters
+      
+         ~TreeFlatten.set_params
+      
+         ~TreeFlatten.set_precision
+      
+         ~TreeFlatten.set_state
+
+   .. autosummary::
+
+      
+      
+         ~TreeFlatten.name

@@ -9,7 +9,7 @@
    :show-inheritance:
    :members:
    :special-members: __call__
-   :exclude-members: __init__
+   :exclude-members: __init__, _abc_impl
 
    .. automethod:: __init__
 
@@ -21,13 +21,25 @@
       
       
       
+         ~AEPMM.add
+      
+         ~AEPMM.add_module
+      
+         ~AEPMM.append
+      
+         ~AEPMM.append_module
+      
          ~AEPMM.astype
       
          ~AEPMM.compile
       
          ~AEPMM.deserialize
       
+         ~AEPMM.from_file
+      
          ~AEPMM.get_hyperparameters
+      
+         ~AEPMM.get_modules
       
          ~AEPMM.get_num_trainable_floats
       
@@ -35,13 +47,39 @@
       
          ~AEPMM.get_params
       
+         ~AEPMM.get_rng
+      
          ~AEPMM.get_state
+      
+         ~AEPMM.grad_input
+      
+         ~AEPMM.grad_params
+      
+         ~AEPMM.insert
+      
+         ~AEPMM.insert_module
       
          ~AEPMM.is_ready
       
-         ~AEPMM.name
+         ~AEPMM.load
+      
+         ~AEPMM.pop
+      
+         ~AEPMM.pop_module_by_index
+      
+         ~AEPMM.pop_module_by_key
+      
+         ~AEPMM.predict
+      
+         ~AEPMM.prepend
+      
+         ~AEPMM.prepend_module
       
          ~AEPMM.reset
+      
+         ~AEPMM.save
+      
+         ~AEPMM.save_compressed
       
          ~AEPMM.serialize
       
@@ -51,8 +89,14 @@
       
          ~AEPMM.set_precision
       
+         ~AEPMM.set_rng
+      
          ~AEPMM.set_state
+      
+         ~AEPMM.train
 
    .. autosummary::
 
       
+      
+         ~AEPMM.name

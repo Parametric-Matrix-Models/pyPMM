@@ -1,0 +1,102 @@
+﻿SequentialModel
+===============
+
+``parametricmatrixmodels.SequentialModel``
+
+.. currentmodule:: parametricmatrixmodels
+
+.. autoclass:: SequentialModel
+   :show-inheritance:
+   :members:
+   :special-members: __call__, compile, grad_input, grad_params
+   :exclude-members: __init__, _abc_impl
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~SequentialModel.add
+      
+         ~SequentialModel.add_module
+      
+         ~SequentialModel.append
+      
+         ~SequentialModel.append_module
+      
+         ~SequentialModel.astype
+      
+         ~SequentialModel.compile
+      
+         ~SequentialModel.deserialize
+      
+         ~SequentialModel.from_file
+      
+         ~SequentialModel.get_hyperparameters
+      
+         ~SequentialModel.get_modules
+      
+         ~SequentialModel.get_num_trainable_floats
+      
+         ~SequentialModel.get_output_shape
+      
+         ~SequentialModel.get_params
+      
+         ~SequentialModel.get_rng
+      
+         ~SequentialModel.get_state
+      
+         ~SequentialModel.grad_input
+      
+         ~SequentialModel.grad_params
+      
+         ~SequentialModel.insert
+      
+         ~SequentialModel.insert_module
+      
+         ~SequentialModel.is_ready
+      
+         ~SequentialModel.load
+      
+         ~SequentialModel.pop
+      
+         ~SequentialModel.pop_module_by_index
+      
+         ~SequentialModel.pop_module_by_key
+      
+         ~SequentialModel.predict
+      
+         ~SequentialModel.prepend
+      
+         ~SequentialModel.prepend_module
+      
+         ~SequentialModel.reset
+      
+         ~SequentialModel.save
+      
+         ~SequentialModel.save_compressed
+      
+         ~SequentialModel.serialize
+      
+         ~SequentialModel.set_hyperparameters
+      
+         ~SequentialModel.set_params
+      
+         ~SequentialModel.set_precision
+      
+         ~SequentialModel.set_rng
+      
+         ~SequentialModel.set_state
+      
+         ~SequentialModel.train
+
+   .. autosummary::
+
+      
+      
+         ~SequentialModel.name

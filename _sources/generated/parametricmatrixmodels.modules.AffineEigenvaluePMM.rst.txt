@@ -9,7 +9,7 @@
    :show-inheritance:
    :members:
    :special-members: __call__
-   :exclude-members: __init__
+   :exclude-members: __init__, _abc_impl
 
    .. automethod:: __init__
 
@@ -21,13 +21,25 @@
       
       
       
+         ~AffineEigenvaluePMM.add
+      
+         ~AffineEigenvaluePMM.add_module
+      
+         ~AffineEigenvaluePMM.append
+      
+         ~AffineEigenvaluePMM.append_module
+      
          ~AffineEigenvaluePMM.astype
       
          ~AffineEigenvaluePMM.compile
       
          ~AffineEigenvaluePMM.deserialize
       
+         ~AffineEigenvaluePMM.from_file
+      
          ~AffineEigenvaluePMM.get_hyperparameters
+      
+         ~AffineEigenvaluePMM.get_modules
       
          ~AffineEigenvaluePMM.get_num_trainable_floats
       
@@ -35,13 +47,39 @@
       
          ~AffineEigenvaluePMM.get_params
       
+         ~AffineEigenvaluePMM.get_rng
+      
          ~AffineEigenvaluePMM.get_state
+      
+         ~AffineEigenvaluePMM.grad_input
+      
+         ~AffineEigenvaluePMM.grad_params
+      
+         ~AffineEigenvaluePMM.insert
+      
+         ~AffineEigenvaluePMM.insert_module
       
          ~AffineEigenvaluePMM.is_ready
       
-         ~AffineEigenvaluePMM.name
+         ~AffineEigenvaluePMM.load
+      
+         ~AffineEigenvaluePMM.pop
+      
+         ~AffineEigenvaluePMM.pop_module_by_index
+      
+         ~AffineEigenvaluePMM.pop_module_by_key
+      
+         ~AffineEigenvaluePMM.predict
+      
+         ~AffineEigenvaluePMM.prepend
+      
+         ~AffineEigenvaluePMM.prepend_module
       
          ~AffineEigenvaluePMM.reset
+      
+         ~AffineEigenvaluePMM.save
+      
+         ~AffineEigenvaluePMM.save_compressed
       
          ~AffineEigenvaluePMM.serialize
       
@@ -51,8 +89,14 @@
       
          ~AffineEigenvaluePMM.set_precision
       
+         ~AffineEigenvaluePMM.set_rng
+      
          ~AffineEigenvaluePMM.set_state
+      
+         ~AffineEigenvaluePMM.train
 
    .. autosummary::
 
       
+      
+         ~AffineEigenvaluePMM.name

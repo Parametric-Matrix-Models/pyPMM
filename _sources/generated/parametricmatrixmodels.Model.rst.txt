@@ -1,0 +1,102 @@
+﻿Model
+=====
+
+``parametricmatrixmodels.Model``
+
+.. currentmodule:: parametricmatrixmodels
+
+.. autoclass:: Model
+   :show-inheritance:
+   :members:
+   :special-members: __call__, compile, grad_input, grad_params
+   :exclude-members: __init__, _abc_impl
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~Model.add
+      
+         ~Model.add_module
+      
+         ~Model.append
+      
+         ~Model.append_module
+      
+         ~Model.astype
+      
+         ~Model.compile
+      
+         ~Model.deserialize
+      
+         ~Model.from_file
+      
+         ~Model.get_hyperparameters
+      
+         ~Model.get_modules
+      
+         ~Model.get_num_trainable_floats
+      
+         ~Model.get_output_shape
+      
+         ~Model.get_params
+      
+         ~Model.get_rng
+      
+         ~Model.get_state
+      
+         ~Model.grad_input
+      
+         ~Model.grad_params
+      
+         ~Model.insert
+      
+         ~Model.insert_module
+      
+         ~Model.is_ready
+      
+         ~Model.load
+      
+         ~Model.pop
+      
+         ~Model.pop_module_by_index
+      
+         ~Model.pop_module_by_key
+      
+         ~Model.predict
+      
+         ~Model.prepend
+      
+         ~Model.prepend_module
+      
+         ~Model.reset
+      
+         ~Model.save
+      
+         ~Model.save_compressed
+      
+         ~Model.serialize
+      
+         ~Model.set_hyperparameters
+      
+         ~Model.set_params
+      
+         ~Model.set_precision
+      
+         ~Model.set_rng
+      
+         ~Model.set_state
+      
+         ~Model.train
+
+   .. autosummary::
+
+      
+      
+         ~Model.name

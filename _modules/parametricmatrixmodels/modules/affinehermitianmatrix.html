@@ -131,8 +131,8 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../model.html">
-    Model
+  <a class="nav-link nav-internal" href="../../../models.html">
+    Models
   </a>
 </li>
 
@@ -181,7 +181,7 @@
           
           
           
-          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -231,8 +231,8 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../model.html">
-    Model
+  <a class="nav-link nav-internal" href="../../../models.html">
+    Models
   </a>
 </li>
 
@@ -272,7 +272,7 @@
           
           
           
-          <a href="https://github.com/Parametric-Matrix-Models" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -339,19 +339,30 @@
   <h1>Source code for parametricmatrixmodels.modules.affinehermitianmatrix</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Inexact</span><span class="p">,</span> <span class="n">jaxtyped</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">._regression_backing_funcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">exact_smoothing_matrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_shape_leaf</span><span class="p">,</span> <span class="n">is_single_leaf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Data</span><span class="p">,</span>
+    <span class="n">DataShape</span><span class="p">,</span>
+    <span class="n">HyperParams</span><span class="p">,</span>
+    <span class="n">ModuleCallable</span><span class="p">,</span>
+    <span class="n">Params</span><span class="p">,</span>
+    <span class="n">State</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._smoothing</span><span class="w"> </span><span class="kn">import</span> <span class="n">exact_smoothing_matrix</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.basemodule</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
 
 
 <div class="viewcode-block" id="AffineHermitianMatrix">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AffineHermitianMatrix</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Module that builds a parametric hermitian matrix that is affine in the</span>
 <span class="sd">    input features.</span>
 
@@ -359,15 +370,18 @@
 <span class="sd">    where :math:`M_0, M_1, ..., M_p` are (trainable) Hermitian matrices,</span>
 <span class="sd">    :math:`x_1, ..., x_p` are the input features, :math:`s` is the</span>
 <span class="sd">    smoothing hyperparameter, and :math:`C` is a matrix that is computed</span>
-<span class="sd">    as the sum of the commutators of all the Hermitian matrices, in an</span>
-<span class="sd">    efficient way using cumulative sums and the linearity of the</span>
-<span class="sd">    commutator:</span>
+<span class="sd">    as the imaginary unit times the sum of the commutators of all the</span>
+<span class="sd">    :math:`M_i` matrices, in an efficient way using cumulative sums and the</span>
+<span class="sd">    linearity of the commutator:</span>
 
 <span class="sd">    .. math::</span>
 
-<span class="sd">        C &amp;= \\sum_{\\substack{i,j\\\\i\\neq j}} \\left[M_i, M_j\\right] \\\\</span>
-<span class="sd">          &amp;= \\sum_{\\substack{i\\\\i\\neq j}}</span>
-<span class="sd">             \\left[M_i, \\sum_k^j M_k\\right]</span>
+<span class="sd">        C &amp;= i\sum_{\substack{i,j\\i\neq j}} \left[M_i, M_j\right] \\</span>
+<span class="sd">          &amp;= i\sum_{\substack{i\\i\neq j}}</span>
+<span class="sd">             \left[M_i, \sum_k^j M_k\right]</span>
+
+<span class="sd">    Only accepts PyTree data that has a single leaf array that is 1D, excluding</span>
+<span class="sd">    the batch dimension. The PyTree structure is preserved in the output.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -389,11 +403,11 @@
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">matrix_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">smoothing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">Ms</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">matrix_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">smoothing</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">Ms</span><span class="p">:</span> <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;_ n n&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">init_magnitude</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-2</span><span class="p">,</span>
-        <span class="n">flatten</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">bias_term</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an ``AffineHermitianMatrix`` module.</span>
@@ -407,17 +421,15 @@
 <span class="sd">                smoothing. Default is ``None``/``0.0`` (no smoothing).</span>
 <span class="sd">            Ms</span>
 <span class="sd">                Optional array of matrices :math:`M_0, M_1, ..., M_p` that</span>
-<span class="sd">                define the parametric affine matrix. Each :math:`M` must be</span>
+<span class="sd">                define the parametric affine matrix. Each :math:`M_i` must be</span>
 <span class="sd">                Hermitian. If not provided, the matrices will be randomly</span>
 <span class="sd">                initialized when the module is compiled. Default is ``None``.</span>
 <span class="sd">            init_magnitude</span>
 <span class="sd">                Optional initial magnitude of the random matrices, used when</span>
 <span class="sd">                initializing the module. Default is ``1e-2``.</span>
-<span class="sd">            flatten</span>
-<span class="sd">                If ``True``, the *output* will be flattened to a 1D array.</span>
-<span class="sd">                Useful when combining with ``SubsetModule`` or other modules in</span>
-<span class="sd">                order to avoid ragged arrays. Default is ``False``.</span>
-
+<span class="sd">            bias_term</span>
+<span class="sd">                If ``True``, include the bias term :math:`M_0` in the equation</span>
+<span class="sd">                for :math:`M(x)`. Default is ``True``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># input validation</span>
@@ -441,20 +453,18 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span> <span class="o">=</span> <span class="n">matrix_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="o">=</span> <span class="n">smoothing</span> <span class="k">if</span> <span class="n">smoothing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bias_term</span> <span class="o">=</span> <span class="n">bias_term</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Ms</span> <span class="o">=</span> <span class="n">Ms</span>  <span class="c1"># matrices M0, M1, ..., Mp</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span> <span class="o">=</span> <span class="n">init_magnitude</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">flatten</span> <span class="o">=</span> <span class="n">flatten</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span> <span class="o">=</span> <span class="n">init_magnitude</span></div>
 
 
-<div class="viewcode-block" id="AffineHermitianMatrix.name">
-<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix.name">[docs]</a>
+    <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;AffineHermitianMatrix(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="si">}</span><span class="s2">,&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot; smoothing=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, FLATTENED&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">flatten</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">)&quot;</span>
-        <span class="p">)</span></div>
-
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mf">0.0</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="sa">f</span><span class="s1">&#39; smooth=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span><span class="si">}</span><span class="s1">&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">bias_term</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;, no bias&#39;</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="AffineHermitianMatrix.is_ready">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix.is_ready">[docs]</a>
@@ -478,54 +488,102 @@
 
 <div class="viewcode-block" id="AffineHermitianMatrix._get_callable">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix._get_callable">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">affine_hermitian_matrix</span><span class="p">(</span>
-            <span class="n">params</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
-            <span class="n">input_NF</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-            <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-            <span class="n">state</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
-            <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleCallable</span><span class="p">:</span>
 
-            <span class="n">Ms</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias_term</span><span class="p">:</span>
+
+            <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">make_affine_hermitian_matrix</span><span class="p">(</span>
+                <span class="n">Ms</span><span class="p">:</span> <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;p n n&quot;</span><span class="p">],</span>
+                <span class="n">features</span><span class="p">:</span> <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;b p-1&quot;</span><span class="p">],</span>
+            <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;b n n&quot;</span><span class="p">]:</span>
+
+                <span class="c1"># convert to common dtype, this should be traced out</span>
+                <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">result_type</span><span class="p">(</span><span class="n">Ms</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">features</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+                <span class="n">Ms</span> <span class="o">=</span> <span class="n">Ms</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+
+                <span class="n">M</span> <span class="o">=</span> <span class="n">Ms</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
+                    <span class="s2">&quot;ni,ijk-&gt;njk&quot;</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">Ms</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">M</span> <span class="o">+=</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="o">*</span> <span class="n">exact_smoothing_matrix</span><span class="p">(</span><span class="n">Ms</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+                    <span class="p">)</span>
+                <span class="k">return</span> <span class="n">M</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">make_affine_hermitian_matrix</span><span class="p">(</span>
+                <span class="n">Ms</span><span class="p">:</span> <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;p n n&quot;</span><span class="p">],</span>
+                <span class="n">features</span><span class="p">:</span> <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;b p&quot;</span><span class="p">],</span>
+            <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;b n n&quot;</span><span class="p">]:</span>
+                <span class="c1"># convert to common dtype, this should be traced out</span>
+                <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">result_type</span><span class="p">(</span><span class="n">Ms</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">features</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+                <span class="n">Ms</span> <span class="o">=</span> <span class="n">Ms</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
+
+                <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ni,ijk-&gt;njk&quot;</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">Ms</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
+                    <span class="n">M</span> <span class="o">+=</span> <span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="o">*</span> <span class="n">exact_smoothing_matrix</span><span class="p">(</span><span class="n">Ms</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+                    <span class="p">)</span>
+                <span class="k">return</span> <span class="n">M</span>
+
+        <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">affine_hermitian_matrix</span><span class="p">(</span>
+            <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">,</span>
+            <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
+            <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+            <span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">,</span>
+            <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Data</span><span class="p">,</span> <span class="n">State</span><span class="p">]:</span>
+
+            <span class="n">Ms</span> <span class="o">=</span> <span class="n">params</span>
 
             <span class="c1"># enforce Hermitian matrices</span>
             <span class="n">Ms</span> <span class="o">=</span> <span class="p">(</span><span class="n">Ms</span> <span class="o">+</span> <span class="n">Ms</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span> <span class="o">/</span> <span class="mf">2.0</span>
 
-            <span class="n">M</span> <span class="o">=</span> <span class="n">Ms</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
-                <span class="s2">&quot;ni,ijk-&gt;njk&quot;</span><span class="p">,</span> <span class="n">input_NF</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">Ms</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span> <span class="n">Ms</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="c1"># tree map over the data to preserve the PyTree structure</span>
+
+            <span class="c1"># compile will have validated that there is only one leaf that is</span>
+            <span class="c1"># a 1D array, excluding the batch dimension</span>
+            <span class="n">M</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">make_affine_hermitian_matrix</span><span class="p">(</span><span class="n">Ms</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span>
+                <span class="n">data</span><span class="p">,</span>
             <span class="p">)</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="o">!=</span> <span class="mf">0.0</span><span class="p">:</span>
-                <span class="n">M</span> <span class="o">+=</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span>
-                    <span class="o">*</span> <span class="n">exact_smoothing_matrix</span><span class="p">(</span><span class="n">Ms</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Ms</span><span class="p">[</span><span class="mi">1</span><span class="p">:])[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
-                <span class="p">)</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flatten</span><span class="p">:</span>
-                <span class="c1"># preserve batch dimension</span>
-                <span class="k">return</span> <span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">state</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">affine_hermitian_matrix</span></div>
 
 
 <div class="viewcode-block" id="AffineHermitianMatrix.compile">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix.compile">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># input shape must be 1D</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">valid</span><span class="p">,</span> <span class="n">leaf</span> <span class="o">=</span> <span class="n">is_single_leaf</span><span class="p">(</span>
+            <span class="n">input_shape</span><span class="p">,</span> <span class="n">ndim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span>
+        <span class="p">)</span>
+
+        <span class="c1"># input shape must be a PyTree with a single leaf that is 1D</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">valid</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Input shape must be 1D, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span><span class="si">}</span><span class="s2">D shape: &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;Input shape must be a PyTree with a single leaf consisting of&quot;</span>
+                <span class="s2">&quot; a 1D array, got: </span><span class="si">{input_shape}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
+
+        <span class="c1"># number of matrices is number of features + 1 (bias) if bias is used</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">leaf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias_term</span> <span class="k">else</span> <span class="n">leaf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="c1"># if the module is already ready, just verify the input shape</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ms</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ms</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">p</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Input shape </span><span class="si">{</span><span class="n">input_shape</span><span class="si">}</span><span class="s2"> does not match the expected &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Input shape </span><span class="si">{</span><span class="n">leaf</span><span class="si">}</span><span class="s2"> does not match the expected &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;number of features </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Ms</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> &quot;</span>
                 <span class="p">)</span>
             <span class="k">return</span>
@@ -535,13 +593,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">Ms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span> <span class="o">*</span> <span class="p">(</span>
             <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
                 <span class="n">rng_Mreal</span><span class="p">,</span>
-                <span class="p">(</span><span class="n">input_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">),</span>
                 <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="o">+</span> <span class="mi">1</span><span class="n">j</span>
             <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
                 <span class="n">rng_Mimag</span><span class="p">,</span>
-                <span class="p">(</span><span class="n">input_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">),</span>
+                <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">),</span>
                 <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">)</span>
@@ -551,54 +609,57 @@
 
 <div class="viewcode-block" id="AffineHermitianMatrix.get_output_shape">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix.get_output_shape">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">flatten</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="o">**</span><span class="mi">2</span><span class="p">,)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+        <span class="c1"># return (n,n) with the same PyTree structure as input_shape, so long</span>
+        <span class="c1"># as the input shape is valid</span>
+        <span class="n">valid</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">is_single_leaf</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">ndim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">valid</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Input shape must be a PyTree with a single leaf consisting of&quot;</span>
+                <span class="s2">&quot; a 1D array, got: </span><span class="si">{input_shape}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">),</span>
+            <span class="n">input_shape</span><span class="p">,</span>
+            <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="AffineHermitianMatrix.get_hyperparameters">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix.get_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;matrix_size&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">,</span>
             <span class="s2">&quot;smoothing&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span><span class="p">,</span>
             <span class="s2">&quot;init_magnitude&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span><span class="p">,</span>
-            <span class="s2">&quot;flatten&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flatten</span><span class="p">,</span>
+            <span class="s2">&quot;bias_term&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bias_term</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="AffineHermitianMatrix.set_hyperparameters">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix.set_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Cannot set hyperparameters after the module has parameters&quot;</span>
             <span class="p">)</span>
 
-        <span class="nb">super</span><span class="p">(</span><span class="n">AffineHermitianMatrix</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="AffineHermitianMatrix.get_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix.get_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ms</span><span class="p">,)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ms</span></div>
 
 
 <div class="viewcode-block" id="AffineHermitianMatrix.set_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineHermitianMatrix.html#parametricmatrixmodels.modules.AffineHermitianMatrix.set_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span>
-            <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span>
-        <span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;params must be a tuple of numpy arrays&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected 1 parameter arrays, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Params must be a numpy array&quot;</span><span class="p">)</span>
 
-        <span class="n">Ms</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">Ms</span> <span class="o">=</span> <span class="n">params</span>
 
         <span class="n">expected_shape</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">Ms</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ms</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">Ms</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -608,7 +669,8 @@
 
         <span class="k">if</span> <span class="n">Ms</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">expected_shape</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Ms must be a 3D array of shape (input_size+1, matrix_size,&quot;</span>
+                <span class="s2">&quot;Ms must be a 3D array of shape (input_size&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;+1&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">bias_term</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">, matrix_size,&quot;</span>
                 <span class="sa">f</span><span class="s2">&quot; matrix_size) [</span><span class="si">{</span><span class="n">expected_shape</span><span class="si">}</span><span class="s2">], got </span><span class="si">{</span><span class="n">Ms</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
         <span class="c1"># ensure Ms are Hermitian</span>
@@ -651,44 +713,6 @@
 <script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
-<div class="bd-footer__inner bd-page-width">
-  
-    <div class="footer-items__start">
-      
-        <div class="footer-item">
-
-  <p class="copyright">
-    
-      © Copyright 2025, Patrick Cook.
-      <br/>
-    
-  </p>
-</div>
-      
-        <div class="footer-item">
-
-  <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
-    <br/>
-  </p>
-</div>
-      
-    </div>
-  
-  
-  
-    <div class="footer-items__end">
-      
-        <div class="footer-item">
-<p class="theme-version">
-  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
-</p></div>
-      
-    </div>
-  
-</div>
-
   </footer>
   </body>
 </html>

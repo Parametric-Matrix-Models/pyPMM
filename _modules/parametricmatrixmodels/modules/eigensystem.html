@@ -131,8 +131,8 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../model.html">
-    Model
+  <a class="nav-link nav-internal" href="../../../models.html">
+    Models
   </a>
 </li>
 
@@ -231,8 +231,8 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../model.html">
-    Model
+  <a class="nav-link nav-internal" href="../../../models.html">
+    Models
   </a>
 </li>
 
@@ -339,12 +339,28 @@
   <h1>Source code for parametricmatrixmodels.modules.eigensystem</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">jaxtyped</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">._eigensystems</span><span class="w"> </span><span class="kn">import</span> <span class="n">select_eigenpairs_by_eigenvalue</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..eigen_util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">select_eigenpairs_by_eigenvalue</span><span class="p">,</span>
+    <span class="n">validate_eigensystem_input_shape</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_shape_leaf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">ArrayData</span><span class="p">,</span>
+    <span class="n">Data</span><span class="p">,</span>
+    <span class="n">DataShape</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">HyperParams</span><span class="p">,</span>
+    <span class="n">ModuleCallable</span><span class="p">,</span>
+    <span class="n">Params</span><span class="p">,</span>
+    <span class="n">State</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.basemodule</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
 
 
@@ -353,18 +369,10 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Eigensystem</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Module to compute selected eigenpairs of a symmetric (Hermitian) matrix.</span>
+<span class="sd">    Can be applied over PyTrees of matrices.</span>
 
-<span class="sd">    The output of this module for a single input sample is an array where each</span>
-<span class="sd">    column is an eigenvalue followed by its corresponding eigenvector, e.g.</span>
-
-<span class="sd">    .. math::</span>
-
-<span class="sd">        \begin{bmatrix}</span>
-<span class="sd">            \lambda_1 &amp; \lambda_2 &amp; \ldots \\</span>
-<span class="sd">            v_{1,1} &amp; v_{2,1} &amp; \ldots \\</span>
-<span class="sd">            v_{1,2} &amp; v_{2,2} &amp; \ldots \\</span>
-<span class="sd">            \vdots &amp; \vdots &amp; \ddots</span>
-<span class="sd">        \end{bmatrix}</span>
+<span class="sd">    The output of this module for a single input matrix is a Dictionary</span>
+<span class="sd">    (PyTree) keyed by &#39;eigenvalues&#39; and &#39;eigenvectors&#39;.</span>
 
 <span class="sd">    See Also</span>
 <span class="sd">    --------</span>
@@ -381,15 +389,15 @@
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Eigensystem.html#parametricmatrixmodels.modules.Eigensystem.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">num_eig</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">num_eig</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">which</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SA&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        num_eig</span>
-<span class="sd">            Number of eigenpairs to compute. Must be a positive integer.</span>
-<span class="sd">            Default is 1.</span>
+<span class="sd">            Number of eigenpairs to compute. Must be a positive integer or</span>
+<span class="sd">            None. If None, all pairs are returned. Default is 1.</span>
 <span class="sd">        which</span>
 <span class="sd">            Which eigenpairs to return, by default &quot;SA&quot;.</span>
 <span class="sd">            Options are:</span>
@@ -408,8 +416,10 @@
 <span class="sd">            For magnitude &#39;which&#39; options, the eigenpairs are returned in</span>
 <span class="sd">            ascending eigenvalue magnitude order.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">num_eig</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_eig</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_eig must be a positive integer&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">num_eig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">num_eig</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_eig</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_eig must be a positive integer or None.&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">which</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span>
             <span class="s2">&quot;sa&quot;</span><span class="p">,</span>
             <span class="s2">&quot;la&quot;</span><span class="p">,</span>
@@ -426,27 +436,25 @@
             <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span> <span class="o">=</span> <span class="n">num_eig</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">which</span> <span class="o">=</span> <span class="n">which</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span> <span class="o">=</span> <span class="kc">None</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">which</span> <span class="o">=</span> <span class="n">which</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="Eigensystem.name">
-<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Eigensystem.html#parametricmatrixmodels.modules.Eigensystem.name">[docs]</a>
+    <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">which</span> <span class="o">==</span> <span class="s2">&quot;sa&quot;</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;Eigensystem(ground state)&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Eigensystem(ALL, which={self.which.upper()})&quot;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Eigensystem(num_eig=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span><span class="si">}</span><span class="s2">,&quot;</span>
                 <span class="sa">f</span><span class="s2">&quot; which=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">which</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">)&quot;</span>
-            <span class="p">)</span></div>
-
+            <span class="p">)</span>
 
 <div class="viewcode-block" id="Eigensystem.is_ready">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Eigensystem.html#parametricmatrixmodels.modules.Eigensystem.is_ready">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="Eigensystem.get_num_trainable_floats">
@@ -457,102 +465,115 @@
 
 <div class="viewcode-block" id="Eigensystem._get_callable">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Eigensystem.html#parametricmatrixmodels.modules.Eigensystem._get_callable">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span>
-        <span class="p">[</span>
-            <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-            <span class="nb">bool</span><span class="p">,</span>
-            <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
-            <span class="n">Any</span><span class="p">,</span>
-        <span class="p">],</span>
-        <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]],</span>
-    <span class="p">]:</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">_callable</span><span class="p">(</span>
-            <span class="n">params</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
-            <span class="n">input_NF</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleCallable</span><span class="p">:</span>
+
+        <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_eigensystem</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">ArrayData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArrayData</span><span class="p">]:</span>
+            <span class="c1"># compute all eigensystems over the batch dimension, then vmap to</span>
+            <span class="c1"># select the desired eigenpairs</span>
+            <span class="n">E</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span>
+                <span class="n">select_eigenpairs_by_eigenvalue</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="p">)(</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">which</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;eigenvalues&quot;</span><span class="p">:</span> <span class="n">E</span><span class="p">,</span> <span class="s2">&quot;eigenvectors&quot;</span><span class="p">:</span> <span class="n">V</span><span class="p">}</span>
+
+        <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">tree_map_get_eigensystem</span><span class="p">(</span>
+            <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">,</span>
+            <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
             <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-            <span class="n">state</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+            <span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">,</span>
             <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-        <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
-            <span class="n">E</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span>
-                    <span class="n">select_eigenpairs_by_eigenvalue</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="p">)(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">input_NF</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">which</span><span class="p">),</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Data</span><span class="p">,</span> <span class="n">State</span><span class="p">]:</span>
+            <span class="c1"># tree map over the data PyTree</span>
+            <span class="n">transposed</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                <span class="n">get_eigensystem</span><span class="p">,</span>
+                <span class="n">data</span><span class="p">,</span>
             <span class="p">)</span>
 
-            <span class="c1"># E is (N_batch, num_eig)</span>
-            <span class="c1"># V is (N_batch, N_dim, num_eig)</span>
-            <span class="c1"># we want to stack along axis 1 so that the output is</span>
-            <span class="c1"># (N_batch, N_dim + 1, num_eig)</span>
+            <span class="c1"># transpose so that the output is a PyTree with the original</span>
+            <span class="c1"># structure as a suffix to a two-keyed dictionary with</span>
+            <span class="c1"># &#39;eigenvalues&#39; and &#39;eigenvectors&#39;</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+                <span class="n">outer_treedef</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
+                <span class="n">inner_treedef</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span>
+                    <span class="p">{</span><span class="s2">&quot;eigenvalues&quot;</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;eigenvectors&quot;</span><span class="p">:</span> <span class="s2">&quot;*&quot;</span><span class="p">}</span>
+                <span class="p">),</span>
+                <span class="n">pytree_to_transpose</span><span class="o">=</span><span class="n">transposed</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">state</span>
 
-            <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">E</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">V</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">out</span><span class="p">,</span> <span class="n">state</span>
-
-        <span class="k">return</span> <span class="n">_callable</span></div>
+        <span class="k">return</span> <span class="n">tree_map_get_eigensystem</span></div>
 
 
 <div class="viewcode-block" id="Eigensystem.compile">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Eigensystem.html#parametricmatrixmodels.modules.Eigensystem.compile">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># ensure input shape is valid</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Input shape must be a square matrix, got </span><span class="si">{</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="n">input_shape</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_output_shape</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span></div>
+        <span class="n">validate_eigensystem_input_shape</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Eigensystem.get_output_shape">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Eigensystem.html#parametricmatrixmodels.modules.Eigensystem.get_output_shape">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Input shape must be a square matrix, got </span><span class="si">{</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+        <span class="n">validate_eigensystem_input_shape</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span><span class="p">)</span>
 
-        <span class="c1"># returns an array where each column is an eigenvalue followed by its</span>
-        <span class="c1"># eigenvector, e.g.</span>
-        <span class="c1"># [ [eigval1, eigval2, ...],</span>
-        <span class="c1"># [ [eigvec1_comp1, eigvec2_comp1, ...],</span>
-        <span class="c1">#   [eigvec1_comp2, eigvec2_comp2, ...],</span>
-        <span class="c1">#   ...</span>
-        <span class="c1"># ]</span>
-        <span class="c1"># so out[0, :] are the eigenvalues and out[1:, :] are the eigenvectors</span>
+        <span class="c1"># the output is a PyTree with the original structure as a suffix to a</span>
+        <span class="c1"># two-keyed dictionary with &#39;eigenvalues&#39; and &#39;eigenvectors&#39;</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_eigensystem_shape</span><span class="p">(</span>
+            <span class="n">matrix_shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">matrix_shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">n</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;eigenvalues&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">k</span><span class="p">,),</span>
+                <span class="s2">&quot;eigenvectors&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span>
+            <span class="p">}</span>
 
-        <span class="k">return</span> <span class="p">(</span><span class="n">input_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span><span class="p">)</span></div>
+        <span class="c1"># `transposed` has the same structure prefix as input_shape, but with</span>
+        <span class="c1"># the eigensystem shape as suffix</span>
+        <span class="n">transposed</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="n">get_eigensystem_shape</span><span class="p">,</span>
+            <span class="n">input_shape</span><span class="p">,</span>
+            <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># transpose so that the output shape is composite structure of the</span>
+        <span class="c1"># eigensystem shape with the original structure as suffix</span>
+        <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+            <span class="n">outer_treedef</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span>
+                <span class="n">input_shape</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span>
+            <span class="p">),</span>
+            <span class="n">inner_treedef</span><span class="o">=</span><span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">&quot;eigenvalues&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,),</span> <span class="s2">&quot;eigenvectors&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">)}</span>
+            <span class="p">),</span>
+            <span class="n">pytree_to_transpose</span><span class="o">=</span><span class="n">transposed</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Eigensystem.get_hyperparameters">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Eigensystem.html#parametricmatrixmodels.modules.Eigensystem.get_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;num_eig&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span><span class="p">,</span>
             <span class="s2">&quot;which&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">which</span><span class="p">,</span>
-            <span class="s2">&quot;input_shape&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">,</span>
-            <span class="s2">&quot;output_shape&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="Eigensystem.set_hyperparameters">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Eigensystem.html#parametricmatrixmodels.modules.Eigensystem.set_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">Eigensystem</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">)</span></div>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Eigensystem.get_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Eigensystem.html#parametricmatrixmodels.modules.Eigensystem.get_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Eigensystem.set_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Eigensystem.html#parametricmatrixmodels.modules.Eigensystem.set_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span></div>
 </div>
 

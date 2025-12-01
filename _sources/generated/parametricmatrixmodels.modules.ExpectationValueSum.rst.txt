@@ -1,0 +1,56 @@
+﻿ExpectationValueSum
+===================
+
+``parametricmatrixmodels.modules.ExpectationValueSum``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: ExpectationValueSum
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__, _abc_impl
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~ExpectationValueSum.astype
+      
+         ~ExpectationValueSum.compile
+      
+         ~ExpectationValueSum.deserialize
+      
+         ~ExpectationValueSum.get_hyperparameters
+      
+         ~ExpectationValueSum.get_num_trainable_floats
+      
+         ~ExpectationValueSum.get_output_shape
+      
+         ~ExpectationValueSum.get_params
+      
+         ~ExpectationValueSum.get_state
+      
+         ~ExpectationValueSum.is_ready
+      
+         ~ExpectationValueSum.serialize
+      
+         ~ExpectationValueSum.set_hyperparameters
+      
+         ~ExpectationValueSum.set_params
+      
+         ~ExpectationValueSum.set_precision
+      
+         ~ExpectationValueSum.set_state
+
+   .. autosummary::
+
+      
+      
+         ~ExpectationValueSum.name

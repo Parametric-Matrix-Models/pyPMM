@@ -10,7 +10,7 @@
 ==============
 .. autoclass:: parametricmatrixmodels.modules.BaseModule
     :show-inheritance:
-    :exclude-members: __init__, is_ready, get_num_trainable_floats, _get_callable, compile, get_output_shape, get_hyperparameters, get_params, set_params, name, __repr__, __call__, set_hyperparameters, get_state, set_state, set_precision, astype, serialize, deserialize
+    :exclude-members: __init__, is_ready, get_num_trainable_floats, _get_callable, compile, get_output_shape, get_hyperparameters, get_params, set_params, name, __repr__, __call__, set_hyperparameters, get_state, set_state, set_precision, astype, serialize, deserialize, _abc_impl
 
 Methods that must be overridden by subclasses
 ---------------------------------------------
@@ -54,7 +54,7 @@ Methods with default implementations
     ~BaseModule.serialize
     ~BaseModule.deserialize
 
-.. automethod:: parametricmatrixmodels.modules.BaseModule.name
+.. autoproperty:: parametricmatrixmodels.modules.BaseModule.name
 .. automethod:: parametricmatrixmodels.modules.BaseModule.__repr__
 .. automethod:: parametricmatrixmodels.modules.BaseModule.__call__
 .. automethod:: parametricmatrixmodels.modules.BaseModule.set_hyperparameters

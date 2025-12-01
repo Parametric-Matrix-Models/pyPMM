@@ -1,0 +1,56 @@
+﻿TreeKey
+=======
+
+``parametricmatrixmodels.modules.TreeKey``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: TreeKey
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__, _abc_impl
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~TreeKey.astype
+      
+         ~TreeKey.compile
+      
+         ~TreeKey.deserialize
+      
+         ~TreeKey.get_hyperparameters
+      
+         ~TreeKey.get_num_trainable_floats
+      
+         ~TreeKey.get_output_shape
+      
+         ~TreeKey.get_params
+      
+         ~TreeKey.get_state
+      
+         ~TreeKey.is_ready
+      
+         ~TreeKey.serialize
+      
+         ~TreeKey.set_hyperparameters
+      
+         ~TreeKey.set_params
+      
+         ~TreeKey.set_precision
+      
+         ~TreeKey.set_state
+
+   .. autosummary::
+
+      
+      
+         ~TreeKey.name

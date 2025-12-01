@@ -2,9 +2,9 @@
 
 .. currentmodule:: parametricmatrixmodels.modules
 
-========================
-Utility and Meta Modules
-========================
+===============
+Utility Modules
+===============
 
 .. autosummary::
    :toctree: generated/
@@ -12,10 +12,5 @@ Utility and Meta Modules
    :template: modulesubclass.rst
 
    ~Comment
-   ~Bias
-   ~Flatten
-   ~Reshape
-   ~SubsetModule
-   ~MultiModule
-   ~Func
+   ~FuncBase
 

@@ -9,7 +9,7 @@
    :show-inheritance:
    :members:
    :special-members: __call__
-   :exclude-members: __init__
+   :exclude-members: __init__, _abc_impl
 
    .. automethod:: __init__
 
@@ -21,13 +21,25 @@
       
       
       
+         ~AOPMM.add
+      
+         ~AOPMM.add_module
+      
+         ~AOPMM.append
+      
+         ~AOPMM.append_module
+      
          ~AOPMM.astype
       
          ~AOPMM.compile
       
          ~AOPMM.deserialize
       
+         ~AOPMM.from_file
+      
          ~AOPMM.get_hyperparameters
+      
+         ~AOPMM.get_modules
       
          ~AOPMM.get_num_trainable_floats
       
@@ -35,13 +47,39 @@
       
          ~AOPMM.get_params
       
+         ~AOPMM.get_rng
+      
          ~AOPMM.get_state
+      
+         ~AOPMM.grad_input
+      
+         ~AOPMM.grad_params
+      
+         ~AOPMM.insert
+      
+         ~AOPMM.insert_module
       
          ~AOPMM.is_ready
       
-         ~AOPMM.name
+         ~AOPMM.load
+      
+         ~AOPMM.pop
+      
+         ~AOPMM.pop_module_by_index
+      
+         ~AOPMM.pop_module_by_key
+      
+         ~AOPMM.predict
+      
+         ~AOPMM.prepend
+      
+         ~AOPMM.prepend_module
       
          ~AOPMM.reset
+      
+         ~AOPMM.save
+      
+         ~AOPMM.save_compressed
       
          ~AOPMM.serialize
       
@@ -51,8 +89,14 @@
       
          ~AOPMM.set_precision
       
+         ~AOPMM.set_rng
+      
          ~AOPMM.set_state
+      
+         ~AOPMM.train
 
    .. autosummary::
 
       
+      
+         ~AOPMM.name

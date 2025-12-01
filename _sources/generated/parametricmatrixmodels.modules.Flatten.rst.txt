@@ -9,7 +9,7 @@
    :show-inheritance:
    :members:
    :special-members: __call__
-   :exclude-members: __init__
+   :exclude-members: __init__, _abc_impl
 
    .. automethod:: __init__
 
@@ -39,8 +39,6 @@
       
          ~Flatten.is_ready
       
-         ~Flatten.name
-      
          ~Flatten.serialize
       
          ~Flatten.set_hyperparameters
@@ -50,7 +48,11 @@
          ~Flatten.set_precision
       
          ~Flatten.set_state
+      
+         ~Flatten.validate_and_concretify_shape
 
    .. autosummary::
 
       
+      
+         ~Flatten.name

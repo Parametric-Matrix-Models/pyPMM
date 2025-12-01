@@ -9,7 +9,7 @@
    :show-inheritance:
    :members:
    :special-members: __call__
-   :exclude-members: __init__
+   :exclude-members: __init__, _abc_impl
 
    .. automethod:: __init__
 
@@ -41,8 +41,6 @@
       
          ~Softplus.is_ready
       
-         ~Softplus.name
-      
          ~Softplus.serialize
       
          ~Softplus.set_hyperparameters
@@ -56,3 +54,5 @@
    .. autosummary::
 
       
+      
+         ~Softplus.name

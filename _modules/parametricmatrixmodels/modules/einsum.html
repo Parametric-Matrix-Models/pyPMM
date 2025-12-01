@@ -1,0 +1,1236 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>parametricmatrixmodels.modules.einsum &#8212; Parametric Matrix Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/modules/einsum';</script>
+    <link rel="icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../_static/pmmlogo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../../_static/pmmlogo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PMM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../models.html">
+    Models
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../models.html">
+    Models
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">parametricmatrixmodels.modules.einsum</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for parametricmatrixmodels.modules.einsum</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Inexact</span><span class="p">,</span> <span class="n">PyTree</span><span class="p">,</span> <span class="n">jaxtyped</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_shape_leaf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Data</span><span class="p">,</span>
+    <span class="n">DataShape</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">HyperParams</span><span class="p">,</span>
+    <span class="n">ModuleCallable</span><span class="p">,</span>
+    <span class="n">OrderedSet</span><span class="p">,</span>
+    <span class="n">Params</span><span class="p">,</span>
+    <span class="n">State</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.basemodule</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
+
+
+<div class="viewcode-block" id="Einsum">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Einsum</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Module that implements Einsum operations between array leaves in a PyTree</span>
+<span class="sd">    input. Optionally with leading trainable arrays. The einsum operation is</span>
+<span class="sd">    defined by the provided einsum string, which must specify all indices</span>
+<span class="sd">    except for the batch index. The batch index should not be included in the</span>
+<span class="sd">    provided einsum string, as it will be automatically added as the leading</span>
+<span class="sd">    index later.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    Taking in a PyTree with two leaves, each being a 1D array (excluding the</span>
+<span class="sd">    batch dimension), the dot product can be expressed as:</span>
+
+<span class="sd">        &gt;&gt;&gt; einsum_module = Einsum(&quot;i,i-&gt;&quot;)</span>
+
+<span class="sd">    Taking in a PyTree with three leaves, each of which being a matrix</span>
+<span class="sd">    (excluding the batch dimension), and computing the matrix multiplication</span>
+<span class="sd">    of a trainable matrix with the elementwise product of these three input</span>
+<span class="sd">    matrices can be expressed as:</span>
+
+<span class="sd">        &gt;&gt;&gt; einsum_module = Einsum(&quot;ij,jk,jk,jk-&gt;ik&quot;)</span>
+
+<span class="sd">    Since the einsum string in this example has four input arrays (separated by</span>
+<span class="sd">    commas), when the module is compiled with only three input leaves, it will</span>
+<span class="sd">    infer that the leading array is trainable, and initialize it randomly</span>
+<span class="sd">    during compilation. This array can be directly specified by calling</span>
+<span class="sd">    ``set_params`` or by providing it in the ``params`` argument during</span>
+<span class="sd">    initialization.</span>
+
+<span class="sd">    Alternatively, to perform the same operation but with the leading array</span>
+<span class="sd">    fixed (not trainable), the module must be initialized with this array</span>
+<span class="sd">    specified in the ``params`` argument and ``trainable`` set to ``False``:</span>
+
+<span class="sd">        &gt;&gt;&gt; W = np.random.normal(size=(input_dim, output_dim))</span>
+<span class="sd">        &gt;&gt;&gt; einsum_module = Einsum(</span>
+<span class="sd">        ...     &quot;ij,jk,jk,jk-&gt;ik&quot;,</span>
+<span class="sd">        ...     params = W,</span>
+<span class="sd">        ...     trainable = False)</span>
+
+<span class="sd">    In this case, the fixed arrays can be specified later by calling</span>
+<span class="sd">    ``set_hyperparameters`` with a dictionary containing the key ``params``.</span>
+
+<span class="sd">    Any additional trainable or fixed arrays will always be treated as leading</span>
+<span class="sd">    arrays in the einsum operation.</span>
+
+<span class="sd">    If no additional fixed or trainable arrays are to be used, the einsum</span>
+<span class="sd">    string can alternatively be provided as a two-element Tuple</span>
+<span class="sd">    consisting of a PyTree of strings with the same structure as the input data</span>
+<span class="sd">    and string representing the output of the einsum, which can be omitted if</span>
+<span class="sd">    the output string is to be inferred. For example, for a PyTree input with</span>
+<span class="sd">    structure ``PyTree([*, (*, *)])``, with each leaf being a 1D array, to</span>
+<span class="sd">    specify the operation of the three-way outer product between the three</span>
+<span class="sd">    leaves in the order ``PyTree([2, (0, 1)])``, the einsum string can be</span>
+<span class="sd">    provided in any of the following equivalent ways:</span>
+
+<span class="sd">        &gt;&gt;&gt; Einsum(&#39;c,a,b-&gt;abc&#39;) # full string</span>
+<span class="sd">        &gt;&gt;&gt; Einsum(&#39;c,a,b&#39;) # output inferred &#39;abc&#39;</span>
+<span class="sd">        &gt;&gt;&gt; Einsum([&#39;k&#39;, (&#39;i&#39;, &#39;j&#39;)]) # output inferred &#39;ijk&#39;</span>
+<span class="sd">        &gt;&gt;&gt; Einsum(([&#39;k&#39;, (&#39;i&#39;, &#39;j&#39;)], &#39;ijk&#39;)) # full tuple</span>
+<span class="sd">        &gt;&gt;&gt; Einsum(([&#39;a&#39;, (&#39;b&#39;, &#39;c&#39;)], &#39;bca&#39;)) # full tuple</span>
+
+<span class="sd">    If additional fixed or trainable arrays are to be used, the einsum string</span>
+<span class="sd">    can be provided as a three-element tuple where the first element is an</span>
+<span class="sd">    einsum str for the additional arrays, the second element is a PyTree of</span>
+<span class="sd">    strings with the same structure as the input</span>
+<span class="sd">    data, and the third element is the output string, which can be omitted if</span>
+<span class="sd">    to be inferred. For example, to perform the same three-way outer product as</span>
+<span class="sd">    above but with a leading trainable array, the einsum string can be provided</span>
+<span class="sd">    in any of the following equivalent ways:</span>
+
+<span class="sd">        &gt;&gt;&gt; Einsum(&#39;ab,c,a,b-&gt;c&#39;) # full string</span>
+<span class="sd">        &gt;&gt;&gt; Einsum(&#39;ab,c,a,b&#39;) # output inferred &#39;c&#39;</span>
+<span class="sd">        &gt;&gt;&gt; Einsum((&#39;ij&#39;, [&#39;k&#39;, (&#39;i&#39;, &#39;j&#39;)])) # output inferred &#39;k&#39;</span>
+<span class="sd">        &gt;&gt;&gt; Einsum((&#39;ij&#39;, [&#39;k&#39;, (&#39;i&#39;, &#39;j&#39;)], &#39;k&#39;)) # full tuple</span>
+
+<span class="sd">    For multiple leading arrays the following are equivalent:</span>
+
+<span class="sd">        &gt;&gt;&gt; Einsum(&#39;ab,cd,c,a,b-&gt;d&#39;) # full string</span>
+<span class="sd">        &gt;&gt;&gt; Einsum(&#39;ab,cd,c,a,b&#39;) # output inferred &#39;d&#39;</span>
+<span class="sd">        &gt;&gt;&gt; Einsum((&#39;ab,cd&#39;, [&#39;c&#39;, (&#39;a&#39;, &#39;b&#39;)])) # output inferred &#39;d&#39;</span>
+<span class="sd">        &gt;&gt;&gt; Einsum((&#39;ab,cd&#39;, [&#39;c&#39;, (&#39;a&#39;, &#39;b&#39;)], &#39;d&#39;)) # full tuple</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Einsum.__init__">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">einsum_str</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">PyTree</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
+            <span class="o">|</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">PyTree</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+            <span class="o">|</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">PyTree</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
+            <span class="o">|</span> <span class="n">PyTree</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+            <span class="o">|</span> <span class="nb">str</span>
+            <span class="o">|</span> <span class="kc">None</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">params</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">PyTree</span><span class="p">[</span><span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]]</span> <span class="o">|</span> <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">dim_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">trainable</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">init_magnitude</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-2</span><span class="p">,</span>
+        <span class="n">real</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize an ``Einsum`` module.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">            einsum_str</span>
+<span class="sd">                The einsum string defining the operation. The batch index</span>
+<span class="sd">                should not be included in the provided einsum string, as it</span>
+<span class="sd">                will be automatically added as the leading index later. Can be</span>
+<span class="sd">                provided as a single string, a PyTree of input_strings, a Tuple</span>
+<span class="sd">                of (PyTree[input_strings], output_string), or a tuple of</span>
+<span class="sd">                (leading_arrays_einsum_str, PyTree[input_strings],</span>
+<span class="sd">                output_string). The input_strings in a PyTree must have</span>
+<span class="sd">                the same structure as the input data. output_string can be</span>
+<span class="sd">                omitted to have it inferred. If ``None``, it</span>
+<span class="sd">                must be set before compilation via ``set_hyperparameters`` with</span>
+<span class="sd">                the ``einsum_str`` key. Default is ``None``.</span>
+<span class="sd">            params</span>
+<span class="sd">                Optional additional leading arrays for the einsum operation. If</span>
+<span class="sd">                trainable is ``True``, these will be treated as the initial</span>
+<span class="sd">                values for trainable arrays. If ``False``, they will be treated</span>
+<span class="sd">                as fixed arrays. If ``None`` and trainable is ``True``, the</span>
+<span class="sd">                leading arrays will be initialized randomly during compilation.</span>
+<span class="sd">                Default is ``None``. Can be provided later via</span>
+<span class="sd">                ``set_hyperparameters`` with the ``params`` key if</span>
+<span class="sd">                ``trainable`` is ``False``, or via ``set_params`` if</span>
+<span class="sd">                ``trainable`` is ``True``.</span>
+<span class="sd">            dim_map</span>
+<span class="sd">                Dictionary mapping einsum indices (characters) to integer</span>
+<span class="sd">                sizes for the array dimensions. Only entries for indices that</span>
+<span class="sd">                cannot be inferred from the input data shapes or parameter</span>
+<span class="sd">                shapes need to be provided. Default is ``None``.</span>
+<span class="sd">            trainable</span>
+<span class="sd">                Whether the provided ``params`` are trainable or fixed. If</span>
+<span class="sd">                ``True``, the arrays in ``params`` will be treated as initial</span>
+<span class="sd">                values for trainable arrays. If ``False``, they will be treated</span>
+<span class="sd">                as fixed arrays. Default is ``False``.</span>
+<span class="sd">            init_magnitude</span>
+<span class="sd">                Magnitude for the random initialization of weights.</span>
+<span class="sd">                Default is ``1e-2``.</span>
+<span class="sd">            real</span>
+<span class="sd">                Ignored when there are no trainable arrays. If ``True``, the</span>
+<span class="sd">                weights and biases will be real-valued. If ``False``, they will</span>
+<span class="sd">                be complex-valued. Default is ``True``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span> <span class="o">=</span> <span class="n">einsum_str</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim_map</span> <span class="o">=</span> <span class="n">dim_map</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="n">trainable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span> <span class="o">=</span> <span class="n">init_magnitude</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="n">real</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Einsum._get_dimension_map">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum._get_dimension_map">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_dimension_map</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">concrete_einsum_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fill in the dimension map by inferring sizes from the input shapes</span>
+<span class="sd">        and parameter shapes based on the provided concrete einsum string and</span>
+<span class="sd">        ``self.params`` if applicable.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            concrete_einsum_str</span>
+<span class="sd">                The concrete einsum string with all indices specified,</span>
+<span class="sd">                including the output indices and batch index.</span>
+<span class="sd">            input_shape</span>
+<span class="sd">                The shape of the input data, used to infer dimension sizes.</span>
+<span class="sd">                Should not include the batch dimension.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            A complete dimension map with sizes for all indices in the</span>
+<span class="sd">            einsum string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dim_map</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">dict</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim_map</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim_map</span>
+            <span class="k">else</span> <span class="p">{}</span>
+        <span class="p">)</span>
+
+        <span class="c1"># get the batch dimension character from the concrete einsum string and</span>
+        <span class="c1"># remove it</span>
+        <span class="n">input_str</span><span class="p">,</span> <span class="n">output_str</span> <span class="o">=</span> <span class="n">concrete_einsum_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&gt;&quot;</span><span class="p">)</span>
+        <span class="n">batch_char</span> <span class="o">=</span> <span class="n">output_str</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">input_strs</span> <span class="o">=</span> <span class="n">input_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">batch_char</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+        <span class="n">input_shapes_list</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">)</span>
+
+        <span class="c1"># split input_strs into leading and input based on number of input</span>
+        <span class="c1"># arrays</span>
+        <span class="n">num_input_arrays</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_shapes_list</span><span class="p">)</span>
+        <span class="n">leading_strs</span> <span class="o">=</span> <span class="n">input_strs</span><span class="p">[:</span><span class="o">-</span><span class="n">num_input_arrays</span><span class="p">]</span>
+        <span class="n">input_strs</span> <span class="o">=</span> <span class="n">input_strs</span><span class="p">[</span><span class="o">-</span><span class="n">num_input_arrays</span><span class="p">:]</span>
+
+        <span class="c1"># infer from input arrays</span>
+        <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">shape</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">input_strs</span><span class="p">,</span> <span class="n">input_shapes_list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Einsum input string &#39;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&#39; has length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s2">, but &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;corresponding input array has shape </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">for</span> <span class="n">char</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">char</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dim_map</span><span class="p">:</span>
+                    <span class="n">dim_map</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">=</span> <span class="n">size</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">dim_map</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">!=</span> <span class="n">size</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Dimension size mismatch for index &#39;</span><span class="si">{</span><span class="n">char</span><span class="si">}</span><span class="s2">&#39;: &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;got size </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2"> from input shape </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">, &quot;</span>
+                            <span class="s2">&quot;but previously recorded size in `dim_map` is &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dim_map</span><span class="p">[</span><span class="n">char</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span>
+                        <span class="p">)</span>
+        <span class="c1"># infer from parameter arrays if they exist</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">param_shapes_list</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">shape</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+                <span class="k">else</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">leading_strs</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_shapes_list</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Number of leading einsum strings (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">leading_strs</span><span class="p">)</span><span class="si">}</span><span class="s2">) &quot;</span>
+                    <span class="s2">&quot;does not match number of parameter arrays &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">param_shapes_list</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">shape</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">leading_strs</span><span class="p">,</span> <span class="n">param_shapes_list</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Einsum leading string &#39;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&#39; has length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="s2">&quot;but corresponding parameter array has shape &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">.&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">for</span> <span class="n">char</span><span class="p">,</span> <span class="n">size</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">char</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dim_map</span><span class="p">:</span>
+                        <span class="n">dim_map</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">=</span> <span class="n">size</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">dim_map</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">!=</span> <span class="n">size</span><span class="p">:</span>
+                            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                                <span class="s2">&quot;Dimension size mismatch for index &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">char</span><span class="si">}</span><span class="s2">&#39;: got size </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2"> from parameter &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;shape </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">, but previously recorded &quot;</span>
+                                <span class="sa">f</span><span class="s2">&quot;size in `dim_map` is </span><span class="si">{</span><span class="n">dim_map</span><span class="p">[</span><span class="n">char</span><span class="p">]</span><span class="si">}</span><span class="s2">.&quot;</span>
+                            <span class="p">)</span>
+
+        <span class="c1"># now, all indices in the einsum string should be in dim_map, except</span>
+        <span class="c1"># for the batch index, including leading arrays and output indices</span>
+        <span class="n">all_indices</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">(</span>
+            <span class="n">concrete_einsum_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">batch_char</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">missing_indices</span> <span class="o">=</span> <span class="n">all_indices</span> <span class="o">-</span> <span class="n">OrderedSet</span><span class="p">(</span><span class="n">dim_map</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">missing_indices</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Could not infer sizes for indices </span><span class="si">{</span><span class="n">missing_indices</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="s2">&quot;Please provide their sizes in the `dim_map` argument.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dim_map</span></div>
+
+
+<div class="viewcode-block" id="Einsum._get_concrete_einsum_str">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum._get_concrete_einsum_str">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_concrete_einsum_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the concrete einsum string by parsing the provided einsum string,</span>
+<span class="sd">        adding batch indices and inferring any missing output indices. To</span>
+<span class="sd">        account for batch dimensions. If the einsum string is a PyTree, it must</span>
+<span class="sd">        have the same structure as the input data.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            input_shape</span>
+<span class="sd">                The shape of the input data, used to infer any missing output</span>
+<span class="sd">                indices as well as validate existing indices. Should not</span>
+<span class="sd">                include the batch dimension.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">            &gt;&gt;&gt; m = Einsum(&quot;ij,jk-&gt;ik&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; m._get_concrete_einsum_str(((2, 3), (3, 4)))</span>
+<span class="sd">            &#39;aij,ajk-&gt;aik&#39; # leading index &#39;a&#39; added for batch dimension</span>
+
+<span class="sd">            &gt;&gt;&gt; m = Einsum(((&#39;ij&#39;, &#39;jk&#39;), &#39;ik&#39;))</span>
+<span class="sd">            &gt;&gt;&gt; m._get_concrete_einsum_str(((2, 3), (3, 4)))</span>
+<span class="sd">            &#39;aij,ajk-&gt;aik&#39;</span>
+
+<span class="sd">            &gt;&gt;&gt; m = Einsum(&quot;ab,bc-&gt;ac&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; m._get_concrete_einsum_str(((5, 2), (2, 4)))</span>
+<span class="sd">            &#39;dab,dbc-&gt;dac&#39; # leading index &#39;d&#39; added for batch dimension</span>
+
+<span class="sd">            &gt;&gt;&gt; m = Einsum(([&#39;ij&#39;, &#39;jk&#39;], &#39;ik&#39;))</span>
+<span class="sd">            &gt;&gt;&gt; m._get_concrete_einsum_str(((2, 3), (3, 4)))</span>
+<span class="sd">            ValueError: The structure of the einsum_str PyTree must match that</span>
+<span class="sd">            of the input data.</span>
+<span class="sd">            # (since the input data is a Tuple of two arrays, not a List)</span>
+
+<span class="sd">            &gt;&gt;&gt; m = Einsum((&#39;ij,jk&#39;, {&#39;x&#39;: &#39;ik&#39;, &#39;y&#39;: &#39;ab&#39;}, &#39;ab&#39;))</span>
+<span class="sd">            &gt;&gt;&gt; m._get_concrete_einsum_str({&#39;x&#39;: (2, 3), &#39;y&#39;: (3, 4)})</span>
+<span class="sd">            &#39;ij,jk,cik,cab-&gt;cab&#39; # leading arrays don&#39;t have batch index</span>
+<span class="sd">            # all arrays from PyTrees are inserted in the same order as the</span>
+<span class="sd">            # list from jax.tree.leaves(...)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># standardize einsum_str to the single string case</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;einsum_str must be set before concretization.&quot;</span><span class="p">)</span>
+
+        <span class="n">was_pytree</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># if the einsum_str structure matches the input_shape structure, it&#39;s</span>
+        <span class="c1"># the PyTree case</span>
+        <span class="n">input_struct</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">)</span>
+        <span class="n">einsum_str_struct</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">einsum_str_struct</span> <span class="o">==</span> <span class="n">input_struct</span><span class="p">:</span>
+            <span class="n">leading_str</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">input_strs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span>
+            <span class="n">output_str</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">was_pytree</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">leading_str</span><span class="p">,</span> <span class="n">input_strs</span><span class="p">,</span> <span class="n">output_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span>
+
+                <span class="c1"># two cases: (leading_str, input_strs) or</span>
+                <span class="c1"># (input_strs, output_str)</span>
+
+                <span class="c1"># can distinguish based on which is a bare string</span>
+                <span class="c1"># if both are bare strings, then it&#39;s ambiguous (input is a</span>
+                <span class="c1"># degenerate PyTree of a single array and the user should use</span>
+                <span class="c1"># the single string case instead)</span>
+                <span class="n">first_is_str</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+                <span class="n">second_is_str</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">first_is_str</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">second_is_str</span><span class="p">:</span>
+                    <span class="n">leading_str</span> <span class="o">=</span> <span class="n">first</span>
+                    <span class="n">input_strs</span> <span class="o">=</span> <span class="n">second</span>
+                    <span class="n">output_str</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">first_is_str</span> <span class="ow">and</span> <span class="n">second_is_str</span><span class="p">:</span>
+                    <span class="n">leading_str</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">input_strs</span> <span class="o">=</span> <span class="n">first</span>
+                    <span class="n">output_str</span> <span class="o">=</span> <span class="n">second</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># this case should be caught by the structure check above,</span>
+                    <span class="c1"># but just in case</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;If einsum_str is a tuple of length 2, one element &quot;</span>
+                        <span class="s2">&quot;must be a bare string and the other must be a &quot;</span>
+                        <span class="s2">&quot;non-degenerate PyTree of strings matching the &quot;</span>
+                        <span class="s2">&quot;structure of input_shape. If input_shape is a &quot;</span>
+                        <span class="s2">&quot;degenerate PyTree representing bare array input, use &quot;</span>
+                        <span class="s2">&quot;the single string einsum_str format instead. E.g. &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;use Einsum(&#39;</span><span class="si">{</span><span class="n">first</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">second</span><span class="si">}</span><span class="s2">&#39;) or &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Einsum(&#39;</span><span class="si">{</span><span class="n">first</span><span class="si">}</span><span class="s2">-&gt;</span><span class="si">{</span><span class="n">second</span><span class="si">}</span><span class="s2">&#39;) depending on your &quot;</span>
+                        <span class="s2">&quot;intention instead of &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;Einsum((&#39;</span><span class="si">{</span><span class="n">first</span><span class="si">}</span><span class="s2">&#39;, &#39;</span><span class="si">{</span><span class="n">second</span><span class="si">}</span><span class="s2">&#39;)).&quot;</span>
+                    <span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;If einsum_str is a tuple not matching the structure of &quot;</span>
+                    <span class="s2">&quot;input_shape, it must have length 2 or 3.&quot;</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">leading_str</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">input_strs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span>
+            <span class="n">output_str</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># PyTree case</span>
+            <span class="c1"># verify the structure matches input_shape</span>
+            <span class="n">einsum_struct</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span><span class="p">)</span>
+            <span class="n">input_struct</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span>
+                <span class="n">input_shape</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">einsum_struct</span> <span class="o">!=</span> <span class="n">input_struct</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The structure of the einsum_str PyTree must match that &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;of the input data. Got </span><span class="si">{</span><span class="n">einsum_struct</span><span class="si">}</span><span class="s2"> but &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;expected </span><span class="si">{</span><span class="n">input_struct</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">leading_str</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">input_strs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span>
+            <span class="n">output_str</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># if output_str is None, see if it is included in input_strs, which is</span>
+        <span class="c1"># only possible if input_strs is a bare string containing &#39;-&gt;&#39;</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">output_str</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_strs</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="s2">&quot;-&gt;&quot;</span> <span class="ow">in</span> <span class="n">input_strs</span>
+        <span class="p">):</span>
+            <span class="n">input_strs</span><span class="p">,</span> <span class="n">output_str</span> <span class="o">=</span> <span class="n">input_strs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&gt;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># if leading_str is None, see if it is included in input_strs, which is</span>
+        <span class="c1"># only possible if input_strs is a bare string</span>
+        <span class="k">if</span> <span class="n">leading_str</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_strs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">input_str_list</span> <span class="o">=</span> <span class="n">input_strs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="c1"># if the number of input strings is greater than the number of</span>
+            <span class="c1"># input arrays, then the leading strings are included here</span>
+            <span class="n">num_input_arrays</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">num_input_strings</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_str_list</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">num_input_strings</span> <span class="o">&gt;</span> <span class="n">num_input_arrays</span><span class="p">:</span>
+                <span class="n">leading_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">input_str_list</span><span class="p">[:</span> <span class="n">num_input_strings</span> <span class="o">-</span> <span class="n">num_input_arrays</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="n">input_strs</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">input_str_list</span><span class="p">[</span><span class="n">num_input_strings</span> <span class="o">-</span> <span class="n">num_input_arrays</span> <span class="p">:]</span>
+                <span class="p">)</span>
+
+        <span class="c1"># now leading_str, input_strs, and output_str are properly separated</span>
+
+        <span class="c1"># validate the number of arrays in the input_strs matches input_shape</span>
+        <span class="n">num_input_arrays</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_strs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">num_input_strings</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">input_strs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">was_pytree</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># no input strings can have non-alphabetic characters, we check</span>
+            <span class="c1"># that here</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">all</span><span class="p">(</span>
+                <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">s</span><span class="o">.</span><span class="n">isalpha</span><span class="p">(),</span>
+                    <span class="n">input_strs</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;All input strings in the einsum_str PyTree must be &quot;</span>
+                    <span class="s2">&quot;bare strings containing only alphabetic characters.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">num_input_strings</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span>
+                    <span class="n">input_strs</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="c1"># if leading_str is None then params must be None or empty</span>
+        <span class="c1"># if it&#39;s not None, params may still be None (to be initialized later)</span>
+        <span class="k">if</span> <span class="n">leading_str</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">==</span> <span class="p">()</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;If einsum_str does not specify leading arrays, then &quot;</span>
+                <span class="s2">&quot;params must be None or empty.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># if output_str is not None and contains either &#39;,&#39; or &#39;-&gt;&#39;, raise</span>
+        <span class="c1"># error</span>
+        <span class="k">if</span> <span class="n">output_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">output_str</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">&quot;-&gt;&quot;</span> <span class="ow">in</span> <span class="n">output_str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;output_str cannot contain &#39;,&#39; or &#39;-&gt;&#39;. Got &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">output_str</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># verify that all strings contain only valid characters (a-z, A-Z, &#39;,&#39;)</span>
+        <span class="n">valid_chars</span> <span class="o">=</span> <span class="s2">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,&quot;</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">validate_chars</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">invalid_chars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">valid_chars</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">invalid_chars</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Einsum string &#39;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&#39; contains invalid characters: &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">invalid_chars</span><span class="si">}</span><span class="s2">. Only a-z, A-Z, and &#39;,&#39; are allowed. &quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">leading_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">validate_chars</span><span class="p">(</span><span class="n">leading_str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">validate_chars</span><span class="p">(</span><span class="n">output_str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_strs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">validate_chars</span><span class="p">(</span><span class="n">input_strs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">validate_chars</span><span class="p">,</span> <span class="n">input_strs</span><span class="p">)</span>
+
+        <span class="c1"># if input_strs is a bare string, split on commas</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">input_strs</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">input_strs</span> <span class="o">=</span> <span class="n">input_strs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+        <span class="c1"># now, leading_str and output_str are either strings or None</span>
+        <span class="c1"># and input_strs is a PyTree of strings</span>
+
+        <span class="c1"># put the input strings in the order of the input_shape</span>
+        <span class="c1"># so long as the original input was a PyTree</span>
+        <span class="k">if</span> <span class="n">was_pytree</span><span class="p">:</span>
+            <span class="n">input_strs</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">_</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span><span class="p">,</span>
+                <span class="n">input_shape</span><span class="p">,</span>
+                <span class="n">input_strs</span><span class="p">,</span>
+                <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># reduce over input_strs to single string</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">reduce_input_strs</span><span class="p">(</span><span class="n">carry</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">carry</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">s</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">carry</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">s</span>
+
+        <span class="n">input_str</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span>
+            <span class="n">reduce_input_strs</span><span class="p">,</span>
+            <span class="n">input_strs</span><span class="p">,</span>
+            <span class="n">initializer</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># infer output_str if None</span>
+        <span class="c1"># it should be all the indices that appear only once in</span>
+        <span class="c1"># leading_str + input_str, and be in alphabetical order, same as einsum</span>
+        <span class="c1"># would do</span>
+        <span class="k">if</span> <span class="n">output_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">all_input</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">leading_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">all_input</span> <span class="o">+=</span> <span class="n">leading_str</span>
+            <span class="n">all_input</span> <span class="o">+=</span> <span class="n">input_str</span>
+
+            <span class="n">index_counts</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">all_input</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">char</span> <span class="o">!=</span> <span class="s2">&quot;,&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">index_counts</span><span class="p">:</span>
+                        <span class="n">index_counts</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">index_counts</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="n">output_indices</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">char</span>
+                <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">index_counts</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="k">if</span> <span class="n">index_counts</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="p">]</span>
+            <span class="n">output_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_indices</span><span class="p">)</span>
+
+        <span class="c1"># find all used indices to find a batch index that doesn&#39;t conflict</span>
+        <span class="c1"># use OrderedSet to have a deterministic order</span>
+        <span class="n">used_indices</span> <span class="o">=</span> <span class="n">OrderedSet</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">leading_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">used_indices</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">OrderedSet</span><span class="p">(</span><span class="n">leading_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))</span>
+        <span class="n">used_indices</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">OrderedSet</span><span class="p">(</span><span class="n">input_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">output_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">used_indices</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">OrderedSet</span><span class="p">(</span><span class="n">output_str</span><span class="p">))</span>
+
+        <span class="n">available_indices</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">OrderedSet</span><span class="p">(</span><span class="n">valid_chars</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span> <span class="o">-</span> <span class="n">used_indices</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">available_indices</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;No available indices to use for batch dimension. &quot;</span>
+                <span class="s2">&quot;Einsum strings are using all possible indices.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">batch_index</span> <span class="o">=</span> <span class="n">available_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># before adding batch index, validate that the input</span>
+        <span class="c1"># shapes match the input_strs</span>
+        <span class="n">input_str_list</span> <span class="o">=</span> <span class="n">input_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">validate_shape</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Einsum input string &#39;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&#39; has length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s2">, but &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;corresponding input array has shape </span><span class="si">{</span><span class="n">shape</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">shape</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="n">input_str_list</span><span class="p">,</span>
+            <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">),</span>
+        <span class="p">):</span>
+            <span class="n">validate_shape</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+
+        <span class="c1"># add batch index to input_str and output_str only</span>
+        <span class="c1"># leading_str does not get a batch index</span>
+        <span class="n">input_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">batch_index</span> <span class="o">+</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">input_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)])</span>
+        <span class="n">output_str</span> <span class="o">=</span> <span class="n">batch_index</span> <span class="o">+</span> <span class="n">output_str</span>
+
+        <span class="c1"># construct full einsum string</span>
+        <span class="n">full_einsum_str</span> <span class="o">=</span> <span class="n">input_str</span> <span class="o">+</span> <span class="s2">&quot;-&gt;&quot;</span> <span class="o">+</span> <span class="n">output_str</span>
+        <span class="k">if</span> <span class="n">leading_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">full_einsum_str</span> <span class="o">=</span> <span class="n">leading_str</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">full_einsum_str</span>
+        <span class="k">return</span> <span class="n">full_einsum_str</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">concrete_einsum_str</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_concrete_einsum_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Einsum(</span><span class="si">{</span><span class="n">concrete_einsum_str</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+<div class="viewcode-block" id="Einsum.is_ready">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.is_ready">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Einsum._get_callable">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum._get_callable">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleCallable</span><span class="p">:</span>
+
+        <span class="c1"># set up the callable</span>
+
+        <span class="n">concrete_einsum_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_concrete_einsum_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span>
+
+        <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">einsum_callable</span><span class="p">(</span>
+            <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Data</span><span class="p">,</span> <span class="n">State</span><span class="p">]:</span>
+            <span class="c1"># prepare the list of arrays to einsum over</span>
+            <span class="c1"># most of this will be traced out by jax</span>
+            <span class="n">arrays</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># if trainable, params will be the leading arrays, if there are</span>
+            <span class="c1"># any, otherwise it will be an empty tuple</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                    <span class="n">arrays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">arrays</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                        <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span>
+                            <span class="n">params</span><span class="p">,</span>
+                            <span class="n">is_leaf</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">),</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># if not trainable, params are fixed leading arrays, if any,</span>
+                <span class="c1"># and they are stored in self.params</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                    <span class="n">arrays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">arrays</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                        <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+                            <span class="n">is_leaf</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">),</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+            <span class="c1"># add the input data arrays</span>
+            <span class="n">arrays</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span>
+                    <span class="n">data</span><span class="p">,</span>
+                    <span class="n">is_leaf</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="c1"># convert all arrays to common dtype</span>
+            <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">result_type</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">dtype</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arrays</span><span class="p">])</span>
+            <span class="n">arrays</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arrays</span><span class="p">]</span>
+
+            <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="n">concrete_einsum_str</span><span class="p">,</span> <span class="o">*</span><span class="n">arrays</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">output</span><span class="p">,</span> <span class="n">state</span>
+
+        <span class="k">return</span> <span class="n">einsum_callable</span></div>
+
+
+<div class="viewcode-block" id="Einsum.compile">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.compile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;einsum_str must be set before compiling the module&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">!=</span> <span class="n">input_shape</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Module has already been compiled with a different input &quot;</span>
+                <span class="s2">&quot;shape.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="n">input_shape</span>
+
+        <span class="n">concrete_einsum_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_concrete_einsum_str</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+        <span class="n">dim_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dimension_map</span><span class="p">(</span>
+            <span class="n">concrete_einsum_str</span><span class="p">,</span>
+            <span class="n">input_shape</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># figure out how many leading arrays there are</span>
+        <span class="n">input_str</span><span class="p">,</span> <span class="n">output_str</span> <span class="o">=</span> <span class="n">concrete_einsum_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&gt;&quot;</span><span class="p">)</span>
+        <span class="n">input_strs</span> <span class="o">=</span> <span class="n">input_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">num_input_arrays</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">leading_strs</span> <span class="o">=</span> <span class="n">input_strs</span><span class="p">[:</span><span class="o">-</span><span class="n">num_input_arrays</span><span class="p">]</span>
+
+        <span class="c1"># initialize params if needed</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">leading_strs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;params must be provided for fixed (non-trainable) &quot;</span>
+                    <span class="s2">&quot;leading arrays.&quot;</span>
+                <span class="p">)</span>
+            <span class="n">param_arrays</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">:</span>
+                <span class="n">keys</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">leading_strs</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rkey</span><span class="p">,</span> <span class="n">ikey</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
+                <span class="n">rkeys</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rkey</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">leading_strs</span><span class="p">))</span>
+                <span class="n">ikeys</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">ikey</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">leading_strs</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">leading_strs</span><span class="p">):</span>
+                <span class="n">shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dim_map</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">s</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">:</span>
+                    <span class="n">param_array</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
+                        <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">real_part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
+                        <span class="n">rkeys</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span>
+                    <span class="p">)</span>
+                    <span class="n">imag_part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
+                        <span class="n">ikeys</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span>
+                    <span class="p">)</span>
+                    <span class="n">param_array</span> <span class="o">=</span> <span class="n">real_part</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">imag_part</span>
+
+                <span class="n">param_arrays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param_array</span><span class="p">)</span>
+
+            <span class="c1"># if there&#39;s only one leading array, store it as a single array</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_arrays</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">param_arrays</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">param_arrays</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># make sure params shape matches leading_strs</span>
+            <span class="n">expected_shapes</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nb">tuple</span><span class="p">(</span><span class="n">dim_map</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">leading_strs</span>
+            <span class="p">]</span>
+            <span class="n">param_shapes</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">shape</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+                <span class="k">else</span> <span class="p">[</span>
+                    <span class="n">p</span><span class="o">.</span><span class="n">shape</span>
+                    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">,</span>
+                        <span class="n">is_leaf</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">),</span>
+                    <span class="p">)</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">expected_shapes</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_shapes</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Number of leading arrays in einsum_str &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">concrete_einsum_str</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">leading_strs</span><span class="p">)</span><span class="si">}</span><span class="s2">) does not match number of &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;parameter arrays (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">param_shapes</span><span class="p">)</span><span class="si">}</span><span class="s2">).&quot;</span>
+                <span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">expected_shape</span><span class="p">,</span> <span class="n">param_shape</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                <span class="nb">zip</span><span class="p">(</span><span class="n">expected_shapes</span><span class="p">,</span> <span class="n">param_shapes</span><span class="p">)</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="n">expected_shape</span> <span class="o">!=</span> <span class="n">param_shape</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Parameter array </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> has shape </span><span class="si">{</span><span class="n">param_shape</span><span class="si">}</span><span class="s2">, but &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;expected shape </span><span class="si">{</span><span class="n">expected_shape</span><span class="si">}</span><span class="s2"> based on einsum_str.&quot;</span>
+                    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Einsum.get_output_shape">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.get_output_shape">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+        <span class="n">concrete_einsum_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_concrete_einsum_str</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+        <span class="n">dim_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dimension_map</span><span class="p">(</span>
+            <span class="n">concrete_einsum_str</span><span class="p">,</span>
+            <span class="n">input_shape</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">output_str</span> <span class="o">=</span> <span class="n">concrete_einsum_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&gt;&quot;</span><span class="p">)</span>
+        <span class="c1"># skip the batch dimension</span>
+        <span class="n">output_shape</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dim_map</span><span class="p">[</span><span class="n">char</span><span class="p">]</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">output_str</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="k">return</span> <span class="n">output_shape</span></div>
+
+
+<div class="viewcode-block" id="Einsum.get_hyperparameters">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.get_hyperparameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
+
+        <span class="c1"># include params in hyperparameters only if they are fixed</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;einsum_str&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span><span class="p">,</span>
+            <span class="s2">&quot;dim_map&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim_map</span><span class="p">,</span>
+            <span class="o">**</span><span class="p">({</span><span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">}</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span> <span class="k">else</span> <span class="p">{}),</span>
+            <span class="s2">&quot;trainable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">,</span>
+            <span class="s2">&quot;init_magnitude&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span><span class="p">,</span>
+            <span class="s2">&quot;real&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="Einsum.set_hyperparameters">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.set_hyperparameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># setting the hyperparameters should require recompilation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># only allow setting params if they are fixed</span>
+        <span class="k">if</span> <span class="s2">&quot;einsum_str&quot;</span> <span class="ow">in</span> <span class="n">hyperparams</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;einsum_str&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;dim_map&quot;</span> <span class="ow">in</span> <span class="n">hyperparams</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dim_map</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;dim_map&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;trainable&quot;</span> <span class="ow">in</span> <span class="n">hyperparams</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;trainable&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;params&quot;</span> <span class="ow">in</span> <span class="n">hyperparams</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;init_magnitude&quot;</span> <span class="ow">in</span> <span class="n">hyperparams</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;init_magnitude&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;real&quot;</span> <span class="ow">in</span> <span class="n">hyperparams</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;real&quot;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Einsum.get_params">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.get_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
+        <span class="c1"># return params only if they are trainable</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span></div>
+
+
+<div class="viewcode-block" id="Einsum.set_params">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.set_params">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># only allow setting params if they are trainable</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

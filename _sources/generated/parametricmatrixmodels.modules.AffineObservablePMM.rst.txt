@@ -9,7 +9,7 @@
    :show-inheritance:
    :members:
    :special-members: __call__
-   :exclude-members: __init__
+   :exclude-members: __init__, _abc_impl
 
    .. automethod:: __init__
 
@@ -21,13 +21,25 @@
       
       
       
+         ~AffineObservablePMM.add
+      
+         ~AffineObservablePMM.add_module
+      
+         ~AffineObservablePMM.append
+      
+         ~AffineObservablePMM.append_module
+      
          ~AffineObservablePMM.astype
       
          ~AffineObservablePMM.compile
       
          ~AffineObservablePMM.deserialize
       
+         ~AffineObservablePMM.from_file
+      
          ~AffineObservablePMM.get_hyperparameters
+      
+         ~AffineObservablePMM.get_modules
       
          ~AffineObservablePMM.get_num_trainable_floats
       
@@ -35,13 +47,39 @@
       
          ~AffineObservablePMM.get_params
       
+         ~AffineObservablePMM.get_rng
+      
          ~AffineObservablePMM.get_state
+      
+         ~AffineObservablePMM.grad_input
+      
+         ~AffineObservablePMM.grad_params
+      
+         ~AffineObservablePMM.insert
+      
+         ~AffineObservablePMM.insert_module
       
          ~AffineObservablePMM.is_ready
       
-         ~AffineObservablePMM.name
+         ~AffineObservablePMM.load
+      
+         ~AffineObservablePMM.pop
+      
+         ~AffineObservablePMM.pop_module_by_index
+      
+         ~AffineObservablePMM.pop_module_by_key
+      
+         ~AffineObservablePMM.predict
+      
+         ~AffineObservablePMM.prepend
+      
+         ~AffineObservablePMM.prepend_module
       
          ~AffineObservablePMM.reset
+      
+         ~AffineObservablePMM.save
+      
+         ~AffineObservablePMM.save_compressed
       
          ~AffineObservablePMM.serialize
       
@@ -51,8 +89,14 @@
       
          ~AffineObservablePMM.set_precision
       
+         ~AffineObservablePMM.set_rng
+      
          ~AffineObservablePMM.set_state
+      
+         ~AffineObservablePMM.train
 
    .. autosummary::
 
       
+      
+         ~AffineObservablePMM.name

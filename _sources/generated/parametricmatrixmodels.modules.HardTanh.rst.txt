@@ -9,7 +9,7 @@
    :show-inheritance:
    :members:
    :special-members: __call__
-   :exclude-members: __init__
+   :exclude-members: __init__, _abc_impl
 
    .. automethod:: __init__
 
@@ -41,8 +41,6 @@
       
          ~HardTanh.is_ready
       
-         ~HardTanh.name
-      
          ~HardTanh.serialize
       
          ~HardTanh.set_hyperparameters
@@ -56,3 +54,5 @@
    .. autosummary::
 
       
+      
+         ~HardTanh.name

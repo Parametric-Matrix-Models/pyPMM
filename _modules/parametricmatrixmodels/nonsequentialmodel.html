@@ -1,0 +1,1377 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>parametricmatrixmodels.nonsequentialmodel &#8212; Parametric Matrix Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/nonsequentialmodel';</script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/pmmlogo.svg" class="logo__image only-light" alt=""/>
+    <img src="../../_static/pmmlogo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PMM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../models.html">
+    Models
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../models.html">
+    Models
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">parametricmatrixmodels.nonsequentialmodel</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for parametricmatrixmodels.nonsequentialmodel</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">jaxtyped</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.graph_util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">get_outer_connections_by_tree</span><span class="p">,</span>
+    <span class="n">place_connections_in_tree</span><span class="p">,</span>
+    <span class="n">resolve_connections</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.model_util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ModelCallable</span><span class="p">,</span>
+    <span class="n">ModelModules</span><span class="p">,</span>
+    <span class="n">ModelParams</span><span class="p">,</span>
+    <span class="n">ModelState</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">extend_structure_from_strpaths</span><span class="p">,</span>
+    <span class="n">getitem_by_strpath</span><span class="p">,</span>
+    <span class="n">is_shape_leaf</span><span class="p">,</span>
+    <span class="n">make_mutable</span><span class="p">,</span>
+    <span class="n">setitem_by_strpath</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Data</span><span class="p">,</span>
+    <span class="n">DataShape</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">HyperParams</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">ModuleCallable</span><span class="p">,</span>
+    <span class="n">PyTree</span><span class="p">,</span>
+    <span class="n">State</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="NonSequentialModel">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NonSequentialModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A nonsequential model that chains modules (or other models) together with</span>
+<span class="sd">    directed connections.</span>
+
+<span class="sd">    For confidence intervals or uncertainty quantification, wrap a trained</span>
+<span class="sd">    model with ``ConformalModel``.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    jax.tree</span>
+<span class="sd">        PyTree utilities and concepts in JAX.</span>
+<span class="sd">    Model</span>
+<span class="sd">        Abstract base class for all models.</span>
+<span class="sd">    SequentialModel</span>
+<span class="sd">        A model that applies modules in sequence.</span>
+<span class="sd">    ConformalModel</span>
+<span class="sd">        Wrap a trained model to produce confidence intervals.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="NonSequentialModel.__init__">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">modules</span><span class="p">:</span> <span class="n">ModelModules</span> <span class="o">|</span> <span class="n">BaseModule</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">connections</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span>
+        <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">/</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a nonsequential model with a PyTree of modules and a</span>
+<span class="sd">        random key.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            modules</span>
+<span class="sd">                module(s) to initialize the model with. Default is None, which</span>
+<span class="sd">                will become an empty dictionary. Can be a single module, which</span>
+<span class="sd">                will be wrapped in a list, or a PyTree of modules (e.g., nested</span>
+<span class="sd">                lists, tuples, or dictionaries).</span>
+<span class="sd">            connections</span>
+<span class="sd">                Directed connections between module input and outputs in the</span>
+<span class="sd">                model. Keys are period-separated paths of module outputs, and</span>
+<span class="sd">                values are lists or tuples of period-separated paths of module</span>
+<span class="sd">                inputs that receive the output. The reserved keys &quot;input&quot; and</span>
+<span class="sd">                &quot;output&quot; refer to the model input and output, respectively. The</span>
+<span class="sd">                separator can be changed from the default period using the</span>
+<span class="sd">                ``separator`` argument. Default is None, which will become an</span>
+<span class="sd">                empty dictionary.</span>
+<span class="sd">            rng</span>
+<span class="sd">                Initial random key for the model. Default is None. If None, a</span>
+<span class="sd">                new random key will be generated using JAX&#39;s ``random.key``. If</span>
+<span class="sd">                an integer is provided, it will be used as the seed to create</span>
+<span class="sd">                the key.</span>
+<span class="sd">            separator</span>
+<span class="sd">                Separator string to use for denoting paths in the connections</span>
+<span class="sd">                dictionary. Default is &quot;.&quot;.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+
+<span class="sd">        To denote a sequential model where all modules expect a bare array and</span>
+<span class="sd">        produce a bare array:</span>
+
+<span class="sd">            &gt;&gt;&gt; modules = [Module1(), Module2(), Module3()]</span>
+<span class="sd">            &gt;&gt;&gt; connections = {</span>
+<span class="sd">            ...     &quot;input&quot;: &quot;0&quot;,</span>
+<span class="sd">            ...     &quot;0&quot;: &quot;1&quot;,</span>
+<span class="sd">            ...     &quot;1&quot;: &quot;2&quot;,</span>
+<span class="sd">            ...     &quot;2&quot;: &quot;output&quot;</span>
+<span class="sd">            ... }</span>
+<span class="sd">            &gt;&gt;&gt; model = NonSequentialModel(modules, connections)</span>
+
+<span class="sd">        or equivalently to name the modules:</span>
+
+<span class="sd">            &gt;&gt;&gt; modules = {&quot;M0&quot;: Module1(), &quot;M1&quot;: Module2(), &quot;M2&quot;: Module3()}</span>
+<span class="sd">            &gt;&gt;&gt; connections = {</span>
+<span class="sd">            ...     &quot;input&quot;: &quot;M0&quot;,</span>
+<span class="sd">            ...     &quot;M0&quot;: &quot;M1&quot;,</span>
+<span class="sd">            ...     &quot;M1&quot;: &quot;M2&quot;,</span>
+<span class="sd">            ...     &quot;M2&quot;: &quot;output&quot;</span>
+<span class="sd">            ... }</span>
+<span class="sd">            &gt;&gt;&gt; model = NonSequentialModel(modules, connections)</span>
+
+<span class="sd">        or equivalently to use nested structures:</span>
+<span class="sd">            &gt;&gt;&gt; modules = {</span>
+<span class="sd">            ...     &quot;block1&quot;: [Module1(), Module2()],</span>
+<span class="sd">            ...     &quot;block2&quot;: {&quot;M3&quot;: Module3()}</span>
+<span class="sd">            ... }</span>
+<span class="sd">            &gt;&gt;&gt; connections = {</span>
+<span class="sd">            ...     &quot;input&quot;: &quot;block1.0&quot;,</span>
+<span class="sd">            ...     &quot;block1.0&quot;: &quot;block1.1&quot;,</span>
+<span class="sd">            ...     &quot;block1.1&quot;: &quot;block2.M3&quot;,</span>
+<span class="sd">            ...     &quot;block2.M3&quot;: &quot;output&quot;</span>
+<span class="sd">            ... }</span>
+<span class="sd">            &gt;&gt;&gt; model = NonSequentialModel(modules, connections)</span>
+
+<span class="sd">        All three of the above will produce a model that applies the same</span>
+<span class="sd">        three modules sequentially.</span>
+
+<span class="sd">        If a module outputs a PyTree of arrays, or expects a PyTree of arrays</span>
+<span class="sd">        as input, the connections can specify the leaf nodes using the same</span>
+<span class="sd">        period-separated path syntax. For example, if Module1 outputs a dict</span>
+<span class="sd">        with keys &quot;a&quot; and &quot;b&quot;, and Module2 expects a tuple of two arrays as</span>
+<span class="sd">        input, the connections can be specified as:</span>
+
+<span class="sd">            &gt;&gt;&gt; modules = {&quot;M1&quot;: Module1(), &quot;M2&quot;: Module2()}</span>
+<span class="sd">            &gt;&gt;&gt; connections = {</span>
+<span class="sd">            ...     &quot;input&quot;: &quot;M1&quot;,</span>
+<span class="sd">            ...     &quot;M1.a&quot;: &quot;M2.1&quot;,</span>
+<span class="sd">            ...     &quot;M1.b&quot;: &quot;M2.0&quot;,</span>
+<span class="sd">            ...     &quot;M2&quot;: &quot;output&quot;</span>
+<span class="sd">            ... }</span>
+<span class="sd">            &gt;&gt;&gt; model = NonSequentialModel(modules, connections)</span>
+
+<span class="sd">        This will send the &quot;a&quot; output of Module1 to the second input of</span>
+<span class="sd">        Module2, and the &quot;b&quot; output of Module1 to the first input of Module2.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            If a module expects a Tuple or List as input, it is best to write</span>
+<span class="sd">            the module to accept both Tuple and List types, since the specific</span>
+<span class="sd">            input type between List and Tuple cannot be inferred at compile</span>
+<span class="sd">            time.</span>
+
+<span class="sd">        If the entire model input or output is a PyTree of arrays, the</span>
+<span class="sd">        connections use the same period-separated path syntax with the reserved</span>
+<span class="sd">        keys &quot;input&quot; and &quot;output&quot;. For example, if the model input is a dict</span>
+<span class="sd">        with keys &quot;x1&quot; and &quot;x2&quot;, and the model output is a Tuple of two arrays,</span>
+<span class="sd">        the connections can be specified as:</span>
+
+<span class="sd">            &gt;&gt;&gt; modules = {&quot;M1&quot;: Module1(), &quot;M2&quot;: Module2()}</span>
+<span class="sd">            &gt;&gt;&gt; connections = {</span>
+<span class="sd">            ...     &quot;input.x1&quot;: &quot;M1&quot;,</span>
+<span class="sd">            ...     &quot;M1&quot;: &quot;M2&quot;,</span>
+<span class="sd">            ...     &quot;M2&quot;: &quot;output.1&quot;,</span>
+<span class="sd">            ...     &quot;input.x2&quot;: &quot;output.0&quot;</span>
+<span class="sd">            ... }</span>
+<span class="sd">            &gt;&gt;&gt; model = NonSequentialModel(modules, connections)</span>
+
+<span class="sd">        This will perform a sequential model on the &quot;x1&quot; input through Module1</span>
+<span class="sd">        and Module2, sending the output to the second output of the model, and</span>
+<span class="sd">        will send the &quot;x2&quot; input directly to the first output of the model</span>
+<span class="sd">        unchanged.</span>
+
+<span class="sd">        Modules that output PyTrees need not be fully traversed if entire</span>
+<span class="sd">        subtrees are to be passed between modules. For example, if Module1</span>
+<span class="sd">        outputs a dict with keys &quot;a&quot; and &quot;b&quot;, and Module2 expects a dict</span>
+<span class="sd">        with keys &quot;a&quot; and &quot;b&quot; as input, the connections can be specified as:</span>
+
+<span class="sd">            &gt;&gt;&gt; modules = {&quot;M1&quot;: Module1(), &quot;M2&quot;: Module2()}</span>
+<span class="sd">            &gt;&gt;&gt; connections = {</span>
+<span class="sd">            ...     &quot;input&quot;: &quot;M1&quot;,</span>
+<span class="sd">            ...     &quot;M1&quot;: &quot;M2&quot;,</span>
+<span class="sd">            ...     &quot;M2&quot;: &quot;output&quot;</span>
+<span class="sd">            ... }</span>
+<span class="sd">            &gt;&gt;&gt; model = NonSequentialModel(modules, connections)</span>
+
+<span class="sd">        or equivalently:</span>
+
+<span class="sd">            &gt;&gt;&gt; modules = {&quot;M1&quot;: Module1(), &quot;M2&quot;: Module2()}</span>
+<span class="sd">            &gt;&gt;&gt; connections = {</span>
+<span class="sd">            ...     &quot;input&quot;: &quot;M1&quot;,</span>
+<span class="sd">            ...     &quot;M1.a&quot;: &quot;M2.a&quot;,</span>
+<span class="sd">            ...     &quot;M1.b&quot;: &quot;M2.b&quot;,</span>
+<span class="sd">            ...     &quot;M2&quot;: &quot;output&quot;</span>
+<span class="sd">            ... }</span>
+<span class="sd">            &gt;&gt;&gt; model = NonSequentialModel(modules, connections)</span>
+
+<span class="sd">        Both ways will pass the entire output dict of Module1 to Module2.</span>
+
+<span class="sd">        Module ouputs can be sent to multiple module inputs by specifying a</span>
+<span class="sd">        list or tuple of input paths in the connections dictionary. For</span>
+<span class="sd">        example, to send the output of Module1 to both Module2 and Module3:</span>
+
+<span class="sd">            &gt;&gt;&gt; modules = {&quot;M1&quot;: Module1(), &quot;M2&quot;: Module2(), &quot;M3&quot;: Module3()}</span>
+<span class="sd">            &gt;&gt;&gt; connections = {</span>
+<span class="sd">            ...     &quot;input&quot;: &quot;M1&quot;,</span>
+<span class="sd">            ...     &quot;M1&quot;: [&quot;M2&quot;, &quot;M3&quot;],</span>
+<span class="sd">            ...     &quot;M2&quot;: &quot;output.0&quot;,</span>
+<span class="sd">            ...     &quot;M3&quot;: &quot;output.1&quot;</span>
+<span class="sd">            ... }</span>
+<span class="sd">            &gt;&gt;&gt; model = NonSequentialModel(modules, connections)</span>
+
+<span class="sd">        This will create a model that sends the output of Module1 to both</span>
+<span class="sd">        Module2 and Module3 in parallel, and collects their outputs as a Tuple</span>
+<span class="sd">        as the model output.</span>
+
+<span class="sd">        The order of the connections in the dictionary does not matter, as long</span>
+<span class="sd">        as the connections form a valid directed acyclic graph from the</span>
+<span class="sd">        model input to the model output. It is not necessary to use all parts</span>
+<span class="sd">        of the model input, or all modules. However, this will raise a warning.</span>
+<span class="sd">        It is not necessary and will not raise a warning if some parts of the</span>
+<span class="sd">        outputs of some modules are not used, but all inputs of all present</span>
+<span class="sd">        modules must be connected.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        ModelModules</span>
+<span class="sd">            Type alias for a PyTree of modules in a model.</span>
+<span class="sd">        jax.random.key</span>
+<span class="sd">            JAX function to create a random key.</span>
+<span class="sd">        jax.tree_util.keystr</span>
+<span class="sd">            JAX function to create string paths for PyTree KeyPaths in the</span>
+<span class="sd">            format expected by the connections dictionary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">modules</span> <span class="o">=</span> <span class="n">make_mutable</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">modules</span> <span class="k">if</span> <span class="n">modules</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{},</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="o">=</span> <span class="n">connections</span> <span class="k">if</span> <span class="n">connections</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">{}</span>
+
+        <span class="c1"># if &quot;input&quot; or &quot;output&quot; is in the module keys (if modules is a dict),</span>
+        <span class="c1"># then raise an error</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s2">&quot;input&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Module key &#39;input&#39; is reserved for model input.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;output&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Module key &#39;output&#39; is reserved for model output.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="o">=</span> <span class="n">separator</span></div>
+
+
+<div class="viewcode-block" id="NonSequentialModel.get_execution_order">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.get_execution_order">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_execution_order</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resolve the connections dictionary to find the execution order of</span>
+<span class="sd">        module execution.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                If the connections do not form a valid directed acyclic graph</span>
+<span class="sd">                from the model input to the model output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">module_connections</span> <span class="o">=</span> <span class="n">get_outer_connections_by_tree</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span>
+            <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+            <span class="n">in_key</span><span class="o">=</span><span class="s2">&quot;input&quot;</span><span class="p">,</span>
+            <span class="n">out_key</span><span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># now we have connections in the form</span>
+        <span class="c1"># { &#39;input&#39;: {&#39;&lt;mod_path&gt;&#39;, ...}, ... }</span>
+
+        <span class="c1"># now is a good time to verify that &#39;input&#39; is present as a key</span>
+        <span class="k">if</span> <span class="s2">&quot;input&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">module_connections</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Connections must include &#39;input&#39; as a key &quot;</span>
+                <span class="s2">&quot;denoting the model input.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># now we resolve the execution order</span>
+        <span class="n">topo_order</span><span class="p">,</span> <span class="n">visited</span> <span class="o">=</span> <span class="n">resolve_connections</span><span class="p">(</span>
+            <span class="n">module_connections</span><span class="p">,</span>
+            <span class="n">start_key</span><span class="o">=</span><span class="s2">&quot;input&quot;</span><span class="p">,</span>
+            <span class="n">end_key</span><span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">topo_order</span></div>
+
+
+<div class="viewcode-block" id="NonSequentialModel.reset">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.reset">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the compiled state of the model. This will require recompilation</span>
+<span class="sd">        before the model can be used again.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="NonSequentialModel.is_ready">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.is_ready">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the model is compiled and ready for use. Overrides the base</span>
+<span class="sd">        implementation since not all modules need to be ready, as some may</span>
+<span class="sd">        not appear in the execution order.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            True if the model is compiled and ready, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># if the execution order is not set, the model is not ready</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># if any module in the execution order is not ready, the model is not</span>
+        <span class="c1"># ready</span>
+        <span class="k">for</span> <span class="n">module_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">module_path</span> <span class="o">==</span> <span class="s2">&quot;input&quot;</span> <span class="ow">or</span> <span class="n">module_path</span> <span class="o">==</span> <span class="s2">&quot;output&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span>
+                <span class="n">module_path</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">module</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># if the input or output shapes are not set, the model is not ready</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="NonSequentialModel.compile">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.compile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span>
+        <span class="o">/</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compile the model for training by finding the execution order of the</span>
+<span class="sd">        directed graph defined by the connections, and compiling each module</span>
+<span class="sd">        in that order.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            rng</span>
+<span class="sd">                Random key for initializing the model parameters. JAX PRNGKey</span>
+<span class="sd">                or integer seed.</span>
+<span class="sd">            input_shape</span>
+<span class="sd">                Shape of the input array, excluding the batch size.</span>
+<span class="sd">                For example, (input_features,) for a 1D input or</span>
+<span class="sd">                (input_height, input_width, input_channels) for a 3D input.</span>
+<span class="sd">            verbose</span>
+<span class="sd">                Print debug information during compilation. Default is False.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                If the connections do not form a valid directed acyclic graph</span>
+<span class="sd">                from the model input to the model output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rng</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">32</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">rng</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="c1"># just validate that the input shape matches the compiled one</span>
+            <span class="k">assert</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span> <span class="o">==</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span>
+                <span class="n">input_shape</span>
+            <span class="p">),</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is already compiled with input shape &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">, cannot recompile with different &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;input shape </span><span class="si">{</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">assert</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">all</span><span class="p">(</span>
+                <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">,</span>
+                    <span class="n">input_shape</span><span class="p">,</span>
+                    <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">),</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is already compiled with input shape &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">, cannot recompile with different &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;input shape </span><span class="si">{</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># resolve the execution order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_execution_order</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> execution order:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">module_path</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">module_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># set the input and output shapes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="n">input_shape</span>
+
+        <span class="n">input_progression</span><span class="p">,</span> <span class="n">output_progression</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_shape_progression</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> input shape: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># print progression of shapes through the execution order</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> shape progression:&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">module_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">module_path</span> <span class="o">==</span> <span class="s2">&quot;input&quot;</span> <span class="ow">or</span> <span class="n">module_path</span> <span class="o">==</span> <span class="s2">&quot;output&quot;</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">module_input_shape</span> <span class="o">=</span> <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                    <span class="n">input_progression</span><span class="p">,</span>
+                    <span class="n">module_path</span><span class="p">,</span>
+                    <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                    <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">module_output_shape</span> <span class="o">=</span> <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                    <span class="n">output_progression</span><span class="p">,</span>
+                    <span class="n">module_path</span><span class="p">,</span>
+                    <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                    <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">module_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">module_input_shape</span><span class="si">}</span><span class="s2"> -&gt; &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module_output_shape</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> output shape: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># for all modules that appear in the execution order, compile them</span>
+        <span class="k">for</span> <span class="n">module_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">module_path</span> <span class="o">==</span> <span class="s2">&quot;input&quot;</span> <span class="ow">or</span> <span class="n">module_path</span> <span class="o">==</span> <span class="s2">&quot;output&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">rng</span><span class="p">,</span> <span class="n">module_rng</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
+            <span class="n">module</span> <span class="o">=</span> <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span>
+                <span class="n">module_path</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">module_input_shape</span> <span class="o">=</span> <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                <span class="n">input_progression</span><span class="p">,</span>
+                <span class="n">module_path</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Compiling module &#39;</span><span class="si">{</span><span class="n">module_path</span><span class="si">}</span><span class="s2">&#39; with input shape &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module_input_shape</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">module</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+                    <span class="n">module_rng</span><span class="p">,</span>
+                    <span class="n">module_input_shape</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Error compiling module &#39;</span><span class="si">{</span><span class="n">module_path</span><span class="si">}</span><span class="s2">&#39; (</span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">) &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;with input shape </span><span class="si">{</span><span class="n">module_input_shape</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+
+
+<div class="viewcode-block" id="NonSequentialModel._get_module_input_dependencies">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel._get_module_input_dependencies">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_module_input_dependencies</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">PyTree</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">PyTree</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the input dependencies for each module in the execution order.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            module_input_dependencies</span>
+<span class="sd">                List of PyTrees of str paths to the required inputs for each</span>
+<span class="sd">                module in the execution order. The first entry corresponds to</span>
+<span class="sd">                the &quot;input&quot; node and is None.</span>
+<span class="sd">            output_input_dependencies</span>
+<span class="sd">                PyTree of str paths to the required inputs for the &quot;output&quot;</span>
+<span class="sd">                node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">execution_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_execution_order</span><span class="p">()</span>
+
+        <span class="c1"># place the connections into the module tree</span>
+        <span class="n">placed_conn</span><span class="p">,</span> <span class="n">out_placed_conn</span> <span class="o">=</span> <span class="n">place_connections_in_tree</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span>
+            <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+            <span class="n">in_key</span><span class="o">=</span><span class="s2">&quot;input&quot;</span><span class="p">,</span>
+            <span class="n">out_key</span><span class="o">=</span><span class="s2">&quot;output&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">module_inputs</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                <span class="n">placed_conn</span><span class="p">,</span>
+                <span class="n">mod_path</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">mod_path</span> <span class="ow">in</span> <span class="n">execution_order</span>
+            <span class="k">if</span> <span class="n">mod_path</span> <span class="o">!=</span> <span class="s2">&quot;input&quot;</span> <span class="ow">and</span> <span class="n">mod_path</span> <span class="o">!=</span> <span class="s2">&quot;output&quot;</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">module_inputs</span><span class="p">,</span> <span class="n">out_placed_conn</span></div>
+
+
+<div class="viewcode-block" id="NonSequentialModel._get_shape_progression">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel._get_shape_progression">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_shape_progression</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span>
+        <span class="o">/</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">PyTree</span><span class="p">[</span><span class="n">DataShape</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">DataShape</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span> <span class="n">DataShape</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the progression of output shapes through the model given an input</span>
+<span class="sd">        shape. The first entry is the model input shape, and the last entry is</span>
+<span class="sd">        the model output shape.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            input_shape</span>
+<span class="sd">                Shape of the input, excluding the batch dimension.</span>
+<span class="sd">                For example, (input_features,) for 1D bare-array input, or</span>
+<span class="sd">                (input_height, input_width, input_channels) for 3D bare-array</span>
+<span class="sd">                input, [(input_features1,), (input_features2,)] for a List</span>
+<span class="sd">                (PyTree) of 1D arrays, etc.</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            input_shapes</span>
+<span class="sd">                PyTree of input shapes at each module in the execution order,</span>
+<span class="sd">                with the same structure as the modules in the execution order.</span>
+<span class="sd">            output_shapes</span>
+<span class="sd">                PyTree of output shapes at each module in the execution order,</span>
+<span class="sd">                with the same structure as the modules in the execution order.</span>
+<span class="sd">            output_shape</span>
+<span class="sd">                Shape of the output after passing through the model.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># get the execution order</span>
+        <span class="n">execution_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_execution_order</span><span class="p">()</span>
+
+        <span class="c1"># the modules execute sequentially in the execution order and each</span>
+        <span class="c1"># return an arbitrary PyTree of arrays.</span>
+        <span class="c1"># since the inputs to each module can be arbitrary compositions of</span>
+        <span class="c1"># previous module outputs, we need to track the shapes of all</span>
+        <span class="c1"># intermediate outputs and assemble the inputs to each module</span>
+
+        <span class="c1"># first we make two empty PyTrees in the same shape as the modules, but</span>
+        <span class="c1"># only the ones in the execution order</span>
+        <span class="n">input_shapes</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">DataShape</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">extend_structure_from_strpaths</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">execution_order</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">output_shapes</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">DataShape</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">extend_structure_from_strpaths</span><span class="p">(</span>
+                <span class="kc">None</span><span class="p">,</span>
+                <span class="n">execution_order</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># fill in the return shape from the &quot;input&quot; node</span>
+        <span class="n">setitem_by_strpath</span><span class="p">(</span>
+            <span class="n">output_shapes</span><span class="p">,</span>
+            <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+            <span class="n">input_shape</span><span class="p">,</span>  <span class="c1"># input node returns the model input shape</span>
+            <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+            <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">module_input_deps</span><span class="p">,</span> <span class="n">out_input_deps</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_module_input_dependencies</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="c1"># now we build the input and output shapes in execution order</span>
+        <span class="k">for</span> <span class="n">mod_path</span><span class="p">,</span> <span class="n">req_in_paths</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">execution_order</span><span class="p">,</span> <span class="n">module_input_deps</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">mod_path</span> <span class="o">==</span> <span class="s2">&quot;input&quot;</span> <span class="ow">or</span> <span class="n">mod_path</span> <span class="o">==</span> <span class="s2">&quot;output&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="c1"># mod_path is the path to the current module in self.modules</span>
+            <span class="c1"># req_in_paths is either a str or a list of str paths to the</span>
+            <span class="c1"># required inputs for the current module</span>
+            <span class="c1"># since we are in execution order, all required inputs will be</span>
+            <span class="c1"># available in output_shapes</span>
+            <span class="n">in_shapes</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                    <span class="n">output_shapes</span><span class="p">,</span>
+                    <span class="n">p</span><span class="p">,</span>
+                    <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                    <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">req_in_paths</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">setitem_by_strpath</span><span class="p">(</span>
+                <span class="n">input_shapes</span><span class="p">,</span>
+                <span class="n">mod_path</span><span class="p">,</span>
+                <span class="n">in_shapes</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="n">module</span> <span class="o">=</span> <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span>
+                <span class="n">mod_path</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">out_shape</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">get_output_shape</span><span class="p">(</span><span class="n">in_shapes</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Error getting output shape for module &#39;</span><span class="si">{</span><span class="n">mod_path</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">) with input shape </span><span class="si">{</span><span class="n">in_shapes</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Current input shapes progression:&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">input_shapes</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Current output shapes progression:&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">output_shapes</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="n">setitem_by_strpath</span><span class="p">(</span>
+                <span class="n">output_shapes</span><span class="p">,</span>
+                <span class="n">mod_path</span><span class="p">,</span>
+                <span class="n">out_shape</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="c1"># finally, get the output shape from the &quot;output&quot; node</span>
+        <span class="n">out_shapes</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                <span class="n">output_shapes</span><span class="p">,</span>
+                <span class="n">p</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">out_input_deps</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">input_shapes</span><span class="p">,</span> <span class="n">output_shapes</span><span class="p">,</span> <span class="n">out_shapes</span></div>
+
+
+<div class="viewcode-block" id="NonSequentialModel.get_output_shape">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.get_output_shape">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the output shape of the model given an input shape. Must be</span>
+<span class="sd">        implemented by all subclasses.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            input_shape</span>
+<span class="sd">                Shape of the input, excluding the batch dimension.</span>
+<span class="sd">                For example, (input_features,) for 1D bare-array input, or</span>
+<span class="sd">                (input_height, input_width, input_channels) for 3D bare-array</span>
+<span class="sd">                input, [(input_features1,), (input_features2,)] for a List</span>
+<span class="sd">                (PyTree) of 1D arrays, etc.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            output_shape</span>
+<span class="sd">                Shape of the output after passing through the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span>
+
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">output_shape</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_shape_progression</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output_shape</span></div>
+
+
+<div class="viewcode-block" id="NonSequentialModel._get_callable">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel._get_callable">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelCallable</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a ``jax.jit``-able and ``jax.grad``-able callable that</span>
+<span class="sd">        represents the model&#39;s forward pass.</span>
+
+<span class="sd">        This must be implemented by all subclasses.</span>
+
+<span class="sd">        This method must be implemented by all subclasses and must return a</span>
+<span class="sd">        ``jax-jit``-able and ``jax-grad``-able callable in the form of</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            model_callable(</span>
+<span class="sd">                params: parametricmatrixmodels.model_util.ModelParams,</span>
+<span class="sd">                data: parametricmatrixmodels.typing.Data,</span>
+<span class="sd">                training: bool,</span>
+<span class="sd">                state: parametricmatrixmodels.model_util.ModelState,</span>
+<span class="sd">                rng: Any,</span>
+<span class="sd">            ) -&gt; (</span>
+<span class="sd">                output: parametricmatrixmodels.typing.Data,</span>
+<span class="sd">                new_state: parametricmatrixmodels.model_util.ModelState,</span>
+<span class="sd">                )</span>
+
+
+<span class="sd">        That is, all hyperparameters are traced out and the callable depends</span>
+<span class="sd">        explicitly only on</span>
+
+<span class="sd">        * the model&#39;s parameters, as a PyTree with leaf nodes as JAX arrays,</span>
+<span class="sd">        * the input data, as a PyTree with leaf nodes as JAX arrays, each of</span>
+<span class="sd">            which has shape (num_samples, ...),</span>
+<span class="sd">        * the training flag, as a boolean,</span>
+<span class="sd">        * the model&#39;s state, as a PyTree with leaf nodes as JAX arrays</span>
+
+<span class="sd">        and returns</span>
+
+<span class="sd">        * the output data, as a PyTree with leaf nodes as JAX arrays, each of</span>
+<span class="sd">            which has shape (num_samples, ...),</span>
+<span class="sd">        * the new model state, as a PyTree with leaf nodes as JAX arrays. The</span>
+<span class="sd">            PyTree structure must match that of the input state and</span>
+<span class="sd">            additionally all leaf nodes must have the same shape as the input</span>
+<span class="sd">            state leaf nodes.</span>
+
+<span class="sd">        The training flag will be traced out, so it doesn&#39;t need to be jittable</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            A callable that takes the model&#39;s parameters, input data,</span>
+<span class="sd">            training flag, state, and rng key and returns the output data and</span>
+<span class="sd">            new state.</span>
+
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        __call__ : Calls the model with the current parameters and</span>
+<span class="sd">            given input, state, and rng.</span>
+<span class="sd">        ModelCallable : Typing for the callable returned by this method.</span>
+<span class="sd">        Params : Typing for the model parameters.</span>
+<span class="sd">        Data : Typing for the input and output data.</span>
+<span class="sd">        State : Typing for the model state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not ready. Call compile() first.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span> <span class="o">=</span> <span class="n">make_mutable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">)</span>
+
+        <span class="c1"># get the callables for each module in the execution order and put them</span>
+        <span class="c1"># in a PyTree with the same structure</span>
+        <span class="n">module_callables</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ModuleCallable</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span>
+            <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span>
+                <span class="n">mod_path</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">_get_callable</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">mod_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span>
+            <span class="k">if</span> <span class="n">mod_path</span> <span class="o">!=</span> <span class="s2">&quot;input&quot;</span> <span class="ow">and</span> <span class="n">mod_path</span> <span class="o">!=</span> <span class="s2">&quot;output&quot;</span>
+        <span class="p">]</span>
+
+        <span class="c1"># get the input dependencies for each module</span>
+        <span class="n">module_input_deps</span><span class="p">,</span> <span class="n">out_input_deps</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_get_module_input_dependencies</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">nonseq_callable</span><span class="p">(</span>
+            <span class="n">params</span><span class="p">:</span> <span class="n">ModelParams</span><span class="p">,</span>
+            <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
+            <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+            <span class="n">state</span><span class="p">:</span> <span class="n">ModelState</span><span class="p">,</span>
+            <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Data</span><span class="p">,</span> <span class="n">ModelState</span><span class="p">]:</span>
+
+            <span class="c1"># initialize the intermediate outputs PyTree</span>
+            <span class="n">intermediate_outputs</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Data</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">extend_structure_from_strpaths</span><span class="p">(</span>
+                    <span class="kc">None</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span><span class="p">,</span>
+                    <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="c1"># set the model input</span>
+            <span class="n">setitem_by_strpath</span><span class="p">(</span>
+                <span class="n">intermediate_outputs</span><span class="p">,</span>
+                <span class="s2">&quot;input&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="p">,</span>
+                <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">new_state</span> <span class="o">=</span> <span class="n">state</span>
+            <span class="c1"># now execute each module in the execution order, assembling the</span>
+            <span class="c1"># inputs from the intermediate outputs</span>
+            <span class="k">for</span> <span class="n">mod_path</span><span class="p">,</span> <span class="n">module_callable</span><span class="p">,</span> <span class="n">req_in_paths</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span><span class="p">,</span>
+                <span class="n">module_callables</span><span class="p">,</span>
+                <span class="n">module_input_deps</span><span class="p">,</span>
+            <span class="p">):</span>
+                <span class="k">if</span> <span class="n">mod_path</span> <span class="o">==</span> <span class="s2">&quot;input&quot;</span> <span class="ow">or</span> <span class="n">mod_path</span> <span class="o">==</span> <span class="s2">&quot;output&quot;</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="c1"># assemble the inputs for the module</span>
+
+                <span class="n">in_data</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                        <span class="n">intermediate_outputs</span><span class="p">,</span>
+                        <span class="n">p</span><span class="p">,</span>
+                        <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                        <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">req_in_paths</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="n">module_params</span> <span class="o">=</span> <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                    <span class="n">params</span><span class="p">,</span>
+                    <span class="n">mod_path</span><span class="p">,</span>
+                    <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                    <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">module_state</span> <span class="o">=</span> <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                    <span class="n">new_state</span><span class="p">,</span>
+                    <span class="n">mod_path</span><span class="p">,</span>
+                    <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                    <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="c1"># call the module</span>
+                <span class="n">out_data</span><span class="p">,</span> <span class="n">new_module_state</span> <span class="o">=</span> <span class="n">module_callable</span><span class="p">(</span>
+                    <span class="n">module_params</span><span class="p">,</span>
+                    <span class="n">in_data</span><span class="p">,</span>
+                    <span class="n">training</span><span class="p">,</span>
+                    <span class="n">module_state</span><span class="p">,</span>
+                    <span class="n">rng</span><span class="p">,</span>
+                <span class="p">)</span>
+
+                <span class="c1"># store the output</span>
+                <span class="n">setitem_by_strpath</span><span class="p">(</span>
+                    <span class="n">intermediate_outputs</span><span class="p">,</span>
+                    <span class="n">mod_path</span><span class="p">,</span>
+                    <span class="n">out_data</span><span class="p">,</span>
+                    <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="c1"># update the state</span>
+                <span class="n">setitem_by_strpath</span><span class="p">(</span>
+                    <span class="n">new_state</span><span class="p">,</span>
+                    <span class="n">mod_path</span><span class="p">,</span>
+                    <span class="n">new_module_state</span><span class="p">,</span>
+                    <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="c1"># assemble the model output from the intermediate outputs</span>
+            <span class="n">out_data</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">getitem_by_strpath</span><span class="p">(</span>
+                    <span class="n">intermediate_outputs</span><span class="p">,</span>
+                    <span class="n">p</span><span class="p">,</span>
+                    <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                    <span class="n">allow_early_return</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">return_remainder</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
+                <span class="p">),</span>
+                <span class="n">out_input_deps</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">out_data</span><span class="p">,</span> <span class="n">new_state</span>
+
+        <span class="k">return</span> <span class="n">nonseq_callable</span></div>
+
+
+<div class="viewcode-block" id="NonSequentialModel.get_state">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.get_state">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelState</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the state of all modules in the model as a PyTree.</span>
+
+<span class="sd">        Override of the base method in order to ignore modules that are not in</span>
+<span class="sd">        the execution order.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            A PyTree of the states of all modules in the model with the same</span>
+<span class="sd">            structure as the modules PyTree. Modules that are not in the</span>
+<span class="sd">            execution order will have state None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not ready. Call compile() first.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># if the model is ready, then all the modules in the execution order</span>
+        <span class="c1"># are ready, and otherwise we can ignore them</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_state_or_none</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
+                <span class="k">return</span> <span class="n">module</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+            <span class="n">get_state_or_none</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="NonSequentialModel.get_hyperparameters">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.get_hyperparameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;connections&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span>
+            <span class="s2">&quot;separator&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+            <span class="o">**</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_hyperparameters</span><span class="p">(),</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="NonSequentialModel.set_hyperparameters">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.set_hyperparameters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connections</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;connections&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;separator&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NonSequentialModel</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Overload the + operator to append a module or model to the current</span>
+<span class="sd">        model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">            other</span>
+<span class="sd">                Module or model to append.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            New NonSequentialModel with the other module or model appended.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># TODO: handle connections: anything that goes to &quot;output&quot; in self</span>
+        <span class="c1"># should now go to the new module/model and anything that comes from</span>
+        <span class="c1"># that module/model should now go to output</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;&#39;+&#39; not yet implemented for NonSequentialModel.&quot;</span>
+        <span class="p">)</span>
+        <span class="n">new_model</span> <span class="o">=</span> <span class="n">NonSequentialModel</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span>
+            <span class="n">rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_rng</span><span class="p">(),</span>
+            <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">new_model</span><span class="o">.</span><span class="n">append_module</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_model</span></div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

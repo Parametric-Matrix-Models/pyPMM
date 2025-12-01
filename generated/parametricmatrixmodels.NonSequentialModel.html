@@ -1,0 +1,1848 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>NonSequentialModel &#8212; Parametric Matrix Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'generated/parametricmatrixmodels.NonSequentialModel';</script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Modules" href="../modules.html" />
+    <link rel="prev" title="SequentialModel" href="parametricmatrixmodels.SequentialModel.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/pmmlogo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/pmmlogo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PMM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../models.html">
+    Models
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../models.html">
+    Models
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../modules.html">
+    Modules
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="parametricmatrixmodels.Model.html">Model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="parametricmatrixmodels.SequentialModel.html">SequentialModel</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">NonSequentialModel</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../models.html" class="nav-link">Models</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">NonSequentialModel</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="nonsequentialmodel">
+<h1>NonSequentialModel<a class="headerlink" href="#nonsequentialmodel" title="Link to this heading">#</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">parametricmatrixmodels.NonSequentialModel</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NonSequentialModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="parametricmatrixmodels.Model.html#parametricmatrixmodels.Model" title="parametricmatrixmodels.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a></p>
+<p>A nonsequential model that chains modules (or other models) together with
+directed connections.</p>
+<p>For confidence intervals or uncertainty quantification, wrap a trained
+model with <code class="docutils literal notranslate"><span class="pre">ConformalModel</span></code>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://docs.jax.dev/en/latest/jax.tree.html#module-jax.tree" title="(in JAX)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jax.tree</span></code></a></dt><dd><p>PyTree utilities and concepts in JAX.</p>
+</dd>
+<dt><a class="reference internal" href="parametricmatrixmodels.Model.html#parametricmatrixmodels.Model" title="parametricmatrixmodels.Model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Model</span></code></a></dt><dd><p>Abstract base class for all models.</p>
+</dd>
+<dt><a class="reference internal" href="parametricmatrixmodels.SequentialModel.html#parametricmatrixmodels.SequentialModel" title="parametricmatrixmodels.SequentialModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SequentialModel</span></code></a></dt><dd><p>A model that applies modules in sequence.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConformalModel</span></code></dt><dd><p>Wrap a trained model to produce confidence intervals.</p>
+</dd>
+</dl>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>modules</strong> (<em>ModelModules</em><em> | </em><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.BaseModule"><em>BaseModule</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>connections</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>] </em><em>| </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>...</em><em>]</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>rng</strong> (<em>Any</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>separator</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Initialize a nonsequential model with a PyTree of modules and a
+random key.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>modules</strong> (<em>ModelModules</em><em> | </em><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.BaseModule"><em>BaseModule</em></a><em> | </em><em>None</em>) – module(s) to initialize the model with. Default is None, which
+will become an empty dictionary. Can be a single module, which
+will be wrapped in a list, or a PyTree of modules (e.g., nested
+lists, tuples, or dictionaries).</p></li>
+<li><p><strong>connections</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>] </em><em>| </em><em>Tuple</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>...</em><em>]</em><em>] </em><em>| </em><em>None</em>) – Directed connections between module input and outputs in the
+model. Keys are period-separated paths of module outputs, and
+values are lists or tuples of period-separated paths of module
+inputs that receive the output. The reserved keys “input” and
+“output” refer to the model input and output, respectively. The
+separator can be changed from the default period using the
+<code class="docutils literal notranslate"><span class="pre">separator</span></code> argument. Default is None, which will become an
+empty dictionary.</p></li>
+<li><p><strong>rng</strong> (<em>Any</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Initial random key for the model. Default is None. If None, a
+new random key will be generated using JAX’s <code class="docutils literal notranslate"><span class="pre">random.key</span></code>. If
+an integer is provided, it will be used as the seed to create
+the key.</p></li>
+<li><p><strong>separator</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Separator string to use for denoting paths in the connections
+dictionary. Default is “.”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>To denote a sequential model where all modules expect a bare array and
+produce a bare array:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modules</span> <span class="o">=</span> <span class="p">[</span><span class="n">Module1</span><span class="p">(),</span> <span class="n">Module2</span><span class="p">(),</span> <span class="n">Module3</span><span class="p">()]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;0&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;1&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;2&quot;</span><span class="p">:</span> <span class="s2">&quot;output&quot;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">NonSequentialModel</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">connections</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or equivalently to name the modules:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modules</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;M0&quot;</span><span class="p">:</span> <span class="n">Module1</span><span class="p">(),</span> <span class="s2">&quot;M1&quot;</span><span class="p">:</span> <span class="n">Module2</span><span class="p">(),</span> <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="n">Module3</span><span class="p">()}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;M0&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M0&quot;</span><span class="p">:</span> <span class="s2">&quot;M1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M1&quot;</span><span class="p">:</span> <span class="s2">&quot;M2&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="s2">&quot;output&quot;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">NonSequentialModel</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">connections</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl>
+<dt>or equivalently to use nested structures:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modules</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;block1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">Module1</span><span class="p">(),</span> <span class="n">Module2</span><span class="p">()],</span>
+<span class="gp">... </span>    <span class="s2">&quot;block2&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;M3&quot;</span><span class="p">:</span> <span class="n">Module3</span><span class="p">()}</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;block1.0&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;block1.0&quot;</span><span class="p">:</span> <span class="s2">&quot;block1.1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;block1.1&quot;</span><span class="p">:</span> <span class="s2">&quot;block2.M3&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;block2.M3&quot;</span><span class="p">:</span> <span class="s2">&quot;output&quot;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">NonSequentialModel</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">connections</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>All three of the above will produce a model that applies the same
+three modules sequentially.</p>
+<p>If a module outputs a PyTree of arrays, or expects a PyTree of arrays
+as input, the connections can specify the leaf nodes using the same
+period-separated path syntax. For example, if Module1 outputs a dict
+with keys “a” and “b”, and Module2 expects a tuple of two arrays as
+input, the connections can be specified as:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modules</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;M1&quot;</span><span class="p">:</span> <span class="n">Module1</span><span class="p">(),</span> <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="n">Module2</span><span class="p">()}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;M1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M1.a&quot;</span><span class="p">:</span> <span class="s2">&quot;M2.1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M1.b&quot;</span><span class="p">:</span> <span class="s2">&quot;M2.0&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="s2">&quot;output&quot;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">NonSequentialModel</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">connections</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will send the “a” output of Module1 to the second input of
+Module2, and the “b” output of Module1 to the first input of Module2.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If a module expects a Tuple or List as input, it is best to write
+the module to accept both Tuple and List types, since the specific
+input type between List and Tuple cannot be inferred at compile
+time.</p>
+</div>
+<p>If the entire model input or output is a PyTree of arrays, the
+connections use the same period-separated path syntax with the reserved
+keys “input” and “output”. For example, if the model input is a dict
+with keys “x1” and “x2”, and the model output is a Tuple of two arrays,
+the connections can be specified as:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modules</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;M1&quot;</span><span class="p">:</span> <span class="n">Module1</span><span class="p">(),</span> <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="n">Module2</span><span class="p">()}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;input.x1&quot;</span><span class="p">:</span> <span class="s2">&quot;M1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M1&quot;</span><span class="p">:</span> <span class="s2">&quot;M2&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="s2">&quot;output.1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;input.x2&quot;</span><span class="p">:</span> <span class="s2">&quot;output.0&quot;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">NonSequentialModel</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">connections</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will perform a sequential model on the “x1” input through Module1
+and Module2, sending the output to the second output of the model, and
+will send the “x2” input directly to the first output of the model
+unchanged.</p>
+<p>Modules that output PyTrees need not be fully traversed if entire
+subtrees are to be passed between modules. For example, if Module1
+outputs a dict with keys “a” and “b”, and Module2 expects a dict
+with keys “a” and “b” as input, the connections can be specified as:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modules</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;M1&quot;</span><span class="p">:</span> <span class="n">Module1</span><span class="p">(),</span> <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="n">Module2</span><span class="p">()}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;M1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M1&quot;</span><span class="p">:</span> <span class="s2">&quot;M2&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="s2">&quot;output&quot;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">NonSequentialModel</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">connections</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>or equivalently:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modules</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;M1&quot;</span><span class="p">:</span> <span class="n">Module1</span><span class="p">(),</span> <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="n">Module2</span><span class="p">()}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;M1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M1.a&quot;</span><span class="p">:</span> <span class="s2">&quot;M2.a&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M1.b&quot;</span><span class="p">:</span> <span class="s2">&quot;M2.b&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="s2">&quot;output&quot;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">NonSequentialModel</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">connections</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Both ways will pass the entire output dict of Module1 to Module2.</p>
+<p>Module ouputs can be sent to multiple module inputs by specifying a
+list or tuple of input paths in the connections dictionary. For
+example, to send the output of Module1 to both Module2 and Module3:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">modules</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;M1&quot;</span><span class="p">:</span> <span class="n">Module1</span><span class="p">(),</span> <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="n">Module2</span><span class="p">(),</span> <span class="s2">&quot;M3&quot;</span><span class="p">:</span> <span class="n">Module3</span><span class="p">()}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;M1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;M2&quot;</span><span class="p">,</span> <span class="s2">&quot;M3&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;M2&quot;</span><span class="p">:</span> <span class="s2">&quot;output.0&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;M3&quot;</span><span class="p">:</span> <span class="s2">&quot;output.1&quot;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">NonSequentialModel</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">connections</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will create a model that sends the output of Module1 to both
+Module2 and Module3 in parallel, and collects their outputs as a Tuple
+as the model output.</p>
+<p>The order of the connections in the dictionary does not matter, as long
+as the connections form a valid directed acyclic graph from the
+model input to the model output. It is not necessary to use all parts
+of the model input, or all modules. However, this will raise a warning.
+It is not necessary and will not raise a warning if some parts of the
+outputs of some modules are not used, but all inputs of all present
+modules must be connected.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelModules</span></code></dt><dd><p>Type alias for a PyTree of modules in a model.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.random.key.html#jax.random.key" title="(in JAX)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jax.random.key</span></code></a></dt><dd><p>JAX function to create a random key.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.jax.dev/en/latest/_autosummary/jax.tree_util.keystr.html#jax.tree_util.keystr" title="(in JAX)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">jax.tree_util.keystr</span></code></a></dt><dd><p>JAX function to create string paths for PyTree KeyPaths in the format expected by the connections dictionary.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.__call__" title="parametricmatrixmodels.NonSequentialModel.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a></p></td>
+<td><p>Call the model with the input data.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel._get_callable" title="parametricmatrixmodels.NonSequentialModel._get_callable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">_get_callable</span></code></a></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">jax.jit</span></code>-able and <code class="docutils literal notranslate"><span class="pre">jax.grad</span></code>-able callable that represents the model's forward pass.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.add" title="parametricmatrixmodels.NonSequentialModel.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a></p></td>
+<td><p>Append a module to the end of the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.add_module" title="parametricmatrixmodels.NonSequentialModel.add_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_module</span></code></a></p></td>
+<td><p>Append a module to the end of the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.append" title="parametricmatrixmodels.NonSequentialModel.append"><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code></a></p></td>
+<td><p>Append a module to the end of the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.append_module" title="parametricmatrixmodels.NonSequentialModel.append_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">append_module</span></code></a></p></td>
+<td><p>Append a module to the end of the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.astype" title="parametricmatrixmodels.NonSequentialModel.astype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">astype</span></code></a></p></td>
+<td><p>Convenience wrapper to set_precision using the dtype argument, returns self.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.compile" title="parametricmatrixmodels.NonSequentialModel.compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></a></p></td>
+<td><p>Compile the model for training by finding the execution order of the directed graph defined by the connections, and compiling each module in that order.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.deserialize" title="parametricmatrixmodels.NonSequentialModel.deserialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deserialize</span></code></a></p></td>
+<td><p>Deserialize the model from a dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.from_file" title="parametricmatrixmodels.NonSequentialModel.from_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_file</span></code></a></p></td>
+<td><p>Load a model from a file and return an instance of the Model class.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_execution_order" title="parametricmatrixmodels.NonSequentialModel.get_execution_order"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_execution_order</span></code></a></p></td>
+<td><p>Resolve the connections dictionary to find the execution order of module execution.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_hyperparameters" title="parametricmatrixmodels.NonSequentialModel.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a></p></td>
+<td><p>Get the hyperparameters of the model as a dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_modules" title="parametricmatrixmodels.NonSequentialModel.get_modules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_modules</span></code></a></p></td>
+<td><p>Get the modules of the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_num_trainable_floats" title="parametricmatrixmodels.NonSequentialModel.get_num_trainable_floats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_num_trainable_floats</span></code></a></p></td>
+<td><p>Returns the number of trainable floats in the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_output_shape" title="parametricmatrixmodels.NonSequentialModel.get_output_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape</span></code></a></p></td>
+<td><p>Get the output shape of the model given an input shape.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_params" title="parametricmatrixmodels.NonSequentialModel.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a></p></td>
+<td><p>Get the parameters of the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_rng" title="parametricmatrixmodels.NonSequentialModel.get_rng"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rng</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_state" title="parametricmatrixmodels.NonSequentialModel.get_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state</span></code></a></p></td>
+<td><p>Get the state of all modules in the model as a PyTree.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.grad_input" title="parametricmatrixmodels.NonSequentialModel.grad_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grad_input</span></code></a></p></td>
+<td><p>Doc TODO</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.grad_params" title="parametricmatrixmodels.NonSequentialModel.grad_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grad_params</span></code></a></p></td>
+<td><p>Doc TODO</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.insert" title="parametricmatrixmodels.NonSequentialModel.insert"><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert</span></code></a></p></td>
+<td><p>Insert a module at a specific index in the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.insert_module" title="parametricmatrixmodels.NonSequentialModel.insert_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert_module</span></code></a></p></td>
+<td><p>Insert a module at a specific index in the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.is_ready" title="parametricmatrixmodels.NonSequentialModel.is_ready"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_ready</span></code></a></p></td>
+<td><p>Check if the model is compiled and ready for use.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.load" title="parametricmatrixmodels.NonSequentialModel.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a></p></td>
+<td><p>Load the model from a file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.pop" title="parametricmatrixmodels.NonSequentialModel.pop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code></a></p></td>
+<td><p>Remove and return a module by key or index in the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.pop_module_by_index" title="parametricmatrixmodels.NonSequentialModel.pop_module_by_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop_module_by_index</span></code></a></p></td>
+<td><p>Remove and return a module at a specific index in the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.pop_module_by_key" title="parametricmatrixmodels.NonSequentialModel.pop_module_by_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop_module_by_key</span></code></a></p></td>
+<td><p>Remove and return a module by key or index in the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.predict" title="parametricmatrixmodels.NonSequentialModel.predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></a></p></td>
+<td><p>Call the model with the input data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.prepend" title="parametricmatrixmodels.NonSequentialModel.prepend"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepend</span></code></a></p></td>
+<td><p>Prepend a module to the beginning of the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.prepend_module" title="parametricmatrixmodels.NonSequentialModel.prepend_module"><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepend_module</span></code></a></p></td>
+<td><p>Prepend a module to the beginning of the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.reset" title="parametricmatrixmodels.NonSequentialModel.reset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></a></p></td>
+<td><p>Reset the compiled state of the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.save" title="parametricmatrixmodels.NonSequentialModel.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a></p></td>
+<td><p>Save the model to a file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.save_compressed" title="parametricmatrixmodels.NonSequentialModel.save_compressed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_compressed</span></code></a></p></td>
+<td><p>Save the model to a compressed file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.serialize" title="parametricmatrixmodels.NonSequentialModel.serialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize</span></code></a></p></td>
+<td><p>Serialize the model to a dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.set_hyperparameters" title="parametricmatrixmodels.NonSequentialModel.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a></p></td>
+<td><p>Set the hyperparameters of the model from a dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.set_params" title="parametricmatrixmodels.NonSequentialModel.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a></p></td>
+<td><p>Set the parameters of the model from a PyTree of PyTrees of numpy arrays.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.set_precision" title="parametricmatrixmodels.NonSequentialModel.set_precision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_precision</span></code></a></p></td>
+<td><p>Set the precision of the model parameters and states.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.set_rng" title="parametricmatrixmodels.NonSequentialModel.set_rng"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_rng</span></code></a></p></td>
+<td><p>Set the random key for the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.set_state" title="parametricmatrixmodels.NonSequentialModel.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a></p></td>
+<td><p>Set the state of the model from a PyTree of PyTrees of numpy arrays.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.train" title="parametricmatrixmodels.NonSequentialModel.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.name" title="parametricmatrixmodels.NonSequentialModel.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
+<td><p>Returns the name of the module, unless overridden, this is the class name.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'jax.numpy.float64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.__call__" title="Link to this definition">#</a></dt>
+<dd><p>Call the model with the input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>Data</em>) – Input array of shape (batch_size, &lt;input feature axes&gt;).
+For example, (batch_size, input_features) for a 1D input or
+(batch_size, input_height, input_width, input_channels) for a
+3D input.</p></li>
+<li><p><strong>dtype</strong> (<em>jax.typing.DTypeLike</em>) – Data type of the output array. Default is jax.numpy.float64.
+It is strongly recommended to perform training in single
+precision (float32 and complex64) and inference with double
+precision inputs (float64, the default here) with single
+precision weights. Default is float64.</p></li>
+<li><p><strong>rng</strong> (<em>Any</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – JAX random key for stochastic modules. Default is None.
+If None, the saved rng key will be used if it exists, which
+would be the final rng key from the last training run. If an
+integer is provided, it will be used as the seed to create a
+new JAX random key. Default is the saved rng key if it exists,
+otherwise a new random key will be generated.</p></li>
+<li><p><strong>return_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, the model will return the state of the model after
+evaluation. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>update_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, the model will update the state of the model after
+evaluation. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>max_batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – If provided, the input will be split into batches of at most
+this size and processed sequentially to avoid OOM errors.
+Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, which means the input will be processed in
+a single batch.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Data</em> – Output data as a PyTree of JAX arrays, the structure and shape
+of which is determined by the model’s specific modules.</p></li>
+<li><p><em>ModelState</em> – If <code class="docutils literal notranslate"><span class="pre">return_state</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the state of the model after
+evaluation as a PyTree of PyTrees of JAX arrays, the structure
+of which matches that of the model’s modules.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[Data, ModelState] | Data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel._get_callable">
+<span class="sig-name descname"><span class="pre">_get_callable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel._get_callable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel._get_callable" title="Link to this definition">#</a></dt>
+<dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">jax.jit</span></code>-able and <code class="docutils literal notranslate"><span class="pre">jax.grad</span></code>-able callable that
+represents the model’s forward pass.</p>
+<p>This must be implemented by all subclasses.</p>
+<p>This method must be implemented by all subclasses and must return a
+<code class="docutils literal notranslate"><span class="pre">jax-jit</span></code>-able and <code class="docutils literal notranslate"><span class="pre">jax-grad</span></code>-able callable in the form of</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_callable</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">parametricmatrixmodels</span><span class="o">.</span><span class="n">model_util</span><span class="o">.</span><span class="n">ModelParams</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">parametricmatrixmodels</span><span class="o">.</span><span class="n">typing</span><span class="o">.</span><span class="n">Data</span><span class="p">,</span>
+    <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">parametricmatrixmodels</span><span class="o">.</span><span class="n">model_util</span><span class="o">.</span><span class="n">ModelState</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span>
+    <span class="n">output</span><span class="p">:</span> <span class="n">parametricmatrixmodels</span><span class="o">.</span><span class="n">typing</span><span class="o">.</span><span class="n">Data</span><span class="p">,</span>
+    <span class="n">new_state</span><span class="p">:</span> <span class="n">parametricmatrixmodels</span><span class="o">.</span><span class="n">model_util</span><span class="o">.</span><span class="n">ModelState</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>That is, all hyperparameters are traced out and the callable depends
+explicitly only on</p>
+<ul class="simple">
+<li><p>the model’s parameters, as a PyTree with leaf nodes as JAX arrays,</p></li>
+<li><dl class="simple">
+<dt>the input data, as a PyTree with leaf nodes as JAX arrays, each of</dt><dd><p>which has shape (num_samples, …),</p>
+</dd>
+</dl>
+</li>
+<li><p>the training flag, as a boolean,</p></li>
+<li><p>the model’s state, as a PyTree with leaf nodes as JAX arrays</p></li>
+</ul>
+<p>and returns</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>the output data, as a PyTree with leaf nodes as JAX arrays, each of</dt><dd><p>which has shape (num_samples, …),</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>the new model state, as a PyTree with leaf nodes as JAX arrays. The</dt><dd><p>PyTree structure must match that of the input state and
+additionally all leaf nodes must have the same shape as the input
+state leaf nodes.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>The training flag will be traced out, so it doesn’t need to be jittable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>A callable that takes the model’s parameters, input data,</em></p></li>
+<li><p><em>training flag, state, and rng key and returns the output data and</em></p></li>
+<li><p><em>new state.</em></p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pmm.model_util.ModelCallable</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.__call__" title="parametricmatrixmodels.NonSequentialModel.__call__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__call__</span></code></a></dt><dd><p>Calls the model with the current parameters and given input, state, and rng.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelCallable</span></code></dt><dd><p>Typing for the callable returned by this method.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Params</span></code></dt><dd><p>Typing for the model parameters.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">Data</span></code></dt><dd><p>Typing for the input and output data.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">State</span></code></dt><dd><p>Typing for the model state.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel._get_module_input_dependencies">
+<span class="sig-name descname"><span class="pre">_get_module_input_dependencies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel._get_module_input_dependencies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel._get_module_input_dependencies" title="Link to this definition">#</a></dt>
+<dd><p>Get the input dependencies for each module in the execution order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>module_input_dependencies</em> – List of PyTrees of str paths to the required inputs for each
+module in the execution order. The first entry corresponds to
+the “input” node and is None.</p></li>
+<li><p><em>output_input_dependencies</em> – PyTree of str paths to the required inputs for the “output”
+node.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>[<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>]], <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel._get_shape_progression">
+<span class="sig-name descname"><span class="pre">_get_shape_progression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel._get_shape_progression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel._get_shape_progression" title="Link to this definition">#</a></dt>
+<dd><p>Get the progression of output shapes through the model given an input
+shape. The first entry is the model input shape, and the last entry is
+the model output shape.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input_shape</strong> (<em>DataShape</em>) – Shape of the input, excluding the batch dimension.
+For example, (input_features,) for 1D bare-array input, or
+(input_height, input_width, input_channels) for 3D bare-array
+input, [(input_features1,), (input_features2,)] for a List
+(PyTree) of 1D arrays, etc.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>input_shapes</em> – PyTree of input shapes at each module in the execution order,
+with the same structure as the modules in the execution order.</p></li>
+<li><p><em>output_shapes</em> – PyTree of output shapes at each module in the execution order,
+with the same structure as the modules in the execution order.</p></li>
+<li><p><em>output_shape</em> – Shape of the output after passing through the model.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[PyTree[DataShape | <em>None</em>], PyTree[DataShape | <em>None</em>], DataShape]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel._verify_input">
+<span class="sig-name descname"><span class="pre">_verify_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel._verify_input" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>pmm.typing.Data</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.add" title="Link to this definition">#</a></dt>
+<dd><p>Append a module to the end of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a>) – Module to append.</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><em>KeyEntry</em><em>, </em><em>...</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Key to name the module if modules are stored in a dictionary.
+If None and modules are stored in a dictionary, a UUID will be
+generated and used as the key. Default is None. Ignored if
+modules are stored in a list, tuple, or other structure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.add_module">
+<span class="sig-name descname"><span class="pre">add_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.add_module" title="Link to this definition">#</a></dt>
+<dd><p>Append a module to the end of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a>) – Module to append.</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><em>KeyEntry</em><em>, </em><em>...</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Key to name the module if modules are stored in a dictionary.
+If None and modules are stored in a dictionary, a UUID will be
+generated and used as the key. Default is None. Ignored if
+modules are stored in a list, tuple, or other structure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.append" title="Link to this definition">#</a></dt>
+<dd><p>Append a module to the end of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a>) – Module to append.</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><em>KeyEntry</em><em>, </em><em>...</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Key to name the module if modules are stored in a dictionary.
+If None and modules are stored in a dictionary, a UUID will be
+generated and used as the key. Default is None. Ignored if
+modules are stored in a list, tuple, or other structure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.append_module">
+<span class="sig-name descname"><span class="pre">append_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.append_module" title="Link to this definition">#</a></dt>
+<dd><p>Append a module to the end of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a>) – Module to append.</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><em>KeyEntry</em><em>, </em><em>...</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Key to name the module if modules are stored in a dictionary.
+If None and modules are stored in a dictionary, a UUID will be
+generated and used as the key. Default is None. Ignored if
+modules are stored in a list, tuple, or other structure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.astype">
+<span class="sig-name descname"><span class="pre">astype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.astype" title="Link to this definition">#</a></dt>
+<dd><p>Convenience wrapper to set_precision using the dtype argument, returns
+self.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dtype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.14)"><em>type</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.3)"><em>dtype</em></a><em> | </em><em>SupportsDType</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="parametricmatrixmodels.Model.html#parametricmatrixmodels.Model" title="parametricmatrixmodels.model.Model"><em>Model</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel.compile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.compile" title="Link to this definition">#</a></dt>
+<dd><p>Compile the model for training by finding the execution order of the
+directed graph defined by the connections, and compiling each module
+in that order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rng</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Random key for initializing the model parameters. JAX PRNGKey
+or integer seed.</p></li>
+<li><p><strong>input_shape</strong> (<em>pmm.typing.DataShape</em>) – Shape of the input array, excluding the batch size.
+For example, (input_features,) for a 1D input or
+(input_height, input_width, input_channels) for a 3D input.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Print debug information during compilation. Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the connections do not form a valid directed acyclic graph
+    from the model input to the model output.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.deserialize">
+<span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.deserialize" title="Link to this definition">#</a></dt>
+<dd><p>Deserialize the model from a dictionary. This is done by deserializing
+the model’s parameters/metadata and then deserializing each module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Dictionary containing the serialized model data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.from_file">
+<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.from_file" title="Link to this definition">#</a></dt>
+<dd><p>Load a model from a file and return an instance of the Model class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – File to load the model from.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Model</em> – An instance of the Model class with the loaded parameters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="parametricmatrixmodels.Model.html#parametricmatrixmodels.Model" title="parametricmatrixmodels.model.Model"><em>Model</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.get_execution_order">
+<span class="sig-name descname"><span class="pre">get_execution_order</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel.get_execution_order"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.get_execution_order" title="Link to this definition">#</a></dt>
+<dd><p>Resolve the connections dictionary to find the execution order of
+module execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the connections do not form a valid directed acyclic graph
+    from the model input to the model output.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.get_hyperparameters">
+<span class="sig-name descname"><span class="pre">get_hyperparameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel.get_hyperparameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.get_hyperparameters" title="Link to this definition">#</a></dt>
+<dd><p>Get the hyperparameters of the model as a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Dict[str, Any]</em> – Dictionary containing the hyperparameters of the model.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pmm.typing.HyperParams</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.get_modules">
+<span class="sig-name descname"><span class="pre">get_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.get_modules" title="Link to this definition">#</a></dt>
+<dd><p>Get the modules of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>modules</em> – PyTree of modules in the model. The structure of the PyTree
+will match that of the modules in the model.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pmm.model_util.ModelModules</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelModules</span></code></dt><dd><p>Type alias for a PyTree of modules in a model.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.get_num_trainable_floats">
+<span class="sig-name descname"><span class="pre">get_num_trainable_floats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.get_num_trainable_floats" title="Link to this definition">#</a></dt>
+<dd><p>Returns the number of trainable floats in the module.
+If the module does not have trainable parameters, returns <code class="docutils literal notranslate"><span class="pre">0</span></code>.
+If the module is not ready, returns <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>Number of trainable floats in the module, or None if the module</em></p></li>
+<li><p><em>is not ready.</em></p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a> | <em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.get_output_shape">
+<span class="sig-name descname"><span class="pre">get_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel.get_output_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.get_output_shape" title="Link to this definition">#</a></dt>
+<dd><p>Get the output shape of the model given an input shape. Must be
+implemented by all subclasses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input_shape</strong> (<em>pmm.typing.DataShape</em>) – Shape of the input, excluding the batch dimension.
+For example, (input_features,) for 1D bare-array input, or
+(input_height, input_width, input_channels) for 3D bare-array
+input, [(input_features1,), (input_features2,)] for a List
+(PyTree) of 1D arrays, etc.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>output_shape</em> – Shape of the output after passing through the model.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pmm.typing.DataShape</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.get_params" title="Link to this definition">#</a></dt>
+<dd><p>Get the parameters of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>params</em> – PyTree of PyTrees of numpy arrays representing the parameters
+of each module in the model. The structure of the PyTree will
+be a composite structure where the upper level structure
+matches that of the modules in the model, and the lower level
+structure matches that of the parameters of each module.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pmm.model_util.ModelParams</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelParams</span></code></dt><dd><p>Type alias for a PyTree of parameters in a model.</p>
+</dd>
+<dt><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_modules" title="parametricmatrixmodels.NonSequentialModel.get_modules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_modules</span></code></a></dt><dd><p>Get the modules of the model, in the same structure as the parameters returned by this method.</p>
+</dd>
+<dt><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.set_params" title="parametricmatrixmodels.NonSequentialModel.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a></dt><dd><p>Set the parameters of the model from a corresponding PyTree of PyTrees of numpy arrays.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.get_rng">
+<span class="sig-name descname"><span class="pre">get_rng</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.get_rng" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.get_state">
+<span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel.get_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.get_state" title="Link to this definition">#</a></dt>
+<dd><p>Get the state of all modules in the model as a PyTree.</p>
+<p>Override of the base method in order to ignore modules that are not in
+the execution order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>A PyTree of the states of all modules in the model with the same</em></p></li>
+<li><p><em>structure as the modules PyTree. Modules that are not in the</em></p></li>
+<li><p><em>execution order will have state None.</em></p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>pmm.model_util.ModelState</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.grad_input">
+<span class="sig-name descname"><span class="pre">grad_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'jax.numpy.float64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fwd=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.grad_input" title="Link to this definition">#</a></dt>
+<dd><p>Doc TODO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fwd</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em> | </em><em>None</em>) – If True, use <code class="docutils literal notranslate"><span class="pre">jax.jacfwd</span></code>, otherwise use <code class="docutils literal notranslate"><span class="pre">jax.jacrev</span></code>. Default
+is <code class="docutils literal notranslate"><span class="pre">None</span></code>, which decides based on the input and output shapes.</p></li>
+<li><p><strong>max_batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – If provided, the input will be split into batches of at most
+this size and processed sequentially to avoid OOM errors.
+Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, which means the input will be processed in
+a single batch. If <code class="docutils literal notranslate"><span class="pre">max_batch_size</span></code> is set to <code class="docutils literal notranslate"><span class="pre">1</span></code>, the gradient
+will be computed one sample at a time without batching. This case
+is particularly important for <code class="docutils literal notranslate"><span class="pre">grad_input</span></code> since the Jacobian
+contains gradients across different batch samples and thus scales
+with the square of the batch size.</p></li>
+<li><p><strong>X</strong> (<em>PyTree</em><em>[</em><em>Inexact</em><em>[</em><em>Array</em><em>, </em><em>'num_samples </em><em>...</em><em>'</em><em>]</em><em>, </em><em>' DataStruct'</em><em>]</em>)</p></li>
+<li><p><strong>dtype</strong> (<em>jax.type.DTypeLike</em>)</p></li>
+<li><p><strong>rng</strong> (<em>Any</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>return_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+<li><p><strong>update_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>PyTree</em> – Gradient of the model output with respect to the input data,
+as a PyTree of JAX arrays, the structure of which matches that
+of the output structure of the model composed above the input
+data structure. Each leaf array will have shape
+(num_samples, output_dim1, output_dim2, …, input_dim1,
+input_dim2, …), where the output dimensions correspond to
+the shape of the model output for that leaf, and the input
+dimensions correspond to the shape of the input data for that
+leaf.</p></li>
+<li><p><em>ModelState</em> – If <code class="docutils literal notranslate"><span class="pre">return_state</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the state of the model after
+evaluation as a PyTree of PyTrees of JAX arrays, the structure
+of which matches that of the model’s modules.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[PyTree[Inexact[Array, ‘num_samples …’], ’… DataStruct’], ModelState] | PyTree[Inexact[Array, ‘num_samples …’], ’… DataStruct’]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.grad_params">
+<span class="sig-name descname"><span class="pre">grad_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'jax.numpy.float64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fwd=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.grad_params" title="Link to this definition">#</a></dt>
+<dd><p>Doc TODO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fwd</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em> | </em><em>None</em>) – If True, use <code class="docutils literal notranslate"><span class="pre">jax.jacfwd</span></code>, otherwise use <code class="docutils literal notranslate"><span class="pre">jax.jacrev</span></code>. Default
+is <code class="docutils literal notranslate"><span class="pre">None</span></code>, which decides based on the input and output shapes.</p></li>
+<li><p><strong>max_batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – If provided, the input will be split into batches of at most
+this size and processed sequentially to avoid OOM errors.
+Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, which means the input will be processed in
+a single batch. Only applies if <code class="docutils literal notranslate"><span class="pre">batched=True</span></code>.</p></li>
+<li><p><strong>X</strong> (<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Inexact</em><em>[</em><em>Array</em><em>, </em><em>'num_samples </em><em>...</em><em>'</em><em>]</em><em>, </em><em>'DataStruct'</em><em>]</em>)</p></li>
+<li><p><strong>dtype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.14)"><em>type</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.3)"><em>dtype</em></a><em> | </em><em>SupportsDType</em>)</p></li>
+<li><p><strong>rng</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>return_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+<li><p><strong>update_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>PyTree</em> – Gradient of the model output with respect to the model
+parameters, as a PyTree of PyTrees of JAX arrays, the upper
+level structure of which matches that of the model’s modules,
+and the lower level structure of which matches that of the
+parameters of each module. Each leaf array will have shape
+(num_samples, output_dim1, output_dim2, …, param_dim1,
+param_dim2, …), where the output dimensions correspond to
+the shape of the model output for that leaf, and the param
+dimensions correspond to the shape of the parameter for that
+leaf.</p></li>
+<li><p><em>ModelState</em> – If <code class="docutils literal notranslate"><span class="pre">return_state</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the state of the model after
+evaluation as a PyTree of PyTrees of JAX arrays, the structure
+of which matches that of the model’s modules.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>[<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[jaxtyping.Inexact[Array, ‘num_samples …’] | <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>[] | <em>None</em>], TypeAliasForwardRef(’pmm.model_util.ModelState’)] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[jaxtyping.Inexact[Array, ‘num_samples …’] | <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>[] | <em>None</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.insert" title="Link to this definition">#</a></dt>
+<dd><p>Insert a module at a specific index in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Index to insert the module at.</p></li>
+<li><p><strong>module</strong> (<a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a>) – Module to insert.</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><em>KeyEntry</em><em>, </em><em>...</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Key to name the module if modules are stored in a dictionary.
+If None and modules are stored in a dictionary, a UUID will be
+generated and used as the key. Default is None. Ignored if
+modules are stored in a list, tuple, or other structure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.insert_module">
+<span class="sig-name descname"><span class="pre">insert_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.insert_module" title="Link to this definition">#</a></dt>
+<dd><p>Insert a module at a specific index in the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Index to insert the module at.</p></li>
+<li><p><strong>module</strong> (<a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a>) – Module to insert.</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><em>KeyEntry</em><em>, </em><em>...</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Key to name the module if modules are stored in a dictionary.
+If None and modules are stored in a dictionary, a UUID will be
+generated and used as the key. Default is None. Ignored if
+modules are stored in a list, tuple, or other structure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.is_ready">
+<span class="sig-name descname"><span class="pre">is_ready</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel.is_ready"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.is_ready" title="Link to this definition">#</a></dt>
+<dd><p>Check if the model is compiled and ready for use. Overrides the base
+implementation since not all modules need to be ready, as some may
+not appear in the execution order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>True if the model is compiled and ready, False otherwise.</em></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.load" title="Link to this definition">#</a></dt>
+<dd><p>Load the model from a file. Supports both compressed and uncompressed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.IO" title="(in Python v3.14)"><em>IO</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – File to load the model from.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.name">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.name" title="Link to this definition">#</a></dt>
+<dd><p>Returns the name of the module, unless overridden, this is the class
+name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Name of the module.</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.pop">
+<span class="sig-name descname"><span class="pre">pop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.pop" title="Link to this definition">#</a></dt>
+<dd><p>Remove and return a module by key or index in the model.
+:param key: Key or index of the module to remove.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>The removed module.</em></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><em>KeyEntry</em><em>, </em><em>...</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.pop_module_by_index">
+<span class="sig-name descname"><span class="pre">pop_module_by_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.pop_module_by_index" title="Link to this definition">#</a></dt>
+<dd><p>Remove and return a module at a specific index in the model.
+:param index: Index of the module to remove.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>The removed module.</em></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.pop_module_by_key">
+<span class="sig-name descname"><span class="pre">pop_module_by_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.pop_module_by_key" title="Link to this definition">#</a></dt>
+<dd><p>Remove and return a module by key or index in the model.
+:param key: Key or index of the module to remove.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>The removed module.</em></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><em>KeyEntry</em><em>, </em><em>...</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'jax.numpy.float64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.predict" title="Link to this definition">#</a></dt>
+<dd><p>Call the model with the input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>Data</em>) – Input array of shape (batch_size, &lt;input feature axes&gt;).
+For example, (batch_size, input_features) for a 1D input or
+(batch_size, input_height, input_width, input_channels) for a
+3D input.</p></li>
+<li><p><strong>dtype</strong> (<em>jax.typing.DTypeLike</em>) – Data type of the output array. Default is jax.numpy.float64.
+It is strongly recommended to perform training in single
+precision (float32 and complex64) and inference with double
+precision inputs (float64, the default here) with single
+precision weights. Default is float64.</p></li>
+<li><p><strong>rng</strong> (<em>Any</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – JAX random key for stochastic modules. Default is None.
+If None, the saved rng key will be used if it exists, which
+would be the final rng key from the last training run. If an
+integer is provided, it will be used as the seed to create a
+new JAX random key. Default is the saved rng key if it exists,
+otherwise a new random key will be generated.</p></li>
+<li><p><strong>return_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, the model will return the state of the model after
+evaluation. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>update_state</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, the model will update the state of the model after
+evaluation. Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>max_batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – If provided, the input will be split into batches of at most
+this size and processed sequentially to avoid OOM errors.
+Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, which means the input will be processed in
+a single batch.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Data</em> – Output data as a PyTree of JAX arrays, the structure and shape
+of which is determined by the model’s specific modules.</p></li>
+<li><p><em>ModelState</em> – If <code class="docutils literal notranslate"><span class="pre">return_state</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, the state of the model after
+evaluation as a PyTree of PyTrees of JAX arrays, the structure
+of which matches that of the model’s modules.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[Data, ModelState] | Data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.prepend">
+<span class="sig-name descname"><span class="pre">prepend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.prepend" title="Link to this definition">#</a></dt>
+<dd><p>Prepend a module to the beginning of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a>) – Module to prepend.</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><em>KeyEntry</em><em>, </em><em>...</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Key to name the module if modules are stored in a dictionary.
+If None and modules are stored in a dictionary, a UUID will be
+generated and used as the key. Default is None. Ignored if
+modules are stored in a list, tuple, or other structure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.prepend_module">
+<span class="sig-name descname"><span class="pre">prepend_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.prepend_module" title="Link to this definition">#</a></dt>
+<dd><p>Prepend a module to the beginning of the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a>) – Module to prepend.</p></li>
+<li><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><em>KeyEntry</em><em>, </em><em>...</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Key to name the module if modules are stored in a dictionary.
+If None and modules are stored in a dictionary, a UUID will be
+generated and used as the key. Default is None. Ignored if
+modules are stored in a list, tuple, or other structure.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.reset" title="Link to this definition">#</a></dt>
+<dd><p>Reset the compiled state of the model. This will require recompilation
+before the model can be used again.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.save" title="Link to this definition">#</a></dt>
+<dd><p>Save the model to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.IO" title="(in Python v3.14)"><em>IO</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – File to save the model to.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.save_compressed">
+<span class="sig-name descname"><span class="pre">save_compressed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.save_compressed" title="Link to this definition">#</a></dt>
+<dd><p>Save the model to a compressed file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.IO" title="(in Python v3.14)"><em>IO</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>Path</em></a>) – File to save the model to.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.serialize">
+<span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.serialize" title="Link to this definition">#</a></dt>
+<dd><p>Serialize the model to a dictionary. This is done by serializing the
+model’s parameters/metadata and then serializing each module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Dict[str, Any]</em></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.set_hyperparameters">
+<span class="sig-name descname"><span class="pre">set_hyperparameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hyperparams</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/nonsequentialmodel.html#NonSequentialModel.set_hyperparameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.set_hyperparameters" title="Link to this definition">#</a></dt>
+<dd><p>Set the hyperparameters of the model from a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hyperparams</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Dictionary containing the hyperparameters of the model.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.set_params">
+<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.set_params" title="Link to this definition">#</a></dt>
+<dd><p>Set the parameters of the model from a PyTree of PyTrees of numpy
+arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>params</strong> (<em>pmm.model_util.ModelParams</em>) – PyTree of PyTrees of numpy arrays representing the parameters
+of each module in the model. The structure of the PyTree must
+match that of the modules in the model, and the lower level
+structure must match that of the parameters of each module.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelParams</span></code></dt><dd><p>Type alias for a PyTree of parameters in a model.</p>
+</dd>
+<dt><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_modules" title="parametricmatrixmodels.NonSequentialModel.get_modules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_modules</span></code></a></dt><dd><p>Get the modules of the model, in the same structure as the parameters accepted by this method.</p>
+</dd>
+<dt><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_params" title="parametricmatrixmodels.NonSequentialModel.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a></dt><dd><p>Get the parameters of the model, in the same structure as the parameters accepted by this method.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.set_precision">
+<span class="sig-name descname"><span class="pre">set_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prec</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.set_precision" title="Link to this definition">#</a></dt>
+<dd><p>Set the precision of the model parameters and states.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.14)"><em>type</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.3)"><em>dtype</em></a><em> | </em><em>SupportsDType</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Precision to set for the model parameters and states.
+Valid options are:
+[for 32-bit precision (all options are equivalent)]
+- np.float32, np.complex64, “float32”, “complex64”
+- “single”, “f32”, “c64”, 32
+[for 64-bit precision (all options are equivalent)]
+- np.float64, np.complex128, “float64”, “complex128”
+- “double”, “f64”, “c128”, 64</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.set_rng">
+<span class="sig-name descname"><span class="pre">set_rng</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.set_rng" title="Link to this definition">#</a></dt>
+<dd><p>Set the random key for the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rng</strong> (<em>Any</em>) – Random key to set for the model. JAX PRNGKey, integer seed, or
+<cite>None</cite>. If None, a new random key will be generated using JAX’s
+<code class="docutils literal notranslate"><span class="pre">random.key</span></code>. If an integer is provided, it will be used as
+the seed to create the key.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.set_state" title="Link to this definition">#</a></dt>
+<dd><p>Set the state of the model from a PyTree of PyTrees of numpy arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>state</strong> (<em>pmm.model_util.ModelState</em>) – PyTree of PyTrees of numpy arrays representing the state of
+each module in the model. The structure of the PyTree must
+match that of the modules in the model, and the lower level
+structure must match that of the state of each module.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelState</span></code></dt><dd><p>Type alias for a PyTree of states in a model.</p>
+</dd>
+<dt><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_modules" title="parametricmatrixmodels.NonSequentialModel.get_modules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_modules</span></code></a></dt><dd><p>Get the modules of the model, in the same structure as the state accepted by this method.</p>
+</dd>
+<dt><a class="reference internal" href="#parametricmatrixmodels.NonSequentialModel.get_state" title="parametricmatrixmodels.NonSequentialModel.get_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state</span></code></a></dt><dd><p>Get the state of the model, in the same structure as the state accepted by this method.</p>
+</dd>
+</dl>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.NonSequentialModel.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_unc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val_unc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mse'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stopping_patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stopping_min_delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialization_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unroll</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.NonSequentialModel.train" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Inexact</em><em>[</em><em>Array</em><em>, </em><em>'num_samples ?*features'</em><em>]</em><em>, </em><em>'InStruct'</em><em>]</em>)</p></li>
+<li><p><strong>Y</strong> (<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Inexact</em><em>[</em><em>Array</em><em>, </em><em>'num_samples ?*targets'</em><em>]</em><em>, </em><em>'OutStruct'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>Y_unc</strong> (<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Inexact</em><em>[</em><em>Array</em><em>, </em><em>'num_samples ?*targets'</em><em>]</em><em>, </em><em>'OutStruct'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>X_val</strong> (<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Inexact</em><em>[</em><em>Array</em><em>, </em><em>'num_val_samples ?*features'</em><em>]</em><em>, </em><em>'InStruct'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>Y_val</strong> (<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Inexact</em><em>[</em><em>Array</em><em>, </em><em>'num_val_samples ?*targets'</em><em>]</em><em>, </em><em>'OutStruct'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>Y_val_unc</strong> (<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Inexact</em><em>[</em><em>Array</em><em>, </em><em>'num_val_samples ?*targets'</em><em>]</em><em>, </em><em>'OutStruct'</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>loss_fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><em>Callable</em></a>)</p></li>
+<li><p><strong>lr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>epochs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>target_loss</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>early_stopping_patience</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>early_stopping_min_delta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>initialization_seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>callback</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><em>Callable</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>unroll</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+<li><p><strong>batch_rng</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>b1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>b2</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>eps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>clip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="parametricmatrixmodels.SequentialModel.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">SequentialModel</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../modules.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Modules</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel"><code class="docutils literal notranslate"><span class="pre">NonSequentialModel</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.__init__"><code class="docutils literal notranslate"><span class="pre">__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.__call__"><code class="docutils literal notranslate"><span class="pre">__call__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel._get_callable"><code class="docutils literal notranslate"><span class="pre">_get_callable()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel._get_module_input_dependencies"><code class="docutils literal notranslate"><span class="pre">_get_module_input_dependencies()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel._get_shape_progression"><code class="docutils literal notranslate"><span class="pre">_get_shape_progression()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel._verify_input"><code class="docutils literal notranslate"><span class="pre">_verify_input()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.add"><code class="docutils literal notranslate"><span class="pre">add()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.add_module"><code class="docutils literal notranslate"><span class="pre">add_module()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.append"><code class="docutils literal notranslate"><span class="pre">append()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.append_module"><code class="docutils literal notranslate"><span class="pre">append_module()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.astype"><code class="docutils literal notranslate"><span class="pre">astype()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.compile"><code class="docutils literal notranslate"><span class="pre">compile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.deserialize"><code class="docutils literal notranslate"><span class="pre">deserialize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.from_file"><code class="docutils literal notranslate"><span class="pre">from_file()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.get_execution_order"><code class="docutils literal notranslate"><span class="pre">get_execution_order()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.get_hyperparameters"><code class="docutils literal notranslate"><span class="pre">get_hyperparameters()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.get_modules"><code class="docutils literal notranslate"><span class="pre">get_modules()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.get_num_trainable_floats"><code class="docutils literal notranslate"><span class="pre">get_num_trainable_floats()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.get_output_shape"><code class="docutils literal notranslate"><span class="pre">get_output_shape()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.get_params"><code class="docutils literal notranslate"><span class="pre">get_params()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.get_rng"><code class="docutils literal notranslate"><span class="pre">get_rng()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.get_state"><code class="docutils literal notranslate"><span class="pre">get_state()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.grad_input"><code class="docutils literal notranslate"><span class="pre">grad_input()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.grad_params"><code class="docutils literal notranslate"><span class="pre">grad_params()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.insert"><code class="docutils literal notranslate"><span class="pre">insert()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.insert_module"><code class="docutils literal notranslate"><span class="pre">insert_module()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.is_ready"><code class="docutils literal notranslate"><span class="pre">is_ready()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.pop"><code class="docutils literal notranslate"><span class="pre">pop()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.pop_module_by_index"><code class="docutils literal notranslate"><span class="pre">pop_module_by_index()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.pop_module_by_key"><code class="docutils literal notranslate"><span class="pre">pop_module_by_key()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.prepend"><code class="docutils literal notranslate"><span class="pre">prepend()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.prepend_module"><code class="docutils literal notranslate"><span class="pre">prepend_module()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.reset"><code class="docutils literal notranslate"><span class="pre">reset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.save_compressed"><code class="docutils literal notranslate"><span class="pre">save_compressed()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.serialize"><code class="docutils literal notranslate"><span class="pre">serialize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.set_hyperparameters"><code class="docutils literal notranslate"><span class="pre">set_hyperparameters()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.set_params"><code class="docutils literal notranslate"><span class="pre">set_params()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.set_precision"><code class="docutils literal notranslate"><span class="pre">set_precision()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.set_rng"><code class="docutils literal notranslate"><span class="pre">set_rng()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.set_state"><code class="docutils literal notranslate"><span class="pre">set_state()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.NonSequentialModel.train"><code class="docutils literal notranslate"><span class="pre">train()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/generated/parametricmatrixmodels.NonSequentialModel.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

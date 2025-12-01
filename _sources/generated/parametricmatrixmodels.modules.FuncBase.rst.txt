@@ -1,0 +1,58 @@
+﻿FuncBase
+========
+
+``parametricmatrixmodels.modules.FuncBase``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: FuncBase
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__, _abc_impl
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~FuncBase.astype
+      
+         ~FuncBase.compile
+      
+         ~FuncBase.deserialize
+      
+         ~FuncBase.f
+      
+         ~FuncBase.get_hyperparameters
+      
+         ~FuncBase.get_num_trainable_floats
+      
+         ~FuncBase.get_output_shape
+      
+         ~FuncBase.get_params
+      
+         ~FuncBase.get_state
+      
+         ~FuncBase.is_ready
+      
+         ~FuncBase.serialize
+      
+         ~FuncBase.set_hyperparameters
+      
+         ~FuncBase.set_params
+      
+         ~FuncBase.set_precision
+      
+         ~FuncBase.set_state
+
+   .. autosummary::
+
+      
+      
+         ~FuncBase.name

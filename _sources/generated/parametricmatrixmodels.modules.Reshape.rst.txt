@@ -9,7 +9,7 @@
    :show-inheritance:
    :members:
    :special-members: __call__
-   :exclude-members: __init__
+   :exclude-members: __init__, _abc_impl
 
    .. automethod:: __init__
 
@@ -39,8 +39,6 @@
       
          ~Reshape.is_ready
       
-         ~Reshape.name
-      
          ~Reshape.serialize
       
          ~Reshape.set_hyperparameters
@@ -50,7 +48,11 @@
          ~Reshape.set_precision
       
          ~Reshape.set_state
+      
+         ~Reshape.validate_and_concretify_shape
 
    .. autosummary::
 
       
+      
+         ~Reshape.name

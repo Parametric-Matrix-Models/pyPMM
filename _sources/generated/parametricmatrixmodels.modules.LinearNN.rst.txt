@@ -9,7 +9,7 @@
    :show-inheritance:
    :members:
    :special-members: __call__
-   :exclude-members: __init__
+   :exclude-members: __init__, _abc_impl
 
    .. automethod:: __init__
 
@@ -21,13 +21,25 @@
       
       
       
+         ~LinearNN.add
+      
+         ~LinearNN.add_module
+      
+         ~LinearNN.append
+      
+         ~LinearNN.append_module
+      
          ~LinearNN.astype
       
          ~LinearNN.compile
       
          ~LinearNN.deserialize
       
+         ~LinearNN.from_file
+      
          ~LinearNN.get_hyperparameters
+      
+         ~LinearNN.get_modules
       
          ~LinearNN.get_num_trainable_floats
       
@@ -35,11 +47,39 @@
       
          ~LinearNN.get_params
       
+         ~LinearNN.get_rng
+      
          ~LinearNN.get_state
+      
+         ~LinearNN.grad_input
+      
+         ~LinearNN.grad_params
+      
+         ~LinearNN.insert
+      
+         ~LinearNN.insert_module
       
          ~LinearNN.is_ready
       
-         ~LinearNN.name
+         ~LinearNN.load
+      
+         ~LinearNN.pop
+      
+         ~LinearNN.pop_module_by_index
+      
+         ~LinearNN.pop_module_by_key
+      
+         ~LinearNN.predict
+      
+         ~LinearNN.prepend
+      
+         ~LinearNN.prepend_module
+      
+         ~LinearNN.reset
+      
+         ~LinearNN.save
+      
+         ~LinearNN.save_compressed
       
          ~LinearNN.serialize
       
@@ -49,8 +89,14 @@
       
          ~LinearNN.set_precision
       
+         ~LinearNN.set_rng
+      
          ~LinearNN.set_state
+      
+         ~LinearNN.train
 
    .. autosummary::
 
       
+      
+         ~LinearNN.name

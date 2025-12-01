@@ -1,0 +1,56 @@
+﻿Constant
+========
+
+``parametricmatrixmodels.modules.Constant``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Constant
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__, _abc_impl
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~Constant.astype
+      
+         ~Constant.compile
+      
+         ~Constant.deserialize
+      
+         ~Constant.get_hyperparameters
+      
+         ~Constant.get_num_trainable_floats
+      
+         ~Constant.get_output_shape
+      
+         ~Constant.get_params
+      
+         ~Constant.get_state
+      
+         ~Constant.is_ready
+      
+         ~Constant.serialize
+      
+         ~Constant.set_hyperparameters
+      
+         ~Constant.set_params
+      
+         ~Constant.set_precision
+      
+         ~Constant.set_state
+
+   .. autosummary::
+
+      
+      
+         ~Constant.name

@@ -1,0 +1,56 @@
+﻿MatMul
+======
+
+``parametricmatrixmodels.modules.MatMul``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: MatMul
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__, _abc_impl
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~MatMul.astype
+      
+         ~MatMul.compile
+      
+         ~MatMul.deserialize
+      
+         ~MatMul.get_hyperparameters
+      
+         ~MatMul.get_num_trainable_floats
+      
+         ~MatMul.get_output_shape
+      
+         ~MatMul.get_params
+      
+         ~MatMul.get_state
+      
+         ~MatMul.is_ready
+      
+         ~MatMul.serialize
+      
+         ~MatMul.set_hyperparameters
+      
+         ~MatMul.set_params
+      
+         ~MatMul.set_precision
+      
+         ~MatMul.set_state
+
+   .. autosummary::
+
+      
+      
+         ~MatMul.name

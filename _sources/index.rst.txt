@@ -12,5 +12,5 @@ Parametric Matrix Models reference
 .. toctree::
    :maxdepth: 2
 
-   model
+   models
    modules

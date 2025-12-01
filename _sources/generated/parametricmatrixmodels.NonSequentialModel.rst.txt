@@ -1,0 +1,104 @@
+﻿NonSequentialModel
+==================
+
+``parametricmatrixmodels.NonSequentialModel``
+
+.. currentmodule:: parametricmatrixmodels
+
+.. autoclass:: NonSequentialModel
+   :show-inheritance:
+   :members:
+   :special-members: __call__, compile, grad_input, grad_params
+   :exclude-members: __init__, _abc_impl
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~NonSequentialModel.add
+      
+         ~NonSequentialModel.add_module
+      
+         ~NonSequentialModel.append
+      
+         ~NonSequentialModel.append_module
+      
+         ~NonSequentialModel.astype
+      
+         ~NonSequentialModel.compile
+      
+         ~NonSequentialModel.deserialize
+      
+         ~NonSequentialModel.from_file
+      
+         ~NonSequentialModel.get_execution_order
+      
+         ~NonSequentialModel.get_hyperparameters
+      
+         ~NonSequentialModel.get_modules
+      
+         ~NonSequentialModel.get_num_trainable_floats
+      
+         ~NonSequentialModel.get_output_shape
+      
+         ~NonSequentialModel.get_params
+      
+         ~NonSequentialModel.get_rng
+      
+         ~NonSequentialModel.get_state
+      
+         ~NonSequentialModel.grad_input
+      
+         ~NonSequentialModel.grad_params
+      
+         ~NonSequentialModel.insert
+      
+         ~NonSequentialModel.insert_module
+      
+         ~NonSequentialModel.is_ready
+      
+         ~NonSequentialModel.load
+      
+         ~NonSequentialModel.pop
+      
+         ~NonSequentialModel.pop_module_by_index
+      
+         ~NonSequentialModel.pop_module_by_key
+      
+         ~NonSequentialModel.predict
+      
+         ~NonSequentialModel.prepend
+      
+         ~NonSequentialModel.prepend_module
+      
+         ~NonSequentialModel.reset
+      
+         ~NonSequentialModel.save
+      
+         ~NonSequentialModel.save_compressed
+      
+         ~NonSequentialModel.serialize
+      
+         ~NonSequentialModel.set_hyperparameters
+      
+         ~NonSequentialModel.set_params
+      
+         ~NonSequentialModel.set_precision
+      
+         ~NonSequentialModel.set_rng
+      
+         ~NonSequentialModel.set_state
+      
+         ~NonSequentialModel.train
+
+   .. autosummary::
+
+      
+      
+         ~NonSequentialModel.name

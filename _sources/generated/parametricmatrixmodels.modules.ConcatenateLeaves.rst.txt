@@ -1,0 +1,56 @@
+﻿ConcatenateLeaves
+=================
+
+``parametricmatrixmodels.modules.ConcatenateLeaves``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: ConcatenateLeaves
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__, _abc_impl
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~ConcatenateLeaves.astype
+      
+         ~ConcatenateLeaves.compile
+      
+         ~ConcatenateLeaves.deserialize
+      
+         ~ConcatenateLeaves.get_hyperparameters
+      
+         ~ConcatenateLeaves.get_num_trainable_floats
+      
+         ~ConcatenateLeaves.get_output_shape
+      
+         ~ConcatenateLeaves.get_params
+      
+         ~ConcatenateLeaves.get_state
+      
+         ~ConcatenateLeaves.is_ready
+      
+         ~ConcatenateLeaves.serialize
+      
+         ~ConcatenateLeaves.set_hyperparameters
+      
+         ~ConcatenateLeaves.set_params
+      
+         ~ConcatenateLeaves.set_precision
+      
+         ~ConcatenateLeaves.set_state
+
+   .. autosummary::
+
+      
+      
+         ~ConcatenateLeaves.name

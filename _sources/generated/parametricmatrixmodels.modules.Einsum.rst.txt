@@ -1,0 +1,56 @@
+﻿Einsum
+======
+
+``parametricmatrixmodels.modules.Einsum``
+
+.. currentmodule:: parametricmatrixmodels.modules
+
+.. autoclass:: Einsum
+   :show-inheritance:
+   :members:
+   :special-members: __call__
+   :exclude-members: __init__, _abc_impl
+
+   .. automethod:: __init__
+
+   .. autosummary::
+      :nosignatures:
+
+      __call__
+      _get_callable
+      
+      
+      
+         ~Einsum.astype
+      
+         ~Einsum.compile
+      
+         ~Einsum.deserialize
+      
+         ~Einsum.get_hyperparameters
+      
+         ~Einsum.get_num_trainable_floats
+      
+         ~Einsum.get_output_shape
+      
+         ~Einsum.get_params
+      
+         ~Einsum.get_state
+      
+         ~Einsum.is_ready
+      
+         ~Einsum.serialize
+      
+         ~Einsum.set_hyperparameters
+      
+         ~Einsum.set_params
+      
+         ~Einsum.set_precision
+      
+         ~Einsum.set_state
+
+   .. autosummary::
+
+      
+      
+         ~Einsum.name
