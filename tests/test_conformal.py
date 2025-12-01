@@ -69,6 +69,7 @@ def test_conformal_sequentialarray():
         epochs=500,
         batch_size=32,
         lr=1e-2,
+        batch_rng=key,
         verbose=False,
     )
 
@@ -174,6 +175,7 @@ def test_conformal_nonsequentialpytree():
         epochs=500,
         batch_size=20,
         lr=1e-3,
+        batch_rng=key,
         verbose=True,
     )
 
