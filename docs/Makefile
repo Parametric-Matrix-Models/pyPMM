@@ -21,8 +21,9 @@ help:
 
 clean:
 	@$(SPHINXBUILD) -M clean "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O);
-	rm -rf "$(BUILDDIR)/html";
+	# clean git worktree
+	git worktree add -f "$(BUILDDIR)/html" gh-pages;
 	# clean generated files
 	rm -rf "$(SOURCEDIR)/generated";
-	# clean git worktree
-	#cd "$(BUILDDIR)"; git worktree add -f html gh-pages
+	# clear html build directory except .git
+	find "$(BUILDDIR)/html" -mindepth 1 ! -name "*.git*" -exec rm -rf {} \;
