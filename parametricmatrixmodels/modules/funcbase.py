@@ -132,10 +132,10 @@ class FuncBase(BaseModule):
         # only way to do this automatically is to run a dummy input
 
         # add batch dimension to all shapes
-        input_w_batch_shape = jax.tree_map(
+        input_w_batch_shape = jax.tree.map(
             lambda s: (1,) + s, input_shape, is_leaf=is_shape_leaf
         )
-        dummy_input = jax.tree_map(
+        dummy_input = jax.tree.map(
             lambda s: np.zeros(s, dtype=np.float32),
             input_w_batch_shape,
             is_leaf=is_shape_leaf,
