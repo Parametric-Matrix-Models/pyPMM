@@ -177,9 +177,11 @@ def make_schedule(
     scalar_or_schedule: float | Callable[[int], float],
 ) -> Callable[[int], float]:
     if callable(scalar_or_schedule):
-        return scalar_or_schedule
+        return lambda i: np.float32(scalar_or_schedule(i))
     elif np.ndim(scalar_or_schedule) == 0:
-        return lambda _: scalar_or_schedule
+        return lambda _: np.float32(scalar_or_schedule)
+    elif isinstance(scalar_or_schedule, (int, float)):
+        return lambda _: np.float32(scalar_or_schedule)
     else:
         raise TypeError(type(scalar_or_schedule))
 
@@ -233,9 +235,7 @@ def adam(
         # explicit float32 to prevent upcasting in mixed precision
         m_hat = m / np.float32(1 - b1 ** (i + 1))
         v_hat = v / np.float32(1 - b2 ** (i + 1))
-        x = x - step_size(i).astype(np.float32) * m_hat / (
-            np.sqrt(v_hat) + eps
-        )
+        x = x - step_size(i) * m_hat / (np.sqrt(v_hat) + eps)
         return OptimizerState(x, m, v)
 
     @jaxtyped(typechecker=beartype)
@@ -317,9 +317,7 @@ def complex_adam(
         # explicit float32 to prevent upcasting in mixed precision
         m_hat = m / np.float32(1 - b1 ** (i + 1))
         v_hat = v / np.float32(1 - b2 ** (i + 1))
-        x = x - (
-            step_size(i).astype(np.float32) * m_hat / (np.sqrt(v_hat) + eps)
-        )
+        x = x - (step_size(i) * m_hat / (np.sqrt(v_hat) + eps))
 
         return OptimizerState(x, m, v)
 
