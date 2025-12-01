@@ -493,10 +493,10 @@
         <span class="c1"># only way to do this automatically is to run a dummy input</span>
 
         <span class="c1"># add batch dimension to all shapes</span>
-        <span class="n">input_w_batch_shape</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_map</span><span class="p">(</span>
+        <span class="n">input_w_batch_shape</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">s</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span>
         <span class="p">)</span>
-        <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_map</span><span class="p">(</span>
+        <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
             <span class="n">input_w_batch_shape</span><span class="p">,</span>
             <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">,</span>
@@ -507,7 +507,7 @@
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
                 <span class="s2">&quot;Failed to compute output shape in `get_output_shape`. &quot;</span>
                 <span class="s2">&quot;Make sure the function `f` can handle F32 inputs with shape &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_w_batch_shape</span><span class="si">}</span><span class="s2">, which includes a leading size-1 &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">get_shapes</span><span class="p">(</span><span class="n">dummy_input</span><span class="p">)</span><span class="si">}</span><span class="s2">, which includes a leading size-1 &quot;</span>
                 <span class="s2">&quot;batch dimension.&quot;</span>
             <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 
