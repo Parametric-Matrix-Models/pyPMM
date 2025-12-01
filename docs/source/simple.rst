@@ -1,16 +1,17 @@
-.. _utils:
+.. _simple:
 
 .. currentmodule:: parametricmatrixmodels.modules
 
-===============
-Utility Modules
-===============
+==============
+Simple Modules
+==============
 
 .. autosummary::
    :toctree: generated/
    :nosignatures:
    :template: modulesubclass.rst
 
-   ~Comment
-   ~FuncBase
-
+    ~Bias
+    ~Constant
+    ~Einsum
+    ~MatMul

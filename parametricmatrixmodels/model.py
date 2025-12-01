@@ -50,7 +50,7 @@ class Model(BaseModule):
 
     A ``Model`` is a PyTree of modules that can be trained and
     evaluated. Inputs are passed through each module to produce
-    outputs. ``Model``s are also ``BaseModule``s, so they can be
+    outputs. ``Model`` s are also ``BaseModule`` s, so they can be
     nested inside other models.
 
     For confidence intervals or uncertainty quantification, wrap a trained

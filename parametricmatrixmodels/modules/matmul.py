@@ -42,16 +42,18 @@ class MatMul(Einsum):
     --------
     To create a module that takes a single vector input (ignoring batch dim)
     and multiplies it by a trainable weight matrix:
-        >>> m = MatMul(output_shape=2, trainable=True)
-        >>> m(np.ones((batch_dim, 4))) # vec of size 4 in, vec of size 2 out
+
+    >>> m = MatMul(output_shape=2, trainable=True)
+    >>> m(np.ones((batch_dim, 4))) # vec of size 4 in, vec of size 2 out
 
     To create a module that multiplies two input matrices together in an order
     different from the default:
-        >>> input_data = {
-        ...     'x': np.ones((batch_dim, 3, 4)),
-        ...     'y': [np.ones((batch_dim, 5, 3)),],
-        ... }
-        >>> m = MatMul(path_order=['y.0', 'x'])
+
+    >>> input_data = {
+    ...     'x': np.ones((batch_dim, 3, 4)),
+    ...     'y': [np.ones((batch_dim, 5, 3)),],
+    ... }
+    >>> m = MatMul(path_order=['y.0', 'x'])
 
     """
 

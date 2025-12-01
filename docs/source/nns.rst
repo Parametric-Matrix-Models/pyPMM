@@ -12,5 +12,4 @@ Neural Network Modules
    :template: modulesubclass.rst
 
    ~LinearNN
-   ~NonnegativeLinearNN
 

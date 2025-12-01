@@ -30,11 +30,12 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
     "sphinx.ext.autosummary",
-    "sphinx_autodoc_typehints",
     "sphinx.ext.githubpages",
 ]
 
-autodoc_typehints = "signature"
+autodoc_typehints = "description"
+autodoc_typehints_format = "short"
+python_use_unqualified_type_names = True
 napoleon_use_rtype = False
 
 autosummary_generate = True
@@ -54,10 +55,38 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
     "jax": ("https://docs.jax.dev/en/latest/", None),
-    "dill": ("https://dill.readthedocs.io/en/latest/", None),
+    "jaxtyping": ("https://docs.kidger.site/jaxtyping/", None),
 }
 
 add_module_names = False
+toc_object_entries_show_parents = "hide"
+
+autodoc_type_aliases = {
+    "Params": "pmm.typing.Params",
+    "TupleParams": "pmm.typing.TupleParams",
+    "ListParams": "pmm.typing.ListParams",
+    "DictParams": "pmm.typing.DictParams",
+    "HyperParams": "pmm.typing.HyperParams",
+    "ArrayData": "pmm.typing.ArrayData",
+    "Data": "pmm.typing.Data",
+    "DataFixed": "pmm.typing.DataFixed",
+    "BatchlessDataFixed": "pmm.typing.BatchlessDataFixed",
+    "RealDataFixed": "pmm.typing.RealDataFixed",
+    "BatchlessRealDataFixed": "pmm.typing.BatchlessRealDataFixed",
+    "ComplexDataFixed": "pmm.typing.ComplexDataFixed",
+    "BatchlessComplexDataFixed": "pmm.typing.BatchlessComplexDataFixed",
+    "ArrayDataShape": "pmm.typing.ArrayDataShape",
+    "DataShape": "pmm.typing.DataShape",
+    "State": "pmm.typing.State",
+    "TupleState": "pmm.typing.TupleState",
+    "ListState": "pmm.typing.ListState",
+    "DictState": "pmm.typing.DictState",
+    "ModuleCallable": "pmm.typing.ModuleCallable",
+    "ModelModules": "pmm.model_util.ModelModules",
+    "ModelParams": "pmm.model_util.ModelParams",
+    "ModelState": "pmm.model_util.ModelState",
+    "ModelCallable": "pmm.model_util.ModelCallable",
+}
 
 
 # -- Options for HTML output -------------------------------------------------

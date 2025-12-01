@@ -2,9 +2,9 @@
 
 .. currentmodule:: parametricmatrixmodels.modules
 
-===========================================
-Elementwise and Activation Function Modules
-===========================================
+=======================================
+Elementwise Activation Function Modules
+=======================================
 
 .. autosummary::
    :toctree: generated/

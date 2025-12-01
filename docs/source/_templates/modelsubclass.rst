@@ -7,7 +7,7 @@
 .. autoclass:: {{ objname }}
    :show-inheritance:
    :members:
-   :special-members: __call__
+   :special-members: __call__, compile, grad_input, grad_params
    :exclude-members: __init__, _abc_impl
 
    .. automethod:: __init__

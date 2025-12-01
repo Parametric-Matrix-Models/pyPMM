@@ -236,7 +236,7 @@ class BaseModule(ABC):
 
         Parameters
         ----------
-        input
+        data
             PyTree of input arrays of shape (num_samples, ...). Only the first
             dimension (num_samples) is guaranteed to be the same for all input
             arrays.
