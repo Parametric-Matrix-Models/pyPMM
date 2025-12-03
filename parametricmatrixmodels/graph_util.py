@@ -758,7 +758,9 @@ def resolve_connections(
         validate_resolution(topological_order, all_nodes, start_key, end_key)
     except RuntimeError as e:
         raise RuntimeError(
-            "Failed to resolve connections into a valid topological order."
+            "Failed to resolve connections into a valid topological order. "
+            "Got order:\n    "
+            + "\n    ".join(topological_order)
         ) from e
 
     return topological_order, visited
