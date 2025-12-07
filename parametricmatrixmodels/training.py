@@ -1501,7 +1501,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
         def loss_fn(X, Y, Y_unc, params, training, state, rng):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # Y_unc is assumed to be the uncertainty in the targets
-            # abs(Y_pred - Y) ** 2 / Y_unc
+            # abs(Y_pred - Y) ** 2 / abs(Y_unc)**2
             return (
                 pmm_tree_util.mean(
                     pmm_tree_util.abs_sqr(
