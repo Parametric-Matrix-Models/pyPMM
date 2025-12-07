@@ -80,6 +80,7 @@ TrainingState: TypeAlias = Tuple[
 
 class GracefulKiller:
     kill_now = False
+    active = True
 
     def __init__(self) -> None:
         signal.signal(signal.SIGINT, self.exit_gracefully)
@@ -87,7 +88,7 @@ class GracefulKiller:
 
     def exit_gracefully(self, *args) -> None:
         # if a second signal is received, exit immediately
-        if self.kill_now:
+        if self.kill_now and self.active:
             raise KeyboardInterrupt(
                 "Multiple termination signals received, exiting."
             )
@@ -1088,6 +1089,7 @@ def _train(
             best_epoch=final_while_state[9],
             best_val_loss=final_while_state[8],
         )
+        killer.active = False
 
     # Extract the best adam state, model state, model rng, and final epoch
     return (
