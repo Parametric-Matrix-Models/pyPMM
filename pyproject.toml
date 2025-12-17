@@ -25,6 +25,7 @@ dependencies = [
     "jaxtyping",
     "beartype",
     "ordered-set",
+    "packaging",
 ]
 dynamic = ["version"]
 
@@ -45,7 +46,6 @@ examples = [
 docs = [
     "sphinx",
     "numpydoc",
-    "packaging",
     "pydata-sphinx-theme",
     "sphinx-copybutton",
     "sphinx-design",
