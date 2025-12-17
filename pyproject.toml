@@ -45,6 +45,7 @@ examples = [
 docs = [
     "sphinx",
     "numpydoc",
+    "packaging",
     "pydata-sphinx-theme",
     "sphinx-copybutton",
     "sphinx-design",
