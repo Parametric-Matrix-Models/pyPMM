@@ -1,0 +1,1591 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="auto">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Regression Example &#8212; Parametric Matrix Models</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "auto";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "auto";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/nbsphinx-code-cells.css?v=2aa19091" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/basic_regression';</script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Advanced" href="../advanced.html" />
+    <link rel="prev" title="Examples" href="examples.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="auto">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/pmmlogo.svg" class="logo__image only-light" alt=""/>
+    <img src="../_static/pmmlogo.svg" class="logo__image only-dark pst-js-only" alt=""/>
+  
+  
+    <p class="title logo__title">PMM</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../models.html">
+    Models
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../modules.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../advanced.html">
+    Advanced
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../models.html">
+    Models
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../modules.html">
+    Modules
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="examples.html">
+    Examples
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../advanced.html">
+    Advanced
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Parametric-Matrix-Models/pyPMM" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Regression Example</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="examples.html" class="nav-link">Examples</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Regression Example</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="Regression-Example">
+<h1>Regression Example<a class="headerlink" href="#Regression-Example" title="Link to this heading">#</a></h1>
+<p>This notebook provides two examples for performing basic regression on nonlinear data. The first example builds a traditional neural network and the second uses an affine observable PMM.</p>
+<section id="Imports">
+<h2>Imports<a class="headerlink" href="#Imports" title="Link to this heading">#</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install scikit-learn
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Requirement already satisfied: scikit-learn in /home/pcook/Research/FRIB/pmmenv/lib/python3.12/site-packages (1.8.0)
+Requirement already satisfied: numpy&gt;=1.24.1 in /home/pcook/Research/FRIB/pmmenv/lib/python3.12/site-packages (from scikit-learn) (2.4.0)
+Requirement already satisfied: scipy&gt;=1.10.0 in /home/pcook/Research/FRIB/pmmenv/lib/python3.12/site-packages (from scikit-learn) (1.16.3)
+Requirement already satisfied: joblib&gt;=1.3.0 in /home/pcook/Research/FRIB/pmmenv/lib/python3.12/site-packages (from scikit-learn) (1.5.3)
+Requirement already satisfied: threadpoolctl&gt;=3.2.0 in /home/pcook/Research/FRIB/pmmenv/lib/python3.12/site-packages (from scikit-learn) (3.6.0)
+Note: you may need to restart the kernel to use updated packages.
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.random</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">parametricmatrixmodels</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pmm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">MinMaxScaler</span>
+<span class="c1"># enable x64 for JAX</span>
+<span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">&quot;jax_enable_x64&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Data-Creation">
+<h2>Data Creation<a class="headerlink" href="#Data-Creation" title="Link to this heading">#</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># random seed for reproducibility</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
+
+<span class="n">n_pnts</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">n_pnts</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">X</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="c1"># add noise</span>
+<span class="n">key</span><span class="p">,</span> <span class="n">noise_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+<span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">jr</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">noise_key</span><span class="p">,</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># data must be in the shape [n_pnts, n_features] for the pmm library</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(100, 1)
+(100, 1)
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&lt;matplotlib.lines.Line2D at 0x7683e6423d70&gt;]
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_basic_regression_5_2.png" src="../_images/examples_basic_regression_5_2.png" />
+</div>
+</div>
+</section>
+<section id="Data-Partitioning">
+<h2>Data Partitioning<a class="headerlink" href="#Data-Partitioning" title="Link to this heading">#</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># train on 70% of the data, validate on 15%, test on the rest</span>
+<span class="n">train_perc</span> <span class="o">=</span> <span class="mf">0.7</span>
+<span class="n">val_perc</span> <span class="o">=</span> <span class="mf">0.15</span>
+
+<span class="n">n_train</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_pnts</span> <span class="o">*</span> <span class="n">train_perc</span><span class="p">)</span>
+<span class="n">n_val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_pnts</span> <span class="o">*</span> <span class="n">val_perc</span><span class="p">)</span>
+<span class="n">n_test</span> <span class="o">=</span> <span class="n">n_pnts</span> <span class="o">-</span> <span class="n">n_train</span> <span class="o">-</span> <span class="n">n_val</span>
+
+<span class="n">key</span><span class="p">,</span> <span class="n">shuffle_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+<span class="c1"># shuffle the data and then split</span>
+<span class="n">X_sh</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">shuffle_key</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="n">Y_sh</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">shuffle_key</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">X_sh</span><span class="p">[:</span><span class="n">n_train</span><span class="p">]</span>
+<span class="n">Y_train</span> <span class="o">=</span> <span class="n">Y_sh</span><span class="p">[:</span><span class="n">n_train</span><span class="p">]</span>
+<span class="n">X_val</span> <span class="o">=</span> <span class="n">X_sh</span><span class="p">[</span><span class="n">n_train</span><span class="p">:</span><span class="n">n_train</span> <span class="o">+</span> <span class="n">n_val</span><span class="p">]</span>
+<span class="n">Y_val</span> <span class="o">=</span> <span class="n">Y_sh</span><span class="p">[</span><span class="n">n_train</span><span class="p">:</span><span class="n">n_train</span> <span class="o">+</span> <span class="n">n_val</span><span class="p">]</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">X_sh</span><span class="p">[</span><span class="n">n_train</span> <span class="o">+</span> <span class="n">n_val</span><span class="p">:]</span>
+<span class="n">Y_test</span> <span class="o">=</span> <span class="n">Y_sh</span><span class="p">[</span><span class="n">n_train</span> <span class="o">+</span> <span class="n">n_val</span><span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Traditional-Neural-Network">
+<h2>Traditional Neural Network<a class="headerlink" href="#Traditional-Neural-Network" title="Link to this heading">#</a></h2>
+<section id="Data-Preparation-(Scaling)">
+<h3>Data Preparation (Scaling)<a class="headerlink" href="#Data-Preparation-(Scaling)" title="Link to this heading">#</a></h3>
+<p>Regression neural networks typically function best when the data are scaled to have unit variance and zero mean (<code class="docutils literal notranslate"><span class="pre">StandardScaler</span></code>)</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xscaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">yscaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+
+<span class="n">X_train_sc</span> <span class="o">=</span> <span class="n">xscaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_val_sc</span> <span class="o">=</span> <span class="n">xscaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+<span class="n">Y_train_sc</span> <span class="o">=</span> <span class="n">yscaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">Y_train</span><span class="p">)</span>
+<span class="n">Y_val_sc</span> <span class="o">=</span> <span class="n">yscaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Y_val</span><span class="p">)</span>
+
+<span class="c1"># we need to convert the arrays back from numpy arrays to jax.numpy arrays, since sklearn uses pure numpy</span>
+<span class="n">X_train_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_train_sc</span><span class="p">)</span>
+<span class="n">X_val_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_val_sc</span><span class="p">)</span>
+<span class="n">Y_train_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y_train_sc</span><span class="p">)</span>
+<span class="n">Y_val_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y_val_sc</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Model-Creation">
+<h3>Model Creation<a class="headerlink" href="#Model-Creation" title="Link to this heading">#</a></h3>
+<p>The model is built from an ordered sequence of <code class="docutils literal notranslate"><span class="pre">Module</span></code>s. For a traditional neural network, these are just <code class="docutils literal notranslate"><span class="pre">LinearNN</span></code> modules. Since we want linear sequential execution, we use a <code class="docutils literal notranslate"><span class="pre">SequentialModel</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># two hidden layers with 64 neurons each and the ReLU activation function</span>
+<span class="c1"># one output neuron</span>
+<span class="n">modules</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">pmm</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">LinearNN</span><span class="p">(</span>
+            <span class="n">out_features</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">pmm</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="p">),</span>
+        <span class="n">pmm</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">LinearNN</span><span class="p">(</span>
+            <span class="n">out_features</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">pmm</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="p">),</span>
+        <span class="n">pmm</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">LinearNN</span><span class="p">(</span><span class="n">out_features</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="p">]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">pmm</span><span class="o">.</span><span class="n">SequentialModel</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span>
+
+<span class="c1"># print model summary before compilation</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+SequentialModel(
+  [
+   LinearNN(
+     []
+   ),
+   LinearNN(
+     []
+   ),
+   LinearNN(
+     []
+   ),
+  ]
+)
+</pre></div></div>
+</div>
+<p>We can see that the model summary is very sparse at the moment. This is because the model doesn’t know what data to expect yet and doesn’t have any initial values for trainable parameters.</p>
+</section>
+<section id="Model-Compilation">
+<h3>Model Compilation<a class="headerlink" href="#Model-Compilation" title="Link to this heading">#</a></h3>
+<p>It’s more accurate to call this preparation or initialization, since all compilation happens JIT. This step doesn’t <em>need</em> to be done manually, as the model will automatically compile itself for the provided training data when the <code class="docutils literal notranslate"><span class="pre">Model.train</span></code> method is called.</p>
+<p>Models are compiled by providing them with a random key or seed as well as the shape of the input data (excluding the batch dimension). This allows the model to prepare all its modules by, for instance, setting initial values for trainable parameters. Forward passes (inferences/predictions) cannot be done with Models (or Modules) until after compilation with the corresponding input shape.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span><span class="p">,</span> <span class="n">compile_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+<span class="c1"># the random key here can be replaced with an integer seed or None, in which case a random seed will be chosen</span>
+<span class="c1"># the model only needs to know the input shape without the batch dimension</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">X_train_sc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+<span class="c1"># print the model summary after compilation</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total trainable floats: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">get_num_trainable_floats</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+SequentialModel(
+  [
+   LinearNN(
+     [
+      Flatten,
+      MatMul(trainable) (trainable floats: 64),
+      Bias(real=True) (trainable floats: 64),
+      ReLU,
+     ]
+   ),
+   LinearNN(
+     [
+      Flatten,
+      MatMul(trainable) (trainable floats: 4,096),
+      Bias(real=True) (trainable floats: 64),
+      ReLU,
+     ]
+   ),
+   LinearNN(
+     [
+      Flatten,
+      MatMul(trainable) (trainable floats: 64),
+      Bias(real=True) (trainable floats: 1),
+     ]
+   ),
+  ]
+)
+Total trainable floats: 4353
+</pre></div></div>
+</div>
+<p>Now we see some actual details about the model. We can see it is built from 3 <code class="docutils literal notranslate"><span class="pre">LinearNN</span></code> Modules (which themselves are actually also Models) which use three to four submodules each: <code class="docutils literal notranslate"><span class="pre">Flatten</span></code>, a trainable <code class="docutils literal notranslate"><span class="pre">MatMul</span></code>, a trainable and real-valued <code class="docutils literal notranslate"><span class="pre">Bias</span></code>, and for the hidden layers <code class="docutils literal notranslate"><span class="pre">ReLU</span></code>. This represents the classic <span class="math notranslate nohighlight">\(f(Wx+b)\)</span> neural network layer operation.</p>
+<p>We can perform a forward pass (inference/prediction) with the randomly initialized model just to make sure everything is working:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">]]))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Array([[-0.00960011]], dtype=float64)
+</pre></div></div>
+</div>
+</section>
+<section id="64-bit-versus-32-bit">
+<h3>64-bit versus 32-bit<a class="headerlink" href="#64-bit-versus-32-bit" title="Link to this heading">#</a></h3>
+<p>By default, JAX disables 64-bit floating point support (double precision). This is re-enabled by calling <code class="docutils literal notranslate"><span class="pre">jax.config.update(&quot;jax_enable_x64&quot;,</span> <span class="pre">True)</span></code> after JAX is imported but <em>before</em> it is initialized (usually before the first array operation). On certain hardware (like consumer GPUs) 64-bit operations can be nearly an order of magnitude slower than 32-bit. Additionally, there is little benefit to storing the trainable parameters of a model in 64-bit precision or for training models with
+64-bit precision. It is for this reason that the PMM library defaults to (and will raise warnings otherwise) 32-bit models, 32-bit training, and 64-bit inference.</p>
+<p>Here, we explicitly cast the model to 32-bit as well as the training/validation data.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="n">X_train_sc_32</span> <span class="o">=</span> <span class="n">X_train_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">Y_train_sc_32</span> <span class="o">=</span> <span class="n">Y_train_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">X_val_sc_32</span> <span class="o">=</span> <span class="n">X_val_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">Y_val_sc_32</span> <span class="o">=</span> <span class="n">Y_val_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Training">
+<h3>Training<a class="headerlink" href="#Training" title="Link to this heading">#</a></h3>
+<p>To train the model, we simply call the <code class="docutils literal notranslate"><span class="pre">model.train()</span></code> method and supply it with the training and validation data and optionally things like the loss function and options for the optimization process such as the learning rate, total number of epochs, batch size, etc.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span><span class="p">,</span> <span class="n">batch_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+    <span class="n">X_train_sc_32</span><span class="p">,</span>
+    <span class="n">Y</span><span class="o">=</span><span class="n">Y_train_sc_32</span><span class="p">,</span>
+    <span class="n">X_val</span><span class="o">=</span><span class="n">X_val_sc_32</span><span class="p">,</span>
+    <span class="n">Y_val</span><span class="o">=</span><span class="n">Y_val_sc_32</span><span class="p">,</span>
+    <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">batch_rng</span><span class="o">=</span><span class="n">batch_key</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1/250 | 7.8607e-01/7.8607e-01 [####################] (0s)
+2/250 | 5.0318e-01/5.0318e-01 [####################] (0s)
+3/250 | 4.5940e-01/4.5940e-01 [####################] (0s)
+4/250 | 4.0544e-01/4.0544e-01 [####################] (0s)
+5/250 | 3.6005e-01/3.6005e-01 [####################] (0s)
+6/250 | 2.8516e-01/2.8516e-01 [####################] (0s)
+7/250 | 2.5043e-01/2.5043e-01 [####################] (0s)
+8/250 | 2.2804e-01/2.2804e-01 [####################] (0s)
+9/250 | 1.9864e-01/1.9864e-01 [####################] (0s)
+10/250 | 1.8128e-01/1.8128e-01 [####################] (0s)
+11/250 | 1.8519e-01/1.8128e-01 [####################] (0s)
+12/250 | 1.6765e-01/1.6765e-01 [####################] (0s)
+13/250 | 1.5993e-01/1.5993e-01 [####################] (0s)
+14/250 | 1.5118e-01/1.5118e-01 [####################] (0s)
+15/250 | 1.4756e-01/1.4756e-01 [####################] (0s)
+16/250 | 1.4488e-01/1.4488e-01 [####################] (0s)
+17/250 | 1.5423e-01/1.4488e-01 [####################] (0s)
+18/250 | 1.3836e-01/1.3836e-01 [####################] (0s)
+19/250 | 1.2858e-01/1.2858e-01 [####################] (0s)
+20/250 | 1.3492e-01/1.2858e-01 [####################] (0s)
+21/250 | 1.2824e-01/1.2824e-01 [####################] (0s)
+22/250 | 1.2356e-01/1.2356e-01 [####################] (0s)
+23/250 | 1.1941e-01/1.1941e-01 [####################] (0s)
+24/250 | 1.3161e-01/1.1941e-01 [####################] (0s)
+25/250 | 1.2221e-01/1.1941e-01 [####################] (0s)
+26/250 | 1.2183e-01/1.1941e-01 [####################] (0s)
+27/250 | 1.1759e-01/1.1759e-01 [####################] (0s)
+28/250 | 1.1619e-01/1.1619e-01 [####################] (0s)
+29/250 | 1.1807e-01/1.1619e-01 [####################] (0s)
+30/250 | 1.0958e-01/1.0958e-01 [####################] (0s)
+31/250 | 1.3600e-01/1.0958e-01 [####################] (0s)
+32/250 | 1.1083e-01/1.0958e-01 [####################] (0s)
+33/250 | 1.0806e-01/1.0806e-01 [####################] (0s)
+34/250 | 1.1257e-01/1.0806e-01 [####################] (0s)
+35/250 | 1.2772e-01/1.0806e-01 [####################] (0s)
+36/250 | 1.1246e-01/1.0806e-01 [####################] (0s)
+37/250 | 1.0966e-01/1.0806e-01 [####################] (0s)
+38/250 | 1.2023e-01/1.0806e-01 [####################] (0s)
+39/250 | 1.0668e-01/1.0668e-01 [####################] (0s)
+40/250 | 1.0356e-01/1.0356e-01 [####################] (0s)
+41/250 | 1.1708e-01/1.0356e-01 [####################] (0s)
+42/250 | 1.0925e-01/1.0356e-01 [####################] (0s)
+43/250 | 1.0966e-01/1.0356e-01 [####################] (0s)
+44/250 | 1.0242e-01/1.0242e-01 [####################] (0s)
+45/250 | 1.0997e-01/1.0242e-01 [####################] (0s)
+46/250 | 1.0356e-01/1.0242e-01 [####################] (0s)
+47/250 | 1.0313e-01/1.0242e-01 [####################] (0s)
+48/250 | 1.0253e-01/1.0242e-01 [####################] (0s)
+49/250 | 1.0032e-01/1.0032e-01 [####################] (0s)
+50/250 | 9.7897e-02/9.7897e-02 [####################] (0s)
+51/250 | 1.0216e-01/9.7897e-02 [####################] (0s)
+52/250 | 1.0057e-01/9.7897e-02 [####################] (0s)
+53/250 | 1.0118e-01/9.7897e-02 [####################] (0s)
+54/250 | 9.7351e-02/9.7351e-02 [####################] (0s)
+55/250 | 1.1234e-01/9.7351e-02 [####################] (0s)
+56/250 | 9.3110e-02/9.3110e-02 [####################] (0s)
+57/250 | 9.9734e-02/9.3110e-02 [####################] (0s)
+58/250 | 9.1770e-02/9.1770e-02 [####################] (0s)
+59/250 | 8.9069e-02/8.9069e-02 [####################] (0s)
+60/250 | 1.0289e-01/8.9069e-02 [####################] (0s)
+61/250 | 9.6913e-02/8.9069e-02 [####################] (0s)
+62/250 | 9.6241e-02/8.9069e-02 [####################] (0s)
+63/250 | 9.8420e-02/8.9069e-02 [####################] (0s)
+64/250 | 8.7649e-02/8.7649e-02 [####################] (0s)
+65/250 | 9.0070e-02/8.7649e-02 [####################] (0s)
+66/250 | 9.6413e-02/8.7649e-02 [####################] (0s)
+67/250 | 9.2351e-02/8.7649e-02 [####################] (0s)
+68/250 | 1.0716e-01/8.7649e-02 [####################] (0s)
+69/250 | 1.0409e-01/8.7649e-02 [####################] (0s)
+70/250 | 8.6707e-02/8.6707e-02 [####################] (0s)
+71/250 | 8.8159e-02/8.6707e-02 [####################] (0s)
+72/250 | 8.7628e-02/8.6707e-02 [####################] (0s)
+73/250 | 8.3547e-02/8.3547e-02 [####################] (0s)
+74/250 | 8.0006e-02/8.0006e-02 [####################] (0s)
+75/250 | 8.8055e-02/8.0006e-02 [####################] (0s)
+76/250 | 8.6013e-02/8.0006e-02 [####################] (0s)
+77/250 | 9.0464e-02/8.0006e-02 [####################] (0s)
+78/250 | 8.8312e-02/8.0006e-02 [####################] (0s)
+79/250 | 8.0211e-02/8.0006e-02 [####################] (0s)
+80/250 | 8.8458e-02/8.0006e-02 [####################] (0s)
+81/250 | 8.6534e-02/8.0006e-02 [####################] (0s)
+82/250 | 8.5332e-02/8.0006e-02 [####################] (0s)
+83/250 | 8.3566e-02/8.0006e-02 [####################] (0s)
+84/250 | 8.0716e-02/8.0006e-02 [####################] (0s)
+85/250 | 8.1569e-02/8.0006e-02 [####################] (0s)
+86/250 | 8.0372e-02/8.0006e-02 [####################] (0s)
+87/250 | 7.9148e-02/7.9148e-02 [####################] (0s)
+88/250 | 7.3478e-02/7.3478e-02 [####################] (0s)
+89/250 | 8.1903e-02/7.3478e-02 [####################] (0s)
+90/250 | 1.0176e-01/7.3478e-02 [####################] (0s)
+91/250 | 8.8403e-02/7.3478e-02 [####################] (0s)
+92/250 | 9.1995e-02/7.3478e-02 [####################] (0s)
+93/250 | 1.0767e-01/7.3478e-02 [####################] (0s)
+94/250 | 8.3559e-02/7.3478e-02 [####################] (0s)
+95/250 | 7.8728e-02/7.3478e-02 [####################] (0s)
+96/250 | 7.3051e-02/7.3051e-02 [####################] (0s)
+97/250 | 9.4739e-02/7.3051e-02 [####################] (0s)
+98/250 | 9.4280e-02/7.3051e-02 [####################] (0s)
+99/250 | 9.2930e-02/7.3051e-02 [####################] (0s)
+100/250 | 7.2277e-02/7.2277e-02 [####################] (0s)
+101/250 | 7.1439e-02/7.1439e-02 [####################] (0s)
+102/250 | 6.8890e-02/6.8890e-02 [####################] (0s)
+103/250 | 6.8998e-02/6.8890e-02 [####################] (0s)
+104/250 | 7.1708e-02/6.8890e-02 [####################] (0s)
+105/250 | 7.4463e-02/6.8890e-02 [####################] (0s)
+106/250 | 6.4985e-02/6.4985e-02 [####################] (0s)
+107/250 | 6.9123e-02/6.4985e-02 [####################] (0s)
+108/250 | 6.5660e-02/6.4985e-02 [####################] (0s)
+109/250 | 6.5931e-02/6.4985e-02 [####################] (0s)
+110/250 | 6.1449e-02/6.1449e-02 [####################] (0s)
+111/250 | 6.4720e-02/6.1449e-02 [####################] (0s)
+112/250 | 6.7240e-02/6.1449e-02 [####################] (0s)
+113/250 | 7.3970e-02/6.1449e-02 [####################] (0s)
+114/250 | 6.1726e-02/6.1449e-02 [####################] (0s)
+115/250 | 8.1460e-02/6.1449e-02 [####################] (0s)
+116/250 | 8.6221e-02/6.1449e-02 [####################] (0s)
+117/250 | 7.0352e-02/6.1449e-02 [####################] (0s)
+118/250 | 7.6675e-02/6.1449e-02 [####################] (0s)
+119/250 | 9.5870e-02/6.1449e-02 [####################] (0s)
+120/250 | 8.7505e-02/6.1449e-02 [####################] (0s)
+121/250 | 8.1257e-02/6.1449e-02 [####################] (0s)
+122/250 | 8.4181e-02/6.1449e-02 [####################] (0s)
+123/250 | 7.5042e-02/6.1449e-02 [####################] (0s)
+124/250 | 6.2688e-02/6.1449e-02 [####################] (0s)
+125/250 | 8.3008e-02/6.1449e-02 [####################] (0s)
+126/250 | 6.0585e-02/6.0585e-02 [####################] (0s)
+127/250 | 6.7834e-02/6.0585e-02 [####################] (0s)
+128/250 | 9.3002e-02/6.0585e-02 [####################] (0s)
+129/250 | 8.4863e-02/6.0585e-02 [####################] (0s)
+130/250 | 6.4601e-02/6.0585e-02 [####################] (0s)
+131/250 | 6.9106e-02/6.0585e-02 [####################] (0s)
+132/250 | 6.9529e-02/6.0585e-02 [####################] (0s)
+133/250 | 6.9735e-02/6.0585e-02 [####################] (0s)
+134/250 | 6.3158e-02/6.0585e-02 [####################] (0s)
+135/250 | 5.8077e-02/5.8077e-02 [####################] (0s)
+136/250 | 5.8051e-02/5.8051e-02 [####################] (0s)
+137/250 | 5.1926e-02/5.1926e-02 [####################] (0s)
+138/250 | 6.9325e-02/5.1926e-02 [####################] (0s)
+139/250 | 6.6578e-02/5.1926e-02 [####################] (0s)
+140/250 | 5.4720e-02/5.1926e-02 [####################] (0s)
+141/250 | 6.1397e-02/5.1926e-02 [####################] (0s)
+142/250 | 4.6176e-02/4.6176e-02 [####################] (0s)
+143/250 | 5.6338e-02/4.6176e-02 [####################] (0s)
+144/250 | 5.9826e-02/4.6176e-02 [####################] (0s)
+145/250 | 5.2593e-02/4.6176e-02 [####################] (0s)
+146/250 | 4.7631e-02/4.6176e-02 [####################] (0s)
+147/250 | 6.0039e-02/4.6176e-02 [####################] (0s)
+148/250 | 5.1952e-02/4.6176e-02 [####################] (0s)
+149/250 | 6.4384e-02/4.6176e-02 [####################] (0s)
+150/250 | 4.7902e-02/4.6176e-02 [####################] (0s)
+151/250 | 5.4240e-02/4.6176e-02 [####################] (0s)
+152/250 | 8.7593e-02/4.6176e-02 [####################] (0s)
+153/250 | 5.5680e-02/4.6176e-02 [####################] (0s)
+154/250 | 5.9909e-02/4.6176e-02 [####################] (0s)
+155/250 | 4.5948e-02/4.5948e-02 [####################] (0s)
+156/250 | 4.5787e-02/4.5787e-02 [####################] (0s)
+157/250 | 5.4487e-02/4.5787e-02 [####################] (0s)
+158/250 | 4.5993e-02/4.5787e-02 [####################] (0s)
+159/250 | 5.2104e-02/4.5787e-02 [####################] (0s)
+160/250 | 6.5566e-02/4.5787e-02 [####################] (0s)
+161/250 | 4.5222e-02/4.5222e-02 [####################] (0s)
+162/250 | 5.6127e-02/4.5222e-02 [####################] (0s)
+163/250 | 5.9438e-02/4.5222e-02 [####################] (0s)
+164/250 | 4.9327e-02/4.5222e-02 [####################] (0s)
+165/250 | 3.8123e-02/3.8123e-02 [####################] (0s)
+166/250 | 5.3154e-02/3.8123e-02 [####################] (0s)
+167/250 | 4.5029e-02/3.8123e-02 [####################] (0s)
+168/250 | 4.1853e-02/3.8123e-02 [####################] (0s)
+169/250 | 4.6038e-02/3.8123e-02 [####################] (0s)
+170/250 | 5.9997e-02/3.8123e-02 [####################] (0s)
+171/250 | 4.2596e-02/3.8123e-02 [####################] (0s)
+172/250 | 4.8706e-02/3.8123e-02 [####################] (0s)
+173/250 | 4.2727e-02/3.8123e-02 [####################] (0s)
+174/250 | 5.2578e-02/3.8123e-02 [####################] (0s)
+175/250 | 4.3788e-02/3.8123e-02 [####################] (0s)
+176/250 | 7.0637e-02/3.8123e-02 [####################] (0s)
+177/250 | 4.1196e-02/3.8123e-02 [####################] (0s)
+178/250 | 3.1865e-02/3.1865e-02 [####################] (0s)
+179/250 | 3.7221e-02/3.1865e-02 [####################] (0s)
+180/250 | 3.3198e-02/3.1865e-02 [####################] (0s)
+181/250 | 3.1750e-02/3.1750e-02 [####################] (0s)
+182/250 | 3.2191e-02/3.1750e-02 [####################] (0s)
+183/250 | 3.5275e-02/3.1750e-02 [####################] (0s)
+184/250 | 5.1212e-02/3.1750e-02 [####################] (0s)
+185/250 | 4.9963e-02/3.1750e-02 [####################] (0s)
+186/250 | 4.9463e-02/3.1750e-02 [####################] (0s)
+187/250 | 5.6674e-02/3.1750e-02 [####################] (0s)
+188/250 | 2.8552e-02/2.8552e-02 [####################] (0s)
+189/250 | 2.9090e-02/2.8552e-02 [####################] (0s)
+190/250 | 2.9629e-02/2.8552e-02 [####################] (0s)
+191/250 | 3.5665e-02/2.8552e-02 [####################] (0s)
+192/250 | 3.7032e-02/2.8552e-02 [####################] (0s)
+193/250 | 2.9679e-02/2.8552e-02 [####################] (0s)
+194/250 | 3.8773e-02/2.8552e-02 [####################] (0s)
+195/250 | 3.4265e-02/2.8552e-02 [####################] (0s)
+196/250 | 4.1550e-02/2.8552e-02 [####################] (0s)
+197/250 | 3.5000e-02/2.8552e-02 [####################] (0s)
+198/250 | 3.6903e-02/2.8552e-02 [####################] (0s)
+199/250 | 2.7838e-02/2.7838e-02 [####################] (0s)
+200/250 | 2.5960e-02/2.5960e-02 [####################] (0s)
+201/250 | 2.7936e-02/2.5960e-02 [####################] (0s)
+202/250 | 3.4787e-02/2.5960e-02 [####################] (0s)
+203/250 | 3.4081e-02/2.5960e-02 [####################] (0s)
+204/250 | 4.0938e-02/2.5960e-02 [####################] (0s)
+205/250 | 3.7885e-02/2.5960e-02 [####################] (0s)
+206/250 | 3.4678e-02/2.5960e-02 [####################] (0s)
+207/250 | 6.0238e-02/2.5960e-02 [####################] (0s)
+208/250 | 3.5822e-02/2.5960e-02 [####################] (0s)
+209/250 | 2.8570e-02/2.5960e-02 [####################] (0s)
+210/250 | 2.7827e-02/2.5960e-02 [####################] (0s)
+211/250 | 3.3676e-02/2.5960e-02 [####################] (0s)
+212/250 | 3.0658e-02/2.5960e-02 [####################] (0s)
+213/250 | 3.1736e-02/2.5960e-02 [####################] (0s)
+214/250 | 3.2551e-02/2.5960e-02 [####################] (0s)
+215/250 | 2.3595e-02/2.3595e-02 [####################] (0s)
+216/250 | 3.0965e-02/2.3595e-02 [####################] (0s)
+217/250 | 4.1416e-02/2.3595e-02 [####################] (0s)
+218/250 | 7.1400e-02/2.3595e-02 [####################] (0s)
+219/250 | 6.0360e-02/2.3595e-02 [####################] (0s)
+220/250 | 4.7201e-02/2.3595e-02 [####################] (0s)
+221/250 | 4.6297e-02/2.3595e-02 [####################] (0s)
+222/250 | 4.8735e-02/2.3595e-02 [####################] (0s)
+223/250 | 3.6821e-02/2.3595e-02 [####################] (0s)
+224/250 | 3.1825e-02/2.3595e-02 [####################] (0s)
+225/250 | 3.2482e-02/2.3595e-02 [####################] (0s)
+226/250 | 3.4695e-02/2.3595e-02 [####################] (0s)
+227/250 | 3.2790e-02/2.3595e-02 [####################] (0s)
+228/250 | 3.5002e-02/2.3595e-02 [####################] (0s)
+229/250 | 4.2969e-02/2.3595e-02 [####################] (0s)
+230/250 | 4.6462e-02/2.3595e-02 [####################] (0s)
+231/250 | 4.0521e-02/2.3595e-02 [####################] (0s)
+232/250 | 3.8239e-02/2.3595e-02 [####################] (0s)
+233/250 | 3.0208e-02/2.3595e-02 [####################] (0s)
+234/250 | 2.4054e-02/2.3595e-02 [####################] (0s)
+235/250 | 4.7296e-02/2.3595e-02 [####################] (0s)
+236/250 | 3.9185e-02/2.3595e-02 [####################] (0s)
+237/250 | 3.4520e-02/2.3595e-02 [####################] (0s)
+238/250 | 3.4001e-02/2.3595e-02 [####################] (0s)
+239/250 | 4.1196e-02/2.3595e-02 [####################] (0s)
+240/250 | 2.8311e-02/2.3595e-02 [####################] (0s)
+241/250 | 5.0485e-02/2.3595e-02 [####################] (0s)
+242/250 | 3.6910e-02/2.3595e-02 [####################] (0s)
+243/250 | 4.3837e-02/2.3595e-02 [####################] (0s)
+244/250 | 3.7291e-02/2.3595e-02 [####################] (0s)
+245/250 | 3.3454e-02/2.3595e-02 [####################] (0s)
+246/250 | 2.1437e-02/2.1437e-02 [####################] (0s)
+247/250 | 3.5610e-02/2.1437e-02 [####################] (0s)
+248/250 | 2.7829e-02/2.1437e-02 [####################] (0s)
+249/250 | 4.2877e-02/2.1437e-02 [####################] (0s)
+250/250 | 3.8412e-02/2.1437e-02 [####################] (0s)
+
+========================================
+Total epochs: 250
+(best epoch: 245)
+(best validation loss: 2.1437E-02)
+========================================
+</pre></div></div>
+</div>
+</section>
+<section id="Inference">
+<h3>Inference<a class="headerlink" href="#Inference" title="Link to this heading">#</a></h3>
+<p>Now we’re ready to make new predictions with the model. All Models and Modules are directly callable once compiled, so we need only to pass in the (scaled) inputs like <code class="docutils literal notranslate"><span class="pre">model(X)</span></code> and unscale the predictions.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pass in the scaled inputs (converted to JAX arrays again)</span>
+<span class="n">X_sc</span> <span class="o">=</span> <span class="n">xscaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">X_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_sc</span><span class="p">)</span>
+
+<span class="c1"># get scaled predictions</span>
+<span class="n">Y_pred_sc</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_sc</span><span class="p">)</span>
+
+<span class="c1"># unscale predictions</span>
+<span class="n">Y_pred</span> <span class="o">=</span> <span class="n">yscaler</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Y_pred_sc</span><span class="p">)</span>
+
+<span class="c1"># plot results</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;NN&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Train&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Val&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x7683987c4cb0&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_basic_regression_23_1.png" src="../_images/examples_basic_regression_23_1.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="Parametric-Matrix-Model-(AffineObservablePMM)">
+<h2>Parametric Matrix Model (<code class="docutils literal notranslate"><span class="pre">AffineObservablePMM</span></code>)<a class="headerlink" href="#Parametric-Matrix-Model-(AffineObservablePMM)" title="Link to this heading">#</a></h2>
+<p>Here we repeat the above process for the <code class="docutils literal notranslate"><span class="pre">AffineObservablePMM</span></code>, which is both a Module and a Model. For consistency, we wrap it with a <code class="docutils literal notranslate"><span class="pre">SequentialModel</span></code>, though this isn’t necessary as it is itself a subclass of <code class="docutils literal notranslate"><span class="pre">SequentialModel</span></code>. The only other difference in usage here is that this kind of PMM performs best when the data are scaled uniformly, using <code class="docutils literal notranslate"><span class="pre">MinMaxScaler</span></code>.</p>
+<section id="id1">
+<h3>Data Preparation (Scaling)<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>This kind of PMM typically functions best when the data are scaled uniformly (<code class="docutils literal notranslate"><span class="pre">MinMaxScaler</span></code>)</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xscaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+<span class="n">yscaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+
+<span class="n">X_train_sc</span> <span class="o">=</span> <span class="n">xscaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_val_sc</span> <span class="o">=</span> <span class="n">xscaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+<span class="n">Y_train_sc</span> <span class="o">=</span> <span class="n">yscaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">Y_train</span><span class="p">)</span>
+<span class="n">Y_val_sc</span> <span class="o">=</span> <span class="n">yscaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Y_val</span><span class="p">)</span>
+
+<span class="c1"># we need to convert the arrays back from numpy arrays to jax.numpy arrays, since sklearn uses pure numpy</span>
+<span class="n">X_train_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_train_sc</span><span class="p">)</span>
+<span class="n">X_val_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_val_sc</span><span class="p">)</span>
+<span class="n">Y_train_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y_train_sc</span><span class="p">)</span>
+<span class="n">Y_val_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y_val_sc</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="id2">
+<h3>Model Creation<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p>This model is a single <code class="docutils literal notranslate"><span class="pre">AffineObservablePMM</span></code> module with a Hermitian matrices size of <code class="docutils literal notranslate"><span class="pre">5</span></code>, two eigenvectors, one secondary matrix, and using expectation values instead of transition amplitudes. Internally, this Module is just a <code class="docutils literal notranslate"><span class="pre">SequentialModel</span></code> of Modules that first form the primary matrix <span class="math notranslate nohighlight">\(H(c) = H_0 + \sum_i c_i H_i\)</span>, then take the eigendecomposition, then compute the sum of transition amplitudes or expectation values with trainable secondary matrices, then finally add a trainable
+bias.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># just a single PMM module, which contains all the submodules</span>
+<span class="n">modules</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">pmm</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">AffineObservablePMM</span><span class="p">(</span>
+            <span class="n">matrix_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">num_eig</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">num_secondaries</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">output_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">use_expectation_values</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">pmm</span><span class="o">.</span><span class="n">SequentialModel</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span>
+
+<span class="c1"># print model summary before compilation</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total trainable floats: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">get_num_trainable_floats</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+SequentialModel(
+  [
+   AffineObservablePMM(
+     []
+   ),
+  ]
+)
+Total trainable floats: 0
+</pre></div></div>
+</div>
+<p>We can see that the model summary is very sparse at the moment. This is because the model doesn’t know what data to expect yet and doesn’t have any initial values for trainable parameters.</p>
+</section>
+<section id="id3">
+<h3>Model Compilation<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>It’s more accurate to call this preparation or initialization, since all compilation happens JIT. This step doesn’t <em>need</em> to be done manually, as the model will automatically compile itself for the provided training data when the <code class="docutils literal notranslate"><span class="pre">Model.train</span></code> method is called.</p>
+<p>Models are compiled by providing them with a random key or seed as well as the shape of the input data (excluding the batch dimension). This allows the model to prepare all its modules by, for instance, setting initial values for trainable parameters. Forward passes (inferences/predictions) cannot be done with Models (or Modules) until after compilation with the corresponding input shape.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span><span class="p">,</span> <span class="n">compile_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+<span class="c1"># the random key here can be replaced with an integer seed or None, in which case a random seed will be chosen</span>
+<span class="c1"># the model only needs to know the input shape without the batch dimension</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">X_train_sc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+<span class="c1"># print the model summary after compilation</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+SequentialModel(
+  [
+   AffineObservablePMM(
+     (
+      AffineHermitianMatrix(5x5,) (trainable floats: 50),
+      Eigenvectors(num_eig=2, which=LM),
+      ExpectationValueSum(output_size=1, num_observables=1, centered=True) (trainable floats: 25),
+      Bias(real=True) (trainable floats: 1),
+     )
+   ),
+  ]
+)
+</pre></div></div>
+</div>
+<p>Now we see some actual details about the model. We can see it is built from 1 <code class="docutils literal notranslate"><span class="pre">AffineObservablePMM</span></code> Module (which itself is a Model) which uses four submodules: <code class="docutils literal notranslate"><span class="pre">AffineHermitianMatrix</span></code>, <code class="docutils literal notranslate"><span class="pre">Eigenvectors</span></code>, <code class="docutils literal notranslate"><span class="pre">ExpectationValueSum</span></code>, and <code class="docutils literal notranslate"><span class="pre">Bias</span></code>.</p>
+<p>We can perform a forward pass (inference/prediction) with the randomly initialized model just to make sure everything is working:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">]]))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Array([[0.01202144]], dtype=float64)
+</pre></div></div>
+</div>
+</section>
+<section id="id4">
+<h3>64-bit versus 32-bit<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<p>By default, JAX disables 64-bit floating point support (double precision). This is re-enabled by calling <code class="docutils literal notranslate"><span class="pre">jax.config.update(&quot;jax_enable_x64&quot;,</span> <span class="pre">True)</span></code> after JAX is imported but <em>before</em> it is initialized (usually before the first array operation). On certain hardware (like consumer GPUs) 64-bit operations can be nearly an order of magnitude slower than 32-bit. Additionally, there is little benefit to storing the trainable parameters of a model in 64-bit precision or for training models with
+64-bit precision. It is for this reason that the PMM library defaults to (and will raise warnings otherwise) 32-bit models, 32-bit training, and 64-bit inference.</p>
+<p>Here, we explicitly cast the model to 32-bit as well as the training/validation data.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="n">X_train_sc_32</span> <span class="o">=</span> <span class="n">X_train_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">Y_train_sc_32</span> <span class="o">=</span> <span class="n">Y_train_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">X_val_sc_32</span> <span class="o">=</span> <span class="n">X_val_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">Y_val_sc_32</span> <span class="o">=</span> <span class="n">Y_val_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="id5">
+<h3>Training<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>To train the model, we simply call the <code class="docutils literal notranslate"><span class="pre">model.train()</span></code> method and supply it with the training and validation data and optionally things like the loss function and options for the optimization process such as the learning rate, total number of epochs, batch size, etc.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># using the same batch key as with the neural network</span>
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+    <span class="n">X_train_sc_32</span><span class="p">,</span>
+    <span class="n">Y</span><span class="o">=</span><span class="n">Y_train_sc_32</span><span class="p">,</span>
+    <span class="n">X_val</span><span class="o">=</span><span class="n">X_val_sc_32</span><span class="p">,</span>
+    <span class="n">Y_val</span><span class="o">=</span><span class="n">Y_val_sc_32</span><span class="p">,</span>
+    <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">batch_rng</span><span class="o">=</span><span class="n">batch_key</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1/250 | 5.4442e-02/5.4442e-02 [####################] (0s)
+2/250 | 1.1614e-01/5.4442e-02 [####################] (0s)
+3/250 | 5.6446e-02/5.4442e-02 [####################] (0s)
+4/250 | 5.8632e-02/5.4442e-02 [####################] (0s)
+5/250 | 9.0178e-02/5.4442e-02 [####################] (0s)
+6/250 | 5.4176e-02/5.4176e-02 [####################] (0s)
+7/250 | 6.2531e-02/5.4176e-02 [####################] (0s)
+8/250 | 5.2981e-02/5.2981e-02 [####################] (0s)
+9/250 | 3.3681e-02/3.3681e-02 [####################] (0s)
+10/250 | 2.9399e-02/2.9399e-02 [####################] (0s)
+11/250 | 3.0416e-02/2.9399e-02 [####################] (0s)
+12/250 | 2.5683e-02/2.5683e-02 [####################] (0s)
+13/250 | 2.2098e-02/2.2098e-02 [####################] (0s)
+14/250 | 1.8719e-02/1.8719e-02 [####################] (0s)
+15/250 | 1.2611e-02/1.2611e-02 [####################] (0s)
+16/250 | 1.0284e-02/1.0284e-02 [####################] (0s)
+17/250 | 1.0085e-02/1.0085e-02 [####################] (0s)
+18/250 | 1.2628e-02/1.0085e-02 [####################] (0s)
+19/250 | 8.1678e-03/8.1678e-03 [####################] (0s)
+20/250 | 6.8490e-03/6.8490e-03 [####################] (0s)
+21/250 | 7.4929e-03/6.8490e-03 [####################] (0s)
+22/250 | 6.5267e-03/6.5267e-03 [####################] (0s)
+23/250 | 5.5787e-03/5.5787e-03 [####################] (0s)
+24/250 | 7.4365e-03/5.5787e-03 [####################] (0s)
+25/250 | 6.4864e-03/5.5787e-03 [####################] (0s)
+26/250 | 6.3493e-03/5.5787e-03 [####################] (0s)
+27/250 | 5.9987e-03/5.5787e-03 [####################] (0s)
+28/250 | 7.7315e-03/5.5787e-03 [####################] (0s)
+29/250 | 5.9036e-03/5.5787e-03 [####################] (0s)
+30/250 | 6.0343e-03/5.5787e-03 [####################] (0s)
+31/250 | 6.7738e-03/5.5787e-03 [####################] (0s)
+32/250 | 6.3439e-03/5.5787e-03 [####################] (0s)
+33/250 | 9.1537e-03/5.5787e-03 [####################] (0s)
+34/250 | 7.5088e-03/5.5787e-03 [####################] (0s)
+35/250 | 6.0626e-03/5.5787e-03 [####################] (0s)
+36/250 | 6.4997e-03/5.5787e-03 [####################] (0s)
+37/250 | 6.7489e-03/5.5787e-03 [####################] (0s)
+38/250 | 7.2865e-03/5.5787e-03 [####################] (0s)
+39/250 | 7.4852e-03/5.5787e-03 [####################] (0s)
+40/250 | 6.1094e-03/5.5787e-03 [####################] (0s)
+41/250 | 5.7489e-03/5.5787e-03 [####################] (0s)
+42/250 | 6.0052e-03/5.5787e-03 [####################] (0s)
+43/250 | 7.0590e-03/5.5787e-03 [####################] (0s)
+44/250 | 7.0230e-03/5.5787e-03 [####################] (0s)
+45/250 | 6.9031e-03/5.5787e-03 [####################] (0s)
+46/250 | 6.2807e-03/5.5787e-03 [####################] (0s)
+47/250 | 7.0101e-03/5.5787e-03 [####################] (0s)
+48/250 | 7.6631e-03/5.5787e-03 [####################] (0s)
+49/250 | 6.0248e-03/5.5787e-03 [####################] (0s)
+50/250 | 6.5716e-03/5.5787e-03 [####################] (0s)
+51/250 | 6.7445e-03/5.5787e-03 [####################] (0s)
+52/250 | 5.2785e-03/5.2785e-03 [####################] (0s)
+53/250 | 3.1016e-03/3.1016e-03 [####################] (0s)
+54/250 | 8.9250e-03/3.1016e-03 [####################] (0s)
+55/250 | 6.9021e-03/3.1016e-03 [####################] (0s)
+56/250 | 3.8885e-03/3.1016e-03 [####################] (0s)
+57/250 | 7.6216e-03/3.1016e-03 [####################] (0s)
+58/250 | 7.3961e-03/3.1016e-03 [####################] (0s)
+59/250 | 7.0220e-03/3.1016e-03 [####################] (0s)
+60/250 | 6.1720e-03/3.1016e-03 [####################] (0s)
+61/250 | 5.7947e-03/3.1016e-03 [####################] (0s)
+62/250 | 5.0734e-03/3.1016e-03 [####################] (0s)
+63/250 | 4.9879e-03/3.1016e-03 [####################] (0s)
+64/250 | 5.5361e-03/3.1016e-03 [####################] (0s)
+65/250 | 4.5192e-03/3.1016e-03 [####################] (0s)
+66/250 | 6.7327e-03/3.1016e-03 [####################] (0s)
+67/250 | 7.7463e-03/3.1016e-03 [####################] (0s)
+68/250 | 5.5338e-03/3.1016e-03 [####################] (0s)
+69/250 | 3.7159e-03/3.1016e-03 [####################] (0s)
+70/250 | 3.1470e-03/3.1016e-03 [####################] (0s)
+71/250 | 5.3691e-03/3.1016e-03 [####################] (0s)
+72/250 | 9.9612e-03/3.1016e-03 [####################] (0s)
+73/250 | 5.4284e-03/3.1016e-03 [####################] (0s)
+74/250 | 6.3011e-03/3.1016e-03 [####################] (0s)
+75/250 | 4.0493e-03/3.1016e-03 [####################] (0s)
+76/250 | 4.3772e-03/3.1016e-03 [####################] (0s)
+77/250 | 4.2802e-03/3.1016e-03 [####################] (0s)
+78/250 | 6.9974e-03/3.1016e-03 [####################] (0s)
+79/250 | 3.5675e-03/3.1016e-03 [####################] (0s)
+80/250 | 5.5649e-03/3.1016e-03 [####################] (0s)
+81/250 | 7.4596e-03/3.1016e-03 [####################] (0s)
+82/250 | 4.3281e-03/3.1016e-03 [####################] (0s)
+83/250 | 2.9820e-03/2.9820e-03 [####################] (0s)
+84/250 | 6.6735e-03/2.9820e-03 [####################] (0s)
+85/250 | 3.7156e-03/2.9820e-03 [####################] (0s)
+86/250 | 2.8052e-03/2.8052e-03 [####################] (0s)
+87/250 | 1.6796e-02/2.8052e-03 [####################] (0s)
+88/250 | 1.0363e-02/2.8052e-03 [####################] (0s)
+89/250 | 5.0196e-03/2.8052e-03 [####################] (0s)
+90/250 | 3.4737e-03/2.8052e-03 [####################] (0s)
+91/250 | 1.9751e-03/1.9751e-03 [####################] (0s)
+92/250 | 2.8802e-03/1.9751e-03 [####################] (0s)
+93/250 | 5.8319e-03/1.9751e-03 [####################] (0s)
+94/250 | 3.4529e-03/1.9751e-03 [####################] (0s)
+95/250 | 2.6395e-03/1.9751e-03 [####################] (0s)
+96/250 | 2.8948e-03/1.9751e-03 [####################] (0s)
+97/250 | 3.9332e-03/1.9751e-03 [####################] (0s)
+98/250 | 5.2598e-03/1.9751e-03 [####################] (0s)
+99/250 | 4.5422e-03/1.9751e-03 [####################] (0s)
+100/250 | 3.1950e-03/1.9751e-03 [####################] (0s)
+101/250 | 7.2841e-03/1.9751e-03 [####################] (0s)
+102/250 | 7.1810e-03/1.9751e-03 [####################] (0s)
+103/250 | 5.0848e-03/1.9751e-03 [####################] (0s)
+104/250 | 3.0136e-03/1.9751e-03 [####################] (0s)
+105/250 | 2.4440e-03/1.9751e-03 [####################] (0s)
+106/250 | 3.4854e-03/1.9751e-03 [####################] (0s)
+107/250 | 3.3913e-03/1.9751e-03 [####################] (0s)
+108/250 | 1.9056e-03/1.9056e-03 [####################] (0s)
+109/250 | 2.3935e-03/1.9056e-03 [####################] (0s)
+110/250 | 2.2171e-03/1.9056e-03 [####################] (0s)
+111/250 | 2.8577e-03/1.9056e-03 [####################] (0s)
+112/250 | 2.0798e-03/1.9056e-03 [####################] (0s)
+113/250 | 2.2106e-03/1.9056e-03 [####################] (0s)
+114/250 | 2.2582e-03/1.9056e-03 [####################] (0s)
+115/250 | 1.9352e-03/1.9056e-03 [####################] (0s)
+116/250 | 3.8784e-03/1.9056e-03 [####################] (0s)
+117/250 | 2.3278e-03/1.9056e-03 [####################] (0s)
+118/250 | 6.5267e-03/1.9056e-03 [####################] (0s)
+119/250 | 7.0995e-03/1.9056e-03 [####################] (0s)
+120/250 | 2.6266e-03/1.9056e-03 [####################] (0s)
+121/250 | 4.7335e-03/1.9056e-03 [####################] (0s)
+122/250 | 7.1512e-03/1.9056e-03 [####################] (0s)
+123/250 | 4.2358e-03/1.9056e-03 [####################] (0s)
+124/250 | 3.5876e-03/1.9056e-03 [####################] (0s)
+125/250 | 3.0308e-03/1.9056e-03 [####################] (0s)
+126/250 | 4.3498e-03/1.9056e-03 [####################] (0s)
+127/250 | 3.6074e-03/1.9056e-03 [####################] (0s)
+128/250 | 3.4459e-03/1.9056e-03 [####################] (0s)
+129/250 | 2.9632e-03/1.9056e-03 [####################] (0s)
+130/250 | 3.1751e-03/1.9056e-03 [####################] (0s)
+131/250 | 3.5406e-03/1.9056e-03 [####################] (0s)
+132/250 | 2.7615e-03/1.9056e-03 [####################] (0s)
+133/250 | 2.3193e-03/1.9056e-03 [####################] (0s)
+134/250 | 2.5355e-03/1.9056e-03 [####################] (0s)
+135/250 | 2.2808e-03/1.9056e-03 [####################] (0s)
+136/250 | 2.4032e-03/1.9056e-03 [####################] (0s)
+137/250 | 3.0431e-03/1.9056e-03 [####################] (0s)
+138/250 | 2.8142e-03/1.9056e-03 [####################] (0s)
+139/250 | 1.9903e-03/1.9056e-03 [####################] (0s)
+140/250 | 1.9782e-03/1.9056e-03 [####################] (0s)
+141/250 | 1.9603e-03/1.9056e-03 [####################] (0s)
+142/250 | 2.7303e-03/1.9056e-03 [####################] (0s)
+143/250 | 5.9771e-03/1.9056e-03 [####################] (0s)
+144/250 | 4.0507e-03/1.9056e-03 [####################] (0s)
+145/250 | 2.1805e-03/1.9056e-03 [####################] (0s)
+146/250 | 1.7523e-03/1.7523e-03 [####################] (0s)
+147/250 | 2.2935e-03/1.7523e-03 [####################] (0s)
+148/250 | 3.1664e-03/1.7523e-03 [####################] (0s)
+149/250 | 3.0230e-03/1.7523e-03 [####################] (0s)
+150/250 | 2.4747e-03/1.7523e-03 [####################] (0s)
+151/250 | 3.7523e-03/1.7523e-03 [####################] (0s)
+152/250 | 5.4125e-03/1.7523e-03 [####################] (0s)
+153/250 | 2.5811e-03/1.7523e-03 [####################] (0s)
+154/250 | 4.2159e-03/1.7523e-03 [####################] (0s)
+155/250 | 3.1262e-03/1.7523e-03 [####################] (0s)
+156/250 | 1.7317e-03/1.7317e-03 [####################] (0s)
+157/250 | 4.1367e-03/1.7317e-03 [####################] (0s)
+158/250 | 4.9401e-03/1.7317e-03 [####################] (0s)
+159/250 | 7.3494e-03/1.7317e-03 [####################] (0s)
+160/250 | 3.3021e-03/1.7317e-03 [####################] (0s)
+161/250 | 4.1837e-03/1.7317e-03 [####################] (0s)
+162/250 | 2.0441e-03/1.7317e-03 [####################] (0s)
+163/250 | 2.8287e-03/1.7317e-03 [####################] (0s)
+164/250 | 3.9031e-03/1.7317e-03 [####################] (0s)
+165/250 | 3.3648e-03/1.7317e-03 [####################] (0s)
+166/250 | 2.8648e-03/1.7317e-03 [####################] (0s)
+167/250 | 2.1758e-03/1.7317e-03 [####################] (0s)
+168/250 | 1.5925e-03/1.5925e-03 [####################] (0s)
+169/250 | 2.4283e-03/1.5925e-03 [####################] (0s)
+170/250 | 2.0659e-03/1.5925e-03 [####################] (0s)
+171/250 | 2.6633e-03/1.5925e-03 [####################] (0s)
+172/250 | 2.4290e-03/1.5925e-03 [####################] (0s)
+173/250 | 3.4595e-03/1.5925e-03 [####################] (0s)
+174/250 | 4.2879e-03/1.5925e-03 [####################] (0s)
+175/250 | 2.5606e-03/1.5925e-03 [####################] (0s)
+176/250 | 1.7552e-03/1.5925e-03 [####################] (0s)
+177/250 | 1.8150e-03/1.5925e-03 [####################] (0s)
+178/250 | 1.8843e-03/1.5925e-03 [####################] (0s)
+179/250 | 2.4673e-03/1.5925e-03 [####################] (0s)
+180/250 | 2.7264e-03/1.5925e-03 [####################] (0s)
+181/250 | 6.2605e-03/1.5925e-03 [####################] (0s)
+182/250 | 2.2474e-03/1.5925e-03 [####################] (0s)
+183/250 | 5.4456e-03/1.5925e-03 [####################] (0s)
+184/250 | 6.7805e-03/1.5925e-03 [####################] (0s)
+185/250 | 5.3535e-03/1.5925e-03 [####################] (0s)
+186/250 | 2.3965e-03/1.5925e-03 [####################] (0s)
+187/250 | 4.7688e-03/1.5925e-03 [####################] (0s)
+188/250 | 3.9332e-03/1.5925e-03 [####################] (0s)
+189/250 | 2.9458e-03/1.5925e-03 [####################] (0s)
+190/250 | 2.7969e-03/1.5925e-03 [####################] (0s)
+191/250 | 3.7599e-03/1.5925e-03 [####################] (0s)
+192/250 | 2.3289e-03/1.5925e-03 [####################] (0s)
+193/250 | 2.3922e-03/1.5925e-03 [####################] (0s)
+194/250 | 1.4419e-03/1.4419e-03 [####################] (0s)
+195/250 | 1.7286e-03/1.4419e-03 [####################] (0s)
+196/250 | 2.6265e-03/1.4419e-03 [####################] (0s)
+197/250 | 5.1592e-03/1.4419e-03 [####################] (0s)
+198/250 | 2.0504e-03/1.4419e-03 [####################] (0s)
+199/250 | 1.8579e-03/1.4419e-03 [####################] (0s)
+200/250 | 5.1812e-03/1.4419e-03 [####################] (0s)
+201/250 | 5.8354e-03/1.4419e-03 [####################] (0s)
+202/250 | 3.6949e-03/1.4419e-03 [####################] (0s)
+203/250 | 2.4144e-03/1.4419e-03 [####################] (0s)
+204/250 | 2.9960e-03/1.4419e-03 [####################] (0s)
+205/250 | 4.1210e-03/1.4419e-03 [####################] (0s)
+206/250 | 6.0538e-03/1.4419e-03 [####################] (0s)
+207/250 | 5.2219e-03/1.4419e-03 [####################] (0s)
+208/250 | 3.7427e-03/1.4419e-03 [####################] (0s)
+209/250 | 4.7810e-03/1.4419e-03 [####################] (0s)
+210/250 | 5.7836e-03/1.4419e-03 [####################] (0s)
+211/250 | 2.9323e-03/1.4419e-03 [####################] (0s)
+212/250 | 3.8641e-03/1.4419e-03 [####################] (0s)
+213/250 | 4.2803e-03/1.4419e-03 [####################] (0s)
+214/250 | 2.0412e-03/1.4419e-03 [####################] (0s)
+215/250 | 1.6764e-03/1.4419e-03 [####################] (0s)
+216/250 | 2.0434e-03/1.4419e-03 [####################] (0s)
+217/250 | 3.2198e-03/1.4419e-03 [####################] (0s)
+218/250 | 7.8106e-03/1.4419e-03 [####################] (0s)
+219/250 | 3.3164e-03/1.4419e-03 [####################] (0s)
+220/250 | 3.7824e-03/1.4419e-03 [####################] (0s)
+221/250 | 4.9126e-03/1.4419e-03 [####################] (0s)
+222/250 | 7.0033e-03/1.4419e-03 [####################] (0s)
+223/250 | 7.2956e-03/1.4419e-03 [####################] (0s)
+224/250 | 5.2377e-03/1.4419e-03 [####################] (0s)
+225/250 | 3.7460e-03/1.4419e-03 [####################] (0s)
+226/250 | 7.7423e-03/1.4419e-03 [####################] (0s)
+227/250 | 9.5499e-03/1.4419e-03 [####################] (0s)
+228/250 | 2.0417e-02/1.4419e-03 [####################] (0s)
+229/250 | 7.7284e-03/1.4419e-03 [####################] (0s)
+230/250 | 6.8024e-03/1.4419e-03 [####################] (0s)
+231/250 | 6.3797e-03/1.4419e-03 [####################] (0s)
+232/250 | 5.5671e-03/1.4419e-03 [####################] (0s)
+233/250 | 5.5593e-03/1.4419e-03 [####################] (0s)
+234/250 | 7.8933e-03/1.4419e-03 [####################] (0s)
+235/250 | 1.3514e-02/1.4419e-03 [####################] (0s)
+236/250 | 1.0794e-02/1.4419e-03 [####################] (0s)
+237/250 | 5.7856e-03/1.4419e-03 [####################] (0s)
+238/250 | 2.7149e-03/1.4419e-03 [####################] (0s)
+239/250 | 2.0554e-03/1.4419e-03 [####################] (0s)
+240/250 | 3.3540e-03/1.4419e-03 [####################] (0s)
+241/250 | 5.6794e-03/1.4419e-03 [####################] (0s)
+242/250 | 3.3093e-03/1.4419e-03 [####################] (0s)
+243/250 | 3.2271e-03/1.4419e-03 [####################] (0s)
+244/250 | 3.0530e-03/1.4419e-03 [####################] (0s)
+245/250 | 1.7806e-03/1.4419e-03 [####################] (0s)
+246/250 | 1.5051e-03/1.4419e-03 [####################] (0s)
+247/250 | 3.2142e-03/1.4419e-03 [####################] (0s)
+248/250 | 2.2576e-03/1.4419e-03 [####################] (0s)
+249/250 | 1.9008e-03/1.4419e-03 [####################] (0s)
+250/250 | 2.2744e-03/1.4419e-03 [####################] (0s)
+
+========================================
+Total epochs: 250
+(best epoch: 193)
+(best validation loss: 1.4419E-03)
+========================================
+</pre></div></div>
+</div>
+</section>
+<section id="id6">
+<h3>Inference<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<p>Now we’re ready to make new predictions with the model. All Models and Modules are directly callable once compiled, so we need only to pass in the (scaled) inputs like <code class="docutils literal notranslate"><span class="pre">model(X)</span></code> and unscale the predictions.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pass in the scaled inputs (converted to JAX arrays again)</span>
+<span class="n">X_sc</span> <span class="o">=</span> <span class="n">xscaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">X_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_sc</span><span class="p">)</span>
+
+<span class="c1"># get scaled predictions</span>
+<span class="n">Y_pred_sc</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_sc</span><span class="p">)</span>
+
+<span class="c1"># unscale predictions</span>
+<span class="n">Y_pred</span> <span class="o">=</span> <span class="n">yscaler</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Y_pred_sc</span><span class="p">)</span>
+
+<span class="c1"># plot results</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;PMM&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Train&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Val&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;matplotlib.legend.Legend at 0x76838c619f70&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/examples_basic_regression_39_1.png" src="../_images/examples_basic_regression_39_1.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="examples.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Examples</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../advanced.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Advanced</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-Creation">Data Creation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-Partitioning">Data Partitioning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Traditional-Neural-Network">Traditional Neural Network</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Data-Preparation-(Scaling)">Data Preparation (Scaling)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Model-Creation">Model Creation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Model-Compilation">Model Compilation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#64-bit-versus-32-bit">64-bit versus 32-bit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Training">Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Inference">Inference</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Parametric-Matrix-Model-(AffineObservablePMM)">Parametric Matrix Model (<code class="docutils literal notranslate"><span class="pre">AffineObservablePMM</span></code>)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Data Preparation (Scaling)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Model Creation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Model Compilation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">64-bit versus 32-bit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Training</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">Inference</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/examples/basic_regression.ipynb.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
