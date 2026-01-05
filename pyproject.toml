@@ -45,6 +45,7 @@ examples = [
 ]
 docs = [
     "sphinx",
+    "nbsphinx",
     "numpydoc",
     "pydata-sphinx-theme",
     "sphinx-copybutton",
@@ -53,6 +54,7 @@ docs = [
     "sphinx-autodoc-typehints",
     "matplotlib",
     "scipy",
+    "ipykernel",
 ]
 
 [project.urls]

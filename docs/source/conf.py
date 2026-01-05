@@ -31,6 +31,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.autosummary",
     "sphinx.ext.githubpages",
+    "nbsphinx",
 ]
 
 autodoc_typehints = "description"

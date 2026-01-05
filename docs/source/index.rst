@@ -14,3 +14,5 @@ Parametric Matrix Models reference
 
    models
    modules
+   examples/examples.rst
+   advanced
