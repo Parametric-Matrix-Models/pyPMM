@@ -1285,7 +1285,7 @@ def strfmt_pytree(
                 )
 
         ret_str = (
-            "{{\n" + ",\n".join(items) + f",\n{base_indent_str}{indent_str}}}"
+            "{\n" + ",\n".join(items) + f",\n{base_indent_str}{indent_str}}}"
         )
 
     # handle lists
