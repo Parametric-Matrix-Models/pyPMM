@@ -1388,7 +1388,7 @@ class Model(BaseModule):
         -------
             New model with the other module or model appended.
         """
-        new_model = self.__class__(modules=self.modules)
+        new_model = self.__class__(self.modules)
         new_model.append_module(other)
         return new_model
 
