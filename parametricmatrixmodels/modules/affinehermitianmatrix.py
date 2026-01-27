@@ -117,8 +117,8 @@ class AffineHermitianMatrix(BaseModule):
     @property
     def name(self) -> str:
         return (
-            f"AffineHermitianMatrix({self.matrix_size}x{self.matrix_size},"
-            f"{'' if self.smoothing == 0.0 else f' smooth={self.smoothing}'}"
+            f"AffineHermitianMatrix({self.matrix_size}x{self.matrix_size}"
+            f"{'' if self.smoothing == 0.0 else f', smooth={self.smoothing}'}"
             f"{'' if self.bias_term else ', no bias'})"
         )
 
