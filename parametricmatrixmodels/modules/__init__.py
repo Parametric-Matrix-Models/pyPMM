@@ -22,10 +22,11 @@ from .funcbase import FuncBase
 # from .func import Func
 # from .legacyaffineobservablepmm import LegacyAffineObservablePMM
 from .linearnn import LinearNN
-from .matmul import MatMul
 
 # from .lowrankaffineeigenvaluepmm import LowRankAffineEigenvaluePMM
-# from .lowrankaffinehermitianmatrix import LowRankAffineHermitianMatrix
+from .lowrankaffinehermitianmatrix import LowRankAffineHermitianMatrix
+from .matmul import MatMul
+
 # from .lowrankaffineobservablepmm import LowRankAffineObservablePMM
 # from .lowranktransitionamplitudesum import LowRankTransitionAmplitudeSum
 from .prelu import PReLU
@@ -69,7 +70,7 @@ __all__ = [  # noqa: F405
     "Reshape",
     "TreeFlatten",
     "TreeKey",
-    # "LowRankAffineHermitianMatrix",
+    "LowRankAffineHermitianMatrix",
     # "LowRankAffineEigenvaluePMM",
     "TransitionAmplitudeSum",
     # "LowRankTransitionAmplitudeSum",
