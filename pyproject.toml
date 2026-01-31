@@ -40,9 +40,6 @@ cuda = [
 rocm = [
     "jax[rocm]",
 ]
-examples = [
-    "matplotlib",
-]
 docs = [
     "sphinx",
     "nbsphinx",
