@@ -42,7 +42,7 @@ class ExpectationValueSum(BaseModule):
     .. math::
 
         z_k = \sum_{m=1}^l \left(
-                \sum_{i=1}^r \left( v_i^H D_{km} v_j^2 \right)
+                \sum_{i=1}^r \left( v_i^H D_{km} v_j \right)
                  - \frac{r}{2} ||D_{km}||^2_2 \right)
 
     where :math:`||\cdot||_2` is the operator 2-norm (largest singular value)
