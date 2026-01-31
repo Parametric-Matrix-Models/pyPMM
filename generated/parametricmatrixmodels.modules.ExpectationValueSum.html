@@ -542,13 +542,13 @@ this module uses <span class="math notranslate nohighlight">\(q\times l\)</span>
 <span class="math notranslate nohighlight">\(D_{11}, D_{12}, \ldots, D_{1l}, D_{21}, \ldots, D_{ql}\)</span> (each of
 shape <code class="docutils literal notranslate"><span class="pre">(n,</span> <span class="pre">n)</span></code>) to compute the output:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}z_k = \sum_{i=1}^r &amp;\left( \sum_{m=1}^l v_i^H D_{km} v_i\\
-                     &amp;\quad - \frac{1}{2} ||D_{km}||^2_2 \right)\end{split}\]</div>
+\[z_k = \sum_{i=1}^r \left( \sum_{m=1}^l v_i^H D_{km} v_i
+                     - \frac{1}{2} ||D_{km}||^2_2 \right)\]</div>
 <p>for <span class="math notranslate nohighlight">\(k=1, \ldots, q\)</span>. This is equivalent to</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}z_k &amp;= \sum_{m=1}^l \left(
-        \sum_{i=1}^r \left( v_i^H D_{km} v_j^2 \right)\\
-        &amp;\quad - \frac{r}{2} ||D_{km}||^2_2 \right)\end{split}\]</div>
+\[z_k = \sum_{m=1}^l \left(
+        \sum_{i=1}^r \left( v_i^H D_{km} v_j^2 \right)
+         - \frac{r}{2} ||D_{km}||^2_2 \right)\]</div>
 <p>where <span class="math notranslate nohighlight">\(||\cdot||_2\)</span> is the operator 2-norm (largest singular value)
 so for Hermitian <span class="math notranslate nohighlight">\(D\)</span>, <span class="math notranslate nohighlight">\(||D||_2\)</span> is the largest absolute
 eigenvalue.</p>
@@ -880,7 +880,7 @@ dimensions except the leading batch dimension.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.ExpectationValueSum.deserialize">
-<span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.ExpectationValueSum.deserialize" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">override_strict_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.ExpectationValueSum.deserialize" title="Link to this definition">#</a></dt>
 <dd><p>Deserialize the module from a dictionary.</p>
 <p>This method sets the module’s parameters and state based on the
 provided dictionary.</p>
@@ -888,7 +888,11 @@ provided dictionary.</p>
 the module’s name, trainable parameters, and state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>]</em>) – Dictionary containing the serialized module data.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>]</em>) – Dictionary containing the serialized module data.</p></li>
+<li><p><strong>override_strict_version</strong> – If True, overrides the strict version check when loading the
+model, changing the error into a warning. Default is False.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the serialized data does not contain the expected keys or
