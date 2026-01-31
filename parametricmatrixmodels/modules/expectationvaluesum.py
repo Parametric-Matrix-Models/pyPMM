@@ -34,16 +34,16 @@ class ExpectationValueSum(BaseModule):
 
     .. math::
 
-        z_k = \sum_{i=1}^r &\left( \sum_{m=1}^l v_i^H D_{km} v_i\\
-                             &\quad - \frac{1}{2} ||D_{km}||^2_2 \right)
+        z_k = \sum_{i=1}^r \left( \sum_{m=1}^l v_i^H D_{km} v_i
+                             - \frac{1}{2} ||D_{km}||^2_2 \right)
 
     for :math:`k=1, \ldots, q`. This is equivalent to
 
     .. math::
 
-        z_k &= \sum_{m=1}^l \left(
-                \sum_{i=1}^r \left( v_i^H D_{km} v_j^2 \right)\\
-                &\quad - \frac{r}{2} ||D_{km}||^2_2 \right)
+        z_k = \sum_{m=1}^l \left(
+                \sum_{i=1}^r \left( v_i^H D_{km} v_j^2 \right)
+                 - \frac{r}{2} ||D_{km}||^2_2 \right)
 
     where :math:`||\cdot||_2` is the operator 2-norm (largest singular value)
     so for Hermitian :math:`D`, :math:`||D||_2` is the largest absolute
