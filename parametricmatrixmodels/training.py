@@ -73,6 +73,7 @@ TrainingState: TypeAlias = Tuple[
     Any,
     Any,
     float,
+    float,
     int,
     int,
 ]
@@ -150,7 +151,7 @@ class ProgressBar:
             sys.stdout.flush()
             self.last = progress
 
-    def end(self, final_info: str = "") -> None:
+    def end(self, final_info: str = "", newline: bool = False) -> None:
         if self.total <= 1e-9:
             return
         disp = (
@@ -168,7 +169,9 @@ class ProgressBar:
         else:
             self.longest_str = disp_len
 
-        disp += "\n"
+        if newline:
+            disp += "\n"
+
         sys.stdout.write(disp)
         sys.stdout.flush()
 
@@ -687,13 +690,15 @@ def _train(
         pb.start(f"{epoch + 1}/{epochs}")
         return 0
 
-    def update_progress_bar_callback(batch_idx: int) -> int:
+    def update_progress_bar_callback(
+        batch_idx: int, val_loss: float, best_val_loss: float
+    ) -> int:
         """
         Callback to update the progress bar after each batch.
 
         Will be entirely skipped if verbose is False.
         """
-        pb.update(batch_idx)
+        pb.update(batch_idx, f"{val_loss:.4e}/{best_val_loss:.4e}")
         return 0
 
     def end_progress_bar_callback(
@@ -718,6 +723,8 @@ def _train(
             ModelState,
             Any,
             int | Integer[Array, ""],
+            float | Float[Array, ""],
+            float | Float[Array, ""],
         ],
     ) -> Tuple[
         Data,
@@ -727,6 +734,8 @@ def _train(
         ModelState,
         Any,
         int | Integer[Array, ""],
+        float | Float[Array, ""],
+        float | Float[Array, ""],
     ]:
         """
         The part of the training loop that processes all batches in the dataset
@@ -744,11 +753,17 @@ def _train(
             model_state_,
             model_rng_,
             epoch,
+            val_loss,
+            best_val_loss,
         ) = batch_carry
 
         if verbose:
             epoch += jax.pure_callback(
-                update_progress_bar_callback, epoch, batch_idx
+                update_progress_bar_callback,
+                epoch,
+                batch_idx,
+                val_loss,
+                best_val_loss,
             )
 
         # shuffled_X and shuffled_Y are the pre-shuffled data
@@ -791,6 +806,8 @@ def _train(
             new_model_state,
             new_model_rng,
             epoch,
+            val_loss,
+            best_val_loss,
         )
 
     def epoch_cond_callback(training_state: TrainingState) -> bool:
@@ -808,6 +825,7 @@ def _train(
     #   best_model_state,
     #   model_rng,
     #   best_model_rng,
+    #   val_loss,
     #   best_val_loss,
     #   best_epoch,
     #   patience
@@ -835,6 +853,7 @@ def _train(
             best_model_state,
             model_rng,
             best_model_rng,
+            val_loss,
             best_val_loss,
             best_epoch,
             patience,
@@ -861,6 +880,7 @@ def _train(
             best_model_state,
             model_rng,
             best_model_rng,
+            val_loss,
             best_val_loss,
             best_epoch,
             patience,
@@ -898,11 +918,13 @@ def _train(
             model_state,
             model_rng,
             epoch,
+            val_loss,
+            best_val_loss,
         )
         batch_carry = lax.fori_loop(
             0, num_batches, batch_body_fn, batch_carry, unroll=unroll
         )
-        _, _, _, adam_state, model_state, model_rng, _ = batch_carry
+        _, _, _, adam_state, model_state, model_rng, _, _, _ = batch_carry
 
         # deal with possible remainder, again this may be traced out
         if batch_remainder > 0:
@@ -1026,6 +1048,7 @@ def _train(
             best_model_state,
             model_rng,
             best_model_rng,
+            val_loss,
             best_val_loss,
             best_epoch,
             patience,
@@ -1066,6 +1089,7 @@ def _train(
         init_state,  # best model state starts as the initial state
         init_rng,  # initial model rng
         init_rng,  # best model rng starts as the initial rng
+        val_loss,  # initial validation loss
         val_loss,  # best_val_loss starts as the initial validation loss
         start_epoch,  # best epoch
         early_stopping_patience,  # patience starts at the configured value
@@ -1086,8 +1110,8 @@ def _train(
             "\n"
             + 40 * "=",
             epochs=final_while_state[1],
-            best_epoch=final_while_state[9],
-            best_val_loss=final_while_state[8],
+            best_epoch=final_while_state[10],
+            best_val_loss=final_while_state[9],
         )
         killer.active = False
 
@@ -1097,8 +1121,8 @@ def _train(
         final_while_state[5],  # best model state
         final_while_state[7],  # best model rng
         final_while_state[1],  # final epoch
-        final_while_state[8],  # best validation loss
-        final_while_state[9],  # best epoch
+        final_while_state[9],  # best validation loss
+        final_while_state[10],  # best epoch
     )
 
 
