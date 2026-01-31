@@ -7,6 +7,7 @@ Modules can be combined to create Models.
 
 from __future__ import annotations
 
+import warnings
 from abc import ABC, abstractmethod
 
 import jax
@@ -663,7 +664,9 @@ class BaseModule(ABC):
         }
 
     @jaxtyped(typechecker=beartype)
-    def deserialize(self, data: Dict[str, Any], /) -> None:
+    def deserialize(
+        self, data: Dict[str, Any], /, *, override_strict_version=False
+    ) -> None:
         """
         Deserialize the module from a dictionary.
 
@@ -678,6 +681,10 @@ class BaseModule(ABC):
         data
             Dictionary containing the serialized module data.
 
+        override_strict_version
+            If True, overrides the strict version check when loading the
+            model, changing the error into a warning. Default is False.
+
         Raises
         ------
         ValueError
@@ -691,10 +698,23 @@ class BaseModule(ABC):
         package_version = parse(str(data["package_version"]))
 
         if current_version != package_version:
-            # in the future, we will issue DeprecationWarnings or Errors if the
-            # version is unsupported
-            # or possibly handle version-specific deserialization
-            pass
+            if not override_strict_version:
+                raise ValueError(
+                    "Version mismatch when deserializing module "
+                    f"'{self.name}': serialized with version "
+                    f"{package_version}, current version is "
+                    f"{current_version}. To override this error, set "
+                    "`override_strict_version=True`."
+                )
+            else:
+                warnings.warn(
+                    "Version mismatch when deserializing module "
+                    f"'{self.name}': serialized with version "
+                    f"{package_version}, current version is "
+                    f"{current_version}. Proceeding with deserialization "
+                    "due to `override_strict_version=True`.",
+                    UserWarning,
+                )
 
         # set the hyperparameters
         self.set_hyperparameters(data.get("hyperparameters", {}))

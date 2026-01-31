@@ -1471,15 +1471,21 @@ class Model(BaseModule):
             "self_serialized": super().serialize(),
         }
 
-    def deserialize(self, data: Dict[str, Any], /) -> None:
+    def deserialize(
+        self, data: Dict[str, Any], /, *, override_strict_version=False
+    ) -> None:
         """
         Deserialize the model from a dictionary. This is done by deserializing
         the model's parameters/metadata and then deserializing each module.
 
         Parameters
         ----------
-            data : Dict[str, Any]
+            data
                 Dictionary containing the serialized model data.
+
+            override_strict_version
+                If True, overrides the strict version check when loading the
+                model, changing the error into a warning. Default is False.
         """
         self.reset()
 
@@ -1488,10 +1494,23 @@ class Model(BaseModule):
         package_version = parse(str(data["package_version"]))
 
         if current_version != package_version:
-            # in the future, we will issue DeprecationWarnings or Errors if the
-            # version is unsupported
-            # or possibly handle version-specific deserialization
-            pass
+            if not override_strict_version:
+                raise ValueError(
+                    "Model was saved with package version "
+                    f"{package_version}, but current package version is "
+                    f"{current_version}. "
+                    "To override this error, set "
+                    "override_strict_version=True."
+                )
+            else:
+                warnings.warn(
+                    "Model was saved with package version "
+                    f"{package_version}, but current package version is "
+                    f"{current_version}. "
+                    "Continuing deserialization due to "
+                    "override_strict_version=True.",
+                    UserWarning,
+                )
 
         # initialize the modules
         self.modules = jax.tree.map(
@@ -1504,7 +1523,9 @@ class Model(BaseModule):
 
         # deserialize the modules
         jax.tree.map(
-            lambda m, sm: m.deserialize(sm),
+            lambda m, sm: m.deserialize(
+                sm, override_strict_version=override_strict_version
+            ),
             self.modules,
             data["serialized_modules"],
         )
@@ -1519,7 +1540,10 @@ class Model(BaseModule):
         # deserialize the rng key
         key = jax.random.wrap_key_data(data["key_data"])
         self.set_rng(key)
-        super().deserialize(data["self_serialized"])
+        super().deserialize(
+            data["self_serialized"],
+            override_strict_version=override_strict_version,
+        )
 
     def save(self, file: str | IO | Path, /) -> None:
         """
@@ -1558,7 +1582,9 @@ class Model(BaseModule):
         # jax.numpy doesn't have savez_compressed, so we use numpy
         onp.savez_compressed(file, **data)
 
-    def load(self, file: str | IO | Path, /) -> None:
+    def load(
+        self, file: str | IO | Path, /, *, override_strict_version=False
+    ) -> None:
         """
         Load the model from a file. Supports both compressed and uncompressed
 
@@ -1566,6 +1592,10 @@ class Model(BaseModule):
         ----------
             file
                 File to load the model from.
+
+            override_strict_version
+                If True, overrides the strict version check when loading the
+                model, changing the error into a warning. Default is False.
         """
         if isinstance(file, str):
             file = file if file.endswith(".npz") else file + ".npz"
@@ -1588,10 +1618,12 @@ class Model(BaseModule):
             data["self_serialized"] = data["self_serialized"].item()
 
         # deserialize the model
-        self.deserialize(data)
+        self.deserialize(data, override_strict_version=override_strict_version)
 
     @classmethod
-    def from_file(cls, file: str | IO | Path, /) -> "Model":
+    def from_file(
+        cls, file: str | IO | Path, /, *, override_strict_version=False
+    ) -> "Model":
         """
         Load a model from a file and return an instance of the Model class.
 
@@ -1600,11 +1632,15 @@ class Model(BaseModule):
             file : str
                 File to load the model from.
 
+            override_strict_version
+                If True, overrides the strict version check when loading the
+                model, changing the error into a warning. Default is False.
+
         Returns
         -------
             Model
                 An instance of the Model class with the loaded parameters.
         """
         model = cls()
-        model.load(file)
+        model.load(file, override_strict_version=override_strict_version)
         return model
