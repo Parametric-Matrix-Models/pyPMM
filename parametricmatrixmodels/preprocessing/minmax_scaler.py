@@ -35,7 +35,12 @@ class MinMaxScaler(Scaler):
                 | BatchlessRealDataFixed
                 | PyTree[float | int, "RealDataFixed"],
             ]
-            | List[float | int | BatchlessRealDataFixed]
+            | List[
+                float
+                | int
+                | BatchlessRealDataFixed
+                | PyTree[float | int, "RealDataFixed"]
+            ]
         ) = (0.0, 1.0),
     ):
         """
