@@ -29,6 +29,8 @@ class Bias(BaseModule):
     leaf array (or be a scalar).
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(
         self,
         bias: (

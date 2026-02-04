@@ -43,6 +43,8 @@ class PReLU(BaseModule):
         Non-parametric ReLU activation function with a fixed negative slope.
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(
         self,
         single_parameter: bool = True,

@@ -38,6 +38,8 @@ class AffineTensor(BaseModule):
         input features with optional smoothing.
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(
         self,
         tensor_shape: Tuple[int, ...] | None = None,

@@ -7,14 +7,14 @@ Modules can be combined to create Models.
 
 from __future__ import annotations
 
-import warnings
+import inspect
 from abc import ABC, abstractmethod
 
 import jax
 import jax.numpy as np
 from beartype import beartype
 from jaxtyping import jaxtyped
-from packaging.version import parse
+from packaging.version import InvalidVersion, Version, parse
 
 import parametricmatrixmodels as pmm
 from parametricmatrixmodels.typing import (
@@ -34,6 +34,10 @@ class BaseModule(ABC):
     """
     Base class for all Modules. Custom modules should inherit from this class.
     """
+
+    # version of the module class, used for serialization, must be implemented
+    # by subclasses
+    __version__: str
 
     @abstractmethod
     def __init__(self) -> None:
@@ -58,16 +62,65 @@ class BaseModule(ABC):
 
     def __init_subclass__(cls, **kwargs):
         r"""
-        Ensures that all methods of all subclasses of BaseModule are also
+        Ensures that all requirements for concrete subclasses are met:
+
+        1. That all methods of all subclasses of BaseModule are also
         decorated with ``@jaxtyped(typechecker=beartype)``. This includes
         "private" methods (those starting with an underscore).
+
+        2. That the ``__version__`` attribute is set and is a
+        valid version string.
+
+        3. That __init__ has no required arguments.
         """
         super().__init_subclass__(**kwargs)
+
+        # only continue if the subclass is concrete
+        if inspect.isabstract(cls):
+            return
+
         for name, method in cls.__dict__.items():
             if callable(method) and not hasattr(method, "__jaxtyped__"):
                 setattr(cls, name, jaxtyped(typechecker=beartype)(method))
                 # set the __jaxtyped__ attribute to avoid re-wrapping
                 getattr(cls, name).__jaxtyped__ = True
+
+        # ensure that __version__ is set
+        if not hasattr(cls, "__version__"):
+            raise NotImplementedError(
+                f"Subclass {cls.__name__} must define a __version__ attribute."
+            )
+        # ensure that __version__ is a valid version string
+        try:
+            Version(cls.__version__)
+        except InvalidVersion as e:
+            raise ValueError(
+                f"Invalid version string '{cls.__version__}' in subclass "
+                f"{cls.__name__}. Version strings must follow PEP 440. See "
+                "https://peps.python.org/pep-0440/ for more information."
+            ) from e
+
+        # Check if any parameters (other than 'self') are required
+        sig = inspect.signature(cls.__init__)
+        for param_name, param in sig.parameters.items():
+            if param_name == "self":
+                continue
+
+            # If a parameter has no default value, it's required
+            if (
+                param.default == inspect.Parameter.empty
+                and param.kind
+                not in (
+                    inspect.Parameter.VAR_POSITIONAL,  # *args
+                    inspect.Parameter.VAR_KEYWORD,  # **kwargs
+                )
+            ):
+                raise TypeError(
+                    f"{cls.__name__}.__init__() has required parameter"
+                    f" '{param_name}'. Subclasses of"
+                    f" {BaseModule.__name__} must have __init__ methods"
+                    " with no required arguments."
+                )
 
     @property
     def name(self) -> str:
@@ -661,11 +714,12 @@ class BaseModule(ABC):
             "params": self.get_params(),
             "state": self.get_state(),
             "package_version": pmm.__version__,
+            "module_version": self.__version__,
         }
 
     @jaxtyped(typechecker=beartype)
     def deserialize(
-        self, data: Dict[str, Any], /, *, override_strict_version=False
+        self, data: Dict[str, Any], /, *, strict_package_version=False
     ) -> None:
         """
         Deserialize the module from a dictionary.
@@ -681,9 +735,10 @@ class BaseModule(ABC):
         data
             Dictionary containing the serialized module data.
 
-        override_strict_version
-            If True, overrides the strict version check when loading the
-            model, changing the error into a warning. Default is False.
+        strict_package_version
+            If True, raises an error if the package version used to
+            serialize the model does not match the current package version.
+            Default is False.
 
         Raises
         ------
@@ -698,23 +753,19 @@ class BaseModule(ABC):
         package_version = parse(str(data["package_version"]))
 
         if current_version != package_version:
-            if not override_strict_version:
+            if strict_package_version:
                 raise ValueError(
                     "Version mismatch when deserializing module "
                     f"'{self.name}': serialized with version "
                     f"{package_version}, current version is "
-                    f"{current_version}. To override this error, set "
-                    "`override_strict_version=True`."
+                    f"{current_version}."
                 )
-            else:
-                warnings.warn(
-                    "Version mismatch when deserializing module "
-                    f"'{self.name}': serialized with version "
-                    f"{package_version}, current version is "
-                    f"{current_version}. Proceeding with deserialization "
-                    "due to `override_strict_version=True`.",
-                    UserWarning,
-                )
+
+        module_version = parse(str(data["module_version"]))
+        current_module_version = parse(self.__version__)
+        if module_version != current_module_version:
+            # upgrade the data to the current version
+            data = self.upgrade(data)
 
         # set the hyperparameters
         self.set_hyperparameters(data.get("hyperparameters", {}))
@@ -728,3 +779,42 @@ class BaseModule(ABC):
         state = data.get("state", None)
         if state is not None:
             self.set_state(state)
+
+    @jaxtyped(typechecker=beartype)
+    def upgrade(self, data: Dict[str, Any], /) -> Dict[str, Any]:
+        """
+        Upgrade serialized module data to the current version.
+
+        This method can be overridden by subclasses to implement custom
+        upgrade logic when the module's serialization format changes between
+        versions.
+
+        The default implementation simply returns the input data unchanged.
+
+        Parameters
+        ----------
+        data
+            Dictionary containing the serialized module data.
+
+        Returns
+        -------
+            Upgraded dictionary containing the serialized module data.
+        """
+        return data
+
+    @jaxtyped(typechecker=beartype)
+    def copy(self) -> "BaseModule":
+        """
+        Create a deep copy of the module.
+
+        Returns
+        -------
+            A deep copy of the module.
+        """
+        # serialize and deserialize to create a deep copy
+        data = self.serialize()
+        new_module = self.__class__()
+        new_module.deserialize(data)
+        return new_module
+
+    deepcopy = copy  # alias for copy

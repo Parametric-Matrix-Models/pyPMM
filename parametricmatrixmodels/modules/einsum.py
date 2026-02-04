@@ -104,6 +104,8 @@ class Einsum(BaseModule):
 
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(
         self,
         einsum_str: (

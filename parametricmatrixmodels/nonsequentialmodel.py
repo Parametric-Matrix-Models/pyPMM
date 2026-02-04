@@ -60,6 +60,8 @@ class NonSequentialModel(Model):
         Wrap a trained model to produce confidence intervals.
     """
 
+    __version__ = "0.0.0"
+
     def __init__(
         self,
         modules: ModelModules | BaseModule | None = None,

@@ -27,6 +27,8 @@ class FuncBase(BaseModule):
     instantiated directly.
     """
 
+    __version__: str = "0.0.0"
+
     @final
     def __init__(self):
         """

@@ -60,6 +60,8 @@ class AffineEigenvaluePMM(SequentialModel):
             https://doi.org/10.1038/s41467-025-61362-4
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(
         self,
         matrix_size: int = None,

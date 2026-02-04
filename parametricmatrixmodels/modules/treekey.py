@@ -24,6 +24,8 @@ class TreeKey(BaseModule):
     specified keypaths.
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(
         self, keypaths: PyTree[str] | None = None, separator: str = "."
     ) -> None:

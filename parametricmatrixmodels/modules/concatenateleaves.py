@@ -24,6 +24,8 @@ class ConcatenateLeaves(BaseModule):
     single array.
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(
         self,
         axis: int | None = None,

@@ -1481,11 +1481,12 @@ class Model(BaseModule):
             "model_structure": model_structure,
             "key_data": key_data,
             "package_version": pmm.__version__,
+            "model_version": self.__version__,
             "self_serialized": super().serialize(),
         }
 
     def deserialize(
-        self, data: Dict[str, Any], /, *, override_strict_version=False
+        self, data: Dict[str, Any], /, *, strict_package_version=False
     ) -> None:
         """
         Deserialize the model from a dictionary. This is done by deserializing
@@ -1496,9 +1497,10 @@ class Model(BaseModule):
             data
                 Dictionary containing the serialized model data.
 
-            override_strict_version
-                If True, overrides the strict version check when loading the
-                model, changing the error into a warning. Default is False.
+            strict_package_version
+                If True, raises an error if the package version used to
+                serialize the model does not match the current package version.
+                Default is False.
         """
         self.reset()
 
@@ -1507,23 +1509,19 @@ class Model(BaseModule):
         package_version = parse(str(data["package_version"]))
 
         if current_version != package_version:
-            if not override_strict_version:
+            if strict_package_version:
                 raise ValueError(
                     "Model was saved with package version "
                     f"{package_version}, but current package version is "
-                    f"{current_version}. "
-                    "To override this error, set "
-                    "override_strict_version=True."
+                    f"{current_version}."
                 )
-            else:
-                warnings.warn(
-                    "Model was saved with package version "
-                    f"{package_version}, but current package version is "
-                    f"{current_version}. "
-                    "Continuing deserialization due to "
-                    "override_strict_version=True.",
-                    UserWarning,
-                )
+
+        # read the model version, and handle any backward compatibility here
+        model_version = parse(str(data["model_version"]))
+        current_model_version = parse(str(self.__version__))
+        if model_version != current_model_version:
+            # nothing to do yet
+            pass
 
         # initialize the modules
         self.modules = jax.tree.map(
@@ -1537,7 +1535,7 @@ class Model(BaseModule):
         # deserialize the modules
         jax.tree.map(
             lambda m, sm: m.deserialize(
-                sm, override_strict_version=override_strict_version
+                sm, strict_package_version=strict_package_version
             ),
             self.modules,
             data["serialized_modules"],
@@ -1555,7 +1553,7 @@ class Model(BaseModule):
         self.set_rng(key)
         super().deserialize(
             data["self_serialized"],
-            override_strict_version=override_strict_version,
+            strict_package_version=strict_package_version,
         )
 
     def save(self, file: str | IO | Path, /) -> None:
@@ -1596,7 +1594,7 @@ class Model(BaseModule):
         onp.savez_compressed(file, **data)
 
     def load(
-        self, file: str | IO | Path, /, *, override_strict_version=False
+        self, file: str | IO | Path, /, *, strict_package_version=False
     ) -> None:
         """
         Load the model from a file. Supports both compressed and uncompressed
@@ -1606,9 +1604,10 @@ class Model(BaseModule):
             file
                 File to load the model from.
 
-            override_strict_version
-                If True, overrides the strict version check when loading the
-                model, changing the error into a warning. Default is False.
+            strict_package_version
+                If True, raises an error if the package version used to
+                serialize the model does not match the current package version.
+                Default is False.
         """
         if isinstance(file, str):
             file = file if file.endswith(".npz") else file + ".npz"
@@ -1631,11 +1630,11 @@ class Model(BaseModule):
             data["self_serialized"] = data["self_serialized"].item()
 
         # deserialize the model
-        self.deserialize(data, override_strict_version=override_strict_version)
+        self.deserialize(data, strict_package_version=strict_package_version)
 
     @classmethod
     def from_file(
-        cls, file: str | IO | Path, /, *, override_strict_version=False
+        cls, file: str | IO | Path, /, *, strict_package_version=False
     ) -> "Model":
         """
         Load a model from a file and return an instance of the Model class.
@@ -1645,9 +1644,10 @@ class Model(BaseModule):
             file : str
                 File to load the model from.
 
-            override_strict_version
-                If True, overrides the strict version check when loading the
-                model, changing the error into a warning. Default is False.
+            strict_package_version
+                If True, raises an error if the package version used to
+                serialize the model does not match the current package version.
+                Default is False.
 
         Returns
         -------
@@ -1655,5 +1655,5 @@ class Model(BaseModule):
                 An instance of the Model class with the loaded parameters.
         """
         model = cls()
-        model.load(file, override_strict_version=override_strict_version)
+        model.load(file, strict_package_version=strict_package_version)
         return model

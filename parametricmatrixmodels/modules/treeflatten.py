@@ -21,6 +21,8 @@ class TreeFlatten(BaseModule):
     Module that flattens an input tree of arrays into a list of arrays
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(self) -> None:
         pass
 

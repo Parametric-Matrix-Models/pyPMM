@@ -15,6 +15,8 @@ class Comment(BaseModule):
     A module that allows adding comments to ``Model`` summaries.
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(self, comment: str = None) -> None:
         """
         Create a ``Comment`` module.

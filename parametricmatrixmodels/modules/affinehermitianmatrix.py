@@ -58,6 +58,8 @@ class AffineHermitianMatrix(BaseModule):
         ``AffineEigenvaluePMM`` module.
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(
         self,
         matrix_size: int | None = None,

@@ -45,6 +45,8 @@ class SequentialModel(Model):
         Wrap a trained model to produce confidence intervals.
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(
         self,
         modules: ModelModules | BaseModule | None = None,

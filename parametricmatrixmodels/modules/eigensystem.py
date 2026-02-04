@@ -44,6 +44,8 @@ class Eigensystem(BaseModule):
         matrix, which is used internally by this module.
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(
         self,
         num_eig: int | None = 1,

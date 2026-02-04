@@ -76,6 +76,8 @@ class TransitionAmplitudeSum(BaseModule):
 
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(
         self,
         num_observables: int | None = None,

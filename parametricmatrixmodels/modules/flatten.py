@@ -14,6 +14,8 @@ class Flatten(Reshape):
     on all leafs of a PyTree input.
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(self) -> None:
         # initialize with shape=None, shape will be determined at compile time
         # this accounts for both array and PyTree inputs

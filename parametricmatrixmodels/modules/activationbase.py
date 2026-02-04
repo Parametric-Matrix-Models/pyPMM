@@ -25,6 +25,8 @@ class ActivationBase(BaseModule):
     directly.
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(self, *args, **kwargs):
         """
         Initialize the elementwise activation function module.

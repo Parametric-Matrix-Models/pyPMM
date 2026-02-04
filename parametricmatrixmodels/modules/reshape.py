@@ -25,6 +25,8 @@ class Reshape(BaseModule):
     batch dimension.
     """
 
+    __version__: str = "0.0.0"
+
     def __init__(self, shape: DataShape = None) -> None:
         """
         Initialize a ``Reshape`` module.
