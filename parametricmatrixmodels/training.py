@@ -438,22 +438,22 @@ def _train(
     init_state: ModelState,  # initial model state
     init_rng: Any,  # initial model rng
     X: PyTree[
-        Inexact[Array, "num_samples ?*features"], " InStruct"
+        Inexact[Array, "num_samples feature0 ?*features"], " InStruct"
     ],  # in features
     Y: PyTree[
-        Inexact[Array, "num_samples ?*targets"], " OutStruct"
+        Inexact[Array, "num_samples target0 ?*targets"], " OutStruct"
     ],  # targets
     Y_unc: PyTree[
-        Inexact[Array, "num_samples ?*targets"], " OutStruct"
+        Inexact[Array, "num_samples target0 ?*targets"], " OutStruct"
     ],  # uncertainty in the targets, if applicable
     X_val: PyTree[
-        Inexact[Array, "num_val_samples ?*features"], " InStruct"
+        Inexact[Array, "num_val_samples feature0 ?*features"], " InStruct"
     ],  # validation in features
     Y_val: PyTree[
-        Inexact[Array, "num_val_samples ?*targets"], " OutStruct"
+        Inexact[Array, "num_val_samples target0 ?*targets"], " OutStruct"
     ],  # validation targets
     Y_val_unc: PyTree[
-        Inexact[Array, "num_val_samples ?*targets"], " OutStruct"
+        Inexact[Array, "num_val_samples target0 ?*targets"], " OutStruct"
     ],  # uncertainty in the validation targets, if applicable
     loss_fn: Callable[
         [Data, Data, Data, ModelParams, bool, ModelState, Any],
@@ -1149,24 +1149,32 @@ def train(
         ]
     ),  # loss function, three different signatures supported
     X: PyTree[
-        Inexact[Array, "num_samples ?*features"], " InStruct"
+        Inexact[Array, "num_samples feature0 ?*features"], " InStruct"
     ],  # in features
     Y: (
-        PyTree[Inexact[Array, "num_samples ?*targets"], " OutStruct"] | None
+        PyTree[Inexact[Array, "num_samples target0 ?*targets"], " OutStruct"]
+        | None
     ) = None,  # targets
     Y_unc: (
-        PyTree[Inexact[Array, "num_samples ?*targets"], " OutStruct"] | None
+        PyTree[Inexact[Array, "num_samples target0 ?*targets"], " OutStruct"]
+        | None
     ) = None,  # uncertainty in the targets, if applicable
     X_val: (
-        PyTree[Inexact[Array, "num_val_samples ?*features"], " InStruct"]
+        PyTree[
+            Inexact[Array, "num_val_samples feature0 ?*features"], " InStruct"
+        ]
         | None
     ) = None,  # validation in features
     Y_val: (
-        PyTree[Inexact[Array, "num_val_samples ?*targets"], " OutStruct"]
+        PyTree[
+            Inexact[Array, "num_val_samples target0 ?*targets"], " OutStruct"
+        ]
         | None
     ) = None,  # validation targets
     Y_val_unc: (
-        PyTree[Inexact[Array, "num_val_samples ?*targets"], " OutStruct"]
+        PyTree[
+            Inexact[Array, "num_val_samples target0 ?*targets"], " OutStruct"
+        ]
         | None
     ) = None,  # uncertainty in the validation targets, if applicable
     lr: float | Callable[[int], float] = 1e-3,
@@ -1521,6 +1529,33 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
                 ),
                 new_state,
             )
+
+    elif fn_name.startswith("pseudo_huber"):
+        if ":" in fn_name:
+            _, delta_str = fn_name.split(":")
+            delta = float(delta_str)
+        else:
+            delta = 1.0
+
+        # Pseudo-Huber loss
+        def loss_fn(X, Y, params, training, state, rng):
+            Y_pred, new_state = model_fn(X, params, training, state, rng)
+
+            # delta ** 2 * (sqrt(1 + ((Y_pred - Y) / delta) ** 2) - 1)
+
+            error = pmm_tree_util.sub(Y_pred, Y)
+
+            pseudo_huber_loss = delta**2 * (
+                pmm_tree_util.sqrt(
+                    1
+                    + pmm_tree_util.abs_sqr(
+                        jax.tree.map(lambda x: x / delta, error)
+                    )
+                )
+                - 1
+            )
+
+            return (pmm_tree_util.mean(pseudo_huber_loss), new_state)
 
     elif fn_name == "mse_unc":
         # MSE with uncertainty in the targets
