@@ -973,28 +973,41 @@ class Model(BaseModule):
     def train(
         self,
         X: PyTree[
-            Inexact[Array, "num_samples ?*features"], " InStruct"
+            Inexact[Array, "num_samples feature0 ?*features"], " InStruct"
         ],  # in features
         /,
         Y: (
-            PyTree[Inexact[Array, "num_samples ?*targets"], " OutStruct"]
+            PyTree[
+                Inexact[Array, "num_samples target0 ?*targets"], " OutStruct"
+            ]
             | None
         ) = None,  # targets
         *,
         Y_unc: (
-            PyTree[Inexact[Array, "num_samples ?*targets"], " OutStruct"]
+            PyTree[
+                Inexact[Array, "num_samples target0 ?*targets"], " OutStruct"
+            ]
             | None
         ) = None,  # uncertainty in the targets, if applicable
         X_val: (
-            PyTree[Inexact[Array, "num_val_samples ?*features"], " InStruct"]
+            PyTree[
+                Inexact[Array, "num_val_samples feature0 ?*features"],
+                " InStruct",
+            ]
             | None
         ) = None,  # validation in features
         Y_val: (
-            PyTree[Inexact[Array, "num_val_samples ?*targets"], " OutStruct"]
+            PyTree[
+                Inexact[Array, "num_val_samples target0 ?*targets"],
+                " OutStruct",
+            ]
             | None
         ) = None,  # validation targets
         Y_val_unc: (
-            PyTree[Inexact[Array, "num_val_samples ?*targets"], " OutStruct"]
+            PyTree[
+                Inexact[Array, "num_val_samples target0 ?*targets"],
+                " OutStruct",
+            ]
             | None
         ) = None,  # uncertainty in the validation targets, if applicable
         loss_fn: str | Callable = "mse",

@@ -875,6 +875,19 @@ def astype(
     cast to the specified data type.
     """
 
+    # Warn if dtype is real but any leaf is complex
+    leaves = jax.tree.leaves(pytree)
+    is_dtype_complex = np.issubdtype(np.dtype(dtype), np.complexfloating)
+    complex_leaf = any(
+        np.issubdtype(leaf.dtype, np.complexfloating) for leaf in leaves
+    )
+    if not is_dtype_complex and complex_leaf:
+        warnings.warn(
+            "Casting complex arrays to a real dtype will discard the "
+            "imaginary part.",
+            RuntimeWarning,
+        )
+
     return jax.tree.map(lambda x: x.astype(dtype), pytree)
 
 
@@ -887,6 +900,9 @@ def is_shape_leaf(obj: Any, allow_none: bool = True) -> bool:
     ----------
     obj
         The object to check.
+
+    allow_none
+        If True, None is considered a valid shape leaf.
 
     Returns
     -------
