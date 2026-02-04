@@ -25,6 +25,10 @@
       
          ~Constant.compile
       
+         ~Constant.copy
+      
+         ~Constant.deepcopy
+      
          ~Constant.deserialize
       
          ~Constant.get_hyperparameters
@@ -48,6 +52,8 @@
          ~Constant.set_precision
       
          ~Constant.set_state
+      
+         ~Constant.upgrade
 
    .. autosummary::
 

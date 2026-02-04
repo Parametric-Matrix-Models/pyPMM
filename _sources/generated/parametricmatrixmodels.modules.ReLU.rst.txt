@@ -25,6 +25,10 @@
       
          ~ReLU.compile
       
+         ~ReLU.copy
+      
+         ~ReLU.deepcopy
+      
          ~ReLU.deserialize
       
          ~ReLU.func
@@ -50,6 +54,8 @@
          ~ReLU.set_precision
       
          ~ReLU.set_state
+      
+         ~ReLU.upgrade
 
    .. autosummary::
 

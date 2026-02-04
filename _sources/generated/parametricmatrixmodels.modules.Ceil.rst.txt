@@ -25,6 +25,10 @@
       
          ~Ceil.compile
       
+         ~Ceil.copy
+      
+         ~Ceil.deepcopy
+      
          ~Ceil.deserialize
       
          ~Ceil.func
@@ -50,6 +54,8 @@
          ~Ceil.set_precision
       
          ~Ceil.set_state
+      
+         ~Ceil.upgrade
 
    .. autosummary::
 

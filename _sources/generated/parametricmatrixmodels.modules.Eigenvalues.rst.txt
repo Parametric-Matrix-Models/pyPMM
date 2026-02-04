@@ -25,6 +25,10 @@
       
          ~Eigenvalues.compile
       
+         ~Eigenvalues.copy
+      
+         ~Eigenvalues.deepcopy
+      
          ~Eigenvalues.deserialize
       
          ~Eigenvalues.get_hyperparameters
@@ -48,6 +52,8 @@
          ~Eigenvalues.set_precision
       
          ~Eigenvalues.set_state
+      
+         ~Eigenvalues.upgrade
 
    .. autosummary::
 

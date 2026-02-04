@@ -25,6 +25,10 @@
       
          ~Sinh.compile
       
+         ~Sinh.copy
+      
+         ~Sinh.deepcopy
+      
          ~Sinh.deserialize
       
          ~Sinh.func
@@ -50,6 +54,8 @@
          ~Sinh.set_precision
       
          ~Sinh.set_state
+      
+         ~Sinh.upgrade
 
    .. autosummary::
 

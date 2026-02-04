@@ -25,6 +25,10 @@
       
          ~ATanh.compile
       
+         ~ATanh.copy
+      
+         ~ATanh.deepcopy
+      
          ~ATanh.deserialize
       
          ~ATanh.func
@@ -50,6 +54,8 @@
          ~ATanh.set_precision
       
          ~ATanh.set_state
+      
+         ~ATanh.upgrade
 
    .. autosummary::
 

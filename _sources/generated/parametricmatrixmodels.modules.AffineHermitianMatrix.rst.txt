@@ -25,6 +25,10 @@
       
          ~AffineHermitianMatrix.compile
       
+         ~AffineHermitianMatrix.copy
+      
+         ~AffineHermitianMatrix.deepcopy
+      
          ~AffineHermitianMatrix.deserialize
       
          ~AffineHermitianMatrix.get_hyperparameters
@@ -48,6 +52,8 @@
          ~AffineHermitianMatrix.set_precision
       
          ~AffineHermitianMatrix.set_state
+      
+         ~AffineHermitianMatrix.upgrade
 
    .. autosummary::
 

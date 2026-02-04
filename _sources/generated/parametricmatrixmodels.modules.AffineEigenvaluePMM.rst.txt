@@ -33,6 +33,10 @@
       
          ~AffineEigenvaluePMM.compile
       
+         ~AffineEigenvaluePMM.copy
+      
+         ~AffineEigenvaluePMM.deepcopy
+      
          ~AffineEigenvaluePMM.deserialize
       
          ~AffineEigenvaluePMM.from_file
@@ -94,6 +98,8 @@
          ~AffineEigenvaluePMM.set_state
       
          ~AffineEigenvaluePMM.train
+      
+         ~AffineEigenvaluePMM.upgrade
 
    .. autosummary::
 

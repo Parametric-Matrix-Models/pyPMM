@@ -25,6 +25,10 @@
       
          ~Expm1.compile
       
+         ~Expm1.copy
+      
+         ~Expm1.deepcopy
+      
          ~Expm1.deserialize
       
          ~Expm1.func
@@ -50,6 +54,8 @@
          ~Expm1.set_precision
       
          ~Expm1.set_state
+      
+         ~Expm1.upgrade
 
    .. autosummary::
 

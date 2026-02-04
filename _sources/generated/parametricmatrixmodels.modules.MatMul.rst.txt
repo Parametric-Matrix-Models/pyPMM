@@ -25,6 +25,10 @@
       
          ~MatMul.compile
       
+         ~MatMul.copy
+      
+         ~MatMul.deepcopy
+      
          ~MatMul.deserialize
       
          ~MatMul.get_hyperparameters
@@ -48,6 +52,8 @@
          ~MatMul.set_precision
       
          ~MatMul.set_state
+      
+         ~MatMul.upgrade
 
    .. autosummary::
 

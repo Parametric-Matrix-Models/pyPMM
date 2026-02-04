@@ -25,6 +25,10 @@
       
          ~ELU.compile
       
+         ~ELU.copy
+      
+         ~ELU.deepcopy
+      
          ~ELU.deserialize
       
          ~ELU.func
@@ -50,6 +54,8 @@
          ~ELU.set_precision
       
          ~ELU.set_state
+      
+         ~ELU.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~Degrees.compile
       
+         ~Degrees.copy
+      
+         ~Degrees.deepcopy
+      
          ~Degrees.deserialize
       
          ~Degrees.func
@@ -50,6 +54,8 @@
          ~Degrees.set_precision
       
          ~Degrees.set_state
+      
+         ~Degrees.upgrade
 
    .. autosummary::
 

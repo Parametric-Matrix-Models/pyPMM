@@ -25,6 +25,10 @@
       
          ~Conj.compile
       
+         ~Conj.copy
+      
+         ~Conj.deepcopy
+      
          ~Conj.deserialize
       
          ~Conj.func
@@ -50,6 +54,8 @@
          ~Conj.set_precision
       
          ~Conj.set_state
+      
+         ~Conj.upgrade
 
    .. autosummary::
 

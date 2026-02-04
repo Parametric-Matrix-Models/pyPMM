@@ -25,6 +25,10 @@
       
          ~Cbrt.compile
       
+         ~Cbrt.copy
+      
+         ~Cbrt.deepcopy
+      
          ~Cbrt.deserialize
       
          ~Cbrt.func
@@ -50,6 +54,8 @@
          ~Cbrt.set_precision
       
          ~Cbrt.set_state
+      
+         ~Cbrt.upgrade
 
    .. autosummary::
 

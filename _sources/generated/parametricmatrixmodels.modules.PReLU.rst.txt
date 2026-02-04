@@ -25,6 +25,10 @@
       
          ~PReLU.compile
       
+         ~PReLU.copy
+      
+         ~PReLU.deepcopy
+      
          ~PReLU.deserialize
       
          ~PReLU.get_hyperparameters
@@ -48,6 +52,8 @@
          ~PReLU.set_precision
       
          ~PReLU.set_state
+      
+         ~PReLU.upgrade
 
    .. autosummary::
 

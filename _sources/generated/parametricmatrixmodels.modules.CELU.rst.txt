@@ -25,6 +25,10 @@
       
          ~CELU.compile
       
+         ~CELU.copy
+      
+         ~CELU.deepcopy
+      
          ~CELU.deserialize
       
          ~CELU.func
@@ -50,6 +54,8 @@
          ~CELU.set_precision
       
          ~CELU.set_state
+      
+         ~CELU.upgrade
 
    .. autosummary::
 

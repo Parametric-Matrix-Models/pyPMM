@@ -25,6 +25,10 @@
       
          ~Log.compile
       
+         ~Log.copy
+      
+         ~Log.deepcopy
+      
          ~Log.deserialize
       
          ~Log.func
@@ -50,6 +54,8 @@
          ~Log.set_precision
       
          ~Log.set_state
+      
+         ~Log.upgrade
 
    .. autosummary::
 

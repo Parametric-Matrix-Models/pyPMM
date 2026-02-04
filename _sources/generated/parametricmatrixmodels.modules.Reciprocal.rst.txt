@@ -25,6 +25,10 @@
       
          ~Reciprocal.compile
       
+         ~Reciprocal.copy
+      
+         ~Reciprocal.deepcopy
+      
          ~Reciprocal.deserialize
       
          ~Reciprocal.func
@@ -50,6 +54,8 @@
          ~Reciprocal.set_precision
       
          ~Reciprocal.set_state
+      
+         ~Reciprocal.upgrade
 
    .. autosummary::
 

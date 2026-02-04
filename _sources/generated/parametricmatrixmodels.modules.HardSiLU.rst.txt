@@ -25,6 +25,10 @@
       
          ~HardSiLU.compile
       
+         ~HardSiLU.copy
+      
+         ~HardSiLU.deepcopy
+      
          ~HardSiLU.deserialize
       
          ~HardSiLU.func
@@ -50,6 +54,8 @@
          ~HardSiLU.set_precision
       
          ~HardSiLU.set_state
+      
+         ~HardSiLU.upgrade
 
    .. autosummary::
 

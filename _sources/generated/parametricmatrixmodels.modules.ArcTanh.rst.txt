@@ -25,6 +25,10 @@
       
          ~ArcTanh.compile
       
+         ~ArcTanh.copy
+      
+         ~ArcTanh.deepcopy
+      
          ~ArcTanh.deserialize
       
          ~ArcTanh.func
@@ -50,6 +54,8 @@
          ~ArcTanh.set_precision
       
          ~ArcTanh.set_state
+      
+         ~ArcTanh.upgrade
 
    .. autosummary::
 

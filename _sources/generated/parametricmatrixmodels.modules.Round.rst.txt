@@ -25,6 +25,10 @@
       
          ~Round.compile
       
+         ~Round.copy
+      
+         ~Round.deepcopy
+      
          ~Round.deserialize
       
          ~Round.func
@@ -50,6 +54,8 @@
          ~Round.set_precision
       
          ~Round.set_state
+      
+         ~Round.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~Cos.compile
       
+         ~Cos.copy
+      
+         ~Cos.deepcopy
+      
          ~Cos.deserialize
       
          ~Cos.func
@@ -50,6 +54,8 @@
          ~Cos.set_precision
       
          ~Cos.set_state
+      
+         ~Cos.upgrade
 
    .. autosummary::
 

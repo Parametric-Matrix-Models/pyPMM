@@ -25,6 +25,10 @@
       
          ~Sigmoid.compile
       
+         ~Sigmoid.copy
+      
+         ~Sigmoid.deepcopy
+      
          ~Sigmoid.deserialize
       
          ~Sigmoid.func
@@ -50,6 +54,8 @@
          ~Sigmoid.set_precision
       
          ~Sigmoid.set_state
+      
+         ~Sigmoid.upgrade
 
    .. autosummary::
 

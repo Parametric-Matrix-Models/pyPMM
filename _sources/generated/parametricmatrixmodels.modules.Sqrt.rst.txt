@@ -25,6 +25,10 @@
       
          ~Sqrt.compile
       
+         ~Sqrt.copy
+      
+         ~Sqrt.deepcopy
+      
          ~Sqrt.deserialize
       
          ~Sqrt.func
@@ -50,6 +54,8 @@
          ~Sqrt.set_precision
       
          ~Sqrt.set_state
+      
+         ~Sqrt.upgrade
 
    .. autosummary::
 

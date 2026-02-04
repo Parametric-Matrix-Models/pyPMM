@@ -25,6 +25,10 @@
       
          ~Softmax.compile
       
+         ~Softmax.copy
+      
+         ~Softmax.deepcopy
+      
          ~Softmax.deserialize
       
          ~Softmax.func
@@ -50,6 +54,8 @@
          ~Softmax.set_precision
       
          ~Softmax.set_state
+      
+         ~Softmax.upgrade
 
    .. autosummary::
 

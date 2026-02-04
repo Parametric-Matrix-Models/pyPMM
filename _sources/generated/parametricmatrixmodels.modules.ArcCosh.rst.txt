@@ -25,6 +25,10 @@
       
          ~ArcCosh.compile
       
+         ~ArcCosh.copy
+      
+         ~ArcCosh.deepcopy
+      
          ~ArcCosh.deserialize
       
          ~ArcCosh.func
@@ -50,6 +54,8 @@
          ~ArcCosh.set_precision
       
          ~ArcCosh.set_state
+      
+         ~ArcCosh.upgrade
 
    .. autosummary::
 

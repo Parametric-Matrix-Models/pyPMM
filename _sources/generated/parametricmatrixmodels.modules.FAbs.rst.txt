@@ -25,6 +25,10 @@
       
          ~FAbs.compile
       
+         ~FAbs.copy
+      
+         ~FAbs.deepcopy
+      
          ~FAbs.deserialize
       
          ~FAbs.func
@@ -50,6 +54,8 @@
          ~FAbs.set_precision
       
          ~FAbs.set_state
+      
+         ~FAbs.upgrade
 
    .. autosummary::
 

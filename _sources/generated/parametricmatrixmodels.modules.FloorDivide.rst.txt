@@ -25,6 +25,10 @@
       
          ~FloorDivide.compile
       
+         ~FloorDivide.copy
+      
+         ~FloorDivide.deepcopy
+      
          ~FloorDivide.deserialize
       
          ~FloorDivide.func
@@ -50,6 +54,8 @@
          ~FloorDivide.set_precision
       
          ~FloorDivide.set_state
+      
+         ~FloorDivide.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~Packbits.compile
       
+         ~Packbits.copy
+      
+         ~Packbits.deepcopy
+      
          ~Packbits.deserialize
       
          ~Packbits.func
@@ -50,6 +54,8 @@
          ~Packbits.set_precision
       
          ~Packbits.set_state
+      
+         ~Packbits.upgrade
 
    .. autosummary::
 

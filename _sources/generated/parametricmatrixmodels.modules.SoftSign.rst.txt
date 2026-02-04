@@ -25,6 +25,10 @@
       
          ~SoftSign.compile
       
+         ~SoftSign.copy
+      
+         ~SoftSign.deepcopy
+      
          ~SoftSign.deserialize
       
          ~SoftSign.func
@@ -50,6 +54,8 @@
          ~SoftSign.set_precision
       
          ~SoftSign.set_state
+      
+         ~SoftSign.upgrade
 
    .. autosummary::
 

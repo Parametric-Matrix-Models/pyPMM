@@ -25,6 +25,10 @@
       
          ~ASin.compile
       
+         ~ASin.copy
+      
+         ~ASin.deepcopy
+      
          ~ASin.deserialize
       
          ~ASin.func
@@ -50,6 +54,8 @@
          ~ASin.set_precision
       
          ~ASin.set_state
+      
+         ~ASin.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~Square.compile
       
+         ~Square.copy
+      
+         ~Square.deepcopy
+      
          ~Square.deserialize
       
          ~Square.func
@@ -50,6 +54,8 @@
          ~Square.set_precision
       
          ~Square.set_state
+      
+         ~Square.upgrade
 
    .. autosummary::
 

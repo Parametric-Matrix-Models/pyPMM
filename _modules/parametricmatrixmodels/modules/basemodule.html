@@ -375,14 +375,14 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">jaxtyped</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">packaging.version</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packaging.version</span><span class="w"> </span><span class="kn">import</span> <span class="n">InvalidVersion</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">parse</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">parametricmatrixmodels</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pmm</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">parametricmatrixmodels.typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -404,6 +404,10 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for all Modules. Custom modules should inherit from this class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># version of the module class, used for serialization, must be implemented</span>
+    <span class="c1"># by subclasses</span>
+    <span class="n">__version__</span><span class="p">:</span> <span class="nb">str</span>
 
 <div class="viewcode-block" id="BaseModule.__init__">
 <a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.__init__">[docs]</a>
@@ -431,16 +435,65 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Ensures that all methods of all subclasses of BaseModule are also</span>
+<span class="sd">        Ensures that all requirements for concrete subclasses are met:</span>
+
+<span class="sd">        1. That all methods of all subclasses of BaseModule are also</span>
 <span class="sd">        decorated with ``@jaxtyped(typechecker=beartype)``. This includes</span>
 <span class="sd">        &quot;private&quot; methods (those starting with an underscore).</span>
+
+<span class="sd">        2. That the ``__version__`` attribute is set and is a</span>
+<span class="sd">        valid version string.</span>
+
+<span class="sd">        3. That __init__ has no required arguments.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init_subclass__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># only continue if the subclass is concrete</span>
+        <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isabstract</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+            <span class="k">return</span>
+
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">method</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">method</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="s2">&quot;__jaxtyped__&quot;</span><span class="p">):</span>
                 <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)(</span><span class="n">method</span><span class="p">))</span>
                 <span class="c1"># set the __jaxtyped__ attribute to avoid re-wrapping</span>
                 <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">__jaxtyped__</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># ensure that __version__ is set</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s2">&quot;__version__&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Subclass </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> must define a __version__ attribute.&quot;</span>
+            <span class="p">)</span>
+        <span class="c1"># ensure that __version__ is a valid version string</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">Version</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">InvalidVersion</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid version string &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&#39; in subclass &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">. Version strings must follow PEP 440. See &quot;</span>
+                <span class="s2">&quot;https://peps.python.org/pep-0440/ for more information.&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+
+        <span class="c1"># Check if any parameters (other than &#39;self&#39;) are required</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="fm">__init__</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">param_name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">param_name</span> <span class="o">==</span> <span class="s2">&quot;self&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># If a parameter has no default value, it&#39;s required</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">default</span> <span class="o">==</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span>
+                <span class="ow">and</span> <span class="n">param</span><span class="o">.</span><span class="n">kind</span>
+                <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span>
+                    <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">VAR_POSITIONAL</span><span class="p">,</span>  <span class="c1"># *args</span>
+                    <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">VAR_KEYWORD</span><span class="p">,</span>  <span class="c1"># **kwargs</span>
+                <span class="p">)</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.__init__() has required parameter&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot; &#39;</span><span class="si">{</span><span class="n">param_name</span><span class="si">}</span><span class="s2">&#39;. Subclasses of&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">BaseModule</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> must have __init__ methods&quot;</span>
+                    <span class="s2">&quot; with no required arguments.&quot;</span>
+                <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -1081,6 +1134,7 @@
             <span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">(),</span>
             <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">(),</span>
             <span class="s2">&quot;package_version&quot;</span><span class="p">:</span> <span class="n">pmm</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
+            <span class="s2">&quot;module_version&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 
@@ -1088,7 +1142,7 @@
 <a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.deserialize">[docs]</a>
     <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">deserialize</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">override_strict_version</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">strict_package_version</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deserialize the module from a dictionary.</span>
@@ -1104,9 +1158,10 @@
 <span class="sd">        data</span>
 <span class="sd">            Dictionary containing the serialized module data.</span>
 
-<span class="sd">        override_strict_version</span>
-<span class="sd">            If True, overrides the strict version check when loading the</span>
-<span class="sd">            model, changing the error into a warning. Default is False.</span>
+<span class="sd">        strict_package_version</span>
+<span class="sd">            If True, raises an error if the package version used to</span>
+<span class="sd">            serialize the model does not match the current package version.</span>
+<span class="sd">            Default is False.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -1121,23 +1176,19 @@
         <span class="n">package_version</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;package_version&quot;</span><span class="p">]))</span>
 
         <span class="k">if</span> <span class="n">current_version</span> <span class="o">!=</span> <span class="n">package_version</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">override_strict_version</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">strict_package_version</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;Version mismatch when deserializing module &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;: serialized with version &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">package_version</span><span class="si">}</span><span class="s2">, current version is &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_version</span><span class="si">}</span><span class="s2">. To override this error, set &quot;</span>
-                    <span class="s2">&quot;`override_strict_version=True`.&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_version</span><span class="si">}</span><span class="s2">.&quot;</span>
                 <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="s2">&quot;Version mismatch when deserializing module &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;: serialized with version &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">package_version</span><span class="si">}</span><span class="s2">, current version is &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_version</span><span class="si">}</span><span class="s2">. Proceeding with deserialization &quot;</span>
-                    <span class="s2">&quot;due to `override_strict_version=True`.&quot;</span><span class="p">,</span>
-                    <span class="ne">UserWarning</span><span class="p">,</span>
-                <span class="p">)</span>
+
+        <span class="n">module_version</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;module_version&quot;</span><span class="p">]))</span>
+        <span class="n">current_module_version</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">module_version</span> <span class="o">!=</span> <span class="n">current_module_version</span><span class="p">:</span>
+            <span class="c1"># upgrade the data to the current version</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upgrade</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
         <span class="c1"># set the hyperparameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;hyperparameters&quot;</span><span class="p">,</span> <span class="p">{}))</span>
@@ -1151,7 +1202,52 @@
         <span class="n">state</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;state&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">state</span><span class="p">)</span></div>
-</div>
+
+
+<div class="viewcode-block" id="BaseModule.upgrade">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.upgrade">[docs]</a>
+    <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">upgrade</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Upgrade serialized module data to the current version.</span>
+
+<span class="sd">        This method can be overridden by subclasses to implement custom</span>
+<span class="sd">        upgrade logic when the module&#39;s serialization format changes between</span>
+<span class="sd">        versions.</span>
+
+<span class="sd">        The default implementation simply returns the input data unchanged.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        data</span>
+<span class="sd">            Dictionary containing the serialized module data.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Upgraded dictionary containing the serialized module data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="BaseModule.copy">
+<a class="viewcode-back" href="../../../basemodule.html#parametricmatrixmodels.modules.BaseModule.copy">[docs]</a>
+    <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;BaseModule&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a deep copy of the module.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            A deep copy of the module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># serialize and deserialize to create a deep copy</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
+        <span class="n">new_module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">()</span>
+        <span class="n">new_module</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_module</span></div>
+
+
+    <span class="n">deepcopy</span> <span class="o">=</span> <span class="n">copy</span>  <span class="c1"># alias for copy</span></div>
 
 </pre></div>
 

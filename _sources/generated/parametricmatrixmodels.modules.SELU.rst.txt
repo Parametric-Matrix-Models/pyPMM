@@ -25,6 +25,10 @@
       
          ~SELU.compile
       
+         ~SELU.copy
+      
+         ~SELU.deepcopy
+      
          ~SELU.deserialize
       
          ~SELU.func
@@ -50,6 +54,8 @@
          ~SELU.set_precision
       
          ~SELU.set_state
+      
+         ~SELU.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~Einsum.compile
       
+         ~Einsum.copy
+      
+         ~Einsum.deepcopy
+      
          ~Einsum.deserialize
       
          ~Einsum.get_hyperparameters
@@ -48,6 +52,8 @@
          ~Einsum.set_precision
       
          ~Einsum.set_state
+      
+         ~Einsum.upgrade
 
    .. autosummary::
 

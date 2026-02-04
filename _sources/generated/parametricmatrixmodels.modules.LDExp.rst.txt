@@ -25,6 +25,10 @@
       
          ~LDExp.compile
       
+         ~LDExp.copy
+      
+         ~LDExp.deepcopy
+      
          ~LDExp.deserialize
       
          ~LDExp.func
@@ -50,6 +54,8 @@
          ~LDExp.set_precision
       
          ~LDExp.set_state
+      
+         ~LDExp.upgrade
 
    .. autosummary::
 

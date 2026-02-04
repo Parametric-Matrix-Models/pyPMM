@@ -25,6 +25,10 @@
       
          ~Log1p.compile
       
+         ~Log1p.copy
+      
+         ~Log1p.deepcopy
+      
          ~Log1p.deserialize
       
          ~Log1p.func
@@ -50,6 +54,8 @@
          ~Log1p.set_precision
       
          ~Log1p.set_state
+      
+         ~Log1p.upgrade
 
    .. autosummary::
 

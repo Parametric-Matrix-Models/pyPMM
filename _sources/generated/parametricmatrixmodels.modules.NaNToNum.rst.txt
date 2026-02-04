@@ -25,6 +25,10 @@
       
          ~NaNToNum.compile
       
+         ~NaNToNum.copy
+      
+         ~NaNToNum.deepcopy
+      
          ~NaNToNum.deserialize
       
          ~NaNToNum.func
@@ -50,6 +54,8 @@
          ~NaNToNum.set_precision
       
          ~NaNToNum.set_state
+      
+         ~NaNToNum.upgrade
 
    .. autosummary::
 

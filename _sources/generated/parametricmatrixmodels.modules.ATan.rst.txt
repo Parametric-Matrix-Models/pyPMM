@@ -25,6 +25,10 @@
       
          ~ATan.compile
       
+         ~ATan.copy
+      
+         ~ATan.deepcopy
+      
          ~ATan.deserialize
       
          ~ATan.func
@@ -50,6 +54,8 @@
          ~ATan.set_precision
       
          ~ATan.set_state
+      
+         ~ATan.upgrade
 
    .. autosummary::
 

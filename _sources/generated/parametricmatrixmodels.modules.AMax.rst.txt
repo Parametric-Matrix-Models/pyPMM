@@ -25,6 +25,10 @@
       
          ~AMax.compile
       
+         ~AMax.copy
+      
+         ~AMax.deepcopy
+      
          ~AMax.deserialize
       
          ~AMax.func
@@ -50,6 +54,8 @@
          ~AMax.set_precision
       
          ~AMax.set_state
+      
+         ~AMax.upgrade
 
    .. autosummary::
 

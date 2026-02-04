@@ -25,6 +25,10 @@
       
          ~TreeFlatten.compile
       
+         ~TreeFlatten.copy
+      
+         ~TreeFlatten.deepcopy
+      
          ~TreeFlatten.deserialize
       
          ~TreeFlatten.get_hyperparameters
@@ -48,6 +52,8 @@
          ~TreeFlatten.set_precision
       
          ~TreeFlatten.set_state
+      
+         ~TreeFlatten.upgrade
 
    .. autosummary::
 

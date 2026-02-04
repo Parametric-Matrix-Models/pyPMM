@@ -25,6 +25,10 @@
       
          ~Conjugate.compile
       
+         ~Conjugate.copy
+      
+         ~Conjugate.deepcopy
+      
          ~Conjugate.deserialize
       
          ~Conjugate.func
@@ -50,6 +54,8 @@
          ~Conjugate.set_precision
       
          ~Conjugate.set_state
+      
+         ~Conjugate.upgrade
 
    .. autosummary::
 

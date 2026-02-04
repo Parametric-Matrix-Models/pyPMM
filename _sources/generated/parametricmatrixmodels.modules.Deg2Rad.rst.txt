@@ -25,6 +25,10 @@
       
          ~Deg2Rad.compile
       
+         ~Deg2Rad.copy
+      
+         ~Deg2Rad.deepcopy
+      
          ~Deg2Rad.deserialize
       
          ~Deg2Rad.func
@@ -50,6 +54,8 @@
          ~Deg2Rad.set_precision
       
          ~Deg2Rad.set_state
+      
+         ~Deg2Rad.upgrade
 
    .. autosummary::
 

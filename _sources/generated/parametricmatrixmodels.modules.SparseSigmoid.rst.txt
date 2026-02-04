@@ -25,6 +25,10 @@
       
          ~SparseSigmoid.compile
       
+         ~SparseSigmoid.copy
+      
+         ~SparseSigmoid.deepcopy
+      
          ~SparseSigmoid.deserialize
       
          ~SparseSigmoid.func
@@ -50,6 +54,8 @@
          ~SparseSigmoid.set_precision
       
          ~SparseSigmoid.set_state
+      
+         ~SparseSigmoid.upgrade
 
    .. autosummary::
 

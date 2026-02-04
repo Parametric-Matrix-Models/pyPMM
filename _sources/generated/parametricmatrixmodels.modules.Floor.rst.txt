@@ -25,6 +25,10 @@
       
          ~Floor.compile
       
+         ~Floor.copy
+      
+         ~Floor.deepcopy
+      
          ~Floor.deserialize
       
          ~Floor.func
@@ -50,6 +54,8 @@
          ~Floor.set_precision
       
          ~Floor.set_state
+      
+         ~Floor.upgrade
 
    .. autosummary::
 

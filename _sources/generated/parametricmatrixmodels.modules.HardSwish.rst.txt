@@ -25,6 +25,10 @@
       
          ~HardSwish.compile
       
+         ~HardSwish.copy
+      
+         ~HardSwish.deepcopy
+      
          ~HardSwish.deserialize
       
          ~HardSwish.func
@@ -50,6 +54,8 @@
          ~HardSwish.set_precision
       
          ~HardSwish.set_state
+      
+         ~HardSwish.upgrade
 
    .. autosummary::
 

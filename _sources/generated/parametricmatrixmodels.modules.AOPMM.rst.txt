@@ -33,6 +33,10 @@
       
          ~AOPMM.compile
       
+         ~AOPMM.copy
+      
+         ~AOPMM.deepcopy
+      
          ~AOPMM.deserialize
       
          ~AOPMM.from_file
@@ -94,6 +98,8 @@
          ~AOPMM.set_state
       
          ~AOPMM.train
+      
+         ~AOPMM.upgrade
 
    .. autosummary::
 

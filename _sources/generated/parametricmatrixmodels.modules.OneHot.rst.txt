@@ -25,6 +25,10 @@
       
          ~OneHot.compile
       
+         ~OneHot.copy
+      
+         ~OneHot.deepcopy
+      
          ~OneHot.deserialize
       
          ~OneHot.func
@@ -50,6 +54,8 @@
          ~OneHot.set_precision
       
          ~OneHot.set_state
+      
+         ~OneHot.upgrade
 
    .. autosummary::
 

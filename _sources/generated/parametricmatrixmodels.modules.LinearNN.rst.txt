@@ -33,6 +33,10 @@
       
          ~LinearNN.compile
       
+         ~LinearNN.copy
+      
+         ~LinearNN.deepcopy
+      
          ~LinearNN.deserialize
       
          ~LinearNN.from_file
@@ -94,6 +98,8 @@
          ~LinearNN.set_state
       
          ~LinearNN.train
+      
+         ~LinearNN.upgrade
 
    .. autosummary::
 

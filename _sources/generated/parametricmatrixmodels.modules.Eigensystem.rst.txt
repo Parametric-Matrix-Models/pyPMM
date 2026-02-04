@@ -25,6 +25,10 @@
       
          ~Eigensystem.compile
       
+         ~Eigensystem.copy
+      
+         ~Eigensystem.deepcopy
+      
          ~Eigensystem.deserialize
       
          ~Eigensystem.get_hyperparameters
@@ -48,6 +52,8 @@
          ~Eigensystem.set_precision
       
          ~Eigensystem.set_state
+      
+         ~Eigensystem.upgrade
 
    .. autosummary::
 

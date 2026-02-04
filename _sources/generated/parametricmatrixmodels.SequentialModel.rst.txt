@@ -33,6 +33,10 @@
       
          ~SequentialModel.compile
       
+         ~SequentialModel.copy
+      
+         ~SequentialModel.deepcopy
+      
          ~SequentialModel.deserialize
       
          ~SequentialModel.from_file
@@ -94,6 +98,8 @@
          ~SequentialModel.set_state
       
          ~SequentialModel.train
+      
+         ~SequentialModel.upgrade
 
    .. autosummary::
 

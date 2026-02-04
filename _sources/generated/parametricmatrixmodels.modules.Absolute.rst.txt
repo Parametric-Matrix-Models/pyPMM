@@ -25,6 +25,10 @@
       
          ~Absolute.compile
       
+         ~Absolute.copy
+      
+         ~Absolute.deepcopy
+      
          ~Absolute.deserialize
       
          ~Absolute.func
@@ -50,6 +54,8 @@
          ~Absolute.set_precision
       
          ~Absolute.set_state
+      
+         ~Absolute.upgrade
 
    .. autosummary::
 

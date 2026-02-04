@@ -25,6 +25,10 @@
       
          ~TransitionAmplitudeSum.compile
       
+         ~TransitionAmplitudeSum.copy
+      
+         ~TransitionAmplitudeSum.deepcopy
+      
          ~TransitionAmplitudeSum.deserialize
       
          ~TransitionAmplitudeSum.get_hyperparameters
@@ -48,6 +52,8 @@
          ~TransitionAmplitudeSum.set_precision
       
          ~TransitionAmplitudeSum.set_state
+      
+         ~TransitionAmplitudeSum.upgrade
 
    .. autosummary::
 

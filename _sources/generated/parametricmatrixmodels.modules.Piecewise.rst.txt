@@ -25,6 +25,10 @@
       
          ~Piecewise.compile
       
+         ~Piecewise.copy
+      
+         ~Piecewise.deepcopy
+      
          ~Piecewise.deserialize
       
          ~Piecewise.func
@@ -50,6 +54,8 @@
          ~Piecewise.set_precision
       
          ~Piecewise.set_state
+      
+         ~Piecewise.upgrade
 
    .. autosummary::
 

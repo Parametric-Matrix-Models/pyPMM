@@ -25,6 +25,10 @@
       
          ~Softplus.compile
       
+         ~Softplus.copy
+      
+         ~Softplus.deepcopy
+      
          ~Softplus.deserialize
       
          ~Softplus.func
@@ -50,6 +54,8 @@
          ~Softplus.set_precision
       
          ~Softplus.set_state
+      
+         ~Softplus.upgrade
 
    .. autosummary::
 

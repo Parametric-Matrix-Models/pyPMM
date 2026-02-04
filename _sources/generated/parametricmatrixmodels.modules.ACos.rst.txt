@@ -25,6 +25,10 @@
       
          ~ACos.compile
       
+         ~ACos.copy
+      
+         ~ACos.deepcopy
+      
          ~ACos.deserialize
       
          ~ACos.func
@@ -50,6 +54,8 @@
          ~ACos.set_precision
       
          ~ACos.set_state
+      
+         ~ACos.upgrade
 
    .. autosummary::
 

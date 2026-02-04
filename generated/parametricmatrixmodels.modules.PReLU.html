@@ -598,6 +598,12 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
 <tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.PReLU.compile" title="parametricmatrixmodels.modules.PReLU.compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></a></p></td>
 <td><p>Compile the module to be used with the given input shape.</p></td>
 </tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.PReLU.copy" title="parametricmatrixmodels.modules.PReLU.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a></p></td>
+<td><p>Create a deep copy of the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.PReLU.deepcopy" title="parametricmatrixmodels.modules.PReLU.deepcopy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deepcopy</span></code></a></p></td>
+<td><p>Create a deep copy of the module.</p></td>
+</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.PReLU.deserialize" title="parametricmatrixmodels.modules.PReLU.deserialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deserialize</span></code></a></p></td>
 <td><p>Deserialize the module from a dictionary.</p></td>
 </tr>
@@ -633,6 +639,9 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.PReLU.set_state" title="parametricmatrixmodels.modules.PReLU.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a></p></td>
 <td><p>Set the state of the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.PReLU.upgrade" title="parametricmatrixmodels.modules.PReLU.upgrade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upgrade</span></code></a></p></td>
+<td><p>Upgrade serialized module data to the current version.</p></td>
 </tr>
 </tbody>
 </table>
@@ -851,8 +860,36 @@ dimensions except the leading batch dimension.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.PReLU.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.PReLU.copy" title="Link to this definition">#</a></dt>
+<dd><p>Create a deep copy of the module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>A deep copy of the module.</em></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.PReLU.deepcopy">
+<span class="sig-name descname"><span class="pre">deepcopy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.PReLU.deepcopy" title="Link to this definition">#</a></dt>
+<dd><p>Create a deep copy of the module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>A deep copy of the module.</em></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.PReLU.deserialize">
-<span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">override_strict_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.PReLU.deserialize" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict_package_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.PReLU.deserialize" title="Link to this definition">#</a></dt>
 <dd><p>Deserialize the module from a dictionary.</p>
 <p>This method sets the module’s parameters and state based on the
 provided dictionary.</p>
@@ -862,8 +899,9 @@ the module’s name, trainable parameters, and state.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>]</em>) – Dictionary containing the serialized module data.</p></li>
-<li><p><strong>override_strict_version</strong> – If True, overrides the strict version check when loading the
-model, changing the error into a warning. Default is False.</p></li>
+<li><p><strong>strict_package_version</strong> – If True, raises an error if the package version used to
+serialize the model does not match the current package version.
+Default is False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -1189,6 +1227,27 @@ state of the module.</p>
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.PReLU.upgrade">
+<span class="sig-name descname"><span class="pre">upgrade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.PReLU.upgrade" title="Link to this definition">#</a></dt>
+<dd><p>Upgrade serialized module data to the current version.</p>
+<p>This method can be overridden by subclasses to implement custom
+upgrade logic when the module’s serialization format changes between
+versions.</p>
+<p>The default implementation simply returns the input data unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>]</em>) – Dictionary containing the serialized module data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Upgraded dictionary containing the serialized module data.</em></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -1246,6 +1305,8 @@ state of the module.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.PReLU._get_callable"><code class="docutils literal notranslate"><span class="pre">_get_callable()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.PReLU.astype"><code class="docutils literal notranslate"><span class="pre">astype()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.PReLU.compile"><code class="docutils literal notranslate"><span class="pre">compile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.PReLU.copy"><code class="docutils literal notranslate"><span class="pre">copy()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.PReLU.deepcopy"><code class="docutils literal notranslate"><span class="pre">deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.PReLU.deserialize"><code class="docutils literal notranslate"><span class="pre">deserialize()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.PReLU.get_hyperparameters"><code class="docutils literal notranslate"><span class="pre">get_hyperparameters()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.PReLU.get_num_trainable_floats"><code class="docutils literal notranslate"><span class="pre">get_num_trainable_floats()</span></code></a></li>
@@ -1259,6 +1320,7 @@ state of the module.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.PReLU.set_params"><code class="docutils literal notranslate"><span class="pre">set_params()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.PReLU.set_precision"><code class="docutils literal notranslate"><span class="pre">set_precision()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.PReLU.set_state"><code class="docutils literal notranslate"><span class="pre">set_state()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.PReLU.upgrade"><code class="docutils literal notranslate"><span class="pre">upgrade()</span></code></a></li>
 </ul>
 </li>
 </ul>

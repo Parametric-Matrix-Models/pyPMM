@@ -33,6 +33,10 @@
       
          ~AffineObservablePMM.compile
       
+         ~AffineObservablePMM.copy
+      
+         ~AffineObservablePMM.deepcopy
+      
          ~AffineObservablePMM.deserialize
       
          ~AffineObservablePMM.from_file
@@ -94,6 +98,8 @@
          ~AffineObservablePMM.set_state
       
          ~AffineObservablePMM.train
+      
+         ~AffineObservablePMM.upgrade
 
    .. autosummary::
 

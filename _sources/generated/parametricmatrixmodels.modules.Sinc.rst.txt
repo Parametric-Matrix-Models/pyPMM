@@ -25,6 +25,10 @@
       
          ~Sinc.compile
       
+         ~Sinc.copy
+      
+         ~Sinc.deepcopy
+      
          ~Sinc.deserialize
       
          ~Sinc.func
@@ -50,6 +54,8 @@
          ~Sinc.set_precision
       
          ~Sinc.set_state
+      
+         ~Sinc.upgrade
 
    .. autosummary::
 

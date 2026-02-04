@@ -1308,6 +1308,19 @@
 <span class="sd">    cast to the specified data type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1"># Warn if dtype is real but any leaf is complex</span>
+    <span class="n">leaves</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="n">pytree</span><span class="p">)</span>
+    <span class="n">is_dtype_complex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">)</span>
+    <span class="n">complex_leaf</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">leaf</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">)</span> <span class="k">for</span> <span class="n">leaf</span> <span class="ow">in</span> <span class="n">leaves</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_dtype_complex</span> <span class="ow">and</span> <span class="n">complex_leaf</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;Casting complex arrays to a real dtype will discard the &quot;</span>
+            <span class="s2">&quot;imaginary part.&quot;</span><span class="p">,</span>
+            <span class="ne">RuntimeWarning</span><span class="p">,</span>
+        <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">dtype</span><span class="p">),</span> <span class="n">pytree</span><span class="p">)</span></div>
 
 
@@ -1323,6 +1336,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    obj</span>
 <span class="sd">        The object to check.</span>
+
+<span class="sd">    allow_none</span>
+<span class="sd">        If True, None is considered a valid shape leaf.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>

@@ -25,6 +25,10 @@
       
          ~Flatten.compile
       
+         ~Flatten.copy
+      
+         ~Flatten.deepcopy
+      
          ~Flatten.deserialize
       
          ~Flatten.get_hyperparameters
@@ -48,6 +52,8 @@
          ~Flatten.set_precision
       
          ~Flatten.set_state
+      
+         ~Flatten.upgrade
       
          ~Flatten.validate_and_concretify_shape
 

@@ -25,6 +25,10 @@
       
          ~LogSigmoid.compile
       
+         ~LogSigmoid.copy
+      
+         ~LogSigmoid.deepcopy
+      
          ~LogSigmoid.deserialize
       
          ~LogSigmoid.func
@@ -50,6 +54,8 @@
          ~LogSigmoid.set_precision
       
          ~LogSigmoid.set_state
+      
+         ~LogSigmoid.upgrade
 
    .. autosummary::
 

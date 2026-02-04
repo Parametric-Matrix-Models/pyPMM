@@ -25,6 +25,10 @@
       
          ~Reshape.compile
       
+         ~Reshape.copy
+      
+         ~Reshape.deepcopy
+      
          ~Reshape.deserialize
       
          ~Reshape.get_hyperparameters
@@ -48,6 +52,8 @@
          ~Reshape.set_precision
       
          ~Reshape.set_state
+      
+         ~Reshape.upgrade
       
          ~Reshape.validate_and_concretify_shape
 

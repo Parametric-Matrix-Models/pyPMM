@@ -25,6 +25,10 @@
       
          ~Comment.compile
       
+         ~Comment.copy
+      
+         ~Comment.deepcopy
+      
          ~Comment.deserialize
       
          ~Comment.get_hyperparameters
@@ -48,6 +52,8 @@
          ~Comment.set_precision
       
          ~Comment.set_state
+      
+         ~Comment.upgrade
 
    .. autosummary::
 

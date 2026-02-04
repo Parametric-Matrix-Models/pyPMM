@@ -25,6 +25,10 @@
       
          ~Cosh.compile
       
+         ~Cosh.copy
+      
+         ~Cosh.deepcopy
+      
          ~Cosh.deserialize
       
          ~Cosh.func
@@ -50,6 +54,8 @@
          ~Cosh.set_precision
       
          ~Cosh.set_state
+      
+         ~Cosh.upgrade
 
    .. autosummary::
 

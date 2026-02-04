@@ -25,6 +25,10 @@
       
          ~ASinh.compile
       
+         ~ASinh.copy
+      
+         ~ASinh.deepcopy
+      
          ~ASinh.deserialize
       
          ~ASinh.func
@@ -50,6 +54,8 @@
          ~ASinh.set_precision
       
          ~ASinh.set_state
+      
+         ~ASinh.upgrade
 
    .. autosummary::
 

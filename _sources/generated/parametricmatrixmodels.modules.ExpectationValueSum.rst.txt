@@ -25,6 +25,10 @@
       
          ~ExpectationValueSum.compile
       
+         ~ExpectationValueSum.copy
+      
+         ~ExpectationValueSum.deepcopy
+      
          ~ExpectationValueSum.deserialize
       
          ~ExpectationValueSum.get_hyperparameters
@@ -48,6 +52,8 @@
          ~ExpectationValueSum.set_precision
       
          ~ExpectationValueSum.set_state
+      
+         ~ExpectationValueSum.upgrade
 
    .. autosummary::
 

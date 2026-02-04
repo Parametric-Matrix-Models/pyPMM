@@ -1405,28 +1405,41 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span>
-            <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_samples ?*features&quot;</span><span class="p">],</span> <span class="s2">&quot; InStruct&quot;</span>
+            <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_samples feature0 ?*features&quot;</span><span class="p">],</span> <span class="s2">&quot; InStruct&quot;</span>
         <span class="p">],</span>  <span class="c1"># in features</span>
         <span class="o">/</span><span class="p">,</span>
         <span class="n">Y</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">PyTree</span><span class="p">[</span><span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_samples ?*targets&quot;</span><span class="p">],</span> <span class="s2">&quot; OutStruct&quot;</span><span class="p">]</span>
+            <span class="n">PyTree</span><span class="p">[</span>
+                <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_samples target0 ?*targets&quot;</span><span class="p">],</span> <span class="s2">&quot; OutStruct&quot;</span>
+            <span class="p">]</span>
             <span class="o">|</span> <span class="kc">None</span>
         <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># targets</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">Y_unc</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">PyTree</span><span class="p">[</span><span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_samples ?*targets&quot;</span><span class="p">],</span> <span class="s2">&quot; OutStruct&quot;</span><span class="p">]</span>
+            <span class="n">PyTree</span><span class="p">[</span>
+                <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_samples target0 ?*targets&quot;</span><span class="p">],</span> <span class="s2">&quot; OutStruct&quot;</span>
+            <span class="p">]</span>
             <span class="o">|</span> <span class="kc">None</span>
         <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># uncertainty in the targets, if applicable</span>
         <span class="n">X_val</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">PyTree</span><span class="p">[</span><span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_val_samples ?*features&quot;</span><span class="p">],</span> <span class="s2">&quot; InStruct&quot;</span><span class="p">]</span>
+            <span class="n">PyTree</span><span class="p">[</span>
+                <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_val_samples feature0 ?*features&quot;</span><span class="p">],</span>
+                <span class="s2">&quot; InStruct&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
             <span class="o">|</span> <span class="kc">None</span>
         <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># validation in features</span>
         <span class="n">Y_val</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">PyTree</span><span class="p">[</span><span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_val_samples ?*targets&quot;</span><span class="p">],</span> <span class="s2">&quot; OutStruct&quot;</span><span class="p">]</span>
+            <span class="n">PyTree</span><span class="p">[</span>
+                <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_val_samples target0 ?*targets&quot;</span><span class="p">],</span>
+                <span class="s2">&quot; OutStruct&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
             <span class="o">|</span> <span class="kc">None</span>
         <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># validation targets</span>
         <span class="n">Y_val_unc</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">PyTree</span><span class="p">[</span><span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_val_samples ?*targets&quot;</span><span class="p">],</span> <span class="s2">&quot; OutStruct&quot;</span><span class="p">]</span>
+            <span class="n">PyTree</span><span class="p">[</span>
+                <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_val_samples target0 ?*targets&quot;</span><span class="p">],</span>
+                <span class="s2">&quot; OutStruct&quot;</span><span class="p">,</span>
+            <span class="p">]</span>
             <span class="o">|</span> <span class="kc">None</span>
         <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># uncertainty in the validation targets, if applicable</span>
         <span class="n">loss_fn</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span> <span class="o">=</span> <span class="s2">&quot;mse&quot;</span><span class="p">,</span>
@@ -1924,6 +1937,7 @@
             <span class="s2">&quot;model_structure&quot;</span><span class="p">:</span> <span class="n">model_structure</span><span class="p">,</span>
             <span class="s2">&quot;key_data&quot;</span><span class="p">:</span> <span class="n">key_data</span><span class="p">,</span>
             <span class="s2">&quot;package_version&quot;</span><span class="p">:</span> <span class="n">pmm</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
+            <span class="s2">&quot;model_version&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
             <span class="s2">&quot;self_serialized&quot;</span><span class="p">:</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">serialize</span><span class="p">(),</span>
         <span class="p">}</span></div>
 
@@ -1931,7 +1945,7 @@
 <div class="viewcode-block" id="Model.deserialize">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.deserialize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">deserialize</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">override_strict_version</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">strict_package_version</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deserialize the model from a dictionary. This is done by deserializing</span>
@@ -1942,9 +1956,10 @@
 <span class="sd">            data</span>
 <span class="sd">                Dictionary containing the serialized model data.</span>
 
-<span class="sd">            override_strict_version</span>
-<span class="sd">                If True, overrides the strict version check when loading the</span>
-<span class="sd">                model, changing the error into a warning. Default is False.</span>
+<span class="sd">            strict_package_version</span>
+<span class="sd">                If True, raises an error if the package version used to</span>
+<span class="sd">                serialize the model does not match the current package version.</span>
+<span class="sd">                Default is False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
 
@@ -1953,23 +1968,19 @@
         <span class="n">package_version</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;package_version&quot;</span><span class="p">]))</span>
 
         <span class="k">if</span> <span class="n">current_version</span> <span class="o">!=</span> <span class="n">package_version</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">override_strict_version</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">strict_package_version</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="s2">&quot;Model was saved with package version &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">package_version</span><span class="si">}</span><span class="s2">, but current package version is &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_version</span><span class="si">}</span><span class="s2">. &quot;</span>
-                    <span class="s2">&quot;To override this error, set &quot;</span>
-                    <span class="s2">&quot;override_strict_version=True.&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_version</span><span class="si">}</span><span class="s2">.&quot;</span>
                 <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="s2">&quot;Model was saved with package version &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">package_version</span><span class="si">}</span><span class="s2">, but current package version is &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_version</span><span class="si">}</span><span class="s2">. &quot;</span>
-                    <span class="s2">&quot;Continuing deserialization due to &quot;</span>
-                    <span class="s2">&quot;override_strict_version=True.&quot;</span><span class="p">,</span>
-                    <span class="ne">UserWarning</span><span class="p">,</span>
-                <span class="p">)</span>
+
+        <span class="c1"># read the model version, and handle any backward compatibility here</span>
+        <span class="n">model_version</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;model_version&quot;</span><span class="p">]))</span>
+        <span class="n">current_model_version</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">model_version</span> <span class="o">!=</span> <span class="n">current_model_version</span><span class="p">:</span>
+            <span class="c1"># nothing to do yet</span>
+            <span class="k">pass</span>
 
         <span class="c1"># initialize the modules</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modules</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
@@ -1983,7 +1994,7 @@
         <span class="c1"># deserialize the modules</span>
         <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
             <span class="k">lambda</span> <span class="n">m</span><span class="p">,</span> <span class="n">sm</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span>
-                <span class="n">sm</span><span class="p">,</span> <span class="n">override_strict_version</span><span class="o">=</span><span class="n">override_strict_version</span>
+                <span class="n">sm</span><span class="p">,</span> <span class="n">strict_package_version</span><span class="o">=</span><span class="n">strict_package_version</span>
             <span class="p">),</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;serialized_modules&quot;</span><span class="p">],</span>
@@ -2001,7 +2012,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_rng</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;self_serialized&quot;</span><span class="p">],</span>
-            <span class="n">override_strict_version</span><span class="o">=</span><span class="n">override_strict_version</span><span class="p">,</span>
+            <span class="n">strict_package_version</span><span class="o">=</span><span class="n">strict_package_version</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
@@ -2051,7 +2062,7 @@
 <div class="viewcode-block" id="Model.load">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.load">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IO</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">override_strict_version</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IO</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">strict_package_version</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load the model from a file. Supports both compressed and uncompressed</span>
@@ -2061,9 +2072,10 @@
 <span class="sd">            file</span>
 <span class="sd">                File to load the model from.</span>
 
-<span class="sd">            override_strict_version</span>
-<span class="sd">                If True, overrides the strict version check when loading the</span>
-<span class="sd">                model, changing the error into a warning. Default is False.</span>
+<span class="sd">            strict_package_version</span>
+<span class="sd">                If True, raises an error if the package version used to</span>
+<span class="sd">                serialize the model does not match the current package version.</span>
+<span class="sd">                Default is False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">file</span> <span class="o">=</span> <span class="n">file</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.npz&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">file</span> <span class="o">+</span> <span class="s2">&quot;.npz&quot;</span>
@@ -2086,14 +2098,14 @@
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;self_serialized&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;self_serialized&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
         <span class="c1"># deserialize the model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">override_strict_version</span><span class="o">=</span><span class="n">override_strict_version</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">strict_package_version</span><span class="o">=</span><span class="n">strict_package_version</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Model.from_file">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.from_file">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IO</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">override_strict_version</span><span class="o">=</span><span class="kc">False</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IO</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">strict_package_version</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Model&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a model from a file and return an instance of the Model class.</span>
@@ -2103,9 +2115,10 @@
 <span class="sd">            file : str</span>
 <span class="sd">                File to load the model from.</span>
 
-<span class="sd">            override_strict_version</span>
-<span class="sd">                If True, overrides the strict version check when loading the</span>
-<span class="sd">                model, changing the error into a warning. Default is False.</span>
+<span class="sd">            strict_package_version</span>
+<span class="sd">                If True, raises an error if the package version used to</span>
+<span class="sd">                serialize the model does not match the current package version.</span>
+<span class="sd">                Default is False.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -2113,7 +2126,7 @@
 <span class="sd">                An instance of the Model class with the loaded parameters.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">model</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-        <span class="n">model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">override_strict_version</span><span class="o">=</span><span class="n">override_strict_version</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">strict_package_version</span><span class="o">=</span><span class="n">strict_package_version</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">model</span></div>
 </div>
 

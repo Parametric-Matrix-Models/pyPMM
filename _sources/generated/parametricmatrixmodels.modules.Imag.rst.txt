@@ -25,6 +25,10 @@
       
          ~Imag.compile
       
+         ~Imag.copy
+      
+         ~Imag.deepcopy
+      
          ~Imag.deserialize
       
          ~Imag.func
@@ -50,6 +54,8 @@
          ~Imag.set_precision
       
          ~Imag.set_state
+      
+         ~Imag.upgrade
 
    .. autosummary::
 

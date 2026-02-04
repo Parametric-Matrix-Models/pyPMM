@@ -25,6 +25,10 @@
       
          ~Abs.compile
       
+         ~Abs.copy
+      
+         ~Abs.deepcopy
+      
          ~Abs.deserialize
       
          ~Abs.func
@@ -50,6 +54,8 @@
          ~Abs.set_precision
       
          ~Abs.set_state
+      
+         ~Abs.upgrade
 
    .. autosummary::
 

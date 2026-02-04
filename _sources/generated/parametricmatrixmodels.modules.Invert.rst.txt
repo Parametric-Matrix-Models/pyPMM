@@ -25,6 +25,10 @@
       
          ~Invert.compile
       
+         ~Invert.copy
+      
+         ~Invert.deepcopy
+      
          ~Invert.deserialize
       
          ~Invert.func
@@ -50,6 +54,8 @@
          ~Invert.set_precision
       
          ~Invert.set_state
+      
+         ~Invert.upgrade
 
    .. autosummary::
 

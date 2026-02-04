@@ -25,6 +25,10 @@
       
          ~Mish.compile
       
+         ~Mish.copy
+      
+         ~Mish.deepcopy
+      
          ~Mish.deserialize
       
          ~Mish.func
@@ -50,6 +54,8 @@
          ~Mish.set_precision
       
          ~Mish.set_state
+      
+         ~Mish.upgrade
 
    .. autosummary::
 

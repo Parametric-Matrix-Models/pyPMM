@@ -25,6 +25,10 @@
       
          ~SparsePlus.compile
       
+         ~SparsePlus.copy
+      
+         ~SparsePlus.deepcopy
+      
          ~SparsePlus.deserialize
       
          ~SparsePlus.func
@@ -50,6 +54,8 @@
          ~SparsePlus.set_precision
       
          ~SparsePlus.set_state
+      
+         ~SparsePlus.upgrade
 
    .. autosummary::
 

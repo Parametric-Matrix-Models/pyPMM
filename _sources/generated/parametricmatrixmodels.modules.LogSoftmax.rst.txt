@@ -25,6 +25,10 @@
       
          ~LogSoftmax.compile
       
+         ~LogSoftmax.copy
+      
+         ~LogSoftmax.deepcopy
+      
          ~LogSoftmax.deserialize
       
          ~LogSoftmax.func
@@ -50,6 +54,8 @@
          ~LogSoftmax.set_precision
       
          ~LogSoftmax.set_state
+      
+         ~LogSoftmax.upgrade
 
    .. autosummary::
 

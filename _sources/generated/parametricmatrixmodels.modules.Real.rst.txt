@@ -25,6 +25,10 @@
       
          ~Real.compile
       
+         ~Real.copy
+      
+         ~Real.deepcopy
+      
          ~Real.deserialize
       
          ~Real.func
@@ -50,6 +54,8 @@
          ~Real.set_precision
       
          ~Real.set_state
+      
+         ~Real.upgrade
 
    .. autosummary::
 

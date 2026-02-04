@@ -25,6 +25,10 @@
       
          ~Trunc.compile
       
+         ~Trunc.copy
+      
+         ~Trunc.deepcopy
+      
          ~Trunc.deserialize
       
          ~Trunc.func
@@ -50,6 +54,8 @@
          ~Trunc.set_precision
       
          ~Trunc.set_state
+      
+         ~Trunc.upgrade
 
    .. autosummary::
 

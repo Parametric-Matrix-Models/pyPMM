@@ -33,6 +33,10 @@
       
          ~AEPMM.compile
       
+         ~AEPMM.copy
+      
+         ~AEPMM.deepcopy
+      
          ~AEPMM.deserialize
       
          ~AEPMM.from_file
@@ -94,6 +98,8 @@
          ~AEPMM.set_state
       
          ~AEPMM.train
+      
+         ~AEPMM.upgrade
 
    .. autosummary::
 

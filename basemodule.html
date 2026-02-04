@@ -529,6 +529,55 @@
 <p>Base class for all Modules. Custom modules should inherit from this class.</p>
 <dl class="field-list simple">
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.BaseModule.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/parametricmatrixmodels/modules/basemodule.html#BaseModule.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.BaseModule.copy" title="Link to this definition">#</a></dt>
+<dd><p>Create a deep copy of the module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>A deep copy of the module.</em></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.BaseModule.deepcopy">
+<span class="sig-name descname"><span class="pre">deepcopy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.BaseModule.deepcopy" title="Link to this definition">#</a></dt>
+<dd><p>Create a deep copy of the module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>A deep copy of the module.</em></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.BaseModule.upgrade">
+<span class="sig-name descname"><span class="pre">upgrade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/parametricmatrixmodels/modules/basemodule.html#BaseModule.upgrade"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.BaseModule.upgrade" title="Link to this definition">#</a></dt>
+<dd><p>Upgrade serialized module data to the current version.</p>
+<p>This method can be overridden by subclasses to implement custom
+upgrade logic when the module’s serialization format changes between
+versions.</p>
+<p>The default implementation simply returns the input data unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>]</em>) – Dictionary containing the serialized module data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Upgraded dictionary containing the serialized module data.</em></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <section id="methods-that-must-be-overridden-by-subclasses">
@@ -1153,7 +1202,7 @@ This includes basic types as well as numpy arrays.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.BaseModule.deserialize">
-<span class="sig-prename descclassname"><span class="pre">BaseModule.</span></span><span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">override_strict_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/parametricmatrixmodels/modules/basemodule.html#BaseModule.deserialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.BaseModule.deserialize" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">BaseModule.</span></span><span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict_package_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/parametricmatrixmodels/modules/basemodule.html#BaseModule.deserialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.BaseModule.deserialize" title="Link to this definition">#</a></dt>
 <dd><p>Deserialize the module from a dictionary.</p>
 <p>This method sets the module’s parameters and state based on the
 provided dictionary.</p>
@@ -1163,8 +1212,9 @@ the module’s name, trainable parameters, and state.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>]</em>) – Dictionary containing the serialized module data.</p></li>
-<li><p><strong>override_strict_version</strong> – If True, overrides the strict version check when loading the
-model, changing the error into a warning. Default is False.</p></li>
+<li><p><strong>strict_package_version</strong> – If True, raises an error if the package version used to
+serialize the model does not match the current package version.
+Default is False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -1228,7 +1278,12 @@ model, changing the error into a warning. Default is False.</p></li>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.BaseModule"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.BaseModule"><code class="docutils literal notranslate"><span class="pre">BaseModule</span></code></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.BaseModule.copy"><code class="docutils literal notranslate"><span class="pre">copy()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.BaseModule.deepcopy"><code class="docutils literal notranslate"><span class="pre">deepcopy()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.BaseModule.upgrade"><code class="docutils literal notranslate"><span class="pre">upgrade()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#methods-that-must-be-overridden-by-subclasses">Methods that must be overridden by subclasses</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.BaseModule.__init__"><code class="docutils literal notranslate"><span class="pre">__init__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.BaseModule.is_ready"><code class="docutils literal notranslate"><span class="pre">is_ready()</span></code></a></li>

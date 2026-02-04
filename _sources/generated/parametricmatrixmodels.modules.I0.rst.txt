@@ -25,6 +25,10 @@
       
          ~I0.compile
       
+         ~I0.copy
+      
+         ~I0.deepcopy
+      
          ~I0.deserialize
       
          ~I0.func
@@ -50,6 +54,8 @@
          ~I0.set_precision
       
          ~I0.set_state
+      
+         ~I0.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~ArcSin.compile
       
+         ~ArcSin.copy
+      
+         ~ArcSin.deepcopy
+      
          ~ArcSin.deserialize
       
          ~ArcSin.func
@@ -50,6 +54,8 @@
          ~ArcSin.set_precision
       
          ~ArcSin.set_state
+      
+         ~ArcSin.upgrade
 
    .. autosummary::
 

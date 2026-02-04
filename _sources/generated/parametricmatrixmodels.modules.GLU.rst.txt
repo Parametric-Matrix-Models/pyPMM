@@ -25,6 +25,10 @@
       
          ~GLU.compile
       
+         ~GLU.copy
+      
+         ~GLU.deepcopy
+      
          ~GLU.deserialize
       
          ~GLU.func
@@ -50,6 +54,8 @@
          ~GLU.set_precision
       
          ~GLU.set_state
+      
+         ~GLU.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~ArcSinh.compile
       
+         ~ArcSinh.copy
+      
+         ~ArcSinh.deepcopy
+      
          ~ArcSinh.deserialize
       
          ~ArcSinh.func
@@ -50,6 +54,8 @@
          ~ArcSinh.set_precision
       
          ~ArcSinh.set_state
+      
+         ~ArcSinh.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~Standardize.compile
       
+         ~Standardize.copy
+      
+         ~Standardize.deepcopy
+      
          ~Standardize.deserialize
       
          ~Standardize.func
@@ -50,6 +54,8 @@
          ~Standardize.set_precision
       
          ~Standardize.set_state
+      
+         ~Standardize.upgrade
 
    .. autosummary::
 

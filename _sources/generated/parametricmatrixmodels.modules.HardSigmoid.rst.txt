@@ -25,6 +25,10 @@
       
          ~HardSigmoid.compile
       
+         ~HardSigmoid.copy
+      
+         ~HardSigmoid.deepcopy
+      
          ~HardSigmoid.deserialize
       
          ~HardSigmoid.func
@@ -50,6 +54,8 @@
          ~HardSigmoid.set_precision
       
          ~HardSigmoid.set_state
+      
+         ~HardSigmoid.upgrade
 
    .. autosummary::
 

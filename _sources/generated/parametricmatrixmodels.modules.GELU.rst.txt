@@ -25,6 +25,10 @@
       
          ~GELU.compile
       
+         ~GELU.copy
+      
+         ~GELU.deepcopy
+      
          ~GELU.deserialize
       
          ~GELU.func
@@ -50,6 +54,8 @@
          ~GELU.set_precision
       
          ~GELU.set_state
+      
+         ~GELU.upgrade
 
    .. autosummary::
 

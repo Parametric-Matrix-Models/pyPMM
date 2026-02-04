@@ -25,6 +25,10 @@
       
          ~RInt.compile
       
+         ~RInt.copy
+      
+         ~RInt.deepcopy
+      
          ~RInt.deserialize
       
          ~RInt.func
@@ -50,6 +54,8 @@
          ~RInt.set_precision
       
          ~RInt.set_state
+      
+         ~RInt.upgrade
 
    .. autosummary::
 

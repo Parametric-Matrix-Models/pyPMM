@@ -25,6 +25,10 @@
       
          ~LogSumExp.compile
       
+         ~LogSumExp.copy
+      
+         ~LogSumExp.deepcopy
+      
          ~LogSumExp.deserialize
       
          ~LogSumExp.func
@@ -50,6 +54,8 @@
          ~LogSumExp.set_precision
       
          ~LogSumExp.set_state
+      
+         ~LogSumExp.upgrade
 
    .. autosummary::
 

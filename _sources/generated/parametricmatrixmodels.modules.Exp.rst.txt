@@ -25,6 +25,10 @@
       
          ~Exp.compile
       
+         ~Exp.copy
+      
+         ~Exp.deepcopy
+      
          ~Exp.deserialize
       
          ~Exp.func
@@ -50,6 +54,8 @@
          ~Exp.set_precision
       
          ~Exp.set_state
+      
+         ~Exp.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~ReLU6.compile
       
+         ~ReLU6.copy
+      
+         ~ReLU6.deepcopy
+      
          ~ReLU6.deserialize
       
          ~ReLU6.func
@@ -50,6 +54,8 @@
          ~ReLU6.set_precision
       
          ~ReLU6.set_state
+      
+         ~ReLU6.upgrade
 
    .. autosummary::
 

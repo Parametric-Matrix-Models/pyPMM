@@ -25,6 +25,10 @@
       
          ~Bias.compile
       
+         ~Bias.copy
+      
+         ~Bias.deepcopy
+      
          ~Bias.deserialize
       
          ~Bias.get_hyperparameters
@@ -48,6 +52,8 @@
          ~Bias.set_precision
       
          ~Bias.set_state
+      
+         ~Bias.upgrade
 
    .. autosummary::
 

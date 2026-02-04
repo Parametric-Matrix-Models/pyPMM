@@ -25,6 +25,10 @@
       
          ~Power.compile
       
+         ~Power.copy
+      
+         ~Power.deepcopy
+      
          ~Power.deserialize
       
          ~Power.func
@@ -50,6 +54,8 @@
          ~Power.set_precision
       
          ~Power.set_state
+      
+         ~Power.upgrade
 
    .. autosummary::
 

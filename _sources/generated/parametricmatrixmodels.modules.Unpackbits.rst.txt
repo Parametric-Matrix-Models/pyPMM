@@ -25,6 +25,10 @@
       
          ~Unpackbits.compile
       
+         ~Unpackbits.copy
+      
+         ~Unpackbits.deepcopy
+      
          ~Unpackbits.deserialize
       
          ~Unpackbits.func
@@ -50,6 +54,8 @@
          ~Unpackbits.set_precision
       
          ~Unpackbits.set_state
+      
+         ~Unpackbits.upgrade
 
    .. autosummary::
 

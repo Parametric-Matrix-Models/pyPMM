@@ -25,6 +25,10 @@
       
          ~Radians.compile
       
+         ~Radians.copy
+      
+         ~Radians.deepcopy
+      
          ~Radians.deserialize
       
          ~Radians.func
@@ -50,6 +54,8 @@
          ~Radians.set_precision
       
          ~Radians.set_state
+      
+         ~Radians.upgrade
 
    .. autosummary::
 

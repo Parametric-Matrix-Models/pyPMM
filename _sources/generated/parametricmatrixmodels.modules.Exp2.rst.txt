@@ -25,6 +25,10 @@
       
          ~Exp2.compile
       
+         ~Exp2.copy
+      
+         ~Exp2.deepcopy
+      
          ~Exp2.deserialize
       
          ~Exp2.func
@@ -50,6 +54,8 @@
          ~Exp2.set_precision
       
          ~Exp2.set_state
+      
+         ~Exp2.upgrade
 
    .. autosummary::
 

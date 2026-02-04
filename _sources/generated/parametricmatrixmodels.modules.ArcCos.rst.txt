@@ -25,6 +25,10 @@
       
          ~ArcCos.compile
       
+         ~ArcCos.copy
+      
+         ~ArcCos.deepcopy
+      
          ~ArcCos.deserialize
       
          ~ArcCos.func
@@ -50,6 +54,8 @@
          ~ArcCos.set_precision
       
          ~ArcCos.set_state
+      
+         ~ArcCos.upgrade
 
    .. autosummary::
 

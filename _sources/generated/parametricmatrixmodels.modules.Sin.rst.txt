@@ -25,6 +25,10 @@
       
          ~Sin.compile
       
+         ~Sin.copy
+      
+         ~Sin.deepcopy
+      
          ~Sin.deserialize
       
          ~Sin.func
@@ -50,6 +54,8 @@
          ~Sin.set_precision
       
          ~Sin.set_state
+      
+         ~Sin.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~LeakyReLU.compile
       
+         ~LeakyReLU.copy
+      
+         ~LeakyReLU.deepcopy
+      
          ~LeakyReLU.deserialize
       
          ~LeakyReLU.func
@@ -50,6 +54,8 @@
          ~LeakyReLU.set_precision
       
          ~LeakyReLU.set_state
+      
+         ~LeakyReLU.upgrade
 
    .. autosummary::
 

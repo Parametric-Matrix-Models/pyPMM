@@ -33,6 +33,10 @@
       
          ~Model.compile
       
+         ~Model.copy
+      
+         ~Model.deepcopy
+      
          ~Model.deserialize
       
          ~Model.from_file
@@ -94,6 +98,8 @@
          ~Model.set_state
       
          ~Model.train
+      
+         ~Model.upgrade
 
    .. autosummary::
 

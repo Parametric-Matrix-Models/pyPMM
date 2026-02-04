@@ -25,6 +25,10 @@
       
          ~Identity.compile
       
+         ~Identity.copy
+      
+         ~Identity.deepcopy
+      
          ~Identity.deserialize
       
          ~Identity.func
@@ -50,6 +54,8 @@
          ~Identity.set_precision
       
          ~Identity.set_state
+      
+         ~Identity.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~Tanh.compile
       
+         ~Tanh.copy
+      
+         ~Tanh.deepcopy
+      
          ~Tanh.deserialize
       
          ~Tanh.func
@@ -50,6 +54,8 @@
          ~Tanh.set_precision
       
          ~Tanh.set_state
+      
+         ~Tanh.upgrade
 
    .. autosummary::
 

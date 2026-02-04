@@ -25,6 +25,10 @@
       
          ~Log2.compile
       
+         ~Log2.copy
+      
+         ~Log2.deepcopy
+      
          ~Log2.deserialize
       
          ~Log2.func
@@ -50,6 +54,8 @@
          ~Log2.set_precision
       
          ~Log2.set_state
+      
+         ~Log2.upgrade
 
    .. autosummary::
 

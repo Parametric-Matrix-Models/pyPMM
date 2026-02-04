@@ -25,6 +25,10 @@
       
          ~ArcTan.compile
       
+         ~ArcTan.copy
+      
+         ~ArcTan.deepcopy
+      
          ~ArcTan.deserialize
       
          ~ArcTan.func
@@ -50,6 +54,8 @@
          ~ArcTan.set_precision
       
          ~ArcTan.set_state
+      
+         ~ArcTan.upgrade
 
    .. autosummary::
 

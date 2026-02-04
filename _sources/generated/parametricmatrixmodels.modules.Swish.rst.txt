@@ -25,6 +25,10 @@
       
          ~Swish.compile
       
+         ~Swish.copy
+      
+         ~Swish.deepcopy
+      
          ~Swish.deserialize
       
          ~Swish.func
@@ -50,6 +54,8 @@
          ~Swish.set_precision
       
          ~Swish.set_state
+      
+         ~Swish.upgrade
 
    .. autosummary::
 

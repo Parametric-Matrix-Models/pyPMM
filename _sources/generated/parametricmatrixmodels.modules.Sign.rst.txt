@@ -25,6 +25,10 @@
       
          ~Sign.compile
       
+         ~Sign.copy
+      
+         ~Sign.deepcopy
+      
          ~Sign.deserialize
       
          ~Sign.func
@@ -50,6 +54,8 @@
          ~Sign.set_precision
       
          ~Sign.set_state
+      
+         ~Sign.upgrade
 
    .. autosummary::
 

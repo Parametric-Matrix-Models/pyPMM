@@ -25,6 +25,10 @@
       
          ~ACosh.compile
       
+         ~ACosh.copy
+      
+         ~ACosh.deepcopy
+      
          ~ACosh.deserialize
       
          ~ACosh.func
@@ -50,6 +54,8 @@
          ~ACosh.set_precision
       
          ~ACosh.set_state
+      
+         ~ACosh.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~FuncBase.compile
       
+         ~FuncBase.copy
+      
+         ~FuncBase.deepcopy
+      
          ~FuncBase.deserialize
       
          ~FuncBase.f
@@ -50,6 +54,8 @@
          ~FuncBase.set_precision
       
          ~FuncBase.set_state
+      
+         ~FuncBase.upgrade
 
    .. autosummary::
 

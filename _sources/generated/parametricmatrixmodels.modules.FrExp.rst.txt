@@ -25,6 +25,10 @@
       
          ~FrExp.compile
       
+         ~FrExp.copy
+      
+         ~FrExp.deepcopy
+      
          ~FrExp.deserialize
       
          ~FrExp.func
@@ -50,6 +54,8 @@
          ~FrExp.set_precision
       
          ~FrExp.set_state
+      
+         ~FrExp.upgrade
 
    .. autosummary::
 

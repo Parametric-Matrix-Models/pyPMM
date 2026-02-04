@@ -25,6 +25,10 @@
       
          ~Positive.compile
       
+         ~Positive.copy
+      
+         ~Positive.deepcopy
+      
          ~Positive.deserialize
       
          ~Positive.func
@@ -50,6 +54,8 @@
          ~Positive.set_precision
       
          ~Positive.set_state
+      
+         ~Positive.upgrade
 
    .. autosummary::
 

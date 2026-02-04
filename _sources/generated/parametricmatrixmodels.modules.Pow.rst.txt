@@ -25,6 +25,10 @@
       
          ~Pow.compile
       
+         ~Pow.copy
+      
+         ~Pow.deepcopy
+      
          ~Pow.deserialize
       
          ~Pow.func
@@ -50,6 +54,8 @@
          ~Pow.set_precision
       
          ~Pow.set_state
+      
+         ~Pow.upgrade
 
    .. autosummary::
 

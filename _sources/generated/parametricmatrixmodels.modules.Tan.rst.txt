@@ -25,6 +25,10 @@
       
          ~Tan.compile
       
+         ~Tan.copy
+      
+         ~Tan.deepcopy
+      
          ~Tan.deserialize
       
          ~Tan.func
@@ -50,6 +54,8 @@
          ~Tan.set_precision
       
          ~Tan.set_state
+      
+         ~Tan.upgrade
 
    .. autosummary::
 

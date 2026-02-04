@@ -25,6 +25,10 @@
       
          ~NextAfter.compile
       
+         ~NextAfter.copy
+      
+         ~NextAfter.deepcopy
+      
          ~NextAfter.deserialize
       
          ~NextAfter.func
@@ -50,6 +54,8 @@
          ~NextAfter.set_precision
       
          ~NextAfter.set_state
+      
+         ~NextAfter.upgrade
 
    .. autosummary::
 

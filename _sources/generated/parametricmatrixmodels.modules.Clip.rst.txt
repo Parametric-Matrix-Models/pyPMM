@@ -25,6 +25,10 @@
       
          ~Clip.compile
       
+         ~Clip.copy
+      
+         ~Clip.deepcopy
+      
          ~Clip.deserialize
       
          ~Clip.func
@@ -50,6 +54,8 @@
          ~Clip.set_precision
       
          ~Clip.set_state
+      
+         ~Clip.upgrade
 
    .. autosummary::
 

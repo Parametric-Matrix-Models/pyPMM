@@ -33,6 +33,10 @@
       
          ~NonSequentialModel.compile
       
+         ~NonSequentialModel.copy
+      
+         ~NonSequentialModel.deepcopy
+      
          ~NonSequentialModel.deserialize
       
          ~NonSequentialModel.from_file
@@ -96,6 +100,8 @@
          ~NonSequentialModel.set_state
       
          ~NonSequentialModel.train
+      
+         ~NonSequentialModel.upgrade
 
    .. autosummary::
 

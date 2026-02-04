@@ -25,6 +25,10 @@
       
          ~TreeKey.compile
       
+         ~TreeKey.copy
+      
+         ~TreeKey.deepcopy
+      
          ~TreeKey.deserialize
       
          ~TreeKey.get_hyperparameters
@@ -48,6 +52,8 @@
          ~TreeKey.set_precision
       
          ~TreeKey.set_state
+      
+         ~TreeKey.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~Fix.compile
       
+         ~Fix.copy
+      
+         ~Fix.deepcopy
+      
          ~Fix.deserialize
       
          ~Fix.func
@@ -50,6 +54,8 @@
          ~Fix.set_precision
       
          ~Fix.set_state
+      
+         ~Fix.upgrade
 
    .. autosummary::
 

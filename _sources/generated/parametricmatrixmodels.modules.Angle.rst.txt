@@ -25,6 +25,10 @@
       
          ~Angle.compile
       
+         ~Angle.copy
+      
+         ~Angle.deepcopy
+      
          ~Angle.deserialize
       
          ~Angle.func
@@ -50,6 +54,8 @@
          ~Angle.set_precision
       
          ~Angle.set_state
+      
+         ~Angle.upgrade
 
    .. autosummary::
 

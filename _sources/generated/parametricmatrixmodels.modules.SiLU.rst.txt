@@ -25,6 +25,10 @@
       
          ~SiLU.compile
       
+         ~SiLU.copy
+      
+         ~SiLU.deepcopy
+      
          ~SiLU.deserialize
       
          ~SiLU.func
@@ -50,6 +54,8 @@
          ~SiLU.set_precision
       
          ~SiLU.set_state
+      
+         ~SiLU.upgrade
 
    .. autosummary::
 

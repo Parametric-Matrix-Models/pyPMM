@@ -25,6 +25,10 @@
       
          ~HardTanh.compile
       
+         ~HardTanh.copy
+      
+         ~HardTanh.deepcopy
+      
          ~HardTanh.deserialize
       
          ~HardTanh.func
@@ -50,6 +54,8 @@
          ~HardTanh.set_precision
       
          ~HardTanh.set_state
+      
+         ~HardTanh.upgrade
 
    .. autosummary::
 

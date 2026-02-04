@@ -25,6 +25,10 @@
       
          ~FloatPower.compile
       
+         ~FloatPower.copy
+      
+         ~FloatPower.deepcopy
+      
          ~FloatPower.deserialize
       
          ~FloatPower.func
@@ -50,6 +54,8 @@
          ~FloatPower.set_precision
       
          ~FloatPower.set_state
+      
+         ~FloatPower.upgrade
 
    .. autosummary::
 

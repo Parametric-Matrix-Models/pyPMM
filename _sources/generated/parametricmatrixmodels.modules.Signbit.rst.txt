@@ -25,6 +25,10 @@
       
          ~Signbit.compile
       
+         ~Signbit.copy
+      
+         ~Signbit.deepcopy
+      
          ~Signbit.deserialize
       
          ~Signbit.func
@@ -50,6 +54,8 @@
          ~Signbit.set_precision
       
          ~Signbit.set_state
+      
+         ~Signbit.upgrade
 
    .. autosummary::
 

@@ -25,6 +25,10 @@
       
          ~ConcatenateLeaves.compile
       
+         ~ConcatenateLeaves.copy
+      
+         ~ConcatenateLeaves.deepcopy
+      
          ~ConcatenateLeaves.deserialize
       
          ~ConcatenateLeaves.get_hyperparameters
@@ -48,6 +52,8 @@
          ~ConcatenateLeaves.set_precision
       
          ~ConcatenateLeaves.set_state
+      
+         ~ConcatenateLeaves.upgrade
 
    .. autosummary::
 
