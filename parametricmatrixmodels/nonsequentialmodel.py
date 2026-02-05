@@ -270,6 +270,25 @@ class NonSequentialModel(Model):
         self.execution_order: List[str] = None
         self.separator = separator
 
+    def __repr__(self) -> str:
+        modules_repr = super().__repr__()
+
+        # add the connections if present in the format
+        # A -> B
+        if self.connections is None or len(self.connections) == 0:
+            connections_repr = "No connections defined."
+            return f"{modules_repr}\nConnections:\n{connections_repr}"
+
+        connections_lines = []
+        for out_path, in_paths in self.connections.items():
+            if isinstance(in_paths, (list, tuple)):
+                for in_path in in_paths:
+                    connections_lines.append(f"{out_path} -> {in_path}")
+            else:
+                connections_lines.append(f"{out_path} -> {in_paths}")
+        connections_repr = "\n".join(connections_lines)
+        return f"{modules_repr}\nConnections:\n{connections_repr}"
+
     def get_execution_order(self) -> List[str]:
         r"""
         Resolve the connections dictionary to find the execution order of
