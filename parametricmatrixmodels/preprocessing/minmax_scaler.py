@@ -26,20 +26,23 @@ class MinMaxScaler(Scaler):
         feature_range: (
             Real[Array, "2"]
             | Tuple[
-                float
+                None
+                | float
                 | int
                 | BatchlessRealDataFixed
-                | PyTree[float | int, "RealDataFixed"],
+                | PyTree[None | float | int, "RealDataFixed"],
                 float
+                | None
                 | int
                 | BatchlessRealDataFixed
-                | PyTree[float | int, "RealDataFixed"],
+                | PyTree[None | float | int, "RealDataFixed"],
             ]
             | List[
                 float
+                | None
                 | int
                 | BatchlessRealDataFixed
-                | PyTree[float | int, "RealDataFixed"]
+                | PyTree[None | float | int, "RealDataFixed"]
             ]
         ) = (0.0, 1.0),
     ):
@@ -52,7 +55,10 @@ class MinMaxScaler(Scaler):
                 A tuple specifying the desired range of transformed data. Can
                 be a tuple of floats or a tuple of arrays. If arrays are
                 provided, they must match the PyTree structure and shapes of
-                the input data, excluding the leading batch dimension.
+                the input data, excluding the leading batch dimension. Entries
+                of None denote that the corresponding feature should not be
+                scaled. If None appears in either the lower or upper bound,
+                both will be treated as None for that feature.
                 Default is (0.0, 1.0).
         """
         self.min_val, self.max_val = feature_range
@@ -114,8 +120,12 @@ class MinMaxScaler(Scaler):
 
         return jax.tree.map(
             lambda x, data_min, data_max, min_v, max_v: (
-                (x - data_min) / (data_max - data_min) * (max_v - min_v)
-                + min_v
+                (
+                    (x - data_min) / (data_max - data_min) * (max_v - min_v)
+                    + min_v
+                )
+                if (min_v is not None and max_v is not None)
+                else x
             ),
             X,
             self.data_min_,
@@ -158,8 +168,14 @@ class MinMaxScaler(Scaler):
 
         return jax.tree.map(
             lambda x_scaled, data_min, data_max, min_v, max_v: (
-                (x_scaled - min_v) / (max_v - min_v) * (data_max - data_min)
-                + data_min
+                (
+                    (x_scaled - min_v)
+                    / (max_v - min_v)
+                    * (data_max - data_min)
+                    + data_min
+                )
+                if (min_v is not None and max_v is not None)
+                else x_scaled
             ),
             X_scaled,
             self.data_min_,
