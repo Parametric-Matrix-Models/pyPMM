@@ -346,7 +346,6 @@ class NonSequentialModel(Model):
         -------
             True if the model is compiled and ready, False otherwise.
         """
-
         # if the execution order is not set, the model is not ready
         if self.execution_order is None:
             return False
@@ -943,14 +942,22 @@ class NonSequentialModel(Model):
 
     def get_hyperparameters(self) -> HyperParams:
         return {
+            "execution_order": self.execution_order,
             "connections": self.connections,
             "separator": self.separator,
+            "input_shape": self.input_shape,
+            "output_shape": self.output_shape,
             **super().get_hyperparameters(),
         }
 
     def set_hyperparameters(self, hyperparams: HyperParams, /) -> None:
+        self.execution_order = hyperparams.get(
+            "execution_order", self.execution_order
+        )
         self.connections = hyperparams.get("connections", self.connections)
         self.separator = hyperparams.get("separator", self.separator)
+        self.input_shape = hyperparams.get("input_shape", self.input_shape)
+        self.output_shape = hyperparams.get("output_shape", self.output_shape)
 
         super().set_hyperparameters(hyperparams)
 

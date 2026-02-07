@@ -137,6 +137,31 @@ class Model(BaseModule):
             and self.output_shape is not None
         )
 
+    def _get_all_unready_modules(self) -> List[BaseModule]:
+        return [
+            module
+            for module in jax.tree.leaves(self.modules)
+            if not module.is_ready()
+        ]
+
+    def _get_unready_reason(self) -> str:
+        if len(jax.tree.leaves(self.modules)) == 0:
+            return "No modules in the model."
+        unready_modules = self._get_all_unready_modules()
+        if len(unready_modules) > 0:
+            return f"Unready modules: {unready_modules}."
+        if self.input_shape is None:
+            return (
+                "Model input shape is not set. Call compile() with an input"
+                " shape to set it."
+            )
+        if self.output_shape is None:
+            return (
+                "Model output shape is not set. Call compile() with an input"
+                " shape to set it."
+            )
+        return "Unknown reason."
+
     def reset(self) -> None:
         self.input_shape: DataShape | None = None
         self.output_shape: DataShape | None = None
@@ -431,8 +456,10 @@ class Model(BaseModule):
 
     def _verify_input(self, X: Data) -> None:
         if not self.is_ready():
+            unready_reason = self._get_unready_reason()
             raise RuntimeError(
                 f"{self.name} is not ready. Call compile() first."
+                f"\nReason: {unready_reason}"
             )
         # assert that the model was compiled for this input shape
         if not tree_util.all_equal(
@@ -502,8 +529,10 @@ class Model(BaseModule):
                 of which matches that of the model's modules.
         """
         if not self.is_ready():
+            unready_reason = self._get_unready_reason()
             raise RuntimeError(
                 f"{self.name} is not ready. Call compile() first."
+                f"\nReason: {unready_reason}"
             )
 
         # assert that the model was compiled for this input shape
@@ -596,8 +625,10 @@ class Model(BaseModule):
         """
 
         if not self.is_ready():
+            unready_reason = self._get_unready_reason()
             raise RuntimeError(
                 f"{self.name} is not ready. Call compile() first."
+                f"\nReason: {unready_reason}"
             )
         self._verify_input(X)
         if self.callable is None:
@@ -829,8 +860,10 @@ class Model(BaseModule):
         """
 
         if not self.is_ready():
+            unready_reason = self._get_unready_reason()
             raise RuntimeError(
                 f"{self.name} is not ready. Call compile() first."
+                f"\nReason: {unready_reason}"
             )
         self._verify_input(X)
         if self.callable is None:
@@ -915,8 +948,10 @@ class Model(BaseModule):
                 - "double", "f64", "c128", 64
         """
         if not self.is_ready():
+            unready_reason = self._get_unready_reason()
             raise RuntimeError(
                 f"{self.name} is not ready. Call compile() first."
+                f"\nReason: {unready_reason}"
             )
 
         # convert precision to 32 or 64
@@ -1425,6 +1460,8 @@ class Model(BaseModule):
         return {
             "modules": self.modules,
             "rng": self.rng,
+            "input_shape": self.input_shape,
+            "output_shape": self.output_shape,
         }
 
     def set_hyperparameters(self, hyperparams: HyperParams, /) -> None:
@@ -1437,11 +1474,10 @@ class Model(BaseModule):
                 Dictionary containing the hyperparameters of the model.
         """
         # reset input_shape and output_shape to force re-compilation
-        self.input_shape = None
-        self.output_shape = None
-
         self.modules = hyperparams["modules"]
         self.set_rng(hyperparams["rng"])
+        self.input_shape = hyperparams["input_shape"]
+        self.output_shape = hyperparams["output_shape"]
         super().set_hyperparameters(hyperparams)
 
     def serialize(self) -> Dict[str, Any]:
