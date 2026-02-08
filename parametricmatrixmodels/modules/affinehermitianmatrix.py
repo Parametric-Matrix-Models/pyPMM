@@ -35,9 +35,8 @@ class AffineHermitianMatrix(BaseModule):
 
     .. math::
 
-        C &= i\sum_{\substack{i,j\\i\neq j}} \left[M_i, M_j\right] \\
-          &= i\sum_{\substack{i\\i\neq j}}
-             \left[M_i, \sum_k^j M_k\right]
+        C &= i\sum_{\substack{i,j\\i > j}} \left[M_i, M_j\right] \\
+          &= i\sum_{i>1} \left[M_i, \sum_{j<i} M_j\right]
 
     Only accepts PyTree data that has a single leaf array that is 1D, excluding
     the batch dimension. The PyTree structure is preserved in the output.
