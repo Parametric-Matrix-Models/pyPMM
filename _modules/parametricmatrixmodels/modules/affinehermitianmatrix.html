@@ -405,9 +405,8 @@
 
 <span class="sd">    .. math::</span>
 
-<span class="sd">        C &amp;= i\sum_{\substack{i,j\\i\neq j}} \left[M_i, M_j\right] \\</span>
-<span class="sd">          &amp;= i\sum_{\substack{i\\i\neq j}}</span>
-<span class="sd">             \left[M_i, \sum_k^j M_k\right]</span>
+<span class="sd">        C &amp;= i\sum_{\substack{i,j\\i &gt; j}} \left[M_i, M_j\right] \\</span>
+<span class="sd">          &amp;= i\sum_{i&gt;1} \left[M_i, \sum_{j&lt;i} M_j\right]</span>
 
 <span class="sd">    Only accepts PyTree data that has a single leaf array that is 1D, excluding</span>
 <span class="sd">    the batch dimension. The PyTree structure is preserved in the output.</span>

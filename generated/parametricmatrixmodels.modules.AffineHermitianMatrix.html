@@ -542,9 +542,8 @@ as the imaginary unit times the sum of the commutators of all the
 <span class="math notranslate nohighlight">\(M_i\)</span> matrices, in an efficient way using cumulative sums and the
 linearity of the commutator:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}C &amp;= i\sum_{\substack{i,j\\i\neq j}} \left[M_i, M_j\right] \\
-  &amp;= i\sum_{\substack{i\\i\neq j}}
-     \left[M_i, \sum_k^j M_k\right]\end{split}\]</div>
+\[\begin{split}C &amp;= i\sum_{\substack{i,j\\i &gt; j}} \left[M_i, M_j\right] \\
+  &amp;= i\sum_{i&gt;1} \left[M_i, \sum_{j&lt;i} M_j\right]\end{split}\]</div>
 <p>Only accepts PyTree data that has a single leaf array that is 1D, excluding
 the batch dimension. The PyTree structure is preserved in the output.</p>
 <div class="admonition seealso">

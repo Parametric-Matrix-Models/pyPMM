@@ -394,7 +394,7 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>%pip install scikit-learn
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">pip</span> install scikit-learn
 </pre></div>
 </div>
 </div>
@@ -415,14 +415,14 @@ Note: you may need to restart the kernel to use updated packages.
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import jax
-import jax.numpy as np
-import jax.random as jr
-import parametricmatrixmodels as pmm
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
-# enable x64 for JAX
-jax.config.update(&quot;jax_enable_x64&quot;, True)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.random</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">parametricmatrixmodels</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pmm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">StandardScaler</span><span class="p">,</span> <span class="n">MinMaxScaler</span>
+<span class="c1"># enable x64 for JAX</span>
+<span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">&quot;jax_enable_x64&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -433,26 +433,26 @@ jax.config.update(&quot;jax_enable_x64&quot;, True)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># random seed for reproducibility
-SEED = 0
-key = jr.key(SEED)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># random seed for reproducibility</span>
+<span class="n">SEED</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">SEED</span><span class="p">)</span>
 
-n_pnts = 100
-X = np.linspace(-2 * np.pi, 2 * np.pi, n_pnts)
-Y = np.sin(X) + 0.1 * X**2
+<span class="n">n_pnts</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">n_pnts</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">X</span><span class="o">**</span><span class="mi">2</span>
 
-# add noise
-key, noise_key = jr.split(key)
+<span class="c1"># add noise</span>
+<span class="n">key</span><span class="p">,</span> <span class="n">noise_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
-Y = Y + 0.2 * jr.normal(noise_key, Y.shape)
+<span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">jr</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">noise_key</span><span class="p">,</span> <span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
-# data must be in the shape [n_pnts, n_features] for the pmm library
-X = X[:, None]
-Y = Y[:, None]
-print(X.shape)
-print(Y.shape)
+<span class="c1"># data must be in the shape [n_pnts, n_features] for the pmm library</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
-plt.plot(X, Y, &#39;o&#39;)
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -488,26 +488,26 @@ plt.plot(X, Y, &#39;o&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># train on 70% of the data, validate on 15%, test on the rest
-train_perc = 0.7
-val_perc = 0.15
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># train on 70% of the data, validate on 15%, test on the rest</span>
+<span class="n">train_perc</span> <span class="o">=</span> <span class="mf">0.7</span>
+<span class="n">val_perc</span> <span class="o">=</span> <span class="mf">0.15</span>
 
-n_train = int(n_pnts * train_perc)
-n_val = int(n_pnts * val_perc)
-n_test = n_pnts - n_train - n_val
+<span class="n">n_train</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_pnts</span> <span class="o">*</span> <span class="n">train_perc</span><span class="p">)</span>
+<span class="n">n_val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_pnts</span> <span class="o">*</span> <span class="n">val_perc</span><span class="p">)</span>
+<span class="n">n_test</span> <span class="o">=</span> <span class="n">n_pnts</span> <span class="o">-</span> <span class="n">n_train</span> <span class="o">-</span> <span class="n">n_val</span>
 
-key, shuffle_key = jr.split(key)
+<span class="n">key</span><span class="p">,</span> <span class="n">shuffle_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
-# shuffle the data and then split
-X_sh = jr.permutation(shuffle_key, X)
-Y_sh = jr.permutation(shuffle_key, Y)
+<span class="c1"># shuffle the data and then split</span>
+<span class="n">X_sh</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">shuffle_key</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="n">Y_sh</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">shuffle_key</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
 
-X_train = X_sh[:n_train]
-Y_train = Y_sh[:n_train]
-X_val = X_sh[n_train:n_train + n_val]
-Y_val = Y_sh[n_train:n_train + n_val]
-X_test = X_sh[n_train + n_val:]
-Y_test = Y_sh[n_train + n_val:]
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">X_sh</span><span class="p">[:</span><span class="n">n_train</span><span class="p">]</span>
+<span class="n">Y_train</span> <span class="o">=</span> <span class="n">Y_sh</span><span class="p">[:</span><span class="n">n_train</span><span class="p">]</span>
+<span class="n">X_val</span> <span class="o">=</span> <span class="n">X_sh</span><span class="p">[</span><span class="n">n_train</span><span class="p">:</span><span class="n">n_train</span> <span class="o">+</span> <span class="n">n_val</span><span class="p">]</span>
+<span class="n">Y_val</span> <span class="o">=</span> <span class="n">Y_sh</span><span class="p">[</span><span class="n">n_train</span><span class="p">:</span><span class="n">n_train</span> <span class="o">+</span> <span class="n">n_val</span><span class="p">]</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">X_sh</span><span class="p">[</span><span class="n">n_train</span> <span class="o">+</span> <span class="n">n_val</span><span class="p">:]</span>
+<span class="n">Y_test</span> <span class="o">=</span> <span class="n">Y_sh</span><span class="p">[</span><span class="n">n_train</span> <span class="o">+</span> <span class="n">n_val</span><span class="p">:]</span>
 </pre></div>
 </div>
 </div>
@@ -521,19 +521,19 @@ Y_test = Y_sh[n_train + n_val:]
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>xscaler = StandardScaler()
-yscaler = StandardScaler()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xscaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">yscaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
 
-X_train_sc = xscaler.fit_transform(X_train)
-X_val_sc = xscaler.transform(X_val)
-Y_train_sc = yscaler.fit_transform(Y_train)
-Y_val_sc = yscaler.transform(Y_val)
+<span class="n">X_train_sc</span> <span class="o">=</span> <span class="n">xscaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_val_sc</span> <span class="o">=</span> <span class="n">xscaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+<span class="n">Y_train_sc</span> <span class="o">=</span> <span class="n">yscaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">Y_train</span><span class="p">)</span>
+<span class="n">Y_val_sc</span> <span class="o">=</span> <span class="n">yscaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Y_val</span><span class="p">)</span>
 
-# we need to convert the arrays back from numpy arrays to jax.numpy arrays, since sklearn uses pure numpy
-X_train_sc = np.array(X_train_sc)
-X_val_sc = np.array(X_val_sc)
-Y_train_sc = np.array(Y_train_sc)
-Y_val_sc = np.array(Y_val_sc)
+<span class="c1"># we need to convert the arrays back from numpy arrays to jax.numpy arrays, since sklearn uses pure numpy</span>
+<span class="n">X_train_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_train_sc</span><span class="p">)</span>
+<span class="n">X_val_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_val_sc</span><span class="p">)</span>
+<span class="n">Y_train_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y_train_sc</span><span class="p">)</span>
+<span class="n">Y_val_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y_val_sc</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -545,22 +545,22 @@ Y_val_sc = np.array(Y_val_sc)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># two hidden layers with 64 neurons each and the ReLU activation function
-# one output neuron
-modules = [
-        pmm.modules.LinearNN(
-            out_features=64, bias=True, activation=pmm.modules.ReLU()
-        ),
-        pmm.modules.LinearNN(
-            out_features=64, bias=True, activation=pmm.modules.ReLU()
-        ),
-        pmm.modules.LinearNN(out_features=1, bias=True),
-    ]
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># two hidden layers with 64 neurons each and the ReLU activation function</span>
+<span class="c1"># one output neuron</span>
+<span class="n">modules</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">pmm</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">LinearNN</span><span class="p">(</span>
+            <span class="n">out_features</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">pmm</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="p">),</span>
+        <span class="n">pmm</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">LinearNN</span><span class="p">(</span>
+            <span class="n">out_features</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">pmm</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="p">),</span>
+        <span class="n">pmm</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">LinearNN</span><span class="p">(</span><span class="n">out_features</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="p">]</span>
 
-model = pmm.SequentialModel(modules)
+<span class="n">model</span> <span class="o">=</span> <span class="n">pmm</span><span class="o">.</span><span class="n">SequentialModel</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span>
 
-# print model summary before compilation
-print(model)
+<span class="c1"># print model summary before compilation</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -594,15 +594,15 @@ SequentialModel(
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>key, compile_key = jr.split(key)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span><span class="p">,</span> <span class="n">compile_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
-# the random key here can be replaced with an integer seed or None, in which case a random seed will be chosen
-# the model only needs to know the input shape without the batch dimension
-model.compile(key, X_train_sc.shape[1:])
+<span class="c1"># the random key here can be replaced with an integer seed or None, in which case a random seed will be chosen</span>
+<span class="c1"># the model only needs to know the input shape without the batch dimension</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">X_train_sc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
 
-# print the model summary after compilation
-print(model)
-print(f&quot;Total trainable floats: {model.get_num_trainable_floats()}&quot;)
+<span class="c1"># print the model summary after compilation</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total trainable floats: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">get_num_trainable_floats</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -647,7 +647,7 @@ Total trainable floats: 4353
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model(np.array([[1.0]]))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">]]))</span>
 </pre></div>
 </div>
 </div>
@@ -670,12 +670,12 @@ Array([[-0.00960011]], dtype=float64)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model = model.astype(np.float32)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
-X_train_sc_32 = X_train_sc.astype(np.float32)
-Y_train_sc_32 = Y_train_sc.astype(np.float32)
-X_val_sc_32 = X_val_sc.astype(np.float32)
-Y_val_sc_32 = Y_val_sc.astype(np.float32)
+<span class="n">X_train_sc_32</span> <span class="o">=</span> <span class="n">X_train_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">Y_train_sc_32</span> <span class="o">=</span> <span class="n">Y_train_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">X_val_sc_32</span> <span class="o">=</span> <span class="n">X_val_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">Y_val_sc_32</span> <span class="o">=</span> <span class="n">Y_val_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -687,18 +687,18 @@ Y_val_sc_32 = Y_val_sc.astype(np.float32)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>key, batch_key = jr.split(key)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span><span class="p">,</span> <span class="n">batch_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
-model.train(
-    X_train_sc_32,
-    Y=Y_train_sc_32,
-    X_val=X_val_sc_32,
-    Y_val=Y_val_sc_32,
-    lr=1e-2,
-    epochs=250,
-    batch_size=5,
-    batch_rng=batch_key,
-    verbose=True)
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+    <span class="n">X_train_sc_32</span><span class="p">,</span>
+    <span class="n">Y</span><span class="o">=</span><span class="n">Y_train_sc_32</span><span class="p">,</span>
+    <span class="n">X_val</span><span class="o">=</span><span class="n">X_val_sc_32</span><span class="p">,</span>
+    <span class="n">Y_val</span><span class="o">=</span><span class="n">Y_val_sc_32</span><span class="p">,</span>
+    <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">batch_rng</span><span class="o">=</span><span class="n">batch_key</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -973,22 +973,22 @@ Total epochs: 250
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># pass in the scaled inputs (converted to JAX arrays again)
-X_sc = xscaler.transform(X)
-X_sc = np.array(X_sc)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pass in the scaled inputs (converted to JAX arrays again)</span>
+<span class="n">X_sc</span> <span class="o">=</span> <span class="n">xscaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">X_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_sc</span><span class="p">)</span>
 
-# get scaled predictions
-Y_pred_sc = model(X_sc)
+<span class="c1"># get scaled predictions</span>
+<span class="n">Y_pred_sc</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_sc</span><span class="p">)</span>
 
-# unscale predictions
-Y_pred = yscaler.inverse_transform(Y_pred_sc)
+<span class="c1"># unscale predictions</span>
+<span class="n">Y_pred</span> <span class="o">=</span> <span class="n">yscaler</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Y_pred_sc</span><span class="p">)</span>
 
-# plot results
-plt.plot(X, Y_pred, label=&quot;NN&quot;, lw=2, zorder=10)
-plt.plot(X_train, Y_train, &#39;o&#39;, label=&quot;Train&quot;)
-plt.plot(X_val, Y_val, &#39;s&#39;, label=&quot;Val&quot;)
-plt.plot(X_test, Y_test, &#39;x&#39;, label=&quot;Test&quot;)
-plt.legend()
+<span class="c1"># plot results</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;NN&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Train&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Val&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1020,19 +1020,19 @@ plt.legend()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>xscaler = MinMaxScaler()
-yscaler = MinMaxScaler()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">xscaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+<span class="n">yscaler</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
 
-X_train_sc = xscaler.fit_transform(X_train)
-X_val_sc = xscaler.transform(X_val)
-Y_train_sc = yscaler.fit_transform(Y_train)
-Y_val_sc = yscaler.transform(Y_val)
+<span class="n">X_train_sc</span> <span class="o">=</span> <span class="n">xscaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+<span class="n">X_val_sc</span> <span class="o">=</span> <span class="n">xscaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
+<span class="n">Y_train_sc</span> <span class="o">=</span> <span class="n">yscaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">Y_train</span><span class="p">)</span>
+<span class="n">Y_val_sc</span> <span class="o">=</span> <span class="n">yscaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Y_val</span><span class="p">)</span>
 
-# we need to convert the arrays back from numpy arrays to jax.numpy arrays, since sklearn uses pure numpy
-X_train_sc = np.array(X_train_sc)
-X_val_sc = np.array(X_val_sc)
-Y_train_sc = np.array(Y_train_sc)
-Y_val_sc = np.array(Y_val_sc)
+<span class="c1"># we need to convert the arrays back from numpy arrays to jax.numpy arrays, since sklearn uses pure numpy</span>
+<span class="n">X_train_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_train_sc</span><span class="p">)</span>
+<span class="n">X_val_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_val_sc</span><span class="p">)</span>
+<span class="n">Y_train_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y_train_sc</span><span class="p">)</span>
+<span class="n">Y_val_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Y_val_sc</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1045,22 +1045,22 @@ bias.</p>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># just a single PMM module, which contains all the submodules
-modules = [
-        pmm.modules.AffineObservablePMM(
-            matrix_size=5,
-            num_eig=2,
-            num_secondaries=1,
-            output_size=1,
-            use_expectation_values=True
-        )
-    ]
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># just a single PMM module, which contains all the submodules</span>
+<span class="n">modules</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">pmm</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">AffineObservablePMM</span><span class="p">(</span>
+            <span class="n">matrix_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">num_eig</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">num_secondaries</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">output_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">use_expectation_values</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+    <span class="p">]</span>
 
-model = pmm.SequentialModel(modules)
+<span class="n">model</span> <span class="o">=</span> <span class="n">pmm</span><span class="o">.</span><span class="n">SequentialModel</span><span class="p">(</span><span class="n">modules</span><span class="p">)</span>
 
-# print model summary before compilation
-print(model)
-print(f&quot;Total trainable floats: {model.get_num_trainable_floats()}&quot;)
+<span class="c1"># print model summary before compilation</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total trainable floats: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">get_num_trainable_floats</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1089,14 +1089,14 @@ Total trainable floats: 0
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>key, compile_key = jr.split(key)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span><span class="p">,</span> <span class="n">compile_key</span> <span class="o">=</span> <span class="n">jr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
-# the random key here can be replaced with an integer seed or None, in which case a random seed will be chosen
-# the model only needs to know the input shape without the batch dimension
-model.compile(key, X_train_sc.shape[1:])
+<span class="c1"># the random key here can be replaced with an integer seed or None, in which case a random seed will be chosen</span>
+<span class="c1"># the model only needs to know the input shape without the batch dimension</span>
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">X_train_sc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
 
-# print the model summary after compilation
-print(model)
+<span class="c1"># print the model summary after compilation</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1125,7 +1125,7 @@ SequentialModel(
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model(np.array([[1.0]]))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">]]))</span>
 </pre></div>
 </div>
 </div>
@@ -1148,12 +1148,12 @@ Array([[0.01202144]], dtype=float64)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>model = model.astype(np.float32)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
-X_train_sc_32 = X_train_sc.astype(np.float32)
-Y_train_sc_32 = Y_train_sc.astype(np.float32)
-X_val_sc_32 = X_val_sc.astype(np.float32)
-Y_val_sc_32 = Y_val_sc.astype(np.float32)
+<span class="n">X_train_sc_32</span> <span class="o">=</span> <span class="n">X_train_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">Y_train_sc_32</span> <span class="o">=</span> <span class="n">Y_train_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">X_val_sc_32</span> <span class="o">=</span> <span class="n">X_val_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">Y_val_sc_32</span> <span class="o">=</span> <span class="n">Y_val_sc</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1165,17 +1165,17 @@ Y_val_sc_32 = Y_val_sc.astype(np.float32)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># using the same batch key as with the neural network
-model.train(
-    X_train_sc_32,
-    Y=Y_train_sc_32,
-    X_val=X_val_sc_32,
-    Y_val=Y_val_sc_32,
-    lr=1e-2,
-    epochs=250,
-    batch_size=5,
-    batch_rng=batch_key,
-    verbose=True)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># using the same batch key as with the neural network</span>
+<span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">(</span>
+    <span class="n">X_train_sc_32</span><span class="p">,</span>
+    <span class="n">Y</span><span class="o">=</span><span class="n">Y_train_sc_32</span><span class="p">,</span>
+    <span class="n">X_val</span><span class="o">=</span><span class="n">X_val_sc_32</span><span class="p">,</span>
+    <span class="n">Y_val</span><span class="o">=</span><span class="n">Y_val_sc_32</span><span class="p">,</span>
+    <span class="n">lr</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">250</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">batch_rng</span><span class="o">=</span><span class="n">batch_key</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1450,22 +1450,22 @@ Total epochs: 250
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># pass in the scaled inputs (converted to JAX arrays again)
-X_sc = xscaler.transform(X)
-X_sc = np.array(X_sc)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pass in the scaled inputs (converted to JAX arrays again)</span>
+<span class="n">X_sc</span> <span class="o">=</span> <span class="n">xscaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">X_sc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_sc</span><span class="p">)</span>
 
-# get scaled predictions
-Y_pred_sc = model(X_sc)
+<span class="c1"># get scaled predictions</span>
+<span class="n">Y_pred_sc</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X_sc</span><span class="p">)</span>
 
-# unscale predictions
-Y_pred = yscaler.inverse_transform(Y_pred_sc)
+<span class="c1"># unscale predictions</span>
+<span class="n">Y_pred</span> <span class="o">=</span> <span class="n">yscaler</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">Y_pred_sc</span><span class="p">)</span>
 
-# plot results
-plt.plot(X, Y_pred, label=&quot;PMM&quot;, lw=2, zorder=10)
-plt.plot(X_train, Y_train, &#39;o&#39;, label=&quot;Train&quot;)
-plt.plot(X_val, Y_val, &#39;s&#39;, label=&quot;Val&quot;)
-plt.plot(X_test, Y_test, &#39;x&#39;, label=&quot;Test&quot;)
-plt.legend()
+<span class="c1"># plot results</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;PMM&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">Y_train</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Train&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_val</span><span class="p">,</span> <span class="n">Y_val</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Val&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">Y_test</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>

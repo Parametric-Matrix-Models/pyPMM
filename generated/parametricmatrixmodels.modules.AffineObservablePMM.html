@@ -881,6 +881,16 @@ of which matches that of the model’s modules.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM._get_all_unready_modules">
+<span class="sig-name descname"><span class="pre">_get_all_unready_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM._get_all_unready_modules" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>[<a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM._get_callable">
 <span class="sig-name descname"><span class="pre">_get_callable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM._get_callable" title="Link to this definition">#</a></dt>
 <dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">jax.jit</span></code>-able and <code class="docutils literal notranslate"><span class="pre">jax.grad</span></code>-able callable that
@@ -956,6 +966,16 @@ state leaf nodes.</p>
 </dd>
 </dl>
 </div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.AffineObservablePMM._get_unready_reason">
+<span class="sig-name descname"><span class="pre">_get_unready_reason</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.AffineObservablePMM._get_unready_reason" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1905,7 +1925,9 @@ versions.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM"><code class="docutils literal notranslate"><span class="pre">AffineObservablePMM</span></code></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM.__init__"><code class="docutils literal notranslate"><span class="pre">__init__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM.__call__"><code class="docutils literal notranslate"><span class="pre">__call__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM._get_all_unready_modules"><code class="docutils literal notranslate"><span class="pre">_get_all_unready_modules()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM._get_callable"><code class="docutils literal notranslate"><span class="pre">_get_callable()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM._get_unready_reason"><code class="docutils literal notranslate"><span class="pre">_get_unready_reason()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM._verify_input"><code class="docutils literal notranslate"><span class="pre">_verify_input()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM.add"><code class="docutils literal notranslate"><span class="pre">add()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.AffineObservablePMM.add_module"><code class="docutils literal notranslate"><span class="pre">add_module()</span></code></a></li>
