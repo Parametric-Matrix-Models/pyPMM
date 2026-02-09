@@ -52,6 +52,7 @@ docs = [
     "matplotlib",
     "scipy",
     "ipykernel",
+    "ipython",
 ]
 
 [project.urls]
