@@ -29,12 +29,41 @@ class FuncBase(BaseModule):
 
     __version__: str = "0.0.0"
 
-    @final
     def __init__(self):
         """
         Initialize the function module.
         """
         pass
+
+    @abstractmethod
+    def get_hyperparameters(self) -> HyperParams:
+        """
+        Get the hyperparameters of the function module.
+
+        Returns
+        -------
+            An empty dictionary, as function modules do not have
+            hyperparameters.
+        """
+        raise NotImplementedError(
+            "Subclasses must implement `get_hyperparameters`."
+        )
+
+    @abstractmethod
+    def f(self, data: Data) -> Data:
+        """
+        Apply the function to the input data
+
+        Parameters
+        ----------
+        data
+            Input Data (PyTree of arrays).
+
+        Returns
+        -------
+            Output Data (PyTree of arrays).
+        """
+        raise NotImplementedError("Subclasses must implement `f`.")
 
     @property
     def name(self) -> str:
@@ -61,22 +90,6 @@ class FuncBase(BaseModule):
             Always returns 0.
         """
         return 0
-
-    @abstractmethod
-    def f(self, data: Data) -> Data:
-        """
-        Apply the function to the input data
-
-        Parameters
-        ----------
-        data
-            Input Data (PyTree of arrays).
-
-        Returns
-        -------
-            Output Data (PyTree of arrays).
-        """
-        raise NotImplementedError("Subclasses must implement `f`.")
 
     @final
     def _get_callable(self) -> ModuleCallable:
@@ -155,19 +168,6 @@ class FuncBase(BaseModule):
         output_shape = get_shapes(dummy_output, axis=slice(1, None))
 
         return output_shape
-
-    @final
-    def get_hyperparameters(self) -> HyperParams:
-        """
-        Get the hyperparameters of the function module, of which there are
-        none.
-
-        Returns
-        -------
-            An empty dictionary, as function modules do not have
-            hyperparameters.
-        """
-        return {}
 
     @final
     def get_params(self) -> Params:

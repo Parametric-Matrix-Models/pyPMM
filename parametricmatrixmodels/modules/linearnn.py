@@ -6,12 +6,7 @@ from ..sequentialmodel import SequentialModel
 
 # direct import to avoid circular import
 from ..tree_util import is_shape_leaf
-from ..typing import (
-    Any,
-    DataShape,
-    HyperParams,
-    List,
-)
+from ..typing import Any, DataShape, Dict, HyperParams, List, Serializable
 from .basemodule import BaseModule
 from .bias import Bias
 from .flatten import Flatten
@@ -181,3 +176,37 @@ class LinearNN(SequentialModel):
         )
         self.real = hyperparams.get("real", self.real)
         super().set_hyperparameters(hyperparams)
+
+    def deserialize(
+        self,
+        data: Dict[str, Serializable],
+        /,
+        *,
+        strict_package_version: bool = False,
+    ) -> None:
+        r"""
+        Deserialize the LinearNN module from a dictionary.
+
+        Parameters
+        ----------
+        data
+            A dictionary containing the serialized data of the module.
+        """
+
+        # base implementation takes care of almost everything
+        super().deserialize(
+            data, strict_package_version=strict_package_version
+        )
+        # just need to read .modules to make sure .activation matches the
+        # modules
+        if self.modules is not None:
+            # figure out if modules contains an activation function
+            # by checking the number of modules
+            if len(self.modules) == 2:
+                self.activation = None
+            elif len(self.modules) == 3 and not self.bias:
+                self.activation = self.modules[2]
+            elif len(self.modules) == 4 and self.bias:
+                self.activation = self.modules[3]
+            else:
+                self.activation = None

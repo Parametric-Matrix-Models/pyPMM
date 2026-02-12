@@ -128,17 +128,25 @@ def test_sequential_save_load(tmp_path):
 
     key = jax.random.key(0)
 
+    mag = 1.0
+
     batch_dim = 10
-    input_data = jax.random.normal(key, (batch_dim, 4))
+    input_data = mag * jax.random.normal(key, (batch_dim, 4))
 
     modules = [
         pmm.modules.LinearNN(
-            out_features=8, bias=True, activation=pmm.modules.ReLU()
+            out_features=8,
+            bias=True,
+            activation=pmm.modules.ReLU(),
+            init_magnitude=mag,
         ),
         pmm.modules.LinearNN(
-            out_features=8, bias=True, activation=pmm.modules.ReLU()
+            out_features=8,
+            bias=True,
+            activation=pmm.modules.ReLU(),
+            init_magnitude=mag,
         ),
-        pmm.modules.LinearNN(out_features=1, bias=True),
+        pmm.modules.LinearNN(out_features=1, bias=True, init_magnitude=mag),
     ]
 
     model = pmm.SequentialModel(modules)
@@ -151,7 +159,6 @@ def test_sequential_save_load(tmp_path):
 
     loaded_model = pmm.SequentialModel.from_file(save_path)
 
-    loaded_model.compile(None, input_data.shape[1:])
     loaded_output = loaded_model(input_data)
 
     assert np.allclose(output, loaded_output)

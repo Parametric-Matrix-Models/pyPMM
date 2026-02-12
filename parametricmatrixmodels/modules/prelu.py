@@ -197,6 +197,8 @@ class PReLU(BaseModule):
         return {
             "single_parameter": self.single_parameter,
             "init_magnitude": self.init_magnitude,
+            "input_shape": self.input_shape,
+            "real": self.real,
         }
 
     def set_hyperparameters(self, hyperparams: HyperParams) -> None:

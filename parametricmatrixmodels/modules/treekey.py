@@ -135,7 +135,10 @@ class TreeKey(BaseModule):
         return treekey_callable
 
     def get_hyperparameters(self) -> HyperParams:
-        return {}
+        return {
+            "keypaths": self.keypaths,
+            "separator": self.separator,
+        }
 
     def get_params(self) -> Params:
         return ()

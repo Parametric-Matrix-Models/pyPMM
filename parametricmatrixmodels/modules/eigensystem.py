@@ -181,16 +181,34 @@ class Eigensystem(BaseModule):
             is_leaf=is_shape_leaf,
         )
 
+        # in order to do a partial transpose with "leaves" that are just tuples
+        # (PyTrees) we have to hide the tuples in a custom struct
+        class _ShapeLeaf:
+            def __init__(self, shape: Tuple[int, ...] = ()):
+                self.shape = shape
+
+        transposed_with_shape_leaves = jax.tree.map(
+            lambda x: _ShapeLeaf(x),
+            transposed,
+            is_leaf=is_shape_leaf,
+        )
+
         # transpose so that the output shape is composite structure of the
         # eigensystem shape with the original structure as suffix
-        return jax.tree.transpose(
+        with_shape_leaves = jax.tree.transpose(
             outer_treedef=jax.tree.structure(
                 input_shape, is_leaf=is_shape_leaf
             ),
             inner_treedef=jax.tree.structure(
-                {"eigenvalues": ("*",), "eigenvectors": ("*", "*")}
+                {"eigenvalues": "*", "eigenvectors": "*"}
             ),
-            pytree_to_transpose=transposed,
+            pytree_to_transpose=transposed_with_shape_leaves,
+        )
+        # map back from _ShapeLeaf to the actual shape
+        return jax.tree.map(
+            lambda x: x.shape,
+            with_shape_leaves,
+            is_leaf=is_shape_leaf,
         )
 
     def get_hyperparameters(self) -> HyperParams:

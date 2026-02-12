@@ -165,9 +165,13 @@ def test_integration(tmp_path):
     save_path = tmp_path / "nsm_test.npz"
     nsm.save(save_path)
     nsm2 = pmm.NonSequentialModel.from_file(save_path)
-    nsm2.compile(
-        key, pmm.tree_util.get_shapes(data, slice(1, None)), verbose=True
-    )
+
+    assert nsm.execution_order == nsm2.execution_order
+    assert nsm.connections == nsm2.connections
+    assert nsm.input_shape == nsm2.input_shape
+    assert nsm.output_shape == nsm2.output_shape
+    assert nsm.separator == nsm2.separator
+
     out2 = nsm2(data)
     eigvals2, eigvecs2 = out2
     assert np.allclose(eigvals, eigvals2)

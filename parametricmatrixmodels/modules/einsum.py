@@ -796,12 +796,13 @@ class Einsum(BaseModule):
             "trainable": self.trainable,
             "init_magnitude": self.init_magnitude,
             "real": self.real,
+            "input_shape": self.input_shape,
         }
 
     def set_hyperparameters(self, hyperparams: HyperParams) -> None:
-        # setting the hyperparameters should require recompilation
-        self.input_shape = None
         # only allow setting params if they are fixed
+        if "input_shape" in hyperparams:
+            self.input_shape = hyperparams["input_shape"]
         if "einsum_str" in hyperparams:
             self.einsum_str = hyperparams["einsum_str"]
         if "dim_map" in hyperparams:

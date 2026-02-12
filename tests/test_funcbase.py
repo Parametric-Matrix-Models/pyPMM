@@ -7,6 +7,9 @@ import parametricmatrixmodels as pmm
 def test_funcbase():
 
     class AddOverTree(pmm.modules.FuncBase):
+        def get_hyperparameters(self):
+            return {}
+
         def f(self, data):
             return jax.tree.reduce(lambda x, y: x + y, data)
 
@@ -23,6 +26,9 @@ def test_funcbase():
     assert np.all(result == expected), f"Expected {expected}, got {result}"
 
     class Expm(pmm.modules.FuncBase):
+        def get_hyperparameters(self):
+            return {}
+
         def f(self, data):
             return jax.tree.map(jax.scipy.linalg.expm, data)
 

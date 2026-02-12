@@ -346,6 +346,7 @@ class NonSequentialModel(Model):
         -------
             True if the model is compiled and ready, False otherwise.
         """
+
         # if the execution order is not set, the model is not ready
         if self.execution_order is None:
             return False

@@ -39,6 +39,7 @@ from .typing import (
     Inexact,
     List,
     PyTree,
+    Serializable,
     Tuple,
 )
 
@@ -1474,20 +1475,24 @@ class Model(BaseModule):
                 Dictionary containing the hyperparameters of the model.
         """
         # reset input_shape and output_shape to force re-compilation
-        self.modules = hyperparams["modules"]
-        self.set_rng(hyperparams["rng"])
+        modules_ = hyperparams.get("modules", None)
+        if modules_ is not None:
+            self.modules = modules_
+        rng_ = hyperparams.get("rng", None)
+        if rng_ is not None:
+            self.set_rng(rng_)
         self.input_shape = hyperparams["input_shape"]
         self.output_shape = hyperparams["output_shape"]
-        super().set_hyperparameters(hyperparams)
 
-    def serialize(self) -> Dict[str, Any]:
+    @jaxtyped(typechecker=beartype)
+    def serialize(self) -> Dict[str, Serializable]:
         """
         Serialize the model to a dictionary. This is done by serializing the
         model's parameters/metadata and then serializing each module.
 
         Returns
         -------
-            Dict[str, Any]
+            Dict[str, Serializable]
         """
 
         module_fulltypenames = jax.tree.map(
@@ -1522,7 +1527,11 @@ class Model(BaseModule):
         }
 
     def deserialize(
-        self, data: Dict[str, Any], /, *, strict_package_version=False
+        self,
+        data: Dict[str, Serializable],
+        /,
+        *,
+        strict_package_version: bool = False,
     ) -> None:
         """
         Deserialize the model from a dictionary. This is done by deserializing
@@ -1587,11 +1596,18 @@ class Model(BaseModule):
         # deserialize the rng key
         key = jax.random.wrap_key_data(data["key_data"])
         self.set_rng(key)
+
+        # remove rng from data["self_serialized"] since it's already
+        # deserialized above
+        data["self_serialized"].pop("rng", None)
+
+        # let default deserialization handle the rest of the attributes
         super().deserialize(
             data["self_serialized"],
             strict_package_version=strict_package_version,
         )
 
+    @jaxtyped(typechecker=beartype)
     def save(self, file: str | IO | Path, /) -> None:
         """
         Save the model to a file.
@@ -1604,12 +1620,13 @@ class Model(BaseModule):
 
         # if everything serializes correctly, we can save the model with just
         # savez
-        data = self.serialize()
+        data: Dict[str, Serializable] = self.serialize()
 
         if isinstance(file, str):
             file = file if file.endswith(".npz") else file + ".npz"
         np.savez(file, **data)
 
+    @jaxtyped(typechecker=beartype)
     def save_compressed(self, file: str | IO | Path, /) -> None:
         """
         Save the model to a compressed file.
@@ -1621,7 +1638,7 @@ class Model(BaseModule):
         """
         # if everything serializes correctly, we can save the model with just
         # savez_compressed
-        data = self.serialize()
+        data: Dict[str, Serializable] = self.serialize()
 
         if isinstance(file, str):
             file = file if file.endswith(".npz") else file + ".npz"
@@ -1670,7 +1687,7 @@ class Model(BaseModule):
 
     @classmethod
     def from_file(
-        cls, file: str | IO | Path, /, *, strict_package_version=False
+        cls, file: str | IO | Path, /, *, strict_package_version: bool = False
     ) -> "Model":
         """
         Load a model from a file and return an instance of the Model class.

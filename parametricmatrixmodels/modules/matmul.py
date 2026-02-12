@@ -424,3 +424,5 @@ class MatMul(Einsum):
             init_magnitude=self.init_magnitude,
             real=self.real,
         )
+
+        super().set_hyperparameters(hyperparams)

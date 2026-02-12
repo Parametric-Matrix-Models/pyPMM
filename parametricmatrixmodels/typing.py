@@ -3,7 +3,16 @@ from __future__ import annotations
 from sys import version_info
 from typing import Any, TypeAlias
 
-from jaxtyping import Array, Complex, Inexact, Num, PyTree, Real
+import numpy as onp
+from jaxtyping import (
+    Array,
+    Complex,
+    Inexact,
+    Num,
+    PyTree,
+    Real,
+    Shaped,
+)
 from ordered_set import OrderedSet  # noqa: F401
 
 r"""
@@ -116,13 +125,15 @@ BatchlessComplexDataFixed: TypeAlias = PyTree[
 
 #: A special case of ``DataShape`` where the input data shape is represented as
 #: a single tuple of integers.
-ArrayDataShape: TypeAlias = Tuple[int | None, ...]
+ArrayDataShape: TypeAlias = Tuple[int, ...] | Tuple[None, ...]
 
 #: A PyTree representing the shape of input data. Each leaf is a tuple of
 #: integers representing the shape of the corresponding leaf in a ``Data``
 #: PyTree, excluding the leading batch dimension. Alternatively, a single tuple
 #: of integers can be used to represent the shape of a single JAX array.
-DataShape: TypeAlias = PyTree[Tuple[int | None, ...]] | ArrayDataShape
+DataShape: TypeAlias = (
+    PyTree[Tuple[int, ...]] | PyTree[Tuple[None, ...]] | ArrayDataShape
+)
 
 #: A PyTree representing the private and persistent state of a module. Each
 #: leaf is a numerical JAX array of arbitrary shape. The structure of the
@@ -167,3 +178,15 @@ ModuleCallable: TypeAlias = Callable[
     ],
     Tuple[Data, State],
 ]
+
+#: Type that represents a union between all types that are serializable without
+#: allow_pickle=True
+Serializable: TypeAlias = (
+    PyTree[int]
+    | PyTree[float]
+    | PyTree[bool]
+    | PyTree[str]
+    | PyTree[complex]
+    | PyTree[Shaped[Array, "..."]]
+    | PyTree[onp.ndarray, "..."]
+)

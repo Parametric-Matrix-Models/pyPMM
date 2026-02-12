@@ -25,6 +25,7 @@ from parametricmatrixmodels.typing import (
     HyperParams,
     ModuleCallable,
     Params,
+    Serializable,
     State,
     Tuple,
 )
@@ -689,7 +690,8 @@ class BaseModule(ABC):
         self.set_precision(dtype)
         return self
 
-    def serialize(self) -> Dict[str, Any]:
+    @jaxtyped(typechecker=beartype)
+    def serialize(self) -> Dict[str, Serializable]:
         """
         Serialize the module to a dictionary.
 
@@ -708,9 +710,17 @@ class BaseModule(ABC):
             Dictionary containing the serialized module data.
         """
 
+        all_hyperparameters: Dict[str, Any] = self.get_hyperparameters()
+
+        autoserializable_hyperparameters = {
+            k: v
+            for k, v in all_hyperparameters.items()
+            if isinstance(v, Serializable)
+        }
+
         return {
             "name": self.name,
-            "hyperparameters": self.get_hyperparameters(),
+            "hyperparameters": autoserializable_hyperparameters,
             "params": self.get_params(),
             "state": self.get_state(),
             "package_version": pmm.__version__,
