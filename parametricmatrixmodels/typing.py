@@ -125,15 +125,13 @@ BatchlessComplexDataFixed: TypeAlias = PyTree[
 
 #: A special case of ``DataShape`` where the input data shape is represented as
 #: a single tuple of integers.
-ArrayDataShape: TypeAlias = Tuple[int, ...] | Tuple[None, ...]
+ArrayDataShape: TypeAlias = Tuple[int | None, ...]
 
 #: A PyTree representing the shape of input data. Each leaf is a tuple of
 #: integers representing the shape of the corresponding leaf in a ``Data``
 #: PyTree, excluding the leading batch dimension. Alternatively, a single tuple
 #: of integers can be used to represent the shape of a single JAX array.
-DataShape: TypeAlias = (
-    PyTree[Tuple[int, ...]] | PyTree[Tuple[None, ...]] | ArrayDataShape
-)
+DataShape: TypeAlias = PyTree[Tuple[int | None, ...]] | ArrayDataShape
 
 #: A PyTree representing the private and persistent state of a module. Each
 #: leaf is a numerical JAX array of arbitrary shape. The structure of the

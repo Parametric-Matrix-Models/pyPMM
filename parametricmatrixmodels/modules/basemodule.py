@@ -40,6 +40,41 @@ class BaseModule(ABC):
     # by subclasses
     __version__: str
 
+    # trainable property, set to False to freeze module parameters
+    __trainable: bool = True
+
+    @property
+    def trainable(self) -> bool:
+        """
+        Whether the module is trainable (i.e., whether its parameters should be
+        updated during training).
+
+        Returns
+        -------
+            ``True`` if the module is trainable, ``False`` otherwise.
+        """
+        return self.__trainable
+
+    @trainable.setter
+    def trainable(self, value: bool) -> None:
+        """
+        Set whether the module is trainable.
+
+        Parameters
+        ----------
+        value
+            ``True`` to make the module trainable, ``False`` to freeze the
+            module parameters.
+
+        Raises
+        ------
+        ValueError
+            If the value is not a boolean.
+        """
+        if not isinstance(value, bool):
+            raise ValueError("trainable must be set to a boolean value.")
+        self.__trainable = value
+
     @abstractmethod
     def __init__(self) -> None:
         """
@@ -151,6 +186,11 @@ class BaseModule(ABC):
         if param_count is not None and ready:
             if param_count == 0:
                 return f"{self.name}"
+            elif not self.trainable:
+                return (
+                    f"{self.name} (trainable floats: {param_count:,})"
+                    " [frozen])"
+                )
             else:
                 return f"{self.name} (trainable floats: {param_count:,})"
         elif not ready:
@@ -723,6 +763,7 @@ class BaseModule(ABC):
             "hyperparameters": autoserializable_hyperparameters,
             "params": self.get_params(),
             "state": self.get_state(),
+            "trainable": self.trainable,
             "package_version": pmm.__version__,
             "module_version": self.__version__,
         }
@@ -790,6 +831,10 @@ class BaseModule(ABC):
         if state is not None:
             self.set_state(state)
 
+        # set the trainable flag
+        trainable = data.get("trainable", True)
+        self.trainable = trainable
+
     @jaxtyped(typechecker=beartype)
     def upgrade(self, data: Dict[str, Any], /) -> Dict[str, Any]:
         """
@@ -826,5 +871,27 @@ class BaseModule(ABC):
         new_module = self.__class__()
         new_module.deserialize(data)
         return new_module
+
+    def freeze(self) -> "BaseModule":
+        """
+        Freeze the module parameters by setting trainable to False.
+
+        Returns
+        -------
+            The module itself, with trainable set to False.
+        """
+        self.trainable = False
+        return self
+
+    def unfreeze(self) -> "BaseModule":
+        """
+        Unfreeze the module parameters by setting trainable to True.
+
+        Returns
+        -------
+            The module itself, with trainable set to True.
+        """
+        self.trainable = True
+        return self
 
     deepcopy = copy  # alias for copy

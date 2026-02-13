@@ -23,10 +23,11 @@ from .model_util import (
     ModelModules,
     ModelParams,
     ModelState,
+    ModelStruct,
     autobatch,
 )
 from .modules import BaseModule
-from .training import make_loss_fn, train
+from .training import OptimizerState, make_loss_fn, train
 from .tree_util import is_shape_leaf, safecast, strfmt_pytree
 from .typing import (
     Any,
@@ -167,6 +168,7 @@ class Model(BaseModule):
         self.input_shape: DataShape | None = None
         self.output_shape: DataShape | None = None
         self.callable: ModelCallable | None = None
+        self._optimizer_state = None
         self.grad_callable_params = None
         self.grad_callable_params_options = None
         self.grad_callable_inputs = None
@@ -1054,6 +1056,7 @@ class Model(BaseModule):
         early_stopping_patience: int = 100,
         early_stopping_min_delta: float = -np.inf,
         # advanced options
+        resume: bool = False,
         initialization_seed: Any | int | None = None,
         callback: Callable | None = None,
         unroll: int | None = None,
@@ -1144,15 +1147,27 @@ class Model(BaseModule):
             lambda acc, x: acc or np.iscomplexobj(x), params, initializer=False
         )
 
+        # get the trainable modules and map those bools to the param structure
+        # i.e. if trainable modules is [False, True] and the first module has
+        # parameters p1 and the second module has parameters [p2, p3], then
+        # we want trainable_params to be [False, [True, True]] so that the
+        # training function knows to update p2 and p3 but not p1
+        trainable_modules = self.get_trainable_modules()
+
+        trainable_flags = jax.tree.broadcast(trainable_modules, params)
+
         # train the model
         (
             final_params,
             final_model_states,
             final_model_rng,
             final_epoch,
-            final_adam_states,
+            final_optimizer_states,
         ) = train(
+            resume=resume,
+            adam_state=self._optimizer_state,
             init_params=self.get_params(),
+            trainable_flags=trainable_flags,
             init_state=self.get_state(),
             init_rng=self.get_rng(),
             loss_fn=loss_fn_,
@@ -1185,6 +1200,23 @@ class Model(BaseModule):
         self.set_state(final_model_states)
         # set the final rng
         self.set_rng(final_model_rng)
+        # set the final optimizer state
+        self._optimizer_state = final_optimizer_states
+
+    def get_trainable_modules(self) -> PyTree[bool, ModelStruct]:
+        """
+        Return a PyTree with the same structure as the model's modules, where
+        each leaf node is a boolean indicating whether the corresponding module
+        is trainable (i.e. mod.trainable == True and mod.get_params() is not
+        None/())
+        """
+
+        def is_trainable(mod: BaseModule) -> bool:
+            p = mod.get_params()
+            has_params = (p is not None) and len(jax.tree.leaves(p)) > 0
+            return mod.trainable and has_params
+
+        return jax.tree.map(is_trainable, self.modules)
 
     # methods to modify the module list
     def __getitem__(
@@ -1463,6 +1495,7 @@ class Model(BaseModule):
             "rng": self.rng,
             "input_shape": self.input_shape,
             "output_shape": self.output_shape,
+            "_optimizer_state": self._optimizer_state,
         }
 
     def set_hyperparameters(self, hyperparams: HyperParams, /) -> None:
@@ -1483,6 +1516,21 @@ class Model(BaseModule):
             self.set_rng(rng_)
         self.input_shape = hyperparams["input_shape"]
         self.output_shape = hyperparams["output_shape"]
+        optimizer_state_ = hyperparams.get("_optimizer_state", None)
+        if optimizer_state_ is not None:
+            # ensure the structure of the optimizer state matches the model
+            # parameters struct
+            param_struct = jax.tree.structure(self.get_params())
+            adam_struct = jax.tree.structure(
+                optimizer_state_,
+                is_leaf=lambda x: isinstance(x, OptimizerState),
+            )
+            if param_struct != adam_struct:
+                raise ValueError(
+                    "Adam state structure does not match model parameters "
+                    "structure."
+                )
+            self._optimizer_state = optimizer_state_
 
     @jaxtyped(typechecker=beartype)
     def serialize(self) -> Dict[str, Serializable]:
@@ -1513,6 +1561,20 @@ class Model(BaseModule):
         # serialize rng key
         key_data = jax.random.key_data(self.get_rng())
 
+        # serialize optimizer_state if applicable
+        optimizer_struct = jax.tree.structure(self.get_params())
+        serial_optimizer_state = (
+            [
+                a_s.serialize()
+                for a_s in jax.tree.leaves(
+                    self._optimizer_state,
+                    is_leaf=lambda x: isinstance(x, OptimizerState),
+                )
+            ]
+            if self._optimizer_state
+            else None
+        )
+
         return {
             "module_typenames": module_typenames,
             "module_modules": module_modules,
@@ -1521,6 +1583,8 @@ class Model(BaseModule):
             "serialized_modules": serialized_modules,
             "model_structure": model_structure,
             "key_data": key_data,
+            "optimizer_state": serial_optimizer_state,
+            "optimizer_struct": optimizer_struct,
             "package_version": pmm.__version__,
             "model_version": self.__version__,
             "self_serialized": super().serialize(),
@@ -1597,9 +1661,25 @@ class Model(BaseModule):
         key = jax.random.wrap_key_data(data["key_data"])
         self.set_rng(key)
 
+        # deserialize optimizer_state if applicable
+        if (
+            data["optimizer_state"] is not None
+            and data["optimizer_struct"] is not None
+        ):
+            optimizer_state = [
+                OptimizerState.deserialize(a_s_data)
+                for a_s_data in data["optimizer_state"]
+            ]
+            self._optimizer_state = jax.tree.unflatten(
+                data["optimizer_struct"], optimizer_state
+            )
+
         # remove rng from data["self_serialized"] since it's already
         # deserialized above
         data["self_serialized"].pop("rng", None)
+        # remove _optimizer_state from data["self_serialized"] since it's
+        # already deserialized above
+        data["self_serialized"].pop("_optimizer_state", None)
 
         # let default deserialization handle the rest of the attributes
         super().deserialize(
@@ -1681,6 +1761,10 @@ class Model(BaseModule):
             data["model_structure"] = data["model_structure"].item()
         if isinstance(data["self_serialized"], (onp.ndarray, np.ndarray)):
             data["self_serialized"] = data["self_serialized"].item()
+        if isinstance(data["optimizer_state"], (onp.ndarray, np.ndarray)):
+            data["optimizer_state"] = data["optimizer_state"].tolist()
+        if isinstance(data["optimizer_struct"], (onp.ndarray, np.ndarray)):
+            data["optimizer_struct"] = data["optimizer_struct"].item()
 
         # deserialize the model
         self.deserialize(data, strict_package_version=strict_package_version)

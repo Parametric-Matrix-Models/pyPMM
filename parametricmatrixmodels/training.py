@@ -13,21 +13,14 @@ from jax import grad, jit, lax
 from jaxtyping import Array, Float, Inexact, Integer, jaxtyped
 
 from . import tree_util as pmm_tree_util
-from .model_util import ModelParams, ModelState
+from .model_util import ModelParams, ModelParamsStruct, ModelState
 from .tree_util import (
     batch_leaves,
     random_permute_leaves,
     shapes_equal,
     uniform_leaf_shapes_equal,
 )
-from .typing import (
-    Any,
-    Callable,
-    Data,
-    PyTree,
-    Tuple,
-    TypeAlias,
-)
+from .typing import Any, Callable, Data, Dict, Params, PyTree, Tuple, TypeAlias
 
 """
     Complex Adam Optimizer in fully compiled JAX.
@@ -42,11 +35,33 @@ ParamArray: TypeAlias = Inexact[Array, "..."]
 @dataclass
 class OptimizerState:
     params: ParamArray
-    m: ParamArray
-    v: ParamArray
+    m: ParamArray | None
+    v: ParamArray | None
+    epoch: int | Integer[Array, ""]
 
     def __iter__(self):
-        return iter((self.params, self.m, self.v))
+        return iter((self.params, self.m, self.v, self.epoch))
+
+    def serialize(
+        self,
+    ) -> Dict[str, ParamArray | None | int | Integer[Array, ""]]:
+        return {
+            "params": self.params,
+            "m": self.m,
+            "v": self.v,
+            "epoch": self.epoch,
+        }
+
+    @staticmethod
+    def deserialize(
+        data: Dict[str, ParamArray | None | int | Integer[Array, ""]],
+    ) -> "OptimizerState":
+        return OptimizerState(
+            params=data["params"],
+            m=data["m"],
+            v=data["v"],
+            epoch=data["epoch"],
+        )
 
 
 # training_state contains:
@@ -202,6 +217,7 @@ def adam(
     Callable[[int, float, OptimizerState], OptimizerState],
     Callable[[OptimizerState], ParamArray],
     Callable[[ParamArray, OptimizerState], OptimizerState],
+    Callable[[int, OptimizerState], OptimizerState],
 ]:
     """
     Returns functions that computes the Adam update for real numbers.
@@ -210,26 +226,23 @@ def adam(
     step_size = make_schedule(step_size)
 
     @jaxtyped(typechecker=beartype)
-    def init(
-        x0: ParamArray,
-    ) -> OptimizerState:
+    def init(x0: ParamArray) -> OptimizerState:
         """
         Initializes the Adam optimizer state.
         """
         m = np.zeros_like(x0)
         v = np.zeros_like(x0)
-        return OptimizerState(x0, m, v)
+        return OptimizerState(x0, m, v, 0)
 
     @jaxtyped(typechecker=beartype)
     def update(
-        i: int | Integer[Array, ""],
         dx: ParamArray,
         state: OptimizerState,
     ) -> OptimizerState:
         """
         Computes the Adam update for real numbers.
         """
-        x, m, v = state
+        x, m, v, i = state
 
         # clip
         dx = np.clip(dx, -clip, clip)
@@ -240,14 +253,14 @@ def adam(
         m_hat = m / np.float32(1 - b1 ** (i + 1))
         v_hat = v / np.float32(1 - b2 ** (i + 1))
         x = x - step_size(i) * m_hat / (np.sqrt(v_hat) + eps)
-        return OptimizerState(x, m, v)
+        return OptimizerState(x, m, v, i + 1)
 
     @jaxtyped(typechecker=beartype)
     def get_params(state: OptimizerState) -> ParamArray:
         """
         Returns the parameters from the optimizer state.
         """
-        params, _, _ = state
+        params, _, _, _ = state
         return params
 
     @jaxtyped(typechecker=beartype)
@@ -257,10 +270,21 @@ def adam(
         """
         Updates the parameters directly in the optimizer state.
         """
-        _, m, v = state
-        return OptimizerState(new_params, m, v)
+        _, m, v, i = state
+        return OptimizerState(new_params, m, v, i)
 
-    return init, update, get_params, update_params_direct
+    @jaxtyped(typechecker=beartype)
+    def increment_epoch(
+        inc: int | Integer[Array, ""], state: OptimizerState
+    ) -> OptimizerState:
+        """
+        Increment per-parameter epoch counter. Useful for freezing/unfreezing
+        parameters and resuming training later.
+        """
+        x, m, v, i = state
+        return OptimizerState(x, m, v, i + inc)
+
+    return init, update, get_params, update_params_direct, increment_epoch
 
 
 @jaxtyped(typechecker=beartype)
@@ -275,6 +299,7 @@ def complex_adam(
     Callable[[int, ParamArray, OptimizerState], OptimizerState],
     Callable[[OptimizerState], ParamArray],
     Callable[[ParamArray, OptimizerState], OptimizerState],
+    Callable[[int, OptimizerState], OptimizerState],
 ]:
     """
     Returns functions that computes the Adam update for complex numbers.
@@ -289,16 +314,14 @@ def complex_adam(
         """
         m = np.zeros_like(x0)
         v = np.zeros_like(x0)
-        return OptimizerState(x0, m, v)
+        return OptimizerState(x0, m, v, 0)
 
     @jaxtyped(typechecker=beartype)
-    def update(
-        i: int | Integer[Array, ""], dx: ParamArray, state: OptimizerState
-    ) -> OptimizerState:
+    def update(dx: ParamArray, state: OptimizerState) -> OptimizerState:
         """
         Computes the Adam update for complex numbers.
         """
-        x, m, v = state
+        x, m, v, i = state
 
         # choose update based on dtype
         # this branch will be traced out since JAX arrays are static shape and
@@ -323,14 +346,14 @@ def complex_adam(
         v_hat = v / np.float32(1 - b2 ** (i + 1))
         x = x - (step_size(i) * m_hat / (np.sqrt(v_hat) + eps))
 
-        return OptimizerState(x, m, v)
+        return OptimizerState(x, m, v, i + 1)
 
     @jaxtyped(typechecker=beartype)
     def get_params(state: OptimizerState) -> ParamArray:
         """
         Returns the parameters from the optimizer state.
         """
-        params, _, _ = state
+        params, _, _, _ = state
         return params
 
     @jaxtyped(typechecker=beartype)
@@ -340,20 +363,31 @@ def complex_adam(
         """
         Updates the parameters directly in the optimizer state.
         """
-        _, m, v = state
-        return OptimizerState(new_params, m, v)
+        _, m, v, i = state
+        return OptimizerState(new_params, m, v, i)
 
-    return init, update, get_params, update_params_direct
+    @jaxtyped(typechecker=beartype)
+    def increment_epoch(
+        inc: int | Integer[Array, ""], state: OptimizerState
+    ) -> OptimizerState:
+        """
+        Increment per-parameter epoch counter. Useful for freezing/unfreezing
+        parameters and resuming training later.
+        """
+        x, m, v, i = state
+        return OptimizerState(x, m, v, i + inc)
+
+    return init, update, get_params, update_params_direct, increment_epoch
 
 
 @jaxtyped(typechecker=beartype)
 def _train_step(
-    update_fn: Callable[[int, ParamArray, OptimizerState], OptimizerState],
+    update_fn: Callable[[ParamArray, OptimizerState], OptimizerState],
     adam_states: PyTree[OptimizerState],
+    trainable_flags_flat: PyTree[bool],
     get_params: Callable[[OptimizerState], ParamArray],
     model_states: ModelState,
     model_rng: Any,
-    i: int | Integer[Array, ""],
     X_batch: Data,
     Y_batch: Data | None,
     Y_unc_batch: Data | None,
@@ -382,23 +416,33 @@ def _train_step(
         X_batch,
         Y_batch,
         Y_unc_batch,
-        jax.tree.map(
+        True,  # training mode
+        model_states,
+        model_rng,
+        *jax.tree.map(
             get_params,
             adam_states,
             is_leaf=lambda x: isinstance(x, OptimizerState),
         ),
-        True,  # training mode
-        model_states,
-        model_rng,
     )
 
+    # dparams is a List that contains only the gradients of the trainable
+    # parameters, corresponding to [state.trainable for state in adam_states]
+
+    # this only works because trainable_flags is static
+    new_adams = []
+
+    idx = 0
+    for trainable, state in zip(trainable_flags_flat, adam_states):
+        if trainable:
+            new_state = update_fn(dparams[idx], state)
+            new_adams.append(new_state)
+            idx += 1
+        else:
+            new_adams.append(state)
+
     return (
-        jax.tree.map(
-            lambda dp, a_s: update_fn(i, dp, a_s),
-            dparams,
-            adam_states,
-            is_leaf=lambda x: isinstance(x, OptimizerState),
-        ),
+        new_adams,
         new_states,
         new_model_rng,
     )
@@ -408,6 +452,8 @@ def _train_step(
     jit,
     static_argnames=(
         "update_fn",
+        "increment_epoch",
+        "trainable_flags_flat",
         "get_params",
         "update_params_direct",
         "loss_fn",
@@ -430,7 +476,11 @@ def _train(
     update_fn: Callable[
         [int, ParamArray, OptimizerState], OptimizerState
     ],  # static, jittable
+    increment_epoch: Callable[
+        [int, OptimizerState], OptimizerState
+    ],  # static, jittable
     adam_state: PyTree[OptimizerState],
+    trainable_flags_flat: PyTree[bool],
     get_params: Callable[[OptimizerState], ParamArray],  # static, jittable
     update_params_direct: Callable[
         [ParamArray, OptimizerState], OptimizerState
@@ -586,10 +636,10 @@ def _train(
                 X_val_batch,
                 Y_val_batch,
                 Y_unc_val_batch,
-                params,
                 False,  # validation mode
                 state,
                 model_rng,
+                *params,
             )
 
             return (
@@ -669,10 +719,10 @@ def _train(
                 X_val_batch,
                 Y_val_batch,
                 Y_unc_val_batch,
-                params,
                 False,  # validation mode
                 state,
                 model_rng,
+                *params,
             )
 
             # add the last batch loss to the mean
@@ -788,10 +838,11 @@ def _train(
         new_adam_state, new_model_state, new_model_rng = _train_step(
             update_fn,
             adam_state_,
+            trainable_flags_flat,
             get_params,
             model_state_,
             model_rng_,
-            epoch,
+            # epoch,
             X_batch,
             Y_batch,
             Y_unc_batch,
@@ -962,10 +1013,11 @@ def _train(
             adam_state, model_state, model_rng = _train_step(
                 update_fn,
                 adam_state,
+                trainable_flags_flat,
                 get_params,
                 model_state,
                 model_rng,
-                epoch,
+                # epoch,
                 X_batch,
                 Y_batch,
                 Y_unc_batch,
@@ -1037,6 +1089,10 @@ def _train(
             adam_state,
             is_leaf=lambda x: isinstance(x, OptimizerState),
         )
+        adam_state = [
+            increment_epoch(int(trainable), state)
+            for trainable, state in zip(trainable_flags_flat, adam_state)
+        ]
 
         # Return the updated state for the next epoch
         return (
@@ -1128,7 +1184,10 @@ def _train(
 
 @jaxtyped(typechecker=beartype)
 def train(
-    init_params: ModelParams,  # model parameters
+    resume: bool,  # whether to resume training from a previous state
+    adam_state: PyTree[OptimizerState] | None,  # Adam optimizer state
+    init_params: ModelParams | None,  # model parameters
+    trainable_flags: PyTree[bool, ModelParamsStruct],
     init_state: ModelState,  # model state
     init_rng: Any | int | None,  # model rng
     loss_fn: (
@@ -1199,8 +1258,20 @@ def train(
     """
     Train a model from scratch using the Adam optimizer.
     """
+
+    if resume and adam_state is None:
+        raise ValueError(
+            "If resume is True, adam_state must be provided to resume"
+            " training."
+        )
+    elif not resume and init_params is None:
+        raise ValueError(
+            "If resume is False, init_params must be provided to start"
+            " training."
+        )
+
     # check if any parameters are double precision and give a warning if so
-    if any(
+    if init_params is not None and any(
         (
             np.issubdtype(np.asarray(param).dtype, np.float64)
             or np.issubdtype(np.asarray(param).dtype, np.complex128)
@@ -1209,6 +1280,29 @@ def train(
     ):
         warnings.warn(
             "Some parameters are double precision. "
+            "This may lead to significantly slower training on certain "
+            "backends. It is strongly recommended to use single precision "
+            "(float32/complex64) parameters for training.",
+            UserWarning,
+        )
+    # check if any parameters in adam_state are double precision and give a
+    # warning if so
+    if (
+        resume
+        and adam_state is not None
+        and any(
+            jax.tree.leaves(
+                jax.tree.map(
+                    lambda p: np.issubdtype(np.asarray(p).dtype, np.float64)
+                    or np.issubdtype(np.asarray(p).dtype, np.complex128),
+                    adam_state,
+                )
+            )
+        )
+    ):
+
+        warnings.warn(
+            "Some parameters in adam_state are double precision. "
             "This may lead to significantly slower training on certain "
             "backends. It is strongly recommended to use single precision "
             "(float32/complex64) parameters for training.",
@@ -1395,10 +1489,70 @@ def train(
             " dimension)."
         )
 
+    # to support certain parameters being non-trainable, we need to re-sign the
+    # loss function so that the parameters are passed in as separate arguments,
+    # and then we can use jax.grad with argnums to only take gradients with
+    # respect to the trainable parameters
+
+    # this requires flattening the entire parameter PyTree and trainable flags
+    # PyTree, then re-treeing them on the fly
+    # they have to be flat in order for us to convert the trainable flags into
+    # a hashable type (tuple of bools) later
+    trainable_flags_flat, orig_train_flags_struct = jax.tree.flatten(
+        trainable_flags
+    )
+
+    if init_params is not None:
+        init_params_flat, orig_param_struct = jax.tree.flatten(init_params)
+        if orig_param_struct != orig_train_flags_struct:
+            raise ValueError(
+                "The structure of init_params must match the structure of"
+                f" trainable_flags. Got {orig_param_struct} and"
+                f" {orig_train_flags_struct}."
+            )
+        orig_struct = orig_param_struct
+    if resume and adam_state is not None:
+        adam_state_flat, orig_adam_struct = jax.tree.flatten(
+            adam_state, is_leaf=lambda x: isinstance(x, OptimizerState)
+        )
+        if orig_adam_struct != orig_train_flags_struct:
+            raise ValueError(
+                "The structure of adam_state must match the structure of"
+                f" trainable_flags. Got {orig_adam_struct} and"
+                f" {orig_train_flags_struct}."
+            )
+        orig_struct = orig_adam_struct
+
+    # now we resign the loss function to take the parameters as separate
+    # arguments
+
+    orig_loss_fn = loss_fn
+
+    @jaxtyped(typechecker=beartype)
+    def loss_fn(
+        X: Data,
+        Y: Data,
+        Y_unc: None,
+        training: bool,
+        state: ModelState,
+        rng: Any,
+        *params: Params,
+    ) -> Tuple[float | Float[Array, ""], ModelState]:
+        reconstructed_params = jax.tree.unflatten(orig_struct, params)
+        return orig_loss_fn(
+            X, Y, Y_unc, reconstructed_params, training, state, rng
+        )
+
+    # now we calculate which argnums are trainable based on the
+    # trainable_flags_flat
+    trainable_argnums = [
+        6 + i for i, flag in enumerate(trainable_flags_flat) if flag
+    ]
+
     # set up everything for the JAX trainer
     # has_aux=True allows us to return the new state from the loss function
     # this will return (gradients, new_state)
-    grad_loss_fn = grad(loss_fn, argnums=3, has_aux=True)
+    grad_loss_fn = grad(loss_fn, argnums=trainable_argnums, has_aux=True)
 
     # random key for JAX
     if batch_rng is None:
@@ -1414,7 +1568,13 @@ def train(
 
     # Initialize the optimizer
     if real:
-        init_fn, update_fn, get_params, update_params_direct = adam(
+        (
+            init_fn,
+            update_fn,
+            get_params,
+            update_params_direct,
+            increment_epoch,
+        ) = adam(
             step_size=lr,
             b1=b1,
             b2=b2,
@@ -1423,7 +1583,13 @@ def train(
         )
     else:
         # use complex Adam
-        init_fn, update_fn, get_params, update_params_direct = complex_adam(
+        (
+            init_fn,
+            update_fn,
+            get_params,
+            update_params_direct,
+            increment_epoch,
+        ) = complex_adam(
             step_size=lr,
             b1=b1,
             b2=b2,
@@ -1431,7 +1597,8 @@ def train(
             clip=clip,
         )
 
-    adam_state = jax.tree.map(init_fn, init_params)
+    if not resume or adam_state is None:
+        adam_state_flat = jax.tree.map(init_fn, init_params_flat)
 
     # make sure the validation batch size isn't larger than the validation set
     num_val_samples = jax.tree.leaves(X_val)[0].shape[0]
@@ -1448,7 +1615,7 @@ def train(
 
     # train
     (
-        final_adam_state,
+        final_adam_state_flat,
         final_model_state,
         final_model_rng,
         final_epoch,
@@ -1457,7 +1624,9 @@ def train(
     ) = _train(
         batch_rng,
         update_fn,
-        adam_state,
+        increment_epoch,
+        adam_state_flat,
+        tuple(trainable_flags_flat),
         get_params,
         update_params_direct,
         init_state,  # initial model state
@@ -1482,13 +1651,18 @@ def train(
         verbose=verbose,
     )
 
+    # rebuild the params PyTree
+    best_params_list = jax.tree.map(
+        get_params,
+        final_adam_state_flat,
+        is_leaf=lambda x: isinstance(x, OptimizerState),
+    )
+    best_params = jax.tree.unflatten(orig_struct, best_params_list)
+    final_adam_state = jax.tree.unflatten(orig_struct, final_adam_state_flat)
+
     # return the final parameters
     return (
-        jax.tree.map(
-            get_params,
-            final_adam_state,
-            is_leaf=lambda x: isinstance(x, OptimizerState),
-        ),
+        best_params,
         final_model_state,
         final_model_rng,
         final_epoch,
