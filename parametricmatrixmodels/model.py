@@ -82,6 +82,18 @@ class Model(BaseModule):
             + "\n)"
         )
 
+    # override the trainable property
+    @property
+    def trainable(self) -> bool:
+        return any(
+            module.trainable for module in jax.tree.leaves(self.modules)
+        )
+
+    @trainable.setter
+    def trainable(self, value: bool) -> None:
+        for module in jax.tree.leaves(self.modules):
+            module.trainable = value
+
     def __init__(
         self,
         modules: ModelModules | BaseModule | None = None,
