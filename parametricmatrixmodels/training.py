@@ -975,7 +975,12 @@ def _train(
         batch_carry = lax.fori_loop(
             0, num_batches, batch_body_fn, batch_carry, unroll=unroll
         )
-        _, _, _, adam_state, model_state, model_rng, _, _, _ = batch_carry
+
+        # have to read the "epoch" back from the carry even though it's
+        # guaranteed to be the same; otherwise the pure_callbacks in
+        # batch_carry may be elided (i.e. no verbose printing will occur) since
+        # JAX rightly deduces that these callbacks can't effect the output
+        _, _, _, adam_state, model_state, model_rng, epoch, _, _ = batch_carry
 
         # deal with possible remainder, again this may be traced out
         if batch_remainder > 0:
@@ -1073,7 +1078,10 @@ def _train(
 
         if verbose:
             epoch += jax.pure_callback(
-                end_progress_bar_callback, epoch, val_loss, best_val_loss
+                end_progress_bar_callback,
+                epoch,
+                val_loss,
+                best_val_loss,
             )
 
         # Call the callback function
