@@ -8,6 +8,7 @@ Modules can be combined to create Models.
 from __future__ import annotations
 
 import inspect
+import warnings
 from abc import ABC, abstractmethod
 
 import jax
@@ -24,6 +25,7 @@ from parametricmatrixmodels.typing import (
     Dict,
     HyperParams,
     ModuleCallable,
+    NonSerializable,
     Params,
     Serializable,
     State,
@@ -752,11 +754,42 @@ class BaseModule(ABC):
 
         all_hyperparameters: Dict[str, Any] = self.get_hyperparameters()
 
+        # None and Serializable types can be automatically serialized
         autoserializable_hyperparameters = {
             k: v
             for k, v in all_hyperparameters.items()
-            if isinstance(v, Serializable)
+            if v is None
+            or (
+                isinstance(v, Serializable)
+                and not isinstance(v, NonSerializable)
+            )
         }
+
+        if (
+            len(autoserializable_hyperparameters) < len(all_hyperparameters)
+            and self.__class__.serialize is BaseModule.serialize
+        ):
+            unserializable_keys = set(all_hyperparameters.keys()) - set(
+                autoserializable_hyperparameters.keys()
+            )
+            warnings.warn(
+                f"Module '{self.name}' ({self.__class__.__name__}) uses the"
+                " default implementation of BaseModule.serialize() and has"
+                " hyperparameters that are not able to be automatically"
+                " serialized and therefore will not be included in the"
+                " serialized data. Unserializable hyperparameter keys and"
+                " types:\n{"
+                + ", ".join(
+                    f"'{k}': {type(all_hyperparameters[k])}"
+                    for k in unserializable_keys
+                )
+                + "}.\n"
+                " To include these hyperparameters in"
+                " the serialized data, this module should implement its own"
+                " serialize() method that handles these hyperparameters"
+                " explicitly.",
+                RuntimeWarning,
+            )
 
         return {
             "name": self.name,

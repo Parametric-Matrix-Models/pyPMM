@@ -4,6 +4,7 @@ from sys import version_info
 from typing import Any, TypeAlias
 
 import numpy as onp
+from jax._src.prng import PRNGKeyArray
 from jaxtyping import (
     Array,
     Complex,
@@ -188,3 +189,8 @@ Serializable: TypeAlias = (
     | PyTree[Shaped[Array, "..."]]
     | PyTree[onp.ndarray, "..."]
 )
+
+#: Type for all types that inherit from ``Serializable`` but are not themselves
+#: serializable. This is used to identify types that require custom saving and
+#: loading methods. This need not be a complete list
+NonSerializable: TypeAlias = PyTree[PRNGKeyArray] | PRNGKeyArray
