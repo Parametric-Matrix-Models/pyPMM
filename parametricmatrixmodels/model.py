@@ -1061,8 +1061,10 @@ class Model(BaseModule):
             | None
         ) = None,  # uncertainty in the validation targets, if applicable
         loss_fn: str | Callable = "mse",
+        val_loss_fn: str | Callable | None = None,
         lr: float | Callable[[int], float] = 1e-3,
         batch_size: int = 32,
+        val_batch_size: int = 0,
         epochs: int = 100,
         target_loss: float = -np.inf,
         early_stopping_patience: int = 100,
@@ -1101,57 +1103,76 @@ class Model(BaseModule):
         # handle that
         callable_ = self._get_callable()
 
-        # make the loss function
-        if isinstance(loss_fn, str):
-            loss_fn_ = make_loss_fn(
-                loss_fn, lambda x, p, t, s, r: callable_(p, x, t, s, r)
-            )
-        else:
-            # if the loss function is already a callable, we wrap it with the
-            # model callable
-            # whether or not Y and Y_unc are provided changes the signature
-            # of the loss function
-            if Y is not None and Y_unc is not None:
-                # the loss function should be
-                # loss_fn(X, Y, Y_unc, Y_pred) -> err
-                def loss_fn_(X, Y, Y_unc, params, training, states, rng):
-                    Y_pred, new_states = callable_(
-                        params, X, training, states, rng
-                    )
-                    err = loss_fn(X, Y, Y_unc, Y_pred)
-                    return err, new_states
-
-            elif Y is not None and Y_unc is None:
-                # the loss function should be
-                # loss_fn(X, Y, Y_pred) -> err
-                def loss_fn_(X, Y, params, training, states, rng):
-                    Y_pred, new_states = callable_(
-                        params, X, training, states, rng
-                    )
-                    err = loss_fn(X, Y, Y_pred)
-                    return err, new_states
-
-            elif Y is None and Y_unc is None:
-                # the loss function should be
-                # loss_fn(X, pred) -> err
-                # (unsupervised training)
-                def loss_fn_(X, params, training, states, rng):
-                    pred, new_states = callable_(
-                        params, X, training, states, rng
-                    )
-                    err = loss_fn(X, pred)
-                    return err, new_states
-
-            else:
-                raise ValueError(
-                    "Invalid loss function signature. "
-                    "If Y and Y_unc are provided, the loss function should be "
-                    "loss_fn(X, Y, Y_unc, Y_pred) -> err. "
-                    "If only Y is provided, it should be "
-                    "loss_fn(X, Y, Y_pred) -> err. "
-                    "If neither are provided, it should be "
-                    "loss_fn(X, pred) -> err."
+        def clean_loss_fn(
+            loss_fn_: str | Callable, Y_prov: bool, Y_unc_prov: bool
+        ) -> Callable:
+            # make the loss function
+            if isinstance(loss_fn_, str):
+                loss_fn__ = make_loss_fn(
+                    loss_fn_, lambda x, p, t, s, r: callable_(p, x, t, s, r)
                 )
+            else:
+                # if the loss function is already a callable, we wrap it with
+                # the model callable
+                # whether or not Y and Y_unc are provided changes the signature
+                # of the loss function
+                if Y_prov and Y_unc_prov:
+                    # the loss function should be
+                    # loss_fn_(X, Y, Y_unc, Y_pred) -> err
+                    def loss_fn__(
+                        epoch, X, Y, Y_unc, params, training, states, rng
+                    ):
+                        Y_pred, new_states = callable_(
+                            params, X, training, states, rng
+                        )
+                        err = loss_fn_(epoch, X, Y, Y_unc, Y_pred)
+                        return err, new_states
+
+                elif Y_prov and not Y_unc_prov:
+                    # the loss function should be
+                    # loss_fn_(X, Y, Y_pred) -> err
+                    def loss_fn__(epoch, X, Y, params, training, states, rng):
+                        Y_pred, new_states = callable_(
+                            params, X, training, states, rng
+                        )
+                        err = loss_fn_(epoch, X, Y, Y_pred)
+                        return err, new_states
+
+                elif not Y_prov and not Y_unc_prov:
+                    # the loss function should be
+                    # loss_fn_(X, pred) -> err
+                    # (unsupervised training)
+                    def loss_fn__(epoch, X, params, training, states, rng):
+                        pred, new_states = callable_(
+                            params, X, training, states, rng
+                        )
+                        err = loss_fn_(epoch, X, pred)
+                        return err, new_states
+
+                else:
+                    raise ValueError(
+                        "Invalid loss function signature. If Y and Y_unc are"
+                        " provided, the loss function should be loss_fn(epoch,"
+                        " X, Y, Y_unc, Y_pred) -> err. If only Y is provided,"
+                        " it should be loss_fn(epoch, X, Y, Y_pred) -> err. If"
+                        " neither are provided, it should be loss_fn(epoch, X,"
+                        " pred) -> err."
+                    )
+
+            return loss_fn__
+
+        Y_prov = Y is not None
+        Y_unc_prov = Y_unc is not None
+        loss_fn_ = clean_loss_fn(loss_fn, Y_prov, Y_unc_prov)
+
+        # repeat for validation
+        Y_val_prov = Y_val is not None
+        Y_val_unc_prov = Y_val_unc is not None
+        val_loss_fn_ = (
+            clean_loss_fn(val_loss_fn, Y_val_prov, Y_val_unc_prov)
+            if val_loss_fn is not None
+            else loss_fn_
+        )
 
         # check if any of the model parameters are complex
         params = self.get_params()
@@ -1183,6 +1204,7 @@ class Model(BaseModule):
             init_state=self.get_state(),
             init_rng=self.get_rng(),
             loss_fn=loss_fn_,
+            val_loss_fn=val_loss_fn_,
             X=X,
             Y=Y,
             Y_unc=Y_unc,
@@ -1191,6 +1213,7 @@ class Model(BaseModule):
             Y_val_unc=Y_val_unc,
             lr=lr,
             batch_size=batch_size,
+            val_batch_size=val_batch_size,
             epochs=epochs,
             target_loss=target_loss,
             early_stopping_patience=early_stopping_patience,

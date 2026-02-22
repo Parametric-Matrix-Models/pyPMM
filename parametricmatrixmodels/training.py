@@ -393,6 +393,7 @@ def _train_step(
     Y_unc_batch: Data | None,
     grad_loss_fn: Callable[
         [
+            int | Integer[Array, ""],
             Data,
             Data | None,
             Data | None,
@@ -403,6 +404,7 @@ def _train_step(
         ],
         Tuple[ModelParams, ModelState],
     ],
+    epoch: int | Integer[Array, ""],
 ):
     """
     Performs a single training step.
@@ -413,6 +415,7 @@ def _train_step(
 
     # Compute gradients
     dparams, new_states = grad_loss_fn(
+        epoch,
         X_batch,
         Y_batch,
         Y_unc_batch,
@@ -457,6 +460,7 @@ def _train_step(
         "get_params",
         "update_params_direct",
         "loss_fn",
+        "val_loss_fn",
         "grad_loss_fn",
         "batch_size",
         "val_batch_size",
@@ -506,11 +510,15 @@ def _train(
         Inexact[Array, "num_val_samples target0 ?*targets"], " OutStruct"
     ],  # uncertainty in the validation targets, if applicable
     loss_fn: Callable[
-        [Data, Data, Data, ModelParams, bool, ModelState, Any],
+        [...],
+        Tuple[float, ModelState],
+    ],  # static, jittable
+    val_loss_fn: Callable[
+        [...],
         Tuple[float, ModelState],
     ],  # static, jittable
     grad_loss_fn: Callable[
-        [Data, Data, Data, ModelParams, bool, ModelState, Any],
+        [...],
         Tuple[ModelParams, ModelState],
     ],  # static, jittable
     batch_size: int,  # static [default should be the full dataset]
@@ -598,15 +606,27 @@ def _train(
         state: ModelState,
         model_rng: Any,
         epoch_rng: Any,
+        epoch: int | Integer[Array, ""],
     ) -> float | Float[Array, ""]:
         @jaxtyped(typechecker=beartype)
         def batch_val_body_fn(
             batch_idx: int | Integer[Array, ""],
             batch_carry: Tuple[
-                Data, Data | None, Data | None, float | Float[Array, ""]
+                int | Integer[Array, ""],
+                Data,
+                Data | None,
+                Data | None,
+                float | Float[Array, ""],
             ],
-        ) -> Tuple[Data, Data | None, Data | None, float | Float[Array, ""]]:
+        ) -> Tuple[
+            int | Integer[Array, ""],
+            Data,
+            Data | None,
+            Data | None,
+            float | Float[Array, ""],
+        ]:
             (
+                epoch,
                 shuffled_val_X,
                 shuffled_val_Y,
                 shuffled_val_Y_unc,
@@ -632,7 +652,8 @@ def _train(
 
             # Compute the loss for this batch
             # do not update state or rng in validation mode
-            val_loss, _ = loss_fn(
+            val_loss, _ = val_loss_fn(
+                epoch,
                 X_val_batch,
                 Y_val_batch,
                 Y_unc_val_batch,
@@ -643,6 +664,7 @@ def _train(
             )
 
             return (
+                epoch,
                 shuffled_val_X,
                 shuffled_val_Y,
                 shuffled_val_Y_unc,
@@ -667,11 +689,12 @@ def _train(
         )
 
         # scan over the validation batches
-        _, _, _, mean_val_loss = lax.fori_loop(
+        _, _, _, _, mean_val_loss = lax.fori_loop(
             0,
             num_val_batches,
             batch_val_body_fn,
             (
+                epoch,
                 shuffled_X_val,
                 shuffled_Y_val,
                 shuffled_Y_unc_val,
@@ -715,7 +738,8 @@ def _train(
 
             # Compute the loss for this batch
             # do not update state or rng in validation mode
-            val_loss, _ = loss_fn(
+            val_loss, _ = val_loss_fn(
+                epoch,
                 X_val_batch,
                 Y_val_batch,
                 Y_unc_val_batch,
@@ -847,6 +871,7 @@ def _train(
             Y_batch,
             Y_unc_batch,
             grad_loss_fn,
+            epoch,
         )
 
         return (
@@ -1027,6 +1052,7 @@ def _train(
                 Y_batch,
                 Y_unc_batch,
                 grad_loss_fn,
+                epoch,
             )
 
         # Validation step
@@ -1043,6 +1069,7 @@ def _train(
             model_state,
             model_rng,
             epoch_rng,
+            epoch,
         )
 
         # patience handling
@@ -1119,15 +1146,6 @@ def _train(
         )
 
     # get initial validation loss
-    # val_loss, _ = loss_fn(
-    #    X_val,
-    #    Y_val,
-    #    Y_val_unc,
-    #    tuple(map(get_params, adam_state)),
-    #    False,  # validation mode
-    #    init_state,
-    #    init_rng,
-    # )
     init_rng, epoch_rng = jax.random.split(init_rng)
     val_loss = batched_val_loss_fn(
         X_val,
@@ -1141,6 +1159,7 @@ def _train(
         init_state,
         init_rng,
         epoch_rng,
+        start_epoch,
     )
 
     # Initial state for the training loop
@@ -1201,17 +1220,82 @@ def train(
     loss_fn: (
         # supervised with uncertainty
         Callable[
-            [Data, Data, Data, ModelParams, bool, ModelState, Any],
+            [
+                int | Integer[Array, ""],
+                Data,
+                Data,
+                Data,
+                ModelParams,
+                bool,
+                ModelState,
+                Any,
+            ],
             Tuple[float, ModelState],
         ]
         # unsupervised
         | Callable[
-            [Data, ModelParams, bool, ModelState, Any],
+            [
+                int | Integer[Array, ""],
+                Data,
+                ModelParams,
+                bool,
+                ModelState,
+                Any,
+            ],
             Tuple[float, ModelState],
         ]
         # supervised without uncertainty
         | Callable[
-            [Data, Data, ModelParams, bool, ModelState, Any],
+            [
+                int | Integer[Array, ""],
+                Data,
+                Data,
+                ModelParams,
+                bool,
+                ModelState,
+                Any,
+            ],
+            Tuple[float, ModelState],
+        ]
+    ),  # loss function, three different signatures supported
+    val_loss_fn: (
+        # supervised with uncertainty
+        Callable[
+            [
+                int | Integer[Array, ""],
+                Data,
+                Data,
+                Data,
+                ModelParams,
+                bool,
+                ModelState,
+                Any,
+            ],
+            Tuple[float, ModelState],
+        ]
+        # unsupervised
+        | Callable[
+            [
+                int | Integer[Array, ""],
+                Data,
+                ModelParams,
+                bool,
+                ModelState,
+                Any,
+            ],
+            Tuple[float, ModelState],
+        ]
+        # supervised without uncertainty
+        | Callable[
+            [
+                int | Integer[Array, ""],
+                Data,
+                Data,
+                ModelParams,
+                bool,
+                ModelState,
+                Any,
+            ],
             Tuple[float, ModelState],
         ]
     ),  # loss function, three different signatures supported
@@ -1246,6 +1330,7 @@ def train(
     ) = None,  # uncertainty in the validation targets, if applicable
     lr: float | Callable[[int], float] = 1e-3,
     batch_size: int = 32,
+    val_batch_size: int = 0,
     epochs: int = 100,
     target_loss: float = 1e-12,
     early_stopping_patience: int = 100,
@@ -1415,46 +1500,8 @@ def train(
             " for supervised training."
         )
 
-    # if no Y data is provided, assume unsupervised training
-    # make Y data a dummy array with the same leading dimension as X
-    # and redefine the loss function to take Y as a dummy variable
-    if Y is None:
-        loss_fn_unsupervised = loss_fn
-
-        @jaxtyped(typechecker=beartype)
-        def loss_fn(
-            X: Data,
-            Y: None,
-            params: ModelParams,
-            training: bool,
-            state: ModelState,
-            rng: Any,
-        ) -> Tuple[float | Float[Array, ""], ModelState]:
-            """
-            Wrapper for the loss function that ignores Y.
-            """
-            return loss_fn_unsupervised(X, params, training, state, rng)
-
-    if Y_unc is None:
-        loss_fn_no_unc = loss_fn
-
-        @jaxtyped(typechecker=beartype)
-        def loss_fn(
-            X: Data,
-            Y: Data,
-            Y_unc: None,
-            params: ModelParams,
-            training: bool,
-            state: ModelState,
-            rng: Any,
-        ) -> Tuple[float | Float[Array, ""], ModelState]:
-            """
-            Wrapper for the loss function that ignores Y_unc.
-            """
-            return loss_fn_no_unc(X, Y, params, training, state, rng)
-
-        if Y_val is not None:
-            Y_val_unc = None
+    if Y_unc is None and Y_val is not None:
+        Y_val_unc = None
 
     # input handling
     # if validation data is not provided, use the training data
@@ -1462,6 +1509,70 @@ def train(
         X_val = X
         Y_val = Y
         Y_val_unc = Y_unc
+
+    def clean_loss_fn(
+        loss_fn_: Callable[..., Tuple[float, ModelState]],
+        Y_prov: bool,
+        Y_unc_prov: bool,
+    ) -> Callable[..., Tuple[float, ModelState]]:
+        """
+        Make a loss function with a uniform signature
+        """
+
+        if not Y_prov:
+            # if no Y data is provided, assume unsupervised training
+            # make Y data a dummy array with the same leading dimension as X
+            # and redefine the loss function to take Y as a dummy variable
+            loss_fn_unsupervised = loss_fn_
+
+            @jaxtyped(typechecker=beartype)
+            def loss_fn_wrapper(
+                epoch: int | Integer[Array, ""],
+                X: Data,
+                Y: None,
+                params: ModelParams,
+                training: bool,
+                state: ModelState,
+                rng: Any,
+            ) -> Tuple[float | Float[Array, ""], ModelState]:
+                """
+                Wrapper for the loss function that ignores Y.
+                """
+                return loss_fn_unsupervised(
+                    epoch, X, params, training, state, rng
+                )
+
+            loss_fn_ = loss_fn_wrapper
+
+        if not Y_unc_prov:
+            loss_fn_no_unc = loss_fn_
+
+            @jaxtyped(typechecker=beartype)
+            def loss_fn_wrapper(
+                epoch: int | Integer[Array, ""],
+                X: Data,
+                Y: Data,
+                Y_unc: None,
+                params: ModelParams,
+                training: bool,
+                state: ModelState,
+                rng: Any,
+            ) -> Tuple[float | Float[Array, ""], ModelState]:
+                """
+                Wrapper for the loss function that ignores Y_unc.
+                """
+                return loss_fn_no_unc(
+                    epoch, X, Y, params, training, state, rng
+                )
+
+            loss_fn_ = loss_fn_wrapper
+
+        return loss_fn_
+
+    loss_fn = clean_loss_fn(loss_fn, Y is not None, Y_unc is not None)
+    val_loss_fn = clean_loss_fn(
+        val_loss_fn, Y_val is not None, Y_val_unc is not None
+    )
 
     # check sizes
     # this should've already been caught by jaxtyping, but just in case
@@ -1533,11 +1644,16 @@ def train(
 
     # now we resign the loss function to take the parameters as separate
     # arguments
+    # this only needs to be done for the training loss function, since we don't
+    # take gradients of the validation loss function, but it's easier to just
+    # do it for both to keep the signatures consistent
 
     orig_loss_fn = loss_fn
+    orig_val_loss_fn = val_loss_fn
 
     @jaxtyped(typechecker=beartype)
     def loss_fn(
+        epoch: int | Integer[Array, ""],
         X: Data,
         Y: Data,
         Y_unc: None,
@@ -1548,13 +1664,29 @@ def train(
     ) -> Tuple[float | Float[Array, ""], ModelState]:
         reconstructed_params = jax.tree.unflatten(orig_struct, params)
         return orig_loss_fn(
-            X, Y, Y_unc, reconstructed_params, training, state, rng
+            epoch, X, Y, Y_unc, reconstructed_params, training, state, rng
+        )
+
+    @jaxtyped(typechecker=beartype)
+    def val_loss_fn(
+        epoch: int | Integer[Array, ""],
+        X: Data,
+        Y: Data,
+        Y_unc: None,
+        training: bool,
+        state: ModelState,
+        rng: Any,
+        *params: Params,
+    ) -> Tuple[float | Float[Array, ""], ModelState]:
+        reconstructed_params = jax.tree.unflatten(orig_struct, params)
+        return orig_val_loss_fn(
+            epoch, X, Y, Y_unc, reconstructed_params, training, state, rng
         )
 
     # now we calculate which argnums are trainable based on the
     # trainable_flags_flat
     trainable_argnums = [
-        6 + i for i, flag in enumerate(trainable_flags_flat) if flag
+        7 + i for i, flag in enumerate(trainable_flags_flat) if flag
     ]
 
     # set up everything for the JAX trainer
@@ -1610,16 +1742,16 @@ def train(
 
     # make sure the validation batch size isn't larger than the validation set
     num_val_samples = jax.tree.leaves(X_val)[0].shape[0]
-    if num_val_samples < batch_size:
+    if val_batch_size > 0 and num_val_samples < val_batch_size:
         val_batch_size = num_val_samples
         warnings.warn(
-            f"Validation batch size {batch_size} is larger than the number of"
-            f" validation samples {num_val_samples}. Using the full validation"
-            " dataset as a single batch.",
+            f"Validation batch size {val_batch_size} is larger than the number"
+            f" of validation samples {num_val_samples}. Using the full"
+            " validation dataset as a single batch.",
             UserWarning,
         )
-    else:
-        val_batch_size = batch_size
+    elif val_batch_size <= 0:
+        val_batch_size = num_val_samples
 
     # train
     (
@@ -1646,6 +1778,7 @@ def train(
         Y_val,
         Y_val_unc,
         loss_fn,
+        val_loss_fn,
         grad_loss_fn,
         batch_size=batch_size,
         val_batch_size=val_batch_size,
@@ -1690,7 +1823,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
     """
     if fn_name == "mse":
 
-        def loss_fn(X, Y, params, training, state, rng):
+        def loss_fn(epoch, X, Y, params, training, state, rng):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # abs(Y_pred - Y) ** 2
             return (
@@ -1702,7 +1835,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
 
     elif fn_name == "mae":
 
-        def loss_fn(X, Y, params, training, state, rng):
+        def loss_fn(epoch, X, Y, params, training, state, rng):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # abs(Y_pred - Y)
             return (
@@ -1720,7 +1853,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
             delta = 1.0
 
         # Pseudo-Huber loss
-        def loss_fn(X, Y, params, training, state, rng):
+        def loss_fn(epoch, X, Y, params, training, state, rng):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
 
             # delta ** 2 * (sqrt(1 + ((Y_pred - Y) / delta) ** 2) - 1)
@@ -1741,7 +1874,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
 
     elif fn_name == "mse_unc":
         # MSE with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params, training, state, rng):
+        def loss_fn(epoch, X, Y, Y_unc, params, training, state, rng):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # Y_unc is assumed to be the uncertainty in the targets
             # abs(Y_pred - Y) ** 2 / abs(Y_unc)**2
@@ -1756,7 +1889,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
 
     elif fn_name == "mae_unc":
         # MAE with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params, training, state, rng):
+        def loss_fn(epoch, X, Y, Y_unc, params, training, state, rng):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # Y_unc is assumed to be the uncertainty in the targets
             # abs(Y_pred - Y) / Y_unc
@@ -1771,7 +1904,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
 
     elif fn_name == "mre":
         # Mean relative error
-        def loss_fn(X, Y, params, training, state, rng):
+        def loss_fn(epoch, X, Y, params, training, state, rng):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # abs((Y_pred - Y) / (Y + 1e-4))
             return (
@@ -1788,7 +1921,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
 
     elif fn_name == "mre_unc":
         # Mean relative error with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params, training, state, rng):
+        def loss_fn(epoch, X, Y, Y_unc, params, training, state, rng):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # abs((Y_pred - Y) / ((Y + 1e-4) * Y_unc))
             return (
@@ -1808,7 +1941,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
 
     elif fn_name == "mrd":
         # mean relative difference
-        def loss_fn(X, Y, params, training, state, rng):
+        def loss_fn(epoch, X, Y, params, training, state, rng):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # abs((Y_pred - Y) / ((Y + Y_pred) * 2.0 + 1e-4))
             return (
@@ -1831,7 +1964,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
 
     elif fn_name == "mrd_unc":
         # mean relative difference with uncertainty in the targets
-        def loss_fn(X, Y, Y_unc, params, training, state, rng):
+        def loss_fn(epoch, X, Y, Y_unc, params, training, state, rng):
             Y_pred, new_state = model_fn(X, params, training, state, rng)
             # abs((Y_pred - Y) / (((Y + Y_pred) * 2.0 + 1e-4) * Y_unc))
             return (
@@ -1857,7 +1990,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
 
     elif fn_name == "mse_unsupervised":
 
-        def loss_fn(X, params, training, state, rng):
+        def loss_fn(epoch, X, params, training, state, rng):
             """
             Mean squared error loss function for unsupervised training.
             """
@@ -1872,7 +2005,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
 
     elif fn_name == "mae_unsupervised":
 
-        def loss_fn(X, params, training, state, rng):
+        def loss_fn(epoch, X, params, training, state, rng):
             """
             Mean absolute error loss function for unsupervised training.
             """
@@ -1887,7 +2020,7 @@ def make_loss_fn(fn_name: str, model_fn: Callable):
 
     elif fn_name == "mre_unsupervised":
 
-        def loss_fn(X, params, training, state, rng):
+        def loss_fn(epoch, X, params, training, state, rng):
             """
             Mean relative error loss function for unsupervised training.
             """
