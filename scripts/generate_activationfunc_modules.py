@@ -85,7 +85,6 @@ funcs = {
     "Exp2": "jax.numpy.exp2",
     "Expm1": "jax.numpy.expm1",
     "FAbs": "jax.numpy.fabs",
-    "Fix": "jax.numpy.fix",
     "FloatPower": "jax.numpy.float_power",
     "Floor": "jax.numpy.floor",
     "FloorDivide": "jax.numpy.floor_divide",

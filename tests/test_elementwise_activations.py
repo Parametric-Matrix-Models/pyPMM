@@ -70,7 +70,6 @@ funcs = {
     "Exp2": (pmm.modules.Exp2, jax.numpy.exp2, (), {}),
     "Expm1": (pmm.modules.Expm1, jax.numpy.expm1, (), {}),
     "FAbs": (pmm.modules.FAbs, jax.numpy.fabs, (), {}),
-    "Fix": (pmm.modules.Fix, jax.numpy.fix, (), {}),
     "FloatPower": (pmm.modules.FloatPower, jax.numpy.float_power, (1.0,), {}),
     "Floor": (pmm.modules.Floor, jax.numpy.floor, (), {}),
     "FloorDivide": (

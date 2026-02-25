@@ -91,6 +91,7 @@ class Model(BaseModule):
 
     @trainable.setter
     def trainable(self, value: bool) -> None:
+        print(f"{self.name}.trainable set to {value}.")
         for module in jax.tree.leaves(self.modules):
             module.trainable = value
 
@@ -497,6 +498,7 @@ class Model(BaseModule):
         return_state: bool = False,
         update_state: bool = False,
         max_batch_size: int | None = None,
+        verbose: bool = False,
     ) -> Tuple[Data, ModelState] | Data:
         """
         Call the model with the input data.
@@ -564,7 +566,9 @@ class Model(BaseModule):
         elif isinstance(rng, int):
             rng = jax.random.key(rng)
 
-        autobatched_callable = autobatch(self.callable, max_batch_size)
+        autobatched_callable = autobatch(
+            self.callable, max_batch_size, verbose=verbose
+        )
 
         out, new_state = autobatched_callable(
             self.get_params(), X_, False, self.get_state(), rng
@@ -1715,6 +1719,10 @@ class Model(BaseModule):
         # remove _optimizer_state from data["self_serialized"] since it's
         # already deserialized above
         data["self_serialized"].pop("_optimizer_state", None)
+        # remove "trainable" from data["self_serialized"] since it's not needed
+        # and will cause issues overwriting the module's own trainable
+        # attribute
+        data["self_serialized"].pop("trainable", None)
 
         # let default deserialization handle the rest of the attributes
         super().deserialize(

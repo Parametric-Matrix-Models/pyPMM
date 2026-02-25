@@ -138,10 +138,7 @@ class Constant(BaseModule):
             sample_leaf = jax.tree.leaves(data)[0]
             batch_size = sample_leaf.shape[0]
 
-            if self.trainable:
-                constant = params
-            else:
-                constant = self.constant
+            constant = params
 
             constant_broadcasted = jax.tree.map(
                 lambda c: np.broadcast_to(
@@ -229,14 +226,6 @@ class Constant(BaseModule):
 
     def get_hyperparameters(self) -> HyperParams:
         return {
-            **(
-                {
-                    "constant": self.constant,
-                }
-                if not self.trainable
-                else {}
-            ),
-            "trainable": self.trainable,
             "shape": self.shape,
             "init_magnitude": self.init_magnitude,
             "real": self.real,
@@ -247,16 +236,7 @@ class Constant(BaseModule):
         super(Constant, self).set_hyperparameters(hyperparams)
 
     def get_params(self) -> Params:
-        if self.trainable:
-            return self.constant
-        else:
-            return ()
+        return self.constant
 
     def set_params(self, params: Params) -> None:
-        if self.trainable:
-            self.constant = params
-        else:
-            if len(params) != 0:
-                raise ValueError(
-                    "Cannot set parameters for non-trainable Constant module."
-                )
+        self.constant = params

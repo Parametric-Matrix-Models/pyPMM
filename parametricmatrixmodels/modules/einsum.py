@@ -793,7 +793,6 @@ class Einsum(BaseModule):
             "einsum_str": self.einsum_str,
             "dim_map": self.dim_map,
             **({"params": self.params} if not self.trainable else {}),
-            "trainable": self.trainable,
             "init_magnitude": self.init_magnitude,
             "real": self.real,
             "input_shape": self.input_shape,
@@ -807,8 +806,6 @@ class Einsum(BaseModule):
             self.einsum_str = hyperparams["einsum_str"]
         if "dim_map" in hyperparams:
             self.dim_map = hyperparams["dim_map"]
-        if "trainable" in hyperparams:
-            self.trainable = hyperparams["trainable"]
         if "params" in hyperparams and not self.trainable:
             self.params = hyperparams["params"]
         if "init_magnitude" in hyperparams:
@@ -817,12 +814,7 @@ class Einsum(BaseModule):
             self.real = hyperparams["real"]
 
     def get_params(self) -> Params:
-        # return params only if they are trainable
-        if not self.trainable:
-            return ()
         return self.params
 
     def set_params(self, params: Params) -> None:
-        # only allow setting params if they are trainable
-        if self.trainable:
-            self.params = params
+        self.params = params

@@ -227,8 +227,22 @@ class TransitionAmplitudeSum(BaseModule):
                 f"observable matrices. Got input shape: {input_shape}"
             )
 
-        # otherwise, initialize the matrices
         n, _ = leaf
+
+        # if the module is already initialized, validate that the input
+        # shape is compatible, then return
+        if self.is_ready():
+            if self.Ds.shape[2] != n or self.Ds.shape[3] != n:
+                raise ValueError(
+                    "If the module is already initialized, the input shape"
+                    " must be compatible with the shape of the observable"
+                    f" matrices. Got input shape: {input_shape} and Ds shape:"
+                    f" {self.Ds.shape}"
+                )
+
+            return
+
+        # otherwise, initialize the matrices
 
         rng_Dreal, rng_Dimag = jax.random.split(rng, 2)
 

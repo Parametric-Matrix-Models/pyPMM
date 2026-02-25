@@ -754,15 +754,37 @@ class BaseModule(ABC):
 
         all_hyperparameters: Dict[str, Any] = self.get_hyperparameters()
 
+        def is_serializable(v: Any) -> bool:
+            # None is serializable
+            if v is None:
+                return True
+
+            # basic types, arrays, and pytrees of these are serializable
+            if isinstance(v, Serializable) and not isinstance(
+                v, NonSerializable
+            ):
+                return True
+
+            # empty lists, tuples, and dicts are serializable
+            if isinstance(v, (list, tuple, dict)) and len(v) == 0:
+                return True
+
+            # pytrees with all leaf nodes as empty lists, tuples, or dicts are
+            # serializable
+            if isinstance(v, (list, tuple, dict)):
+                leaves = jax.tree.leaves(v)
+                if all(
+                    isinstance(leaf, (list, tuple, dict)) and len(leaf) == 0
+                    for leaf in leaves
+                ):
+                    return True
+
+            # otherwise, not serializable
+            return False
+
         # None and Serializable types can be automatically serialized
         autoserializable_hyperparameters = {
-            k: v
-            for k, v in all_hyperparameters.items()
-            if v is None
-            or (
-                isinstance(v, Serializable)
-                and not isinstance(v, NonSerializable)
-            )
+            k: v for k, v in all_hyperparameters.items() if is_serializable(v)
         }
 
         if (
@@ -864,9 +886,10 @@ class BaseModule(ABC):
         if state is not None:
             self.set_state(state)
 
-        # set the trainable flag
-        trainable = data.get("trainable", True)
-        self.trainable = trainable
+        # optionally set the trainable flag
+        trainable = data.get("trainable", None)
+        if trainable is not None:
+            self.trainable = trainable
 
     @jaxtyped(typechecker=beartype)
     def upgrade(self, data: Dict[str, Any], /) -> Dict[str, Any]:

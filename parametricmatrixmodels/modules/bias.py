@@ -255,7 +255,6 @@ class Bias(BaseModule):
             "init_magnitude": self.init_magnitude,
             "real": self.real,
             "scalar": self.scalar,
-            "trainable": self.trainable,
         }
 
     def set_hyperparameters(self, hyperparams: HyperParams) -> None:

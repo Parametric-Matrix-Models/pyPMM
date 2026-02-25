@@ -1,17 +1,24 @@
 from __future__ import annotations
 
-from functools import wraps
+from functools import partial, wraps
 from typing import TypeAlias
 
 import jax
 import jax.numpy as np
 from beartype import beartype
-from jaxtyping import Array, Inexact, Num, PyTree, PyTreeDef, jaxtyped
+from jaxtyping import (
+    Array,
+    Inexact,
+    Num,
+    PyTree,
+    jaxtyped,
+)
 
 from .modules import BaseModule
+from .progressbar import ProgressBar
+from .tree_util import concatenate, pytree_split
 from .typing import (
     Any,
-    ArrayData,
     Callable,
     Data,
     List,
@@ -66,6 +73,7 @@ ModelCallable: TypeAlias = Callable[
 def autobatch(
     fn: ModelCallable | ModuleCallable,
     max_batch_size: int | None,
+    verbose: bool = False,
 ) -> ModelCallable | ModuleCallable:
     r"""
     Decorator to automatically limit the batch size of a ``ModelCallable`` or
@@ -93,6 +101,8 @@ def autobatch(
         then no batching is performed and the original function is returned.
     """
 
+    # rewrite to be jittable
+    @partial(jax.jit, static_argnames=["training"])
     @wraps(fn)
     @jaxtyped(typechecker=beartype)
     def batched_fn(
@@ -105,65 +115,69 @@ def autobatch(
 
         orig_batch_size = jax.tree.leaves(X)[0].shape[0]
 
+        # max_batch_size is a static argument and so is the size of the batch,
+        # so this condition will be traced out
         if max_batch_size is None or orig_batch_size <= max_batch_size:
             # nothing to do
             return fn(params, X, training, state, rng)
         else:
-            flattened_outputs: List[List[ArrayData]] = []
-            output_structs: List[PyTreeDef] = []
-            new_state = state
+            num_batches = orig_batch_size // max_batch_size
+            remainder = orig_batch_size % max_batch_size
 
-            def get_batch(
-                arr: ArrayData,
-                batch_idx: int,
-                batch_size: int,
-            ) -> ArrayData:
-                return arr[
-                    batch_idx * batch_size : (batch_idx + 1) * batch_size, ...
-                ]
-
-            num_batches = int(np.ceil(orig_batch_size / max_batch_size))
-
-            for batch_idx in range(num_batches):
-                batch_X = jax.tree.map(
-                    lambda x: get_batch(x, batch_idx, max_batch_size), X
+            if verbose:
+                pb = ProgressBar(
+                    num_batches + 1 + (1 if remainder > 0 else 0), length=20
                 )
 
-                batch_output, new_state = fn(
+            def update_pb(out: Data, i: int) -> Data:
+                pb.update(i)
+                return out
+
+            def end_pb(out: Data) -> Data:
+                pb.end()
+                return out
+
+            def body_fn(i_new_state, X_batch):
+                i, new_state = i_new_state
+                out, new_state = fn(params, X_batch, training, new_state, rng)
+                if verbose:
+                    out = jax.pure_callback(update_pb, out, out, i + 1)
+                return (i + 1, new_state), out
+
+            X_batches, X_remainder = pytree_split(X, max_batch_size, axis=0)
+
+            i_new_state, out = jax.lax.scan(
+                body_fn,
+                (0, state),
+                X_batches,
+            )
+            _, new_state = i_new_state
+
+            # out is of shape [num_batches, batch_size, ...], so we need
+            # to reshape it to [num_batches * batch_size, ...]
+            out = np.reshape(out, (-1,) + out.shape[2:])
+
+            if remainder > 0:
+                # process the remainder batch first, so that the final state is
+                # from the last batch processed
+                if verbose:
+                    out = jax.pure_callback(
+                        update_pb, out, out, num_batches + 2
+                    )
+
+                out_remainder, new_state = fn(
                     params,
-                    batch_X,
+                    X_remainder,
                     training,
                     new_state,
                     rng,
                 )
+                out = concatenate([out, out_remainder], axis=0)
 
-                flat_output, output_struct = jax.tree.flatten(batch_output)
-                flattened_outputs.append(flat_output)
-                output_structs.append(output_struct)
+            if verbose:
 
-            # check that the structures are all the same
-            first_struct = output_structs[0]
-            if not all(struct == first_struct for struct in output_structs):
-                raise ValueError(
-                    "Inconsistent output structures from autobatched function."
-                )
+                out = jax.pure_callback(end_pb, out, out)
 
-            # concatenate the outputs along the batch dimension
-            concatenated_outputs = [
-                np.concatenate(
-                    [
-                        flattened_outputs[batch_idx][i]
-                        for batch_idx in range(num_batches)
-                    ],
-                    axis=0,
-                )
-                for i in range(len(flattened_outputs[0]))
-            ]
-
-            final_output = jax.tree.unflatten(
-                first_struct, concatenated_outputs
-            )
-
-            return final_output, new_state
+            return out, new_state
 
     return batched_fn

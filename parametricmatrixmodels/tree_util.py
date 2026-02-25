@@ -854,6 +854,44 @@ def scalar_mul(
 
 
 @jaxtyped(typechecker=beartype)
+def concatenate(
+    pytrees: (
+        List[PyTree[Shaped[Array, "..."], " T"]]
+        | Tuple[PyTree[Shaped[Array, "..."], " T"], ...]
+    ),
+    axis: int = 0,
+    is_leaf: Callable[[Any], bool] | None = None,
+) -> PyTree[Shaped[Array, "..."], " T"]:
+    r"""
+    Concatenates a list of PyTrees of arrays along a specified axis. All
+    PyTrees must have the same structure and the same shapes along all axes
+    except the concatenation axis.
+
+    Parameters
+    ----------
+    pytrees
+        A list of PyTrees where each leaf is an array. All PyTrees must have
+        the same structure and the same shapes along all axes except the
+        concatenation axis.
+    axis
+        The axis along which to concatenate the arrays. Default is 0.
+    Returns
+    -------
+    A PyTree with the same structure as the input PyTrees, but with each leaf
+    being the concatenation of the corresponding leaves from the input PyTrees
+    along the specified axis.
+    """
+    if not pytrees:
+        raise ValueError("Input list of PyTrees cannot be empty.")
+
+    return jax.tree.map(
+        lambda *leaves: np.concatenate(leaves, axis=axis),
+        *pytrees,
+        is_leaf=is_leaf,
+    )
+
+
+@jaxtyped(typechecker=beartype)
 def astype(
     pytree: PyTree[Shaped[Array, " ?*d"], " T"],
     dtype: jax.typing.DTypeLike,
@@ -1105,6 +1143,77 @@ def batch_leaves(
         lambda x: jax.lax.dynamic_slice_in_dim(x, start, length, axis=axis),
         pytree,
     )
+
+
+@jaxtyped(typechecker=beartype)
+def pytree_split(
+    pytree: PyTree[Shaped[Array, "..."], " T"],
+    size: int | Integer[Array, ""],
+    axis: int = 0,
+) -> Tuple[
+    PyTree[Shaped[Array, "..."], " T"],
+    PyTree[Shaped[Array, "..."], " T"] | None,
+]:
+    r"""
+    Splits the leaves of a PyTree of arrays using ``jax.numpy.array_split``
+    along a specified axis. The split is performed independently for each leaf,
+    so the resulting PyTrees have the same structure as the input, but with
+    each leaf split into arrays of the specified size along the given axis.
+    The remainder of the split (if the size does not evenly divide the leaf
+    size) is included as the second element of the returned tuple.
+
+    Parameters
+    ----------
+    pytree
+        A PyTree where each leaf is an array with a matching size along the
+        specified axis.
+    size
+        The size of the splits that the leaves are divided into.
+    axis
+        The axis along which to split the leaves. Default is 0.
+
+    Returns
+    -------
+    A tuple of two PyTrees with the same structure as the input. The first
+    PyTree contains the first part of the split leaves, and the second PyTree
+    contains the remainder of the split (if any). If the input PyTree had
+    leaves with the shape ``[..., N, ...]`` along the split axis, then the
+    shapes will now be ``[N // size, ..., size, ...]`` for the first PyTree and
+    ``[..., N % size, ...]`` for the second PyTree.
+    """
+
+    # use batch_leaves inside of a scan to get the part that evenly divides
+    def get_split(carry, batch_idx):
+        split_part = batch_leaves(
+            pytree,
+            batch_size=size,
+            batch_idx=batch_idx,
+            length=size,
+            axis=axis,
+        )  # shape [..., size, ...]
+        # we add a leading axis to the split part to concatenate it in the scan
+        return carry, split_part
+
+    orig_size = jax.tree.leaves(pytree)[0].shape[axis]
+
+    num_batches = orig_size // size
+    _, split_parts = jax.lax.scan(get_split, None, np.arange(num_batches))
+    # scan should have already concatenated the split parts along a new leading
+    # axis, so we just need to deal with the remainder part
+    # we can use batch_leaves to get the remainder part by using the last
+    # batch_idx and setting the length to the remainder size
+    remainder_size = orig_size % size
+    if remainder_size > 0:
+        remainder_part = batch_leaves(
+            pytree,
+            batch_size=size,
+            batch_idx=num_batches,
+            length=remainder_size,
+            axis=axis,
+        )
+        return split_parts, remainder_part
+    else:
+        return split_parts, None
 
 
 @jaxtyped(typechecker=beartype)

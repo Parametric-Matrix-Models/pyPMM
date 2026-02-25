@@ -1127,25 +1127,6 @@ class FAbs(ActivationBase):
 
 
 @jaxtyped(typechecker=beartype)
-class Fix(ActivationBase):
-    """
-    Elementwise activation function for ``jax.numpy.fix``.
-
-    See Also
-    --------
-    jax.numpy.fix : The function used for the elementwise activation.
-    """
-
-    def __init__(self, *args, **kwargs):
-        self.args = args
-        self.kwargs = kwargs
-        super().__init__(*args, **kwargs)
-
-    def func(self, x: jax.numpy.ndarray) -> jax.numpy.ndarray:
-        return jax.numpy.fix(x, *self.args, **self.kwargs)
-
-
-@jaxtyped(typechecker=beartype)
 class FloatPower(ActivationBase):
     """
     Elementwise activation function for ``jax.numpy.float_power``.

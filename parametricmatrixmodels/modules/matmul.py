@@ -395,7 +395,6 @@ class MatMul(Einsum):
             **({"params": self.params} if not self.trainable else {}),
             "output_shape": self.output_shape,
             "path_order": self.path_order,
-            "trainable": self.trainable,
             "init_magnitude": self.init_magnitude,
             "real": self.real,
             "separator": self.separator,
@@ -404,7 +403,6 @@ class MatMul(Einsum):
 
     def set_hyperparameters(self, hyperparams: HyperParams) -> None:
         super().set_hyperparameters(hyperparams)
-        self.trainable = hyperparams.get("trainable", self.trainable)
         if not self.trainable:
             self.params = hyperparams.get("params", self.params)
         self.output_shape = hyperparams.get("output_shape", self.output_shape)

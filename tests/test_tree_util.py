@@ -1,3 +1,4 @@
+import jax.numpy as np
 import pytest
 
 from parametricmatrixmodels import tree_util
@@ -105,3 +106,47 @@ def test_extend_tree():
         extended_tree = tree_util.extend_structure_from_strpaths(
             base_tree, strpaths_fail, separator="."
         )
+
+
+def test_pytree_split():
+    r"""
+    Test pytree_split, which splits a PyTree into batches of equal size plus a
+    remainder
+    """
+    tree = {
+        "a": np.array([[1, 2], [3, 4], [5, 6], [7, 8], [9, 10]]),
+        "b": np.array([[10], [20], [30], [40], [50]]),
+    }
+
+    batch_size = 1  # no remainder
+
+    batches, remainder = tree_util.pytree_split(tree, batch_size)
+
+    # batches should now be a PyTree with leaf shapes [num_batches, batch_size,
+    # ...]
+    expected_batches = {
+        "a": np.array([[[1, 2]], [[3, 4]], [[5, 6]], [[7, 8]], [[9, 10]]]),
+        "b": np.array([[[10]], [[20]], [[30]], [[40]], [[50]]]),
+    }
+
+    assert np.array_equal(batches["a"], expected_batches["a"])
+    assert np.array_equal(batches["b"], expected_batches["b"])
+    assert remainder is None
+
+    batch_size = 2  # with remainder
+
+    batches, remainder = tree_util.pytree_split(tree, batch_size)
+
+    expected_batches = {
+        "a": np.array([[[1, 2], [3, 4]], [[5, 6], [7, 8]]]),
+        "b": np.array([[[10], [20]], [[30], [40]]]),
+    }
+    expected_remainder = {
+        "a": np.array([[9, 10]]),
+        "b": np.array([[50]]),
+    }
+
+    assert np.array_equal(batches["a"], expected_batches["a"])
+    assert np.array_equal(batches["b"], expected_batches["b"])
+    assert np.array_equal(remainder["a"], expected_remainder["a"])
+    assert np.array_equal(remainder["b"], expected_remainder["b"])
