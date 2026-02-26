@@ -172,7 +172,7 @@ def adam(
         m_hat = m / np.float32(1 - b1 ** (i + 1))
         v_hat = v / np.float32(1 - b2 ** (i + 1))
         x = x - step_size(i) * m_hat / (np.sqrt(v_hat) + eps)
-        return OptimizerState(x, m, v, i + 1)
+        return OptimizerState(x, m, v, i)
 
     @jaxtyped(typechecker=beartype)
     def get_params(state: OptimizerState) -> ParamArray:
