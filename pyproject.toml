@@ -21,11 +21,11 @@ classifiers= [
 ]
 dependencies = [
     "jax",
-    "dill",
     "jaxtyping",
     "beartype",
     "ordered-set",
     "packaging",
+    "scipy",
 ]
 dynamic = ["version"]
 
@@ -50,7 +50,6 @@ docs = [
     "sphinxcontrib-bibtex",
     "sphinx-autodoc-typehints",
     "matplotlib",
-    "scipy",
     "ipykernel",
     "ipython",
 ]

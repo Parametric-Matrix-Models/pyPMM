@@ -411,22 +411,22 @@ def _train(
     init_state: ModelState,  # initial model state
     init_rng: Any,  # initial model rng
     X: PyTree[
-        Inexact[Array, "num_samples feature0 ?*features"], " InStruct"
+        Inexact[Array, "num_samples ?feature0 ?*features"], " InStruct"
     ],  # in features
     Y: PyTree[
-        Inexact[Array, "num_samples target0 ?*targets"], " OutStruct"
+        Inexact[Array, "num_samples ?target0 ?*targets"], " OutStruct"
     ],  # targets
     Y_unc: PyTree[
-        Inexact[Array, "num_samples target0 ?*targets"], " OutStruct"
+        Inexact[Array, "num_samples ?target0 ?*targets"], " OutStruct"
     ],  # uncertainty in the targets, if applicable
     X_val: PyTree[
-        Inexact[Array, "num_val_samples feature0 ?*features"], " InStruct"
+        Inexact[Array, "num_val_samples ?feature0 ?*features"], " InStruct"
     ],  # validation in features
     Y_val: PyTree[
-        Inexact[Array, "num_val_samples target0 ?*targets"], " OutStruct"
+        Inexact[Array, "num_val_samples ?target0 ?*targets"], " OutStruct"
     ],  # validation targets
     Y_val_unc: PyTree[
-        Inexact[Array, "num_val_samples target0 ?*targets"], " OutStruct"
+        Inexact[Array, "num_val_samples ?target0 ?*targets"], " OutStruct"
     ],  # uncertainty in the validation targets, if applicable
     loss_fn: Callable[
         [...],
@@ -1219,31 +1219,31 @@ def train(
         ]
     ),  # loss function, three different signatures supported
     X: PyTree[
-        Inexact[Array, "num_samples feature0 ?*features"], " InStruct"
+        Inexact[Array, "num_samples ?feature0 ?*features"], " InStruct"
     ],  # in features
     Y: (
-        PyTree[Inexact[Array, "num_samples target0 ?*targets"], " OutStruct"]
+        PyTree[Inexact[Array, "num_samples ?target0 ?*targets"], " OutStruct"]
         | None
     ) = None,  # targets
     Y_unc: (
-        PyTree[Inexact[Array, "num_samples target0 ?*targets"], " OutStruct"]
+        PyTree[Inexact[Array, "num_samples ?target0 ?*targets"], " OutStruct"]
         | None
     ) = None,  # uncertainty in the targets, if applicable
     X_val: (
         PyTree[
-            Inexact[Array, "num_val_samples feature0 ?*features"], " InStruct"
+            Inexact[Array, "num_val_samples ?feature0 ?*features"], " InStruct"
         ]
         | None
     ) = None,  # validation in features
     Y_val: (
         PyTree[
-            Inexact[Array, "num_val_samples target0 ?*targets"], " OutStruct"
+            Inexact[Array, "num_val_samples ?target0 ?*targets"], " OutStruct"
         ]
         | None
     ) = None,  # validation targets
     Y_val_unc: (
         PyTree[
-            Inexact[Array, "num_val_samples target0 ?*targets"], " OutStruct"
+            Inexact[Array, "num_val_samples ?target0 ?*targets"], " OutStruct"
         ]
         | None
     ) = None,  # uncertainty in the validation targets, if applicable

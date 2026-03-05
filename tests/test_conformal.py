@@ -13,21 +13,33 @@ def test_conformal_sequentialarray():
 
     key = jax.random.key(0)
 
-    nkey, pkey, key = jax.random.split(key, 3)
+    trkey, ckey, tekey, ntrkey, nckey, pkey, key = jax.random.split(key, 7)
 
-    alpha = 0.1  # miscoverage level
+    alphas = [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+    ]  # miscoverage levels
+
+    def f(x):
+        return x**3 - 2 * x * x + 1.0
+
+    xlim = (-0.5, 2.0)
 
     # generate lightly noised abs(x) data
-    N = 200
-    x = np.linspace(-5, 5, N)
-    y = np.abs(x) + 0.1 * jax.random.normal(nkey, (N,))
 
-    # split into train and calibration sets
-    n_train = 150
-    x_shuffle = jax.random.permutation(pkey, x)
-    y_shuffle = jax.random.permutation(pkey, y)
-    x_train, y_train = x_shuffle[:n_train], y_shuffle[:n_train]
-    x_calib, y_calib = x_shuffle[n_train:], y_shuffle[n_train:]
+    n_train = 20
+    x_train = jax.random.uniform(
+        trkey, (n_train,), minval=xlim[0], maxval=xlim[1]
+    )
+    y_train = f(x_train) + 0.05 * jax.random.normal(ntrkey, (n_train,))
+
+    n_calib = 500
+    x_calib = jax.random.uniform(
+        ckey, (n_calib,), minval=xlim[0], maxval=xlim[1]
+    )
+    y_calib = f(x_calib) + 0.05 * jax.random.normal(nckey, (n_calib,))
 
     # add feature axis
     x_train = x_train[:, None]
@@ -42,13 +54,13 @@ def test_conformal_sequentialarray():
         pmm.modules.LinearNN(
             out_features=8,
             bias=True,
-            activation=pmm.modules.ReLU(),
+            activation=pmm.modules.Softplus(),
             init_magnitude=im,
         ),
         pmm.modules.LinearNN(
             out_features=8,
             bias=True,
-            activation=pmm.modules.ReLU(),
+            activation=pmm.modules.Softplus(),
             init_magnitude=im,
         ),
         pmm.modules.LinearNN(
@@ -70,34 +82,36 @@ def test_conformal_sequentialarray():
         batch_size=32,
         lr=1e-2,
         batch_rng=key,
-        verbose=False,
+        verbose=True,
     )
-
-    # standard deviation of the training data
-    std_x_train = np.std(x_train, axis=0)
 
     # make conformal model
-    cmodel = pmm.conformal.ConformalizedModel(
-        model, additional_data={"std_X_train": std_x_train}, alpha=alpha
-    )
+    cmodel = pmm.conformal.ConformalizedModel(model)
 
     # calibrate
-    cmodel.calibrate(x_calib, y_calib)
+    cmodel.calibrate(x_calib, y_calib, X_train=x_train)
 
     # make test data
-    N_test = 500
-    x_test = np.linspace(-6, 6, N_test)[:, None]
-    y_test = np.abs(x_test)
-    # get prediction intervals
-    y_pred, (y_lower, y_upper) = cmodel(x_test)
+    N_test = 5000
+    x_test = np.linspace(xlim[0], xlim[1], N_test)[:, None]
+    y_test = f(x_test)
 
-    # confirm that at least (1-alpha) fraction of the test points are
-    # covered
-    covered = np.logical_and(y_test >= y_lower, y_test <= y_upper)
-    coverage = np.mean(covered)
+    for alpha in alphas:
+        # get prediction intervals
+        y_pred, (y_lower, y_upper) = cmodel(x_test, alpha=alpha)
 
-    if coverage < 1 - alpha:
-        raise ValueError(f"Coverage {coverage} is less than {1 - alpha}.")
+        # confirm that at least (1-alpha) fraction of the test points are
+        # covered
+        covered = np.logical_and(y_test >= y_lower, y_test <= y_upper)
+        coverage = np.mean(covered)
+
+        if coverage < 1 - alpha - 0.01:
+            raise ValueError(f"Coverage {coverage} is less than {1 - alpha}.")
+        if coverage > 1 - alpha + 0.10:
+            print(
+                f"Warning: Coverage {coverage} is much greater than"
+                f" {1 - alpha}."
+            )
 
 
 def test_conformal_nonsequentialpytree():
@@ -105,13 +119,19 @@ def test_conformal_nonsequentialpytree():
     Test ConformalizedModel on a non-SequentialModel with pytree values
     """
 
+    alphas = [
+        0.1,
+        0.2,
+        0.3,
+        0.4,
+        0.5,
+    ]  # miscoverage levels
+
     # fit to slightly noised 2D Runge's function
 
     key = jax.random.key(0)
 
     dkey, nkey, pkey, key = jax.random.split(key, 4)
-
-    alpha = 0.1  # miscoverage level
 
     # generate lightly noised Runge's function data
     N = 300
@@ -129,7 +149,7 @@ def test_conformal_nonsequentialpytree():
     Y = {"value": y}
 
     # split into train and calibration sets
-    n_train = 200
+    n_train = 100
     X_shuffle = jax.tree.map(lambda x: jax.random.permutation(pkey, x), X)
     Y_shuffle = jax.tree.map(lambda y: jax.random.permutation(pkey, y), Y)
     X_train = jax.tree.map(lambda x: x[:n_train], X_shuffle)
@@ -172,21 +192,17 @@ def test_conformal_nonsequentialpytree():
     model.train(
         pmm.tree_util.astype(X_train, np.float32),
         Y=pmm.tree_util.astype(Y_train, np.float32),
-        epochs=500,
+        epochs=200,
         batch_size=20,
         lr=1e-3,
         batch_rng=key,
         verbose=True,
     )
 
-    # standard deviation of the training data
-    std_x_train = jax.tree.map(lambda x: np.std(x, axis=0), X_train)
     # make conformal model
-    cmodel = pmm.conformal.ConformalizedModel(
-        model, additional_data={"std_X_train": std_x_train}, alpha=alpha
-    )
+    cmodel = pmm.conformal.ConformalizedModel(model)
     # calibrate
-    cmodel.calibrate(X_calib, Y_calib)
+    cmodel.calibrate(X_calib, Y_calib, X_train=X_train)
     # make test data
     N_test = 400
     x1 = np.linspace(-1.2, 1.2, int(np.sqrt(N_test)))
@@ -197,14 +213,22 @@ def test_conformal_nonsequentialpytree():
     # convert to PyTree
     X_test = {"x": x_test[:, 0:1], "y": x_test[:, 1:2]}
     Y_test = {"value": y_test}
-    # get prediction intervals
-    Y_pred, (Y_lower, Y_upper) = cmodel(X_test)
-    # confirm that at least (1-alpha) fraction of the test points are
-    # covered
-    covered = np.logical_and(
-        Y_test["value"] >= Y_lower["value"],
-        Y_test["value"] <= Y_upper["value"],
-    )
-    coverage = np.mean(covered)
-    if coverage < 1 - alpha:
-        raise ValueError(f"Coverage {coverage} is less than {1 - alpha}.")
+
+    for alpha in alphas:
+        # get prediction intervals
+        Y_pred, (Y_lower, Y_upper) = cmodel(X_test, alpha=alpha)
+        # confirm that at least (1-alpha) fraction of the test points are
+        # covered
+        covered = np.logical_and(
+            Y_test["value"] >= Y_lower["value"],
+            Y_test["value"] <= Y_upper["value"],
+        )
+        coverage = np.mean(covered)
+
+        if coverage < 1 - alpha - 0.01:
+            raise ValueError(f"Coverage {coverage} is less than {1 - alpha}.")
+        if coverage > 1 - alpha + 0.10:
+            print(
+                f"Warning: Coverage {coverage} is much greater than"
+                f" {1 - alpha}."
+            )

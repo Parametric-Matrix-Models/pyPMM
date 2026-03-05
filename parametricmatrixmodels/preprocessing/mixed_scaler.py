@@ -7,8 +7,8 @@ from jaxtyping import PyTree
 
 from ..typing import (
     Any,
+    Data,
     Dict,
-    RealDataFixed,
 )
 from .scaler import Scaler
 
@@ -21,7 +21,7 @@ class MixedScaler(Scaler):
 
     def __init__(
         self,
-        feature_scalers: PyTree[Scaler | None, "RealDataFixed"] | None = None,
+        feature_scalers: PyTree[Scaler | None, " Data"] | None = None,
     ):
         """
         Initializes the MixedScaler with the specified feature scalers.
@@ -37,9 +37,7 @@ class MixedScaler(Scaler):
         """
         self.feature_scalers = feature_scalers
 
-    def fit(
-        self, X: RealDataFixed, y: RealDataFixed | None = None
-    ) -> MixedScaler:
+    def fit(self, X: Data, y: Data | None = None) -> MixedScaler:
         """
         Computes the minimum and maximum values for each feature in the data.
 
@@ -59,7 +57,7 @@ class MixedScaler(Scaler):
             return self
 
         def fit_individual(
-            scaler: Scaler | None, feature_data: RealDataFixed
+            scaler: Scaler | None, feature_data: Data
         ) -> Scaler | None:
             if scaler is not None:
                 return scaler.fit(feature_data)
@@ -74,9 +72,7 @@ class MixedScaler(Scaler):
         )
         return self
 
-    def transform(
-        self, X: RealDataFixed, y: RealDataFixed | None = None
-    ) -> RealDataFixed:
+    def transform(self, X: Data, y: Data | None = None) -> Data:
         """
         Scales the input data to the specified feature range using the
         previously computed min and max values.
@@ -95,8 +91,8 @@ class MixedScaler(Scaler):
             return X
 
         def transform_individual(
-            scaler: Scaler | None, feature_data: RealDataFixed
-        ) -> RealDataFixed:
+            scaler: Scaler | None, feature_data: Data
+        ) -> Data:
             if scaler is not None:
                 return scaler.transform(feature_data)
             else:
@@ -112,8 +108,8 @@ class MixedScaler(Scaler):
         return X_scaled
 
     def inverse_transform(
-        self, X_scaled: RealDataFixed, y_scaled: RealDataFixed | None = None
-    ) -> RealDataFixed:
+        self, X_scaled: Data, y_scaled: Data | None = None
+    ) -> Data:
         """
         Reverts the scaling of the input data back to the original range.
 
@@ -133,8 +129,8 @@ class MixedScaler(Scaler):
             return X_scaled
 
         def inverse_transform_individual(
-            scaler: Scaler | None, feature_data: RealDataFixed
-        ) -> RealDataFixed:
+            scaler: Scaler | None, feature_data: Data
+        ) -> Data:
             if scaler is not None:
                 return scaler.inverse_transform(feature_data)
             else:
