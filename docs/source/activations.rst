@@ -71,7 +71,6 @@ Elementwise Activation Function Modules
    ~Exp2
    ~Expm1
    ~FAbs
-   ~Fix
    ~FloatPower
    ~Floor
    ~FloorDivide
