@@ -30,7 +30,7 @@
   <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -39,8 +39,8 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/parametricmatrixmodels.modules.FuncBase';</script>
     <link rel="icon" href="../_static/favicon.ico"/>
@@ -407,7 +407,6 @@
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Exp2.html">Exp2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Expm1.html">Expm1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.FAbs.html">FAbs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Fix.html">Fix</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.FloatPower.html">FloatPower</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Floor.html">Floor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.FloorDivide.html">FloorDivide</a></li>
@@ -528,13 +527,13 @@
 <p><code class="docutils literal notranslate"><span class="pre">parametricmatrixmodels.modules.FuncBase</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FuncBase</span></span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">FuncBase</span></span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModule</span></code></a></p>
 <p>Base class for simple non-trainable function modules. Not to be
 instantiated directly.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.__init__">
-<em class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.__init__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.__init__" title="Link to this definition">#</a></dt>
 <dd><p>Initialize the function module.</p>
 </dd></dl>
 
@@ -564,38 +563,44 @@ instantiated directly.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.f" title="parametricmatrixmodels.modules.FuncBase.f"><code class="xref py py-obj docutils literal notranslate"><span class="pre">f</span></code></a></p></td>
 <td><p>Apply the function to the input data</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.get_hyperparameters" title="parametricmatrixmodels.modules.FuncBase.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a></p></td>
-<td><p>Get the hyperparameters of the function module, of which there are none.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.freeze" title="parametricmatrixmodels.modules.FuncBase.freeze"><code class="xref py py-obj docutils literal notranslate"><span class="pre">freeze</span></code></a></p></td>
+<td><p>Freeze the module parameters by setting trainable to False.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.get_num_trainable_floats" title="parametricmatrixmodels.modules.FuncBase.get_num_trainable_floats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_num_trainable_floats</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.get_hyperparameters" title="parametricmatrixmodels.modules.FuncBase.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a></p></td>
+<td><p>Get the hyperparameters of the function module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.get_num_trainable_floats" title="parametricmatrixmodels.modules.FuncBase.get_num_trainable_floats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_num_trainable_floats</span></code></a></p></td>
 <td><p>Funcs do not have trainable parameters.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.get_output_shape" title="parametricmatrixmodels.modules.FuncBase.get_output_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.get_output_shape" title="parametricmatrixmodels.modules.FuncBase.get_output_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape</span></code></a></p></td>
 <td><p>Get the output shape of the function given an input shape.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.get_params" title="parametricmatrixmodels.modules.FuncBase.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.get_params" title="parametricmatrixmodels.modules.FuncBase.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a></p></td>
 <td><p>Get the parameters of the function module, of which there are none.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.get_state" title="parametricmatrixmodels.modules.FuncBase.get_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.get_state" title="parametricmatrixmodels.modules.FuncBase.get_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state</span></code></a></p></td>
 <td><p>Get the current state of the module.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.is_ready" title="parametricmatrixmodels.modules.FuncBase.is_ready"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_ready</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.is_ready" title="parametricmatrixmodels.modules.FuncBase.is_ready"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_ready</span></code></a></p></td>
 <td><p>Funcs are always ready to be used.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.serialize" title="parametricmatrixmodels.modules.FuncBase.serialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.serialize" title="parametricmatrixmodels.modules.FuncBase.serialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize</span></code></a></p></td>
 <td><p>Serialize the module to a dictionary.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.set_hyperparameters" title="parametricmatrixmodels.modules.FuncBase.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.set_hyperparameters" title="parametricmatrixmodels.modules.FuncBase.set_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></a></p></td>
 <td><p>Set the hyperparameters of the module.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.set_params" title="parametricmatrixmodels.modules.FuncBase.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.set_params" title="parametricmatrixmodels.modules.FuncBase.set_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></a></p></td>
 <td><p>Set the trainable parameters of the module.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.set_precision" title="parametricmatrixmodels.modules.FuncBase.set_precision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_precision</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.set_precision" title="parametricmatrixmodels.modules.FuncBase.set_precision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_precision</span></code></a></p></td>
 <td><p>Set the precision of the module parameters and state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.set_state" title="parametricmatrixmodels.modules.FuncBase.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.set_state" title="parametricmatrixmodels.modules.FuncBase.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a></p></td>
 <td><p>Set the state of the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.unfreeze" title="parametricmatrixmodels.modules.FuncBase.unfreeze"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unfreeze</span></code></a></p></td>
+<td><p>Unfreeze the module parameters by setting trainable to True.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.upgrade" title="parametricmatrixmodels.modules.FuncBase.upgrade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upgrade</span></code></a></p></td>
 <td><p>Upgrade serialized module data to the current version.</p></td>
@@ -607,6 +612,9 @@ instantiated directly.</p>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.name" title="parametricmatrixmodels.modules.FuncBase.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
 <td><p>Returns the name of the module, unless overridden, this is the class name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.modules.FuncBase.trainable" title="parametricmatrixmodels.modules.FuncBase.trainable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable</span></code></a></p></td>
+<td><p>Whether the module is trainable (i.e., whether its parameters should be updated during training).</p></td>
 </tr>
 </tbody>
 </table>
@@ -656,9 +664,14 @@ arrays.</p></li>
 </div>
 </dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.__trainable">
+<span class="sig-name descname"><span class="pre">__trainable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.__trainable" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase._get_callable">
-<em class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_get_callable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase._get_callable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase._get_callable" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_get_callable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase._get_callable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase._get_callable" title="Link to this definition">#</a></dt>
 <dd><p>Get the callable for the function module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -715,7 +728,7 @@ Valid options are:
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.compile">
-<em class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.compile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.compile" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.compile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.compile" title="Link to this definition">#</a></dt>
 <dd><p>Compile the function module. No action is needed for function modules.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -788,7 +801,7 @@ Default is False.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.f">
-<em class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.f" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.f" title="Link to this definition">#</a></dt>
 <dd><p>Apply the function to the input data</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -804,10 +817,23 @@ Default is False.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.freeze">
+<span class="sig-name descname"><span class="pre">freeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.freeze" title="Link to this definition">#</a></dt>
+<dd><p>Freeze the module parameters by setting trainable to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>The module itself, with trainable set to False.</em></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.get_hyperparameters">
-<em class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_hyperparameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.get_hyperparameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.get_hyperparameters" title="Link to this definition">#</a></dt>
-<dd><p>Get the hyperparameters of the function module, of which there are
-none.</p>
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_hyperparameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.get_hyperparameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.get_hyperparameters" title="Link to this definition">#</a></dt>
+<dd><p>Get the hyperparameters of the function module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><ul class="simple">
@@ -824,7 +850,7 @@ none.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.get_num_trainable_floats">
-<em class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_num_trainable_floats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.get_num_trainable_floats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.get_num_trainable_floats" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_num_trainable_floats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.get_num_trainable_floats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.get_num_trainable_floats" title="Link to this definition">#</a></dt>
 <dd><p>Funcs do not have trainable parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -838,7 +864,7 @@ none.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.get_output_shape">
-<em class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.get_output_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.get_output_shape" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_output_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.get_output_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.get_output_shape" title="Link to this definition">#</a></dt>
 <dd><p>Get the output shape of the function given an input shape.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -855,7 +881,7 @@ none.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.get_params">
-<em class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.get_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.get_params" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.get_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.get_params" title="Link to this definition">#</a></dt>
 <dd><p>Get the parameters of the function module, of which there are none.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -901,7 +927,7 @@ empty tuple.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.is_ready">
-<em class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_ready</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.is_ready"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.is_ready" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_ready</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.is_ready"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.is_ready" title="Link to this definition">#</a></dt>
 <dd><p>Funcs are always ready to be used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -915,7 +941,7 @@ empty tuple.</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.name">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.name" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.name" title="Link to this definition">#</a></dt>
 <dd><p>Returns the name of the module, unless overridden, this is the class
 name.</p>
 <dl class="field-list simple">
@@ -941,7 +967,7 @@ This includes basic types as well as numpy arrays.</p>
 <dd class="field-odd"><p><em>Dictionary containing the serialized module data.</em></p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[jaxtyping.Shaped[Array, ’…’]] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>, ’…’]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -978,7 +1004,7 @@ attributes of the class instance.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.set_params">
-<em class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.set_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.set_params" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">final</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/modules/funcbase.html#FuncBase.set_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.set_params" title="Link to this definition">#</a></dt>
 <dd><p>Set the trainable parameters of the module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1063,6 +1089,32 @@ state of the module.</p>
 </div>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.trainable">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">trainable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.trainable" title="Link to this definition">#</a></dt>
+<dd><p>Whether the module is trainable (i.e., whether its parameters should be
+updated during training).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the module is trainable, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.unfreeze">
+<span class="sig-name descname"><span class="pre">unfreeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.unfreeze" title="Link to this definition">#</a></dt>
+<dd><p>Unfreeze the module parameters by setting trainable to True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>The module itself, with trainable set to True.</em></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.FuncBase.upgrade">
 <span class="sig-name descname"><span class="pre">upgrade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.modules.FuncBase.upgrade" title="Link to this definition">#</a></dt>
@@ -1138,6 +1190,7 @@ versions.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase"><code class="docutils literal notranslate"><span class="pre">FuncBase</span></code></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.__init__"><code class="docutils literal notranslate"><span class="pre">__init__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.__call__"><code class="docutils literal notranslate"><span class="pre">__call__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.__trainable"><code class="docutils literal notranslate"><span class="pre">__trainable</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase._get_callable"><code class="docutils literal notranslate"><span class="pre">_get_callable()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.astype"><code class="docutils literal notranslate"><span class="pre">astype()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.compile"><code class="docutils literal notranslate"><span class="pre">compile()</span></code></a></li>
@@ -1145,6 +1198,7 @@ versions.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.deepcopy"><code class="docutils literal notranslate"><span class="pre">deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.deserialize"><code class="docutils literal notranslate"><span class="pre">deserialize()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.f"><code class="docutils literal notranslate"><span class="pre">f()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.freeze"><code class="docutils literal notranslate"><span class="pre">freeze()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.get_hyperparameters"><code class="docutils literal notranslate"><span class="pre">get_hyperparameters()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.get_num_trainable_floats"><code class="docutils literal notranslate"><span class="pre">get_num_trainable_floats()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.get_output_shape"><code class="docutils literal notranslate"><span class="pre">get_output_shape()</span></code></a></li>
@@ -1157,6 +1211,8 @@ versions.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.set_params"><code class="docutils literal notranslate"><span class="pre">set_params()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.set_precision"><code class="docutils literal notranslate"><span class="pre">set_precision()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.set_state"><code class="docutils literal notranslate"><span class="pre">set_state()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.trainable"><code class="docutils literal notranslate"><span class="pre">trainable</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.unfreeze"><code class="docutils literal notranslate"><span class="pre">unfreeze()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.modules.FuncBase.upgrade"><code class="docutils literal notranslate"><span class="pre">upgrade()</span></code></a></li>
 </ul>
 </li>

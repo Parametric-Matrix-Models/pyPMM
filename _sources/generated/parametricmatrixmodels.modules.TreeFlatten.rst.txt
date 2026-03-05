@@ -31,6 +31,8 @@
       
          ~TreeFlatten.deserialize
       
+         ~TreeFlatten.freeze
+      
          ~TreeFlatten.get_hyperparameters
       
          ~TreeFlatten.get_num_trainable_floats
@@ -53,6 +55,8 @@
       
          ~TreeFlatten.set_state
       
+         ~TreeFlatten.unfreeze
+      
          ~TreeFlatten.upgrade
 
    .. autosummary::
@@ -60,3 +64,5 @@
       
       
          ~TreeFlatten.name
+      
+         ~TreeFlatten.trainable

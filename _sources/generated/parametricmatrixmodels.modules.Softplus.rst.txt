@@ -31,6 +31,8 @@
       
          ~Softplus.deserialize
       
+         ~Softplus.freeze
+      
          ~Softplus.func
       
          ~Softplus.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Softplus.set_state
       
+         ~Softplus.unfreeze
+      
          ~Softplus.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Softplus.name
+      
+         ~Softplus.trainable

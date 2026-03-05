@@ -39,6 +39,8 @@
       
          ~AOPMM.deserialize
       
+         ~AOPMM.freeze
+      
          ~AOPMM.from_file
       
          ~AOPMM.get_hyperparameters
@@ -54,6 +56,8 @@
          ~AOPMM.get_rng
       
          ~AOPMM.get_state
+      
+         ~AOPMM.get_trainable_modules
       
          ~AOPMM.grad_input
       
@@ -99,6 +103,8 @@
       
          ~AOPMM.train
       
+         ~AOPMM.unfreeze
+      
          ~AOPMM.upgrade
 
    .. autosummary::
@@ -106,3 +112,5 @@
       
       
          ~AOPMM.name
+      
+         ~AOPMM.trainable

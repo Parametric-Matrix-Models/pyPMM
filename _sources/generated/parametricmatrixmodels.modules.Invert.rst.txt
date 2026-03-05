@@ -31,6 +31,8 @@
       
          ~Invert.deserialize
       
+         ~Invert.freeze
+      
          ~Invert.func
       
          ~Invert.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Invert.set_state
       
+         ~Invert.unfreeze
+      
          ~Invert.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Invert.name
+      
+         ~Invert.trainable

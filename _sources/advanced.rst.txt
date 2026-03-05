@@ -6,11 +6,14 @@
 Advanced
 ########
 
-Most of the following modules are mostly intended for internal use.
-
 .. toctree::
    :maxdepth: 1
 
+   conformal
+
+Most of the following modules are mostly intended for internal use.
+
+.. toctree::
    typing
    model_util
    tree_util

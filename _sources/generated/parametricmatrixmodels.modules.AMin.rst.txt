@@ -31,6 +31,8 @@
       
          ~AMin.deserialize
       
+         ~AMin.freeze
+      
          ~AMin.func
       
          ~AMin.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~AMin.set_state
       
+         ~AMin.unfreeze
+      
          ~AMin.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~AMin.name
+      
+         ~AMin.trainable

@@ -31,6 +31,8 @@
       
          ~Cosh.deserialize
       
+         ~Cosh.freeze
+      
          ~Cosh.func
       
          ~Cosh.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Cosh.set_state
       
+         ~Cosh.unfreeze
+      
          ~Cosh.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Cosh.name
+      
+         ~Cosh.trainable

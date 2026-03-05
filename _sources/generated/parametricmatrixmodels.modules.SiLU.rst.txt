@@ -31,6 +31,8 @@
       
          ~SiLU.deserialize
       
+         ~SiLU.freeze
+      
          ~SiLU.func
       
          ~SiLU.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~SiLU.set_state
       
+         ~SiLU.unfreeze
+      
          ~SiLU.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~SiLU.name
+      
+         ~SiLU.trainable

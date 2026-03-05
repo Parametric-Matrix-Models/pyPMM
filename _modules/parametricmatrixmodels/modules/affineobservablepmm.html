@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,8 +38,8 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/modules/affineobservablepmm';</script>
     <link rel="icon" href="../../../_static/favicon.ico"/>
@@ -366,30 +366,30 @@
                 <article class="bd-article">
                   
   <h1>Source code for parametricmatrixmodels.modules.affineobservablepmm</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..sequentialmodel</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequentialModel</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_shape_leaf</span><span class="p">,</span> <span class="n">is_single_leaf</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">..sequentialmodel</span> <span class="kn">import</span> <span class="n">SequentialModel</span>
+<span class="kn">from</span> <span class="nn">..tree_util</span> <span class="kn">import</span> <span class="n">is_shape_leaf</span><span class="p">,</span> <span class="n">is_single_leaf</span>
+<span class="kn">from</span> <span class="nn">..typing</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">DataShape</span><span class="p">,</span>
     <span class="n">HyperParams</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.affinehermitianmatrix</span><span class="w"> </span><span class="kn">import</span> <span class="n">AffineHermitianMatrix</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.bias</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bias</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.eigenvectors</span><span class="w"> </span><span class="kn">import</span> <span class="n">Eigenvectors</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.expectationvaluesum</span><span class="w"> </span><span class="kn">import</span> <span class="n">ExpectationValueSum</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.transitionamplitudesum</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransitionAmplitudeSum</span>
+<span class="kn">from</span> <span class="nn">.affinehermitianmatrix</span> <span class="kn">import</span> <span class="n">AffineHermitianMatrix</span>
+<span class="kn">from</span> <span class="nn">.bias</span> <span class="kn">import</span> <span class="n">Bias</span>
+<span class="kn">from</span> <span class="nn">.eigenvectors</span> <span class="kn">import</span> <span class="n">Eigenvectors</span>
+<span class="kn">from</span> <span class="nn">.expectationvaluesum</span> <span class="kn">import</span> <span class="n">ExpectationValueSum</span>
+<span class="kn">from</span> <span class="nn">.transitionamplitudesum</span> <span class="kn">import</span> <span class="n">TransitionAmplitudeSum</span>
 
 
 <div class="viewcode-block" id="AffineObservablePMM">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineObservablePMM.html#parametricmatrixmodels.modules.AffineObservablePMM">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">AffineObservablePMM</span><span class="p">(</span><span class="n">SequentialModel</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">AffineObservablePMM</span><span class="p">(</span><span class="n">SequentialModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ``AffineObservablePMM`` is a module that implements a general regression</span>
 <span class="sd">    model via the affine observable</span>
@@ -483,7 +483,7 @@
 
 <div class="viewcode-block" id="AffineObservablePMM.__init__">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineObservablePMM.html#parametricmatrixmodels.modules.AffineObservablePMM.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">matrix_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">num_eig</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -602,7 +602,7 @@
 
 <div class="viewcode-block" id="AffineObservablePMM.compile">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineObservablePMM.html#parametricmatrixmodels.modules.AffineObservablePMM.compile">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span>
@@ -678,7 +678,7 @@
 
 <div class="viewcode-block" id="AffineObservablePMM.get_output_shape">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineObservablePMM.html#parametricmatrixmodels.modules.AffineObservablePMM.get_output_shape">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;output_size must be specified to determine output shape.&quot;</span>
@@ -696,7 +696,7 @@
 
 <div class="viewcode-block" id="AffineObservablePMM.get_hyperparameters">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineObservablePMM.html#parametricmatrixmodels.modules.AffineObservablePMM.get_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;matrix_size&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span><span class="p">,</span>
             <span class="s2">&quot;num_eig&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span><span class="p">,</span>
@@ -715,7 +715,7 @@
 
 <div class="viewcode-block" id="AffineObservablePMM.set_hyperparameters">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.AffineObservablePMM.html#parametricmatrixmodels.modules.AffineObservablePMM.set_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matrix_size</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;matrix_size&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">num_eig</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;num_eig&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">which</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;which&quot;</span><span class="p">]</span>

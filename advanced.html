@@ -30,7 +30,7 @@
   <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -39,14 +39,14 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'advanced';</script>
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="typing Module" href="typing.html" />
+    <link rel="next" title="conformal Module" href="conformal.html" />
     <link rel="prev" title="Regression Example" href="examples/basic_regression.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -321,6 +321,9 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="conformal.html"><code class="docutils literal notranslate"><span class="pre">conformal</span></code> Module</a></li>
+</ul>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="typing.html"><code class="docutils literal notranslate"><span class="pre">typing</span></code> Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="model_util.html"><code class="docutils literal notranslate"><span class="pre">model_util</span></code> Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tree_util.html"><code class="docutils literal notranslate"><span class="pre">tree_util</span></code> Module</a></li>
@@ -385,14 +388,101 @@
                   
   <section id="advanced">
 <span id="id1"></span><h1>Advanced<a class="headerlink" href="#advanced" title="Link to this heading">#</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="conformal.html"><code class="docutils literal notranslate"><span class="pre">conformal</span></code> Module</a></li>
+</ul>
+</div>
 <p>Most of the following modules are mostly intended for internal use.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="typing.html"><code class="docutils literal notranslate"><span class="pre">typing</span></code> Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="model_util.html"><code class="docutils literal notranslate"><span class="pre">model_util</span></code> Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tree_util.html"><code class="docutils literal notranslate"><span class="pre">tree_util</span></code> Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="eigen_util.html"><code class="docutils literal notranslate"><span class="pre">eigen_util</span></code> Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="graph_util.html"><code class="docutils literal notranslate"><span class="pre">graph_util</span></code> Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="typing.html"><code class="docutils literal notranslate"><span class="pre">typing</span></code> Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.ArrayData"><code class="docutils literal notranslate"><span class="pre">ArrayData</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.ArrayDataShape"><code class="docutils literal notranslate"><span class="pre">ArrayDataShape</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.BatchlessComplexDataFixed"><code class="docutils literal notranslate"><span class="pre">BatchlessComplexDataFixed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.BatchlessDataFixed"><code class="docutils literal notranslate"><span class="pre">BatchlessDataFixed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.BatchlessRealDataFixed"><code class="docutils literal notranslate"><span class="pre">BatchlessRealDataFixed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.ComplexDataFixed"><code class="docutils literal notranslate"><span class="pre">ComplexDataFixed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.Data"><code class="docutils literal notranslate"><span class="pre">Data</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.DataFixed"><code class="docutils literal notranslate"><span class="pre">DataFixed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.DataShape"><code class="docutils literal notranslate"><span class="pre">DataShape</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.DictParams"><code class="docutils literal notranslate"><span class="pre">DictParams</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.DictState"><code class="docutils literal notranslate"><span class="pre">DictState</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.HyperParams"><code class="docutils literal notranslate"><span class="pre">HyperParams</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.ListParams"><code class="docutils literal notranslate"><span class="pre">ListParams</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.ListState"><code class="docutils literal notranslate"><span class="pre">ListState</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.ModuleCallable"><code class="docutils literal notranslate"><span class="pre">ModuleCallable</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.NonSerializable"><code class="docutils literal notranslate"><span class="pre">NonSerializable</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.Params"><code class="docutils literal notranslate"><span class="pre">Params</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.RealDataFixed"><code class="docutils literal notranslate"><span class="pre">RealDataFixed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.Serializable"><code class="docutils literal notranslate"><span class="pre">Serializable</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.State"><code class="docutils literal notranslate"><span class="pre">State</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.TupleParams"><code class="docutils literal notranslate"><span class="pre">TupleParams</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="typing.html#parametricmatrixmodels.typing.TupleState"><code class="docutils literal notranslate"><span class="pre">TupleState</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="model_util.html"><code class="docutils literal notranslate"><span class="pre">model_util</span></code> Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="model_util.html#parametricmatrixmodels.model_util.ModelCallable"><code class="docutils literal notranslate"><span class="pre">ModelCallable</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_util.html#parametricmatrixmodels.model_util.ModelModules"><code class="docutils literal notranslate"><span class="pre">ModelModules</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_util.html#parametricmatrixmodels.model_util.ModelParams"><code class="docutils literal notranslate"><span class="pre">ModelParams</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_util.html#parametricmatrixmodels.model_util.ModelParamsStruct"><code class="docutils literal notranslate"><span class="pre">ModelParamsStruct</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_util.html#parametricmatrixmodels.model_util.ModelState"><code class="docutils literal notranslate"><span class="pre">ModelState</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_util.html#parametricmatrixmodels.model_util.ModelStateStruct"><code class="docutils literal notranslate"><span class="pre">ModelStateStruct</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="model_util.html#parametricmatrixmodels.model_util.autobatch"><code class="docutils literal notranslate"><span class="pre">autobatch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tree_util.html"><code class="docutils literal notranslate"><span class="pre">tree_util</span></code> Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.abs"><code class="docutils literal notranslate"><span class="pre">abs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.abs_sqr"><code class="docutils literal notranslate"><span class="pre">abs_sqr()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.abs_sqrt"><code class="docutils literal notranslate"><span class="pre">abs_sqrt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.add"><code class="docutils literal notranslate"><span class="pre">add()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.all_close"><code class="docutils literal notranslate"><span class="pre">all_close()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.all_equal"><code class="docutils literal notranslate"><span class="pre">all_equal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.astype"><code class="docutils literal notranslate"><span class="pre">astype()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.batch_leaves"><code class="docutils literal notranslate"><span class="pre">batch_leaves()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.concatenate"><code class="docutils literal notranslate"><span class="pre">concatenate()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.div"><code class="docutils literal notranslate"><span class="pre">div()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.extend_structure_from_strpaths"><code class="docutils literal notranslate"><span class="pre">extend_structure_from_strpaths()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.get_shapes"><code class="docutils literal notranslate"><span class="pre">get_shapes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.getitem_by_strpath"><code class="docutils literal notranslate"><span class="pre">getitem_by_strpath()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.has_uniform_leaf_shapes"><code class="docutils literal notranslate"><span class="pre">has_uniform_leaf_shapes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.is_shape_leaf"><code class="docutils literal notranslate"><span class="pre">is_shape_leaf()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.is_single_leaf"><code class="docutils literal notranslate"><span class="pre">is_single_leaf()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.make_mutable"><code class="docutils literal notranslate"><span class="pre">make_mutable()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.mean"><code class="docutils literal notranslate"><span class="pre">mean()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.mul"><code class="docutils literal notranslate"><span class="pre">mul()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.neg"><code class="docutils literal notranslate"><span class="pre">neg()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.pow"><code class="docutils literal notranslate"><span class="pre">pow()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.pytree_split"><code class="docutils literal notranslate"><span class="pre">pytree_split()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.random_permute_leaves"><code class="docutils literal notranslate"><span class="pre">random_permute_leaves()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.safecast"><code class="docutils literal notranslate"><span class="pre">safecast()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.scalar_add"><code class="docutils literal notranslate"><span class="pre">scalar_add()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.scalar_mul"><code class="docutils literal notranslate"><span class="pre">scalar_mul()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.setitem_by_strpath"><code class="docutils literal notranslate"><span class="pre">setitem_by_strpath()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.shapes_equal"><code class="docutils literal notranslate"><span class="pre">shapes_equal()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.sqrt"><code class="docutils literal notranslate"><span class="pre">sqrt()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.strfmt_pytree"><code class="docutils literal notranslate"><span class="pre">strfmt_pytree()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.sub"><code class="docutils literal notranslate"><span class="pre">sub()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree_util.html#parametricmatrixmodels.tree_util.uniform_leaf_shapes_equal"><code class="docutils literal notranslate"><span class="pre">uniform_leaf_shapes_equal()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="eigen_util.html"><code class="docutils literal notranslate"><span class="pre">eigen_util</span></code> Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="eigen_util.html#parametricmatrixmodels.eigen_util.select_eigenpairs_by_eigenvalue"><code class="docutils literal notranslate"><span class="pre">select_eigenpairs_by_eigenvalue()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eigen_util.html#parametricmatrixmodels.eigen_util.select_eigenpairs_by_fn"><code class="docutils literal notranslate"><span class="pre">select_eigenpairs_by_fn()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eigen_util.html#parametricmatrixmodels.eigen_util.select_eigenvalues"><code class="docutils literal notranslate"><span class="pre">select_eigenvalues()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="eigen_util.html#parametricmatrixmodels.eigen_util.validate_eigensystem_input_shape"><code class="docutils literal notranslate"><span class="pre">validate_eigensystem_input_shape()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="graph_util.html"><code class="docutils literal notranslate"><span class="pre">graph_util</span></code> Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="graph_util.html#parametricmatrixmodels.graph_util.concretize_connections"><code class="docutils literal notranslate"><span class="pre">concretize_connections()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph_util.html#parametricmatrixmodels.graph_util.concretize_paths"><code class="docutils literal notranslate"><span class="pre">concretize_paths()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph_util.html#parametricmatrixmodels.graph_util.get_outer_connections_by_tree"><code class="docutils literal notranslate"><span class="pre">get_outer_connections_by_tree()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph_util.html#parametricmatrixmodels.graph_util.partition_connections_by_tree"><code class="docutils literal notranslate"><span class="pre">partition_connections_by_tree()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph_util.html#parametricmatrixmodels.graph_util.place_connections_in_tree"><code class="docutils literal notranslate"><span class="pre">place_connections_in_tree()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph_util.html#parametricmatrixmodels.graph_util.resolve_connections"><code class="docutils literal notranslate"><span class="pre">resolve_connections()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="graph_util.html#parametricmatrixmodels.graph_util.validate_resolution"><code class="docutils literal notranslate"><span class="pre">validate_resolution()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -417,11 +507,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="typing.html"
+       href="conformal.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">typing</span></code> Module</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">conformal</span></code> Module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

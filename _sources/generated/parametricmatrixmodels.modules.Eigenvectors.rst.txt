@@ -31,6 +31,8 @@
       
          ~Eigenvectors.deserialize
       
+         ~Eigenvectors.freeze
+      
          ~Eigenvectors.get_hyperparameters
       
          ~Eigenvectors.get_num_trainable_floats
@@ -53,6 +55,8 @@
       
          ~Eigenvectors.set_state
       
+         ~Eigenvectors.unfreeze
+      
          ~Eigenvectors.upgrade
 
    .. autosummary::
@@ -60,3 +64,5 @@
       
       
          ~Eigenvectors.name
+      
+         ~Eigenvectors.trainable

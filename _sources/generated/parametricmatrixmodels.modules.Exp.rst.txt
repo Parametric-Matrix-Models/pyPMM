@@ -31,6 +31,8 @@
       
          ~Exp.deserialize
       
+         ~Exp.freeze
+      
          ~Exp.func
       
          ~Exp.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Exp.set_state
       
+         ~Exp.unfreeze
+      
          ~Exp.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Exp.name
+      
+         ~Exp.trainable

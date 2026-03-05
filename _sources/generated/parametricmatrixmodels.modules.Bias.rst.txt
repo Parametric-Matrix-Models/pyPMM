@@ -31,6 +31,8 @@
       
          ~Bias.deserialize
       
+         ~Bias.freeze
+      
          ~Bias.get_hyperparameters
       
          ~Bias.get_num_trainable_floats
@@ -53,6 +55,8 @@
       
          ~Bias.set_state
       
+         ~Bias.unfreeze
+      
          ~Bias.upgrade
 
    .. autosummary::
@@ -60,3 +64,5 @@
       
       
          ~Bias.name
+      
+         ~Bias.trainable

@@ -31,6 +31,8 @@
       
          ~MatMul.deserialize
       
+         ~MatMul.freeze
+      
          ~MatMul.get_hyperparameters
       
          ~MatMul.get_num_trainable_floats
@@ -53,6 +55,8 @@
       
          ~MatMul.set_state
       
+         ~MatMul.unfreeze
+      
          ~MatMul.upgrade
 
    .. autosummary::
@@ -60,3 +64,5 @@
       
       
          ~MatMul.name
+      
+         ~MatMul.trainable

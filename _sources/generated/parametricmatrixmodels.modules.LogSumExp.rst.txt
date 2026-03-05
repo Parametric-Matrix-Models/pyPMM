@@ -31,6 +31,8 @@
       
          ~LogSumExp.deserialize
       
+         ~LogSumExp.freeze
+      
          ~LogSumExp.func
       
          ~LogSumExp.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~LogSumExp.set_state
       
+         ~LogSumExp.unfreeze
+      
          ~LogSumExp.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~LogSumExp.name
+      
+         ~LogSumExp.trainable

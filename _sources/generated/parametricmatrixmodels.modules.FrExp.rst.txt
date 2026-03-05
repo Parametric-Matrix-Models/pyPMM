@@ -31,6 +31,8 @@
       
          ~FrExp.deserialize
       
+         ~FrExp.freeze
+      
          ~FrExp.func
       
          ~FrExp.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~FrExp.set_state
       
+         ~FrExp.unfreeze
+      
          ~FrExp.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~FrExp.name
+      
+         ~FrExp.trainable

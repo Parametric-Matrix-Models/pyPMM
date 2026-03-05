@@ -31,6 +31,8 @@
       
          ~Abs.deserialize
       
+         ~Abs.freeze
+      
          ~Abs.func
       
          ~Abs.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Abs.set_state
       
+         ~Abs.unfreeze
+      
          ~Abs.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Abs.name
+      
+         ~Abs.trainable

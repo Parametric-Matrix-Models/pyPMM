@@ -31,6 +31,8 @@
       
          ~Sinc.deserialize
       
+         ~Sinc.freeze
+      
          ~Sinc.func
       
          ~Sinc.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Sinc.set_state
       
+         ~Sinc.unfreeze
+      
          ~Sinc.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Sinc.name
+      
+         ~Sinc.trainable

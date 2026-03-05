@@ -31,6 +31,8 @@
       
          ~ArcTanh.deserialize
       
+         ~ArcTanh.freeze
+      
          ~ArcTanh.func
       
          ~ArcTanh.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~ArcTanh.set_state
       
+         ~ArcTanh.unfreeze
+      
          ~ArcTanh.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~ArcTanh.name
+      
+         ~ArcTanh.trainable

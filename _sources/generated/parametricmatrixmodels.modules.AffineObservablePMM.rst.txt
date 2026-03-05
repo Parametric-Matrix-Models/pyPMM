@@ -39,6 +39,8 @@
       
          ~AffineObservablePMM.deserialize
       
+         ~AffineObservablePMM.freeze
+      
          ~AffineObservablePMM.from_file
       
          ~AffineObservablePMM.get_hyperparameters
@@ -54,6 +56,8 @@
          ~AffineObservablePMM.get_rng
       
          ~AffineObservablePMM.get_state
+      
+         ~AffineObservablePMM.get_trainable_modules
       
          ~AffineObservablePMM.grad_input
       
@@ -99,6 +103,8 @@
       
          ~AffineObservablePMM.train
       
+         ~AffineObservablePMM.unfreeze
+      
          ~AffineObservablePMM.upgrade
 
    .. autosummary::
@@ -106,3 +112,5 @@
       
       
          ~AffineObservablePMM.name
+      
+         ~AffineObservablePMM.trainable

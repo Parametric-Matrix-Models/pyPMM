@@ -31,6 +31,8 @@
       
          ~Trunc.deserialize
       
+         ~Trunc.freeze
+      
          ~Trunc.func
       
          ~Trunc.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Trunc.set_state
       
+         ~Trunc.unfreeze
+      
          ~Trunc.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Trunc.name
+      
+         ~Trunc.trainable

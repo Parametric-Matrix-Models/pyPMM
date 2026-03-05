@@ -31,6 +31,8 @@
       
          ~I0.deserialize
       
+         ~I0.freeze
+      
          ~I0.func
       
          ~I0.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~I0.set_state
       
+         ~I0.unfreeze
+      
          ~I0.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~I0.name
+      
+         ~I0.trainable

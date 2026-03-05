@@ -31,6 +31,8 @@
       
          ~Signbit.deserialize
       
+         ~Signbit.freeze
+      
          ~Signbit.func
       
          ~Signbit.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Signbit.set_state
       
+         ~Signbit.unfreeze
+      
          ~Signbit.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Signbit.name
+      
+         ~Signbit.trainable

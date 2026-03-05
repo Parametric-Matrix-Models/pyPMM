@@ -31,6 +31,8 @@
       
          ~Cbrt.deserialize
       
+         ~Cbrt.freeze
+      
          ~Cbrt.func
       
          ~Cbrt.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Cbrt.set_state
       
+         ~Cbrt.unfreeze
+      
          ~Cbrt.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Cbrt.name
+      
+         ~Cbrt.trainable

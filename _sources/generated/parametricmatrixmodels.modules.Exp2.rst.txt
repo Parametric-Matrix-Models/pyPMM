@@ -31,6 +31,8 @@
       
          ~Exp2.deserialize
       
+         ~Exp2.freeze
+      
          ~Exp2.func
       
          ~Exp2.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Exp2.set_state
       
+         ~Exp2.unfreeze
+      
          ~Exp2.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Exp2.name
+      
+         ~Exp2.trainable

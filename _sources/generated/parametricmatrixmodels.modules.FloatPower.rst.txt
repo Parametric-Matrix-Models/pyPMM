@@ -31,6 +31,8 @@
       
          ~FloatPower.deserialize
       
+         ~FloatPower.freeze
+      
          ~FloatPower.func
       
          ~FloatPower.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~FloatPower.set_state
       
+         ~FloatPower.unfreeze
+      
          ~FloatPower.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~FloatPower.name
+      
+         ~FloatPower.trainable

@@ -31,6 +31,8 @@
       
          ~ASinh.deserialize
       
+         ~ASinh.freeze
+      
          ~ASinh.func
       
          ~ASinh.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~ASinh.set_state
       
+         ~ASinh.unfreeze
+      
          ~ASinh.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~ASinh.name
+      
+         ~ASinh.trainable

@@ -29,7 +29,7 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,8 +38,8 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/model';</script>
     <link rel="icon" href="../../_static/favicon.ico"/>
@@ -366,37 +366,38 @@
                 <article class="bd-article">
                   
   <h1>Source code for parametricmatrixmodels.model</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">IO</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">IO</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">onp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">jaxtyped</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">packaging.version</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse</span>
+<span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">onp</span>
+<span class="kn">from</span> <span class="nn">beartype</span> <span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">jaxtyped</span>
+<span class="kn">from</span> <span class="nn">packaging.version</span> <span class="kn">import</span> <span class="n">parse</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">parametricmatrixmodels</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pmm</span>
+<span class="kn">import</span> <span class="nn">parametricmatrixmodels</span> <span class="k">as</span> <span class="nn">pmm</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">tree_util</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.model_util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">tree_util</span>
+<span class="kn">from</span> <span class="nn">.model_util</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ModelCallable</span><span class="p">,</span>
     <span class="n">ModelModules</span><span class="p">,</span>
     <span class="n">ModelParams</span><span class="p">,</span>
     <span class="n">ModelState</span><span class="p">,</span>
+    <span class="n">ModelStruct</span><span class="p">,</span>
     <span class="n">autobatch</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_loss_fn</span><span class="p">,</span> <span class="n">train</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_shape_leaf</span><span class="p">,</span> <span class="n">safecast</span><span class="p">,</span> <span class="n">strfmt_pytree</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.modules</span> <span class="kn">import</span> <span class="n">BaseModule</span>
+<span class="kn">from</span> <span class="nn">.training</span> <span class="kn">import</span> <span class="n">OptimizerState</span><span class="p">,</span> <span class="n">make_loss_fn</span><span class="p">,</span> <span class="n">train</span>
+<span class="kn">from</span> <span class="nn">.tree_util</span> <span class="kn">import</span> <span class="n">is_shape_leaf</span><span class="p">,</span> <span class="n">safecast</span><span class="p">,</span> <span class="n">strfmt_pytree</span>
+<span class="kn">from</span> <span class="nn">.typing</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Array</span><span class="p">,</span>
     <span class="n">Callable</span><span class="p">,</span>
@@ -407,13 +408,14 @@
     <span class="n">Inexact</span><span class="p">,</span>
     <span class="n">List</span><span class="p">,</span>
     <span class="n">PyTree</span><span class="p">,</span>
+    <span class="n">Serializable</span><span class="p">,</span>
     <span class="n">Tuple</span><span class="p">,</span>
 <span class="p">)</span>
 
 
 <div class="viewcode-block" id="Model">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Model</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Abstract base class for all models. Do not instantiate this class directly.</span>
@@ -438,7 +440,7 @@
 <span class="sd">        Wrap a trained model to produce confidence intervals.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">(</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="o">+</span> <span class="n">strfmt_pytree</span><span class="p">(</span>
@@ -450,9 +452,22 @@
             <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">)&quot;</span>
         <span class="p">)</span>
 
+    <span class="c1"># override the trainable property</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">trainable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">trainable</span> <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="nd">@trainable</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">trainable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.trainable set to </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">):</span>
+            <span class="n">module</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="n">value</span>
+
 <div class="viewcode-block" id="Model.__init__">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">modules</span><span class="p">:</span> <span class="n">ModelModules</span> <span class="o">|</span> <span class="n">BaseModule</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
@@ -492,7 +507,7 @@
 
 <div class="viewcode-block" id="Model.get_num_trainable_floats">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.get_num_trainable_floats">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_num_trainable_floats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_num_trainable_floats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">num_trainable_floats</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">module</span><span class="o">.</span><span class="n">get_num_trainable_floats</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">)</span>
@@ -505,7 +520,7 @@
 
 <div class="viewcode-block" id="Model.is_ready">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.is_ready">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span>
             <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span>
@@ -518,7 +533,7 @@
 
 <div class="viewcode-block" id="Model._get_all_unready_modules">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model._get_all_unready_modules">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_all_unready_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BaseModule</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_get_all_unready_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BaseModule</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="n">module</span>
             <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">)</span>
@@ -528,7 +543,7 @@
 
 <div class="viewcode-block" id="Model._get_unready_reason">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model._get_unready_reason">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_unready_reason</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_unready_reason</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;No modules in the model.&quot;</span>
         <span class="n">unready_modules</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_all_unready_modules</span><span class="p">()</span>
@@ -549,10 +564,11 @@
 
 <div class="viewcode-block" id="Model.reset">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.reset">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">:</span> <span class="n">DataShape</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">callable</span><span class="p">:</span> <span class="n">ModelCallable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer_state</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grad_callable_params</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grad_callable_params_options</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grad_callable_inputs</span> <span class="o">=</span> <span class="kc">None</span>
@@ -562,7 +578,7 @@
 <div class="viewcode-block" id="Model.compile">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.compile">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span>
@@ -596,7 +612,7 @@
 <div class="viewcode-block" id="Model.get_output_shape">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.get_output_shape">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the output shape of the model given an input shape. Must be</span>
 <span class="sd">        implemented by all subclasses.</span>
@@ -623,7 +639,7 @@
 
 <div class="viewcode-block" id="Model.get_modules">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.get_modules">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelModules</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelModules</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the modules of the model.</span>
 
@@ -642,7 +658,7 @@
 
 <div class="viewcode-block" id="Model.get_params">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.get_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelParams</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelParams</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the parameters of the model.</span>
 
@@ -668,7 +684,7 @@
 
 <div class="viewcode-block" id="Model.set_params">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.set_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">ModelParams</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">ModelParams</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the parameters of the model from a PyTree of PyTrees of numpy</span>
 <span class="sd">        arrays.</span>
@@ -699,12 +715,12 @@
                 <span class="s2">&quot;Structure of params does not match structure of modules. &quot;</span>
                 <span class="s2">&quot;The structure of the modules must be a prefix of the &quot;</span>
                 <span class="s2">&quot;structure of the params.&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 
 
 <div class="viewcode-block" id="Model.get_state">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.get_state">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelState</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelState</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the state of the model. The state is a PyTree of PyTrees of numpy</span>
 <span class="sd">        arrays representing the state of each module in the model. The</span>
@@ -735,7 +751,7 @@
 
 <div class="viewcode-block" id="Model.set_state">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.set_state">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">ModelState</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">ModelState</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the state of the model from a PyTree of PyTrees of numpy arrays.</span>
 
@@ -766,18 +782,18 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Unable to set model state, see inner exception for details.&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 
 
 <div class="viewcode-block" id="Model.get_rng">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.get_rng">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_rng</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_rng</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span></div>
 
 
 <div class="viewcode-block" id="Model.set_rng">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.set_rng">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_rng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_rng</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the random key for the model.</span>
 
@@ -800,7 +816,7 @@
 <div class="viewcode-block" id="Model._get_callable">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model._get_callable">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_get_callable</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelCallable</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -874,7 +890,7 @@
 
 <div class="viewcode-block" id="Model._verify_input">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model._verify_input">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_verify_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_verify_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
             <span class="n">unready_reason</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_unready_reason</span><span class="p">()</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
@@ -895,7 +911,7 @@
 
 <div class="viewcode-block" id="Model.__call__">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.__call__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
@@ -905,6 +921,7 @@
         <span class="n">return_state</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">update_state</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">max_batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Data</span><span class="p">,</span> <span class="n">ModelState</span><span class="p">]</span> <span class="o">|</span> <span class="n">Data</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Call the model with the input data.</span>
@@ -972,7 +989,9 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rng</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
             <span class="n">rng</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">key</span><span class="p">(</span><span class="n">rng</span><span class="p">)</span>
 
-        <span class="n">autobatched_callable</span> <span class="o">=</span> <span class="n">autobatch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">callable</span><span class="p">,</span> <span class="n">max_batch_size</span><span class="p">)</span>
+        <span class="n">autobatched_callable</span> <span class="o">=</span> <span class="n">autobatch</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">callable</span><span class="p">,</span> <span class="n">max_batch_size</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
+        <span class="p">)</span>
 
         <span class="n">out</span><span class="p">,</span> <span class="n">new_state</span> <span class="o">=</span> <span class="n">autobatched_callable</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">(),</span> <span class="n">X_</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">(),</span> <span class="n">rng</span>
@@ -996,7 +1015,7 @@
 
 <div class="viewcode-block" id="Model.grad_input">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.grad_input">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">grad_input</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">grad_input</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_samples ...&quot;</span><span class="p">],</span> <span class="s2">&quot; DataStruct&quot;</span><span class="p">],</span>
         <span class="o">/</span><span class="p">,</span>
@@ -1060,7 +1079,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">callable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">callable</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_callable</span><span class="p">(),</span> <span class="n">static_argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">get_num_elems</span><span class="p">(</span><span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">get_num_elems</span><span class="p">(</span><span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">count</span> <span class="o">+</span> <span class="n">onp</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_callable_inputs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fwd</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1090,11 +1109,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">grad_callable_inputs_options</span> <span class="o">=</span> <span class="p">(</span><span class="n">batched</span><span class="p">,</span> <span class="n">fwd</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">batched</span><span class="p">:</span>
                 <span class="c1"># make non-batched version of the callable</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">remove_batch_dim</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+                <span class="k">def</span> <span class="nf">remove_batch_dim</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
 
                 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">callable_single</span><span class="p">(</span>
+                <span class="k">def</span> <span class="nf">callable_single</span><span class="p">(</span>
                     <span class="n">params</span><span class="p">:</span> <span class="n">ModelParams</span><span class="p">,</span>
                     <span class="n">x</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
                     <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -1143,7 +1162,7 @@
 
                 <span class="c1"># take the diagonal (batch-wise jacobian)</span>
                 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">inner_map_fn</span><span class="p">(</span>
+                <span class="k">def</span> <span class="nf">inner_map_fn</span><span class="p">(</span>
                     <span class="n">input_ndim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                     <span class="n">Y_out</span><span class="p">:</span> <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">],</span>
                     <span class="n">output_ndim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -1163,7 +1182,7 @@
 
                 <span class="c1"># map over output structure</span>
                 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">outer_map_fn</span><span class="p">(</span>
+                <span class="k">def</span> <span class="nf">outer_map_fn</span><span class="p">(</span>
                     <span class="n">output_ndim</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                     <span class="n">Y_out</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;batch ...&quot;</span><span class="p">]],</span>
                     <span class="n">in_ndims</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
@@ -1177,7 +1196,7 @@
                     <span class="p">)</span>
 
                 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">grad_callable_inputs</span><span class="p">(</span>
+                <span class="k">def</span> <span class="nf">grad_callable_inputs</span><span class="p">(</span>
                     <span class="n">params</span><span class="p">:</span> <span class="n">ModelParams</span><span class="p">,</span>
                     <span class="n">X</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
                     <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -1238,7 +1257,7 @@
 
 <div class="viewcode-block" id="Model.grad_params">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.grad_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">grad_params</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">grad_params</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_samples ...&quot;</span><span class="p">],</span> <span class="s2">&quot; DataStruct&quot;</span><span class="p">],</span>
         <span class="o">/</span><span class="p">,</span>
@@ -1298,7 +1317,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">callable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">callable</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_callable</span><span class="p">(),</span> <span class="n">static_argnums</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,))</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">get_num_elems</span><span class="p">(</span><span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">get_num_elems</span><span class="p">(</span><span class="n">count</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">count</span> <span class="o">+</span> <span class="n">onp</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grad_callable_params</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fwd</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1363,7 +1382,7 @@
 
 <div class="viewcode-block" id="Model.set_precision">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.set_precision">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_precision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prec</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">typing</span><span class="o">.</span><span class="n">DTypeLike</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_precision</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prec</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">typing</span><span class="o">.</span><span class="n">DTypeLike</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the precision of the model parameters and states.</span>
 
@@ -1432,7 +1451,7 @@
     <span class="c1"># alias for set_precision method that returns self</span>
 <div class="viewcode-block" id="Model.astype">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.astype">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">astype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">typing</span><span class="o">.</span><span class="n">DTypeLike</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Model&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">astype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">typing</span><span class="o">.</span><span class="n">DTypeLike</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Model&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convenience wrapper to set_precision using the dtype argument, returns</span>
 <span class="sd">        self.</span>
@@ -1443,7 +1462,7 @@
 
 <div class="viewcode-block" id="Model.train">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.train">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">X</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span>
             <span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;num_samples feature0 ?*features&quot;</span><span class="p">],</span> <span class="s2">&quot; InStruct&quot;</span>
@@ -1484,13 +1503,16 @@
             <span class="o">|</span> <span class="kc">None</span>
         <span class="p">)</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># uncertainty in the validation targets, if applicable</span>
         <span class="n">loss_fn</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span> <span class="o">=</span> <span class="s2">&quot;mse&quot;</span><span class="p">,</span>
+        <span class="n">val_loss_fn</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">lr</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="n">val_batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
         <span class="n">target_loss</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
         <span class="n">early_stopping_patience</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
         <span class="n">early_stopping_min_delta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
         <span class="c1"># advanced options</span>
+        <span class="n">resume</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">initialization_seed</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">callback</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">unroll</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1523,57 +1545,76 @@
         <span class="c1"># handle that</span>
         <span class="n">callable_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_callable</span><span class="p">()</span>
 
-        <span class="c1"># make the loss function</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loss_fn</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">loss_fn_</span> <span class="o">=</span> <span class="n">make_loss_fn</span><span class="p">(</span>
-                <span class="n">loss_fn</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">callable_</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-            <span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># if the loss function is already a callable, we wrap it with the</span>
-            <span class="c1"># model callable</span>
-            <span class="c1"># whether or not Y and Y_unc are provided changes the signature</span>
-            <span class="c1"># of the loss function</span>
-            <span class="k">if</span> <span class="n">Y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Y_unc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># the loss function should be</span>
-                <span class="c1"># loss_fn(X, Y, Y_unc, Y_pred) -&gt; err</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">loss_fn_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Y_unc</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
-                    <span class="n">Y_pred</span><span class="p">,</span> <span class="n">new_states</span> <span class="o">=</span> <span class="n">callable_</span><span class="p">(</span>
-                        <span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span>
-                    <span class="p">)</span>
-                    <span class="n">err</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Y_unc</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">err</span><span class="p">,</span> <span class="n">new_states</span>
-
-            <span class="k">elif</span> <span class="n">Y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Y_unc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># the loss function should be</span>
-                <span class="c1"># loss_fn(X, Y, Y_pred) -&gt; err</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">loss_fn_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
-                    <span class="n">Y_pred</span><span class="p">,</span> <span class="n">new_states</span> <span class="o">=</span> <span class="n">callable_</span><span class="p">(</span>
-                        <span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span>
-                    <span class="p">)</span>
-                    <span class="n">err</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">err</span><span class="p">,</span> <span class="n">new_states</span>
-
-            <span class="k">elif</span> <span class="n">Y</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Y_unc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="c1"># the loss function should be</span>
-                <span class="c1"># loss_fn(X, pred) -&gt; err</span>
-                <span class="c1"># (unsupervised training)</span>
-                <span class="k">def</span><span class="w"> </span><span class="nf">loss_fn_</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
-                    <span class="n">pred</span><span class="p">,</span> <span class="n">new_states</span> <span class="o">=</span> <span class="n">callable_</span><span class="p">(</span>
-                        <span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span>
-                    <span class="p">)</span>
-                    <span class="n">err</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">err</span><span class="p">,</span> <span class="n">new_states</span>
-
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Invalid loss function signature. &quot;</span>
-                    <span class="s2">&quot;If Y and Y_unc are provided, the loss function should be &quot;</span>
-                    <span class="s2">&quot;loss_fn(X, Y, Y_unc, Y_pred) -&gt; err. &quot;</span>
-                    <span class="s2">&quot;If only Y is provided, it should be &quot;</span>
-                    <span class="s2">&quot;loss_fn(X, Y, Y_pred) -&gt; err. &quot;</span>
-                    <span class="s2">&quot;If neither are provided, it should be &quot;</span>
-                    <span class="s2">&quot;loss_fn(X, pred) -&gt; err.&quot;</span>
+        <span class="k">def</span> <span class="nf">clean_loss_fn</span><span class="p">(</span>
+            <span class="n">loss_fn_</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Y_prov</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">Y_unc_prov</span><span class="p">:</span> <span class="nb">bool</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+            <span class="c1"># make the loss function</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loss_fn_</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">loss_fn__</span> <span class="o">=</span> <span class="n">make_loss_fn</span><span class="p">(</span>
+                    <span class="n">loss_fn_</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">callable_</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
                 <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># if the loss function is already a callable, we wrap it with</span>
+                <span class="c1"># the model callable</span>
+                <span class="c1"># whether or not Y and Y_unc are provided changes the signature</span>
+                <span class="c1"># of the loss function</span>
+                <span class="k">if</span> <span class="n">Y_prov</span> <span class="ow">and</span> <span class="n">Y_unc_prov</span><span class="p">:</span>
+                    <span class="c1"># the loss function should be</span>
+                    <span class="c1"># loss_fn_(X, Y, Y_unc, Y_pred) -&gt; err</span>
+                    <span class="k">def</span> <span class="nf">loss_fn__</span><span class="p">(</span>
+                        <span class="n">epoch</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Y_unc</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span>
+                    <span class="p">):</span>
+                        <span class="n">Y_pred</span><span class="p">,</span> <span class="n">new_states</span> <span class="o">=</span> <span class="n">callable_</span><span class="p">(</span>
+                            <span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span>
+                        <span class="p">)</span>
+                        <span class="n">err</span> <span class="o">=</span> <span class="n">loss_fn_</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Y_unc</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">err</span><span class="p">,</span> <span class="n">new_states</span>
+
+                <span class="k">elif</span> <span class="n">Y_prov</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Y_unc_prov</span><span class="p">:</span>
+                    <span class="c1"># the loss function should be</span>
+                    <span class="c1"># loss_fn_(X, Y, Y_pred) -&gt; err</span>
+                    <span class="k">def</span> <span class="nf">loss_fn__</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
+                        <span class="n">Y_pred</span><span class="p">,</span> <span class="n">new_states</span> <span class="o">=</span> <span class="n">callable_</span><span class="p">(</span>
+                            <span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span>
+                        <span class="p">)</span>
+                        <span class="n">err</span> <span class="o">=</span> <span class="n">loss_fn_</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Y_pred</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">err</span><span class="p">,</span> <span class="n">new_states</span>
+
+                <span class="k">elif</span> <span class="ow">not</span> <span class="n">Y_prov</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">Y_unc_prov</span><span class="p">:</span>
+                    <span class="c1"># the loss function should be</span>
+                    <span class="c1"># loss_fn_(X, pred) -&gt; err</span>
+                    <span class="c1"># (unsupervised training)</span>
+                    <span class="k">def</span> <span class="nf">loss_fn__</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
+                        <span class="n">pred</span><span class="p">,</span> <span class="n">new_states</span> <span class="o">=</span> <span class="n">callable_</span><span class="p">(</span>
+                            <span class="n">params</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">training</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">rng</span>
+                        <span class="p">)</span>
+                        <span class="n">err</span> <span class="o">=</span> <span class="n">loss_fn_</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">err</span><span class="p">,</span> <span class="n">new_states</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;Invalid loss function signature. If Y and Y_unc are&quot;</span>
+                        <span class="s2">&quot; provided, the loss function should be loss_fn(epoch,&quot;</span>
+                        <span class="s2">&quot; X, Y, Y_unc, Y_pred) -&gt; err. If only Y is provided,&quot;</span>
+                        <span class="s2">&quot; it should be loss_fn(epoch, X, Y, Y_pred) -&gt; err. If&quot;</span>
+                        <span class="s2">&quot; neither are provided, it should be loss_fn(epoch, X,&quot;</span>
+                        <span class="s2">&quot; pred) -&gt; err.&quot;</span>
+                    <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">loss_fn__</span>
+
+        <span class="n">Y_prov</span> <span class="o">=</span> <span class="n">Y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">Y_unc_prov</span> <span class="o">=</span> <span class="n">Y_unc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">loss_fn_</span> <span class="o">=</span> <span class="n">clean_loss_fn</span><span class="p">(</span><span class="n">loss_fn</span><span class="p">,</span> <span class="n">Y_prov</span><span class="p">,</span> <span class="n">Y_unc_prov</span><span class="p">)</span>
+
+        <span class="c1"># repeat for validation</span>
+        <span class="n">Y_val_prov</span> <span class="o">=</span> <span class="n">Y_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">Y_val_unc_prov</span> <span class="o">=</span> <span class="n">Y_val_unc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">val_loss_fn_</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">clean_loss_fn</span><span class="p">(</span><span class="n">val_loss_fn</span><span class="p">,</span> <span class="n">Y_val_prov</span><span class="p">,</span> <span class="n">Y_val_unc_prov</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">val_loss_fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="n">loss_fn_</span>
+        <span class="p">)</span>
 
         <span class="c1"># check if any of the model parameters are complex</span>
         <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
@@ -1581,18 +1622,31 @@
             <span class="k">lambda</span> <span class="n">acc</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">acc</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">params</span><span class="p">,</span> <span class="n">initializer</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
 
+        <span class="c1"># get the trainable modules and map those bools to the param structure</span>
+        <span class="c1"># i.e. if trainable modules is [False, True] and the first module has</span>
+        <span class="c1"># parameters p1 and the second module has parameters [p2, p3], then</span>
+        <span class="c1"># we want trainable_params to be [False, [True, True]] so that the</span>
+        <span class="c1"># training function knows to update p2 and p3 but not p1</span>
+        <span class="n">trainable_modules</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_trainable_modules</span><span class="p">()</span>
+
+        <span class="n">trainable_flags</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">trainable_modules</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
         <span class="c1"># train the model</span>
         <span class="p">(</span>
             <span class="n">final_params</span><span class="p">,</span>
             <span class="n">final_model_states</span><span class="p">,</span>
             <span class="n">final_model_rng</span><span class="p">,</span>
             <span class="n">final_epoch</span><span class="p">,</span>
-            <span class="n">final_adam_states</span><span class="p">,</span>
+            <span class="n">final_optimizer_states</span><span class="p">,</span>
         <span class="p">)</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span>
+            <span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span>
+            <span class="n">adam_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_optimizer_state</span><span class="p">,</span>
             <span class="n">init_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">(),</span>
+            <span class="n">trainable_flags</span><span class="o">=</span><span class="n">trainable_flags</span><span class="p">,</span>
             <span class="n">init_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">(),</span>
             <span class="n">init_rng</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_rng</span><span class="p">(),</span>
             <span class="n">loss_fn</span><span class="o">=</span><span class="n">loss_fn_</span><span class="p">,</span>
+            <span class="n">val_loss_fn</span><span class="o">=</span><span class="n">val_loss_fn_</span><span class="p">,</span>
             <span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span>
             <span class="n">Y</span><span class="o">=</span><span class="n">Y</span><span class="p">,</span>
             <span class="n">Y_unc</span><span class="o">=</span><span class="n">Y_unc</span><span class="p">,</span>
@@ -1601,6 +1655,7 @@
             <span class="n">Y_val_unc</span><span class="o">=</span><span class="n">Y_val_unc</span><span class="p">,</span>
             <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">,</span>
             <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">val_batch_size</span><span class="o">=</span><span class="n">val_batch_size</span><span class="p">,</span>
             <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
             <span class="n">target_loss</span><span class="o">=</span><span class="n">target_loss</span><span class="p">,</span>
             <span class="n">early_stopping_patience</span><span class="o">=</span><span class="n">early_stopping_patience</span><span class="p">,</span>
@@ -1621,11 +1676,31 @@
         <span class="c1"># set the final state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">final_model_states</span><span class="p">)</span>
         <span class="c1"># set the final rng</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_rng</span><span class="p">(</span><span class="n">final_model_rng</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_rng</span><span class="p">(</span><span class="n">final_model_rng</span><span class="p">)</span>
+        <span class="c1"># set the final optimizer state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer_state</span> <span class="o">=</span> <span class="n">final_optimizer_states</span></div>
+
+
+<div class="viewcode-block" id="Model.get_trainable_modules">
+<a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.get_trainable_modules">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_trainable_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">ModelStruct</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a PyTree with the same structure as the model&#39;s modules, where</span>
+<span class="sd">        each leaf node is a boolean indicating whether the corresponding module</span>
+<span class="sd">        is trainable (i.e. mod.trainable == True and mod.get_params() is not</span>
+<span class="sd">        None/())</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">is_trainable</span><span class="p">(</span><span class="n">mod</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">get_params</span><span class="p">()</span>
+            <span class="n">has_params</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="n">p</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="n">mod</span><span class="o">.</span><span class="n">trainable</span> <span class="ow">and</span> <span class="n">has_params</span>
+
+        <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">is_trainable</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">)</span></div>
 
 
     <span class="c1"># methods to modify the module list</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">key</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_util</span><span class="o">.</span><span class="n">KeyPath</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseModule</span> <span class="o">|</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">BaseModule</span><span class="p">]:</span>
@@ -1660,7 +1735,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid key type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2"> for module access.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">key</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_util</span><span class="o">.</span><span class="n">KeyPath</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">module</span><span class="p">:</span> <span class="n">BaseModule</span> <span class="o">|</span> <span class="n">List</span><span class="p">[</span><span class="n">BaseModule</span><span class="p">]</span> <span class="o">|</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">BaseModule</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
@@ -1700,7 +1775,7 @@
 
 <div class="viewcode-block" id="Model.insert_module">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.insert_module">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">insert_module</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">insert_module</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">module</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">,</span>
@@ -1746,7 +1821,7 @@
 
 <div class="viewcode-block" id="Model.append_module">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.append_module">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">append_module</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">append_module</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">module</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
@@ -1774,7 +1849,7 @@
 
 <div class="viewcode-block" id="Model.prepend_module">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.prepend_module">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">prepend_module</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">prepend_module</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">module</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
@@ -1802,7 +1877,7 @@
 
 <div class="viewcode-block" id="Model.pop_module_by_index">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.pop_module_by_index">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">pop_module_by_index</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">pop_module_by_index</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
@@ -1840,7 +1915,7 @@
 
 <div class="viewcode-block" id="Model.pop_module_by_key">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.pop_module_by_key">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">pop_module_by_key</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">pop_module_by_key</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">key</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree_util</span><span class="o">.</span><span class="n">KeyPath</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
@@ -1876,7 +1951,7 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid key type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s2"> for module access.&quot;</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overload the + operator to append a module or model to the current</span>
 <span class="sd">        model.</span>
@@ -1904,7 +1979,7 @@
 
 <div class="viewcode-block" id="Model.get_hyperparameters">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.get_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the hyperparameters of the model as a dictionary.</span>
 
@@ -1918,12 +1993,13 @@
             <span class="s2">&quot;rng&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="p">,</span>
             <span class="s2">&quot;input_shape&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">,</span>
             <span class="s2">&quot;output_shape&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span><span class="p">,</span>
+            <span class="s2">&quot;_optimizer_state&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer_state</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="Model.set_hyperparameters">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.set_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the hyperparameters of the model from a dictionary.</span>
 
@@ -1933,23 +2009,42 @@
 <span class="sd">                Dictionary containing the hyperparameters of the model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># reset input_shape and output_shape to force re-compilation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;modules&quot;</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_rng</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;rng&quot;</span><span class="p">])</span>
+        <span class="n">modules_</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;modules&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">modules_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modules</span> <span class="o">=</span> <span class="n">modules_</span>
+        <span class="n">rng_</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rng&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rng_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_rng</span><span class="p">(</span><span class="n">rng_</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;input_shape&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">output_shape</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;output_shape&quot;</span><span class="p">]</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">)</span></div>
+        <span class="n">optimizer_state_</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;_optimizer_state&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">optimizer_state_</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># ensure the structure of the optimizer state matches the model</span>
+            <span class="c1"># parameters struct</span>
+            <span class="n">param_struct</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">())</span>
+            <span class="n">adam_struct</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span>
+                <span class="n">optimizer_state_</span><span class="p">,</span>
+                <span class="n">is_leaf</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">OptimizerState</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">param_struct</span> <span class="o">!=</span> <span class="n">adam_struct</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Adam state structure does not match model parameters &quot;</span>
+                    <span class="s2">&quot;structure.&quot;</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer_state</span> <span class="o">=</span> <span class="n">optimizer_state_</span></div>
 
 
 <div class="viewcode-block" id="Model.serialize">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.serialize">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Serializable</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Serialize the model to a dictionary. This is done by serializing the</span>
 <span class="sd">        model&#39;s parameters/metadata and then serializing each module.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            Dict[str, Any]</span>
+<span class="sd">            Dict[str, Serializable]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">module_fulltypenames</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
@@ -1970,6 +2065,20 @@
         <span class="c1"># serialize rng key</span>
         <span class="n">key_data</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">key_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_rng</span><span class="p">())</span>
 
+        <span class="c1"># serialize optimizer_state if applicable</span>
+        <span class="n">optimizer_struct</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">structure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">())</span>
+        <span class="n">serial_optimizer_state</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">a_s</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">a_s</span> <span class="ow">in</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer_state</span><span class="p">,</span>
+                    <span class="n">is_leaf</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">OptimizerState</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer_state</span>
+            <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;module_typenames&quot;</span><span class="p">:</span> <span class="n">module_typenames</span><span class="p">,</span>
             <span class="s2">&quot;module_modules&quot;</span><span class="p">:</span> <span class="n">module_modules</span><span class="p">,</span>
@@ -1978,6 +2087,8 @@
             <span class="s2">&quot;serialized_modules&quot;</span><span class="p">:</span> <span class="n">serialized_modules</span><span class="p">,</span>
             <span class="s2">&quot;model_structure&quot;</span><span class="p">:</span> <span class="n">model_structure</span><span class="p">,</span>
             <span class="s2">&quot;key_data&quot;</span><span class="p">:</span> <span class="n">key_data</span><span class="p">,</span>
+            <span class="s2">&quot;optimizer_state&quot;</span><span class="p">:</span> <span class="n">serial_optimizer_state</span><span class="p">,</span>
+            <span class="s2">&quot;optimizer_struct&quot;</span><span class="p">:</span> <span class="n">optimizer_struct</span><span class="p">,</span>
             <span class="s2">&quot;package_version&quot;</span><span class="p">:</span> <span class="n">pmm</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
             <span class="s2">&quot;model_version&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
             <span class="s2">&quot;self_serialized&quot;</span><span class="p">:</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">serialize</span><span class="p">(),</span>
@@ -1986,8 +2097,12 @@
 
 <div class="viewcode-block" id="Model.deserialize">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.deserialize">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">deserialize</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">strict_package_version</span><span class="o">=</span><span class="kc">False</span>
+    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Serializable</span><span class="p">],</span>
+        <span class="o">/</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">strict_package_version</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deserialize the model from a dictionary. This is done by deserializing</span>
@@ -2052,6 +2167,32 @@
         <span class="c1"># deserialize the rng key</span>
         <span class="n">key</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">wrap_key_data</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;key_data&quot;</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_rng</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="c1"># deserialize optimizer_state if applicable</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;optimizer_state&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;optimizer_struct&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="n">optimizer_state</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">OptimizerState</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">a_s_data</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">a_s_data</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;optimizer_state&quot;</span><span class="p">]</span>
+            <span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_optimizer_state</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">unflatten</span><span class="p">(</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;optimizer_struct&quot;</span><span class="p">],</span> <span class="n">optimizer_state</span>
+            <span class="p">)</span>
+
+        <span class="c1"># remove rng from data[&quot;self_serialized&quot;] since it&#39;s already</span>
+        <span class="c1"># deserialized above</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;self_serialized&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;rng&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># remove _optimizer_state from data[&quot;self_serialized&quot;] since it&#39;s</span>
+        <span class="c1"># already deserialized above</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;self_serialized&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;_optimizer_state&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># remove &quot;trainable&quot; from data[&quot;self_serialized&quot;] since it&#39;s not needed</span>
+        <span class="c1"># and will cause issues overwriting the module&#39;s own trainable</span>
+        <span class="c1"># attribute</span>
+        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;self_serialized&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;trainable&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># let default deserialization handle the rest of the attributes</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;self_serialized&quot;</span><span class="p">],</span>
             <span class="n">strict_package_version</span><span class="o">=</span><span class="n">strict_package_version</span><span class="p">,</span>
@@ -2060,7 +2201,8 @@
 
 <div class="viewcode-block" id="Model.save">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.save">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IO</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IO</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the model to a file.</span>
 
@@ -2072,7 +2214,7 @@
 
         <span class="c1"># if everything serializes correctly, we can save the model with just</span>
         <span class="c1"># savez</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Serializable</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">file</span> <span class="o">=</span> <span class="n">file</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.npz&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">file</span> <span class="o">+</span> <span class="s2">&quot;.npz&quot;</span>
@@ -2081,7 +2223,8 @@
 
 <div class="viewcode-block" id="Model.save_compressed">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.save_compressed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_compressed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IO</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">save_compressed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IO</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the model to a compressed file.</span>
 
@@ -2092,7 +2235,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># if everything serializes correctly, we can save the model with just</span>
         <span class="c1"># savez_compressed</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Serializable</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">file</span> <span class="o">=</span> <span class="n">file</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.npz&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">file</span> <span class="o">+</span> <span class="s2">&quot;.npz&quot;</span>
@@ -2103,7 +2246,7 @@
 
 <div class="viewcode-block" id="Model.load">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.load">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IO</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">strict_package_version</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -2138,6 +2281,10 @@
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;model_structure&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;model_structure&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;self_serialized&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
             <span class="n">data</span><span class="p">[</span><span class="s2">&quot;self_serialized&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;self_serialized&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;optimizer_state&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;optimizer_state&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;optimizer_state&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;optimizer_struct&quot;</span><span class="p">],</span> <span class="p">(</span><span class="n">onp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;optimizer_struct&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;optimizer_struct&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
         <span class="c1"># deserialize the model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">strict_package_version</span><span class="o">=</span><span class="n">strict_package_version</span><span class="p">)</span></div>
@@ -2146,8 +2293,8 @@
 <div class="viewcode-block" id="Model.from_file">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.Model.html#parametricmatrixmodels.Model.from_file">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IO</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">strict_package_version</span><span class="o">=</span><span class="kc">False</span>
+    <span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">IO</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span> <span class="o">/</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">strict_package_version</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Model&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a model from a file and return an instance of the Model class.</span>

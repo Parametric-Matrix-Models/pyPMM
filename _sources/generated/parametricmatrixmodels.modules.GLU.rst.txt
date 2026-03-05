@@ -31,6 +31,8 @@
       
          ~GLU.deserialize
       
+         ~GLU.freeze
+      
          ~GLU.func
       
          ~GLU.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~GLU.set_state
       
+         ~GLU.unfreeze
+      
          ~GLU.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~GLU.name
+      
+         ~GLU.trainable

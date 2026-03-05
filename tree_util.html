@@ -30,7 +30,7 @@
   <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -39,8 +39,8 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'tree_util';</script>
     <link rel="icon" href="_static/favicon.ico"/>
@@ -320,7 +320,10 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="conformal.html"><code class="docutils literal notranslate"><span class="pre">conformal</span></code> Module</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="typing.html"><code class="docutils literal notranslate"><span class="pre">typing</span></code> Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="model_util.html"><code class="docutils literal notranslate"><span class="pre">model_util</span></code> Module</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">tree_util</span></code> Module</a></li>
@@ -567,6 +570,36 @@ may be smaller than <cite>batch_size</cite>.</p></li>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>A PyTree with the same structure as the input, but with each leaf</em></p></li>
 <li><p><em>sliced to contain only the specified batch.</em></p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[jaxtyping.Shaped[Array, ’…’], ’T’]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="parametricmatrixmodels.tree_util.concatenate">
+<span class="sig-name descname"><span class="pre">concatenate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pytrees</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_leaf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/parametricmatrixmodels/tree_util.html#concatenate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.tree_util.concatenate" title="Link to this definition">#</a></dt>
+<dd><p>Concatenates a list of PyTrees of arrays along a specified axis. All
+PyTrees must have the same structure and the same shapes along all axes
+except the concatenation axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pytrees</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Shaped</em><em>[</em><em>Array</em><em>, </em><em>'</em><em>...</em><em>'</em><em>]</em><em>, </em><em>'T'</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Shaped</em><em>[</em><em>Array</em><em>, </em><em>'</em><em>...</em><em>'</em><em>]</em><em>, </em><em>'T'</em><em>]</em><em>, </em><em>...</em><em>]</em>) – A list of PyTrees where each leaf is an array. All PyTrees must have
+the same structure and the same shapes along all axes except the
+concatenation axis.</p></li>
+<li><p><strong>axis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The axis along which to concatenate the arrays. Default is 0.</p></li>
+<li><p><strong>is_leaf</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>A PyTree with the same structure as the input PyTrees, but with each leaf</em></p></li>
+<li><p><em>being the concatenation of the corresponding leaves from the input PyTrees</em></p></li>
+<li><p><em>along the specified axis.</em></p></li>
 </ul>
 </p>
 </dd>
@@ -918,6 +951,41 @@ same structure.
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="parametricmatrixmodels.tree_util.pytree_split">
+<span class="sig-name descname"><span class="pre">pytree_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pytree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/parametricmatrixmodels/tree_util.html#pytree_split"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.tree_util.pytree_split" title="Link to this definition">#</a></dt>
+<dd><p>Splits the leaves of a PyTree of arrays using <code class="docutils literal notranslate"><span class="pre">jax.numpy.array_split</span></code>
+along a specified axis. The split is performed independently for each leaf,
+so the resulting PyTrees have the same structure as the input, but with
+each leaf split into arrays of the specified size along the given axis.
+The remainder of the split (if the size does not evenly divide the leaf
+size) is included as the second element of the returned tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pytree</strong> (<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Shaped</em><em>[</em><em>Array</em><em>, </em><em>'</em><em>...</em><em>'</em><em>]</em><em>, </em><em>'T'</em><em>]</em>) – A PyTree where each leaf is an array with a matching size along the
+specified axis.</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>Integer</em><em>[</em><em>Array</em><em>, </em><em>''</em><em>]</em>) – The size of the splits that the leaves are divided into.</p></li>
+<li><p><strong>axis</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The axis along which to split the leaves. Default is 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>A tuple of two PyTrees with the same structure as the input. The first</em></p></li>
+<li><p><em>PyTree contains the first part of the split leaves, and the second PyTree</em></p></li>
+<li><p><em>contains the remainder of the split (if any). If the input PyTree had</em></p></li>
+<li><p>leaves with the shape <code class="docutils literal notranslate"><span class="pre">[...,</span> <span class="pre">N,</span> <span class="pre">...]</span></code> along the split axis, then the</p></li>
+<li><p>shapes will now be <code class="docutils literal notranslate"><span class="pre">[N</span> <span class="pre">//</span> <span class="pre">size,</span> <span class="pre">...,</span> <span class="pre">size,</span> <span class="pre">...]</span></code> for the first PyTree and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[...,</span> <span class="pre">N</span> <span class="pre">%</span> <span class="pre">size,</span> <span class="pre">...]</span></code> for the second PyTree.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>[<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[jaxtyping.Shaped[Array, ’…’], ’T’], <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[jaxtyping.Shaped[Array, ’…’], ’T’] | <em>None</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="parametricmatrixmodels.tree_util.random_permute_leaves">
 <span class="sig-name descname"><span class="pre">random_permute_leaves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pytree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">independent_arrays</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">independent_leaves</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/parametricmatrixmodels/tree_util.html#random_permute_leaves"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.tree_util.random_permute_leaves" title="Link to this definition">#</a></dt>
 <dd><p>Randomly permutes the arrays in the leaves of a PyTree of arrays along a
@@ -1233,6 +1301,7 @@ are compared.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.all_equal"><code class="docutils literal notranslate"><span class="pre">all_equal()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.astype"><code class="docutils literal notranslate"><span class="pre">astype()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.batch_leaves"><code class="docutils literal notranslate"><span class="pre">batch_leaves()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.concatenate"><code class="docutils literal notranslate"><span class="pre">concatenate()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.div"><code class="docutils literal notranslate"><span class="pre">div()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.extend_structure_from_strpaths"><code class="docutils literal notranslate"><span class="pre">extend_structure_from_strpaths()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.get_shapes"><code class="docutils literal notranslate"><span class="pre">get_shapes()</span></code></a></li>
@@ -1245,6 +1314,7 @@ are compared.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.mul"><code class="docutils literal notranslate"><span class="pre">mul()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.neg"><code class="docutils literal notranslate"><span class="pre">neg()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.pow"><code class="docutils literal notranslate"><span class="pre">pow()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.pytree_split"><code class="docutils literal notranslate"><span class="pre">pytree_split()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.random_permute_leaves"><code class="docutils literal notranslate"><span class="pre">random_permute_leaves()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.safecast"><code class="docutils literal notranslate"><span class="pre">safecast()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.tree_util.scalar_add"><code class="docutils literal notranslate"><span class="pre">scalar_add()</span></code></a></li>

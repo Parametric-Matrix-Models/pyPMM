@@ -30,7 +30,7 @@
   <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -39,8 +39,8 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/parametricmatrixmodels.modules.AEPMM';</script>
     <link rel="icon" href="../_static/favicon.ico"/>
@@ -407,7 +407,6 @@
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Exp2.html">Exp2</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Expm1.html">Expm1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.FAbs.html">FAbs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Fix.html">Fix</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.FloatPower.html">FloatPower</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.Floor.html">Floor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parametricmatrixmodels.modules.FloorDivide.html">FloorDivide</a></li>
@@ -529,7 +528,152 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="parametricmatrixmodels.modules.AEPMM">
 <span class="sig-name descname"><span class="pre">AEPMM</span></span><a class="headerlink" href="#parametricmatrixmodels.modules.AEPMM" title="Link to this definition">#</a></dt>
-<dd><p>alias of <a class="reference internal" href="parametricmatrixmodels.modules.AffineEigenvaluePMM.html#parametricmatrixmodels.modules.AffineEigenvaluePMM" title="parametricmatrixmodels.modules.affineeigenvaluepmm.AffineEigenvaluePMM"><code class="xref py py-class docutils literal notranslate"><span class="pre">AffineEigenvaluePMM</span></code></a></p>
+<dd><div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></p></td>
+<td><p>Append a module to the end of the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_module</span></code></p></td>
+<td><p>Append a module to the end of the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">append</span></code></p></td>
+<td><p>Append a module to the end of the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">append_module</span></code></p></td>
+<td><p>Append a module to the end of the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">astype</span></code></p></td>
+<td><p>Convenience wrapper to set_precision using the dtype argument, returns self.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile</span></code></p></td>
+<td><p>Compile the model for training by compiling each module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></p></td>
+<td><p>Create a deep copy of the module.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">deepcopy</span></code></p></td>
+<td><p>Create a deep copy of the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">deserialize</span></code></p></td>
+<td><p>Deserialize the model from a dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">freeze</span></code></p></td>
+<td><p>Freeze the module parameters by setting trainable to False.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_file</span></code></p></td>
+<td><p>Load a model from a file and return an instance of the Model class.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></p></td>
+<td><p>Get the hyperparameters of the model as a dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_modules</span></code></p></td>
+<td><p>Get the modules of the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_num_trainable_floats</span></code></p></td>
+<td><p>Returns the number of trainable floats in the module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape</span></code></p></td>
+<td><p>Get the output shape of the model given an input shape.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></p></td>
+<td><p>Get the parameters of the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rng</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state</span></code></p></td>
+<td><p>Get the state of the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_trainable_modules</span></code></p></td>
+<td><p>Return a PyTree with the same structure as the model's modules, where each leaf node is a boolean indicating whether the corresponding module is trainable (i.e. mod.trainable == True and mod.get_params() is not None/()).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grad_input</span></code></p></td>
+<td><p>Doc TODO</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">grad_params</span></code></p></td>
+<td><p>Doc TODO</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert</span></code></p></td>
+<td><p>Insert a module at a specific index in the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert_module</span></code></p></td>
+<td><p>Insert a module at a specific index in the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_ready</span></code></p></td>
+<td><p>Return True if the module is initialized and ready for training or inference.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></p></td>
+<td><p>Load the model from a file.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop</span></code></p></td>
+<td><p>Remove and return a module by key or index in the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop_module_by_index</span></code></p></td>
+<td><p>Remove and return a module at a specific index in the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pop_module_by_key</span></code></p></td>
+<td><p>Remove and return a module by key or index in the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">predict</span></code></p></td>
+<td><p>Call the model with the input data.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepend</span></code></p></td>
+<td><p>Prepend a module to the beginning of the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">prepend_module</span></code></p></td>
+<td><p>Prepend a module to the beginning of the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></p></td>
+<td><p>Save the model to a file.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_compressed</span></code></p></td>
+<td><p>Save the model to a compressed file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize</span></code></p></td>
+<td><p>Serialize the model to a dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_hyperparameters</span></code></p></td>
+<td><p>Set the hyperparameters of the model from a dictionary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_params</span></code></p></td>
+<td><p>Set the parameters of the model from a PyTree of PyTrees of numpy arrays.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_precision</span></code></p></td>
+<td><p>Set the precision of the model parameters and states.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_rng</span></code></p></td>
+<td><p>Set the random key for the model.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></p></td>
+<td><p>Set the state of the model from a PyTree of PyTrees of numpy arrays.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unfreeze</span></code></p></td>
+<td><p>Unfreeze the module parameters by setting trainable to True.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">upgrade</span></code></p></td>
+<td><p>Upgrade serialized module data to the current version.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p>Returns the name of the module, unless overridden, this is the class name.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable</span></code></p></td>
+<td><p>Whether the module is trainable (i.e., whether its parameters should be updated during training).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>alias of <a class="reference internal" href="parametricmatrixmodels.modules.AffineEigenvaluePMM.html#parametricmatrixmodels.modules.AffineEigenvaluePMM" title="parametricmatrixmodels.modules.affineeigenvaluepmm.AffineEigenvaluePMM"><code class="xref py py-class docutils literal notranslate"><span class="pre">AffineEigenvaluePMM</span></code></a></p>
 </dd></dl>
 
 </section>

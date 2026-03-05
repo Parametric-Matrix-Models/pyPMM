@@ -39,6 +39,8 @@
       
          ~Model.deserialize
       
+         ~Model.freeze
+      
          ~Model.from_file
       
          ~Model.get_hyperparameters
@@ -54,6 +56,8 @@
          ~Model.get_rng
       
          ~Model.get_state
+      
+         ~Model.get_trainable_modules
       
          ~Model.grad_input
       
@@ -99,6 +103,8 @@
       
          ~Model.train
       
+         ~Model.unfreeze
+      
          ~Model.upgrade
 
    .. autosummary::
@@ -106,3 +112,5 @@
       
       
          ~Model.name
+      
+         ~Model.trainable

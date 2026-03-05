@@ -31,6 +31,8 @@
       
          ~GELU.deserialize
       
+         ~GELU.freeze
+      
          ~GELU.func
       
          ~GELU.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~GELU.set_state
       
+         ~GELU.unfreeze
+      
          ~GELU.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~GELU.name
+      
+         ~GELU.trainable

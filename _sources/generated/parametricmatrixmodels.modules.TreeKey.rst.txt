@@ -31,6 +31,8 @@
       
          ~TreeKey.deserialize
       
+         ~TreeKey.freeze
+      
          ~TreeKey.get_hyperparameters
       
          ~TreeKey.get_num_trainable_floats
@@ -53,6 +55,8 @@
       
          ~TreeKey.set_state
       
+         ~TreeKey.unfreeze
+      
          ~TreeKey.upgrade
 
    .. autosummary::
@@ -60,3 +64,5 @@
       
       
          ~TreeKey.name
+      
+         ~TreeKey.trainable

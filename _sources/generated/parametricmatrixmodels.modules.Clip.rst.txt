@@ -31,6 +31,8 @@
       
          ~Clip.deserialize
       
+         ~Clip.freeze
+      
          ~Clip.func
       
          ~Clip.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Clip.set_state
       
+         ~Clip.unfreeze
+      
          ~Clip.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Clip.name
+      
+         ~Clip.trainable

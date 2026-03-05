@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,8 +38,8 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/modules/treeflatten';</script>
     <link rel="icon" href="../../../_static/favicon.ico"/>
@@ -366,12 +366,12 @@
                 <article class="bd-article">
                   
   <h1>Source code for parametricmatrixmodels.modules.treeflatten</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">jaxtyped</span>
+<span></span><span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">from</span> <span class="nn">beartype</span> <span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">jaxtyped</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_shape_leaf</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">..tree_util</span> <span class="kn">import</span> <span class="n">is_shape_leaf</span>
+<span class="kn">from</span> <span class="nn">..typing</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Data</span><span class="p">,</span>
     <span class="n">DataShape</span><span class="p">,</span>
@@ -381,12 +381,12 @@
     <span class="n">State</span><span class="p">,</span>
     <span class="n">Tuple</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.basemodule</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
+<span class="kn">from</span> <span class="nn">.basemodule</span> <span class="kn">import</span> <span class="n">BaseModule</span>
 
 
 <div class="viewcode-block" id="TreeFlatten">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.TreeFlatten.html#parametricmatrixmodels.modules.TreeFlatten">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">TreeFlatten</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">TreeFlatten</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Module that flattens an input tree of arrays into a list of arrays</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -395,32 +395,32 @@
 
 <div class="viewcode-block" id="TreeFlatten.__init__">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.TreeFlatten.html#parametricmatrixmodels.modules.TreeFlatten.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span></div>
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;TreeFlatten&quot;</span>
 
 <div class="viewcode-block" id="TreeFlatten.compile">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.TreeFlatten.html#parametricmatrixmodels.modules.TreeFlatten.compile">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="TreeFlatten.is_ready">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.TreeFlatten.html#parametricmatrixmodels.modules.TreeFlatten.is_ready">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="TreeFlatten._get_callable">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.TreeFlatten.html#parametricmatrixmodels.modules.TreeFlatten._get_callable">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleCallable</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleCallable</span><span class="p">:</span>
 
         <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">flatten_tree_callable</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">flatten_tree_callable</span><span class="p">(</span>
             <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Data</span><span class="p">,</span> <span class="n">State</span><span class="p">]:</span>
             <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">state</span>
@@ -430,25 +430,25 @@
 
 <div class="viewcode-block" id="TreeFlatten.get_output_shape">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.TreeFlatten.html#parametricmatrixmodels.modules.TreeFlatten.get_output_shape">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_shape_leaf</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="TreeFlatten.get_hyperparameters">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.TreeFlatten.html#parametricmatrixmodels.modules.TreeFlatten.get_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{}</span></div>
 
 
 <div class="viewcode-block" id="TreeFlatten.get_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.TreeFlatten.html#parametricmatrixmodels.modules.TreeFlatten.get_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="TreeFlatten.set_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.TreeFlatten.html#parametricmatrixmodels.modules.TreeFlatten.set_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span></div>
 </div>
 

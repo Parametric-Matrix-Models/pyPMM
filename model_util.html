@@ -30,7 +30,7 @@
   <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -39,8 +39,8 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'model_util';</script>
     <link rel="icon" href="_static/favicon.ico"/>
@@ -320,7 +320,10 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="conformal.html"><code class="docutils literal notranslate"><span class="pre">conformal</span></code> Module</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="typing.html"><code class="docutils literal notranslate"><span class="pre">typing</span></code> Module</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">model_util</span></code> Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tree_util.html"><code class="docutils literal notranslate"><span class="pre">tree_util</span></code> Module</a></li>
@@ -411,7 +414,7 @@ and ModelState, which are nested PyTrees.</p>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="parametricmatrixmodels.model_util.ModelParamsStruct">
-<span class="sig-name descname"><span class="pre">ModelParamsStruct</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'</span> <span class="pre">modelparamsstruct'</span></em><a class="headerlink" href="#parametricmatrixmodels.model_util.ModelParamsStruct" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">ModelParamsStruct</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'</span> <span class="pre">modelparamsstruct'</span></span><a class="headerlink" href="#parametricmatrixmodels.model_util.ModelParamsStruct" title="Link to this definition">#</a></dt>
 <dd><p>ModelParamsStruct is a type tag for PyTrees of model parameters. It really
 should be the composition of ModelStruct and “params” or “ …” but this
 doesn’t work currently with jaxtyping due to unbound types in returns.
@@ -426,7 +429,7 @@ See: <a class="github reference external" href="https://github.com/patrick-kidge
 
 <dl class="py data">
 <dt class="sig sig-object py" id="parametricmatrixmodels.model_util.ModelStateStruct">
-<span class="sig-name descname"><span class="pre">ModelStateStruct</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'</span> <span class="pre">modelstatestruct'</span></em><a class="headerlink" href="#parametricmatrixmodels.model_util.ModelStateStruct" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">ModelStateStruct</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'</span> <span class="pre">modelstatestruct'</span></span><a class="headerlink" href="#parametricmatrixmodels.model_util.ModelStateStruct" title="Link to this definition">#</a></dt>
 <dd><p>ModelStateStruct is a type tag for PyTrees of model states. It really
 should be the composition of ModelStruct and “state” or “ …” but this
 doesn’t work currently with jaxtyping due to unbound types in returns.
@@ -435,7 +438,7 @@ See: <a class="github reference external" href="https://github.com/patrick-kidge
 
 <dl class="py function">
 <dt class="sig sig-object py" id="parametricmatrixmodels.model_util.autobatch">
-<span class="sig-name descname"><span class="pre">autobatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/parametricmatrixmodels/model_util.html#autobatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.model_util.autobatch" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">autobatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/parametricmatrixmodels/model_util.html#autobatch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.model_util.autobatch" title="Link to this definition">#</a></dt>
 <dd><p>Decorator to automatically limit the batch size of a <code class="docutils literal notranslate"><span class="pre">ModelCallable</span></code> or
 <code class="docutils literal notranslate"><span class="pre">ModuleCallable</span></code> function. This is not the same as taking a function and
 vmap’ing it. The original function must already be able to handle batches
@@ -450,14 +453,15 @@ unchanged.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fn</strong> (<em>ModelCallable</em><em> | </em><em>ModuleCallable</em>) – The function to be decorated. Must be a <code class="docutils literal notranslate"><span class="pre">ModelCallable</span></code> or
+<li><p><strong>fn</strong> (<em>TypeAliasForwardRef</em><em>(</em><em>'pmm.model_util.ModelCallable'</em><em>) </em><em>| </em><em>TypeAliasForwardRef</em><em>(</em><em>'pmm.typing.ModuleCallable'</em><em>)</em>) – The function to be decorated. Must be a <code class="docutils literal notranslate"><span class="pre">ModelCallable</span></code> or
 <code class="docutils literal notranslate"><span class="pre">ModuleCallable</span></code>.</p></li>
 <li><p><strong>max_batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – The maximum batch size to use when calling the function. If <code class="docutils literal notranslate"><span class="pre">None</span></code>,
 then no batching is performed and the original function is returned.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>ModelCallable | ModuleCallable</p>
+<dd class="field-even"><p>TypeAliasForwardRef(’pmm.model_util.ModelCallable’) | TypeAliasForwardRef(’pmm.typing.ModuleCallable’)</p>
 </dd>
 </dl>
 </dd></dl>

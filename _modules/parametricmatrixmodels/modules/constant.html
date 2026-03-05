@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,8 +38,8 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/modules/constant';</script>
     <link rel="icon" href="../../../_static/favicon.ico"/>
@@ -366,14 +366,14 @@
                 <article class="bd-article">
                   
   <h1>Source code for parametricmatrixmodels.modules.constant</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Inexact</span><span class="p">,</span> <span class="n">PyTree</span><span class="p">,</span> <span class="n">jaxtyped</span>
+<span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">beartype</span> <span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Inexact</span><span class="p">,</span> <span class="n">PyTree</span><span class="p">,</span> <span class="n">jaxtyped</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">parametricmatrixmodels.typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">parametricmatrixmodels.typing</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Data</span><span class="p">,</span>
     <span class="n">DataShape</span><span class="p">,</span>
@@ -384,12 +384,12 @@
     <span class="n">Tuple</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.basemodule</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
+<span class="kn">from</span> <span class="nn">.basemodule</span> <span class="kn">import</span> <span class="n">BaseModule</span>
 
 
 <div class="viewcode-block" id="Constant">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Constant.html#parametricmatrixmodels.modules.Constant">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Constant</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Constant</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Module that always returns a constant value which is optionally trainable.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -398,7 +398,7 @@
 
 <div class="viewcode-block" id="Constant.__init__">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Constant.html#parametricmatrixmodels.modules.Constant.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">constant</span><span class="p">:</span> <span class="p">(</span>
             <span class="n">PyTree</span><span class="p">[</span><span class="n">Inexact</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; Const&quot;</span><span class="p">]</span>
@@ -468,7 +468,7 @@
                 <span class="n">real</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="n">real</span><span class="p">,</span> <span class="n">constant</span><span class="p">)</span>
 
             <span class="c1"># check that real matches constant</span>
-            <span class="k">def</span><span class="w"> </span><span class="nf">check_real</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">check_real</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">r</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isrealobj</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                         <span class="s2">&quot;&#39;real&#39; must match the type of &#39;constant&#39;. &quot;</span>
@@ -486,7 +486,7 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, real=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="si">}</span><span class="s2">,&quot;</span>
             <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="s1">&#39;trainable&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;fixed&#39;</span><span class="si">}</span><span class="s2">)&quot;</span>
@@ -494,16 +494,16 @@
 
 <div class="viewcode-block" id="Constant.is_ready">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Constant.html#parametricmatrixmodels.modules.Constant.is_ready">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">constant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Constant._get_callable">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Constant.html#parametricmatrixmodels.modules.Constant._get_callable">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleCallable</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleCallable</span><span class="p">:</span>
 
         <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">const_callable</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">const_callable</span><span class="p">(</span>
             <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">,</span>
             <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
             <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -516,10 +516,7 @@
             <span class="n">sample_leaf</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">batch_size</span> <span class="o">=</span> <span class="n">sample_leaf</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
-                <span class="n">constant</span> <span class="o">=</span> <span class="n">params</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">constant</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constant</span>
+            <span class="n">constant</span> <span class="o">=</span> <span class="n">params</span>
 
             <span class="n">constant_broadcasted</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
                 <span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span>
@@ -535,7 +532,7 @@
 
 <div class="viewcode-block" id="Constant.compile">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Constant.html#parametricmatrixmodels.modules.Constant.compile">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;Constant module is not trainable and &#39;constant&#39; &quot;</span>
@@ -553,7 +550,7 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
-            <span class="k">def</span><span class="w"> </span><span class="nf">init_constant</span><span class="p">(</span><span class="n">cur_key</span><span class="p">,</span> <span class="n">sr</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">init_constant</span><span class="p">(</span><span class="n">cur_key</span><span class="p">,</span> <span class="n">sr</span><span class="p">):</span>
                 <span class="n">shape</span><span class="p">,</span> <span class="n">real</span> <span class="o">=</span> <span class="n">sr</span>
                 <span class="k">if</span> <span class="n">real</span><span class="p">:</span>
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span> <span class="o">*</span> <span class="n">jax</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
@@ -608,22 +605,14 @@
 
 <div class="viewcode-block" id="Constant.get_output_shape">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Constant.html#parametricmatrixmodels.modules.Constant.get_output_shape">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span></div>
 
 
 <div class="viewcode-block" id="Constant.get_hyperparameters">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Constant.html#parametricmatrixmodels.modules.Constant.get_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="o">**</span><span class="p">(</span>
-                <span class="p">{</span>
-                    <span class="s2">&quot;constant&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">constant</span><span class="p">,</span>
-                <span class="p">}</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span>
-                <span class="k">else</span> <span class="p">{}</span>
-            <span class="p">),</span>
-            <span class="s2">&quot;trainable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">,</span>
             <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
             <span class="s2">&quot;init_magnitude&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span><span class="p">,</span>
             <span class="s2">&quot;real&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
@@ -633,29 +622,20 @@
 
 <div class="viewcode-block" id="Constant.set_hyperparameters">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Constant.html#parametricmatrixmodels.modules.Constant.set_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Constant</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Constant.get_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Constant.html#parametricmatrixmodels.modules.Constant.get_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">constant</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">()</span></div>
+    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">constant</span></div>
 
 
 <div class="viewcode-block" id="Constant.set_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Constant.html#parametricmatrixmodels.modules.Constant.set_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="n">params</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Cannot set parameters for non-trainable Constant module.&quot;</span>
-                <span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="n">params</span></div>
 </div>
 
 </pre></div>

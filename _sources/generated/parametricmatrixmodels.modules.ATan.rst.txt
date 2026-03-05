@@ -31,6 +31,8 @@
       
          ~ATan.deserialize
       
+         ~ATan.freeze
+      
          ~ATan.func
       
          ~ATan.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~ATan.set_state
       
+         ~ATan.unfreeze
+      
          ~ATan.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~ATan.name
+      
+         ~ATan.trainable

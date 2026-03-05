@@ -31,6 +31,8 @@
       
          ~ArcTan2.deserialize
       
+         ~ArcTan2.freeze
+      
          ~ArcTan2.func
       
          ~ArcTan2.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~ArcTan2.set_state
       
+         ~ArcTan2.unfreeze
+      
          ~ArcTan2.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~ArcTan2.name
+      
+         ~ArcTan2.trainable

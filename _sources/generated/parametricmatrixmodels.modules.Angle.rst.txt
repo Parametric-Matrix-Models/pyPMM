@@ -31,6 +31,8 @@
       
          ~Angle.deserialize
       
+         ~Angle.freeze
+      
          ~Angle.func
       
          ~Angle.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Angle.set_state
       
+         ~Angle.unfreeze
+      
          ~Angle.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Angle.name
+      
+         ~Angle.trainable

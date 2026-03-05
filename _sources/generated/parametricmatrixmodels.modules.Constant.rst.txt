@@ -31,6 +31,8 @@
       
          ~Constant.deserialize
       
+         ~Constant.freeze
+      
          ~Constant.get_hyperparameters
       
          ~Constant.get_num_trainable_floats
@@ -53,6 +55,8 @@
       
          ~Constant.set_state
       
+         ~Constant.unfreeze
+      
          ~Constant.upgrade
 
    .. autosummary::
@@ -60,3 +64,5 @@
       
       
          ~Constant.name
+      
+         ~Constant.trainable

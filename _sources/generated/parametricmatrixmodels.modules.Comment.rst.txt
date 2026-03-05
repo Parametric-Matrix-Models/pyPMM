@@ -31,6 +31,8 @@
       
          ~Comment.deserialize
       
+         ~Comment.freeze
+      
          ~Comment.get_hyperparameters
       
          ~Comment.get_num_trainable_floats
@@ -53,6 +55,8 @@
       
          ~Comment.set_state
       
+         ~Comment.unfreeze
+      
          ~Comment.upgrade
 
    .. autosummary::
@@ -60,3 +64,5 @@
       
       
          ~Comment.name
+      
+         ~Comment.trainable

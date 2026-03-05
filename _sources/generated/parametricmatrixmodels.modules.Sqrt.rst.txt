@@ -31,6 +31,8 @@
       
          ~Sqrt.deserialize
       
+         ~Sqrt.freeze
+      
          ~Sqrt.func
       
          ~Sqrt.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Sqrt.set_state
       
+         ~Sqrt.unfreeze
+      
          ~Sqrt.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Sqrt.name
+      
+         ~Sqrt.trainable

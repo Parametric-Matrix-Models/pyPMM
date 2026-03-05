@@ -31,6 +31,8 @@
       
          ~Absolute.deserialize
       
+         ~Absolute.freeze
+      
          ~Absolute.func
       
          ~Absolute.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Absolute.set_state
       
+         ~Absolute.unfreeze
+      
          ~Absolute.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Absolute.name
+      
+         ~Absolute.trainable

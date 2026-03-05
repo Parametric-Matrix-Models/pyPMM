@@ -30,7 +30,7 @@
   <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -39,8 +39,8 @@
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'generated/parametricmatrixmodels.SequentialModel';</script>
     <link rel="icon" href="../_static/favicon.ico"/>
@@ -389,7 +389,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">parametricmatrixmodels.SequentialModel</span></code></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SequentialModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/sequentialmodel.html#SequentialModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.SequentialModel" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">SequentialModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/parametricmatrixmodels/sequentialmodel.html#SequentialModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#parametricmatrixmodels.SequentialModel" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="parametricmatrixmodels.Model.html#parametricmatrixmodels.Model" title="parametricmatrixmodels.model.Model"><code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></a></p>
 <p>A simple sequential model that chains modules (or other models) together
 sequentially.</p>
@@ -411,7 +411,7 @@ model with <code class="docutils literal notranslate"><span class="pre">Conforma
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>modules</strong> (<em>ModelModules</em><em> | </em><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.BaseModule"><em>BaseModule</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>modules</strong> (<a class="reference internal" href="../model_util.html#parametricmatrixmodels.model_util.ModelModules" title="parametricmatrixmodels.model_util.ModelModules"><em>ModelModules</em></a><em> | </em><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.BaseModule"><em>BaseModule</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>rng</strong> (<em>Any</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
 </ul>
 </dd>
@@ -432,9 +432,9 @@ modules if the optional key argument is not provided.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>modules</strong> (<em>ModelModules</em><em> | </em><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.BaseModule"><em>BaseModule</em></a><em> | </em><em>None</em>) – module(s) to initialize the model with. Default is None, which
+<li><p><strong>modules</strong> (<em>TypeAliasForwardRef</em><em>(</em><em>'pmm.model_util.ModelModules'</em><em>) </em><em>| </em><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a><em> | </em><em>None</em>) – module(s) to initialize the model with. Default is None, which
 will become an empty list.</p></li>
-<li><p><strong>rng</strong> (<em>Any</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Initial random key for the model. Default is None. If None, a
+<li><p><strong>rng</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – Initial random key for the model. Default is None. If None, a
 new random key will be generated using JAX’s <code class="docutils literal notranslate"><span class="pre">random.key</span></code>. If
 an integer is provided, it will be used as the seed to create
 the key.</p></li>
@@ -494,29 +494,35 @@ the key.</p></li>
 <tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.deserialize" title="parametricmatrixmodels.SequentialModel.deserialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deserialize</span></code></a></p></td>
 <td><p>Deserialize the model from a dictionary.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.from_file" title="parametricmatrixmodels.SequentialModel.from_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_file</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.freeze" title="parametricmatrixmodels.SequentialModel.freeze"><code class="xref py py-obj docutils literal notranslate"><span class="pre">freeze</span></code></a></p></td>
+<td><p>Freeze the module parameters by setting trainable to False.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.from_file" title="parametricmatrixmodels.SequentialModel.from_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_file</span></code></a></p></td>
 <td><p>Load a model from a file and return an instance of the Model class.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_hyperparameters" title="parametricmatrixmodels.SequentialModel.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_hyperparameters" title="parametricmatrixmodels.SequentialModel.get_hyperparameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_hyperparameters</span></code></a></p></td>
 <td><p>Get the hyperparameters of the model as a dictionary.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_modules" title="parametricmatrixmodels.SequentialModel.get_modules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_modules</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_modules" title="parametricmatrixmodels.SequentialModel.get_modules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_modules</span></code></a></p></td>
 <td><p>Get the modules of the model.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_num_trainable_floats" title="parametricmatrixmodels.SequentialModel.get_num_trainable_floats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_num_trainable_floats</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_num_trainable_floats" title="parametricmatrixmodels.SequentialModel.get_num_trainable_floats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_num_trainable_floats</span></code></a></p></td>
 <td><p>Returns the number of trainable floats in the module.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_output_shape" title="parametricmatrixmodels.SequentialModel.get_output_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_output_shape" title="parametricmatrixmodels.SequentialModel.get_output_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output_shape</span></code></a></p></td>
 <td><p>Get the output shape of the model given an input shape.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_params" title="parametricmatrixmodels.SequentialModel.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_params" title="parametricmatrixmodels.SequentialModel.get_params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_params</span></code></a></p></td>
 <td><p>Get the parameters of the model.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_rng" title="parametricmatrixmodels.SequentialModel.get_rng"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rng</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_rng" title="parametricmatrixmodels.SequentialModel.get_rng"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_rng</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_state" title="parametricmatrixmodels.SequentialModel.get_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_state" title="parametricmatrixmodels.SequentialModel.get_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state</span></code></a></p></td>
 <td><p>Get the state of the model.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.get_trainable_modules" title="parametricmatrixmodels.SequentialModel.get_trainable_modules"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_trainable_modules</span></code></a></p></td>
+<td><p>Return a PyTree with the same structure as the model's modules, where each leaf node is a boolean indicating whether the corresponding module is trainable (i.e. mod.trainable == True and mod.get_params() is not None/()).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.grad_input" title="parametricmatrixmodels.SequentialModel.grad_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grad_input</span></code></a></p></td>
 <td><p>Doc TODO</p></td>
@@ -584,7 +590,10 @@ the key.</p></li>
 <tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.train" title="parametricmatrixmodels.SequentialModel.train"><code class="xref py py-obj docutils literal notranslate"><span class="pre">train</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.upgrade" title="parametricmatrixmodels.SequentialModel.upgrade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upgrade</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.unfreeze" title="parametricmatrixmodels.SequentialModel.unfreeze"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unfreeze</span></code></a></p></td>
+<td><p>Unfreeze the module parameters by setting trainable to True.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.upgrade" title="parametricmatrixmodels.SequentialModel.upgrade"><code class="xref py py-obj docutils literal notranslate"><span class="pre">upgrade</span></code></a></p></td>
 <td><p>Upgrade serialized module data to the current version.</p></td>
 </tr>
 </tbody>
@@ -595,26 +604,29 @@ the key.</p></li>
 <tr class="row-odd"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.name" title="parametricmatrixmodels.SequentialModel.name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></a></p></td>
 <td><p>Returns the name of the module, unless overridden, this is the class name.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#parametricmatrixmodels.SequentialModel.trainable" title="parametricmatrixmodels.SequentialModel.trainable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trainable</span></code></a></p></td>
+<td><p>Whether the module is trainable (i.e., whether its parameters should be updated during training).</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'jax.numpy.float64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.__call__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'jax.numpy.float64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.__call__" title="Link to this definition">#</a></dt>
 <dd><p>Call the model with the input data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>Data</em>) – Input array of shape (batch_size, &lt;input feature axes&gt;).
+<li><p><strong>X</strong> (<em>pmm.typing.Data</em>) – Input array of shape (batch_size, &lt;input feature axes&gt;).
 For example, (batch_size, input_features) for a 1D input or
 (batch_size, input_height, input_width, input_channels) for a
 3D input.</p></li>
-<li><p><strong>dtype</strong> (<em>jax.typing.DTypeLike</em>) – Data type of the output array. Default is jax.numpy.float64.
+<li><p><strong>dtype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.14)"><em>type</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><em>dtype</em></a><em> | </em><em>SupportsDType</em>) – Data type of the output array. Default is jax.numpy.float64.
 It is strongly recommended to perform training in single
 precision (float32 and complex64) and inference with double
 precision inputs (float64, the default here) with single
 precision weights. Default is float64.</p></li>
-<li><p><strong>rng</strong> (<em>Any</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – JAX random key for stochastic modules. Default is None.
+<li><p><strong>rng</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – JAX random key for stochastic modules. Default is None.
 If None, the saved rng key will be used if it exists, which
 would be the final rng key from the last training run. If an
 integer is provided, it will be used as the seed to create a
@@ -628,6 +640,7 @@ evaluation. Default is <code class="docutils literal notranslate"><span class="p
 this size and processed sequentially to avoid OOM errors.
 Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, which means the input will be processed in
 a single batch.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -641,10 +654,15 @@ of which matches that of the model’s modules.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Tuple</em>[Data, ModelState] | Data</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>[TypeAliasForwardRef(’pmm.typing.Data’), TypeAliasForwardRef(’pmm.model_util.ModelState’)] | TypeAliasForwardRef(’pmm.typing.Data’)</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel.__trainable">
+<span class="sig-name descname"><span class="pre">__trainable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.__trainable" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel._get_all_unready_modules">
@@ -910,8 +928,8 @@ the model’s parameters/metadata and then deserializing each module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>]</em>) – Dictionary containing the serialized model data.</p></li>
-<li><p><strong>strict_package_version</strong> – If True, raises an error if the package version used to
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a><em>] </em><em>| </em><a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Shaped</em><em>[</em><em>Array</em><em>, </em><em>'</em><em>...</em><em>'</em><em>]</em><em>] </em><em>| </em><a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a><em>, </em><em>'</em><em>...</em><em>'</em><em>]</em><em>]</em>) – Dictionary containing the serialized model data.</p></li>
+<li><p><strong>strict_package_version</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, raises an error if the package version used to
 serialize the model does not match the current package version.
 Default is False.</p></li>
 </ul>
@@ -923,14 +941,28 @@ Default is False.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel.freeze">
+<span class="sig-name descname"><span class="pre">freeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.freeze" title="Link to this definition">#</a></dt>
+<dd><p>Freeze the module parameters by setting trainable to False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>The module itself, with trainable set to False.</em></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel.from_file">
-<em class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict_package_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.from_file" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict_package_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.from_file" title="Link to this definition">#</a></dt>
 <dd><p>Load a model from a file and return an instance of the Model class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – File to load the model from.</p></li>
-<li><p><strong>strict_package_version</strong> – If True, raises an error if the package version used to
+<li><p><strong>strict_package_version</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, raises an error if the package version used to
 serialize the model does not match the current package version.
 Default is False.</p></li>
 </ul>
@@ -1095,8 +1127,22 @@ matches that of the state of each module.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel.get_trainable_modules">
+<span class="sig-name descname"><span class="pre">get_trainable_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.get_trainable_modules" title="Link to this definition">#</a></dt>
+<dd><p>Return a PyTree with the same structure as the model’s modules, where
+each leaf node is a boolean indicating whether the corresponding module
+is trainable (i.e. mod.trainable == True and mod.get_params() is not
+None/())</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>, ’modelstruct’]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel.grad_input">
-<span class="sig-name descname"><span class="pre">grad_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'jax.numpy.float64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fwd=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.grad_input" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">grad_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'jax.numpy.float64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.grad_input" title="Link to this definition">#</a></dt>
 <dd><p>Doc TODO</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1136,14 +1182,14 @@ of which matches that of the model’s modules.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Tuple</em>[PyTree[Inexact[Array, ‘num_samples …’], ’… DataStruct’], ModelState] | PyTree[Inexact[Array, ‘num_samples …’], ’… DataStruct’]</p>
+<dd class="field-odd"><p><em>Tuple</em>[PyTree[Inexact[Array, ‘num_samples …’], ’… DataStruct’], <a class="reference internal" href="../model_util.html#parametricmatrixmodels.model_util.ModelState" title="parametricmatrixmodels.model_util.ModelState"><em>ModelState</em></a>] | PyTree[Inexact[Array, ‘num_samples …’], ’… DataStruct’]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel.grad_params">
-<span class="sig-name descname"><span class="pre">grad_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'jax.numpy.float64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fwd=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.grad_params" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">grad_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'jax.numpy.float64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.grad_params" title="Link to this definition">#</a></dt>
 <dd><p>Doc TODO</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1266,7 +1312,7 @@ Default is False.</p></li>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel.name">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.name" title="Link to this definition">#</a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.name" title="Link to this definition">#</a></dt>
 <dd><p>Returns the name of the module, unless overridden, this is the class
 name.</p>
 <dl class="field-list simple">
@@ -1332,21 +1378,21 @@ name.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=&lt;class</span> <span class="pre">'jax.numpy.float64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_state=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.predict" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'jax.numpy.float64'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.predict" title="Link to this definition">#</a></dt>
 <dd><p>Call the model with the input data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>Data</em>) – Input array of shape (batch_size, &lt;input feature axes&gt;).
+<li><p><strong>X</strong> (<em>pmm.typing.Data</em>) – Input array of shape (batch_size, &lt;input feature axes&gt;).
 For example, (batch_size, input_features) for a 1D input or
 (batch_size, input_height, input_width, input_channels) for a
 3D input.</p></li>
-<li><p><strong>dtype</strong> (<em>jax.typing.DTypeLike</em>) – Data type of the output array. Default is jax.numpy.float64.
+<li><p><strong>dtype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.14)"><em>type</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em>] </em><em>| </em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.dtype.html#numpy.dtype" title="(in NumPy v2.4)"><em>dtype</em></a><em> | </em><em>SupportsDType</em>) – Data type of the output array. Default is jax.numpy.float64.
 It is strongly recommended to perform training in single
 precision (float32 and complex64) and inference with double
 precision inputs (float64, the default here) with single
 precision weights. Default is float64.</p></li>
-<li><p><strong>rng</strong> (<em>Any</em><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – JAX random key for stochastic modules. Default is None.
+<li><p><strong>rng</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>) – JAX random key for stochastic modules. Default is None.
 If None, the saved rng key will be used if it exists, which
 would be the final rng key from the last training run. If an
 integer is provided, it will be used as the seed to create a
@@ -1360,6 +1406,7 @@ evaluation. Default is <code class="docutils literal notranslate"><span class="p
 this size and processed sequentially to avoid OOM errors.
 Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, which means the input will be processed in
 a single batch.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1373,7 +1420,7 @@ of which matches that of the model’s modules.</p></li>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Tuple</em>[Data, ModelState] | Data</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>[TypeAliasForwardRef(’pmm.typing.Data’), TypeAliasForwardRef(’pmm.model_util.ModelState’)] | TypeAliasForwardRef(’pmm.typing.Data’)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1463,10 +1510,10 @@ modules are stored in a list, tuple, or other structure.</p></li>
 model’s parameters/metadata and then serializing each module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>Dict[str, Any]</em></p>
+<dd class="field-odd"><p><em>Dict[str, Serializable]</em></p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a>]</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>, <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.14)"><em>complex</em></a>] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[jaxtyping.Shaped[Array, ’…’]] | <a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a>[<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.4)"><em>ndarray</em></a>, ’…’]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1582,7 +1629,7 @@ structure must match that of the state of each module.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel.train">
-<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_unc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val_unc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mse'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stopping_patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stopping_min_delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialization_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unroll</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.train" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="positional-only-separator o"><abbr title="Positional-only parameter separator (PEP 570)"><span class="pre">/</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_unc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y_val_unc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mse'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_loss_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stopping_patience</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stopping_min_delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialization_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unroll</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.train" title="Link to this definition">#</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1593,12 +1640,15 @@ structure must match that of the state of each module.</p>
 <li><p><strong>Y_val</strong> (<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Inexact</em><em>[</em><em>Array</em><em>, </em><em>'num_val_samples target0 ?*targets'</em><em>]</em><em>, </em><em>'OutStruct'</em><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>Y_val_unc</strong> (<a class="reference external" href="https://docs.kidger.site/jaxtyping/api/pytree/#jaxtyping.PyTree" title="(in jaxtyping v0.0.0)"><em>PyTree</em></a><em>[</em><em>jaxtyping.Inexact</em><em>[</em><em>Array</em><em>, </em><em>'num_val_samples target0 ?*targets'</em><em>]</em><em>, </em><em>'OutStruct'</em><em>] </em><em>| </em><em>None</em>)</p></li>
 <li><p><strong>loss_fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><em>Callable</em></a>)</p></li>
+<li><p><strong>val_loss_fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><em>Callable</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>lr</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
 <li><p><strong>batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>val_batch_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
 <li><p><strong>epochs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
 <li><p><strong>target_loss</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 <li><p><strong>early_stopping_patience</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
 <li><p><strong>early_stopping_min_delta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>resume</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
 <li><p><strong>initialization_seed</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><em>Any</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>callback</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><em>Callable</em></a><em> | </em><em>None</em>)</p></li>
 <li><p><strong>unroll</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
@@ -1612,6 +1662,32 @@ structure must match that of the state of each module.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel.trainable">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">trainable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.trainable" title="Link to this definition">#</a></dt>
+<dd><p>Whether the module is trainable (i.e., whether its parameters should be
+updated during training).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if the module is trainable, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="parametricmatrixmodels.SequentialModel.unfreeze">
+<span class="sig-name descname"><span class="pre">unfreeze</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#parametricmatrixmodels.SequentialModel.unfreeze" title="Link to this definition">#</a></dt>
+<dd><p>Unfreeze the module parameters by setting trainable to True.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>The module itself, with trainable set to True.</em></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="../basemodule.html#parametricmatrixmodels.modules.BaseModule" title="parametricmatrixmodels.modules.basemodule.BaseModule"><em>BaseModule</em></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1691,6 +1767,7 @@ versions.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel"><code class="docutils literal notranslate"><span class="pre">SequentialModel</span></code></a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.__init__"><code class="docutils literal notranslate"><span class="pre">__init__()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.__call__"><code class="docutils literal notranslate"><span class="pre">__call__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.__trainable"><code class="docutils literal notranslate"><span class="pre">__trainable</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel._get_all_unready_modules"><code class="docutils literal notranslate"><span class="pre">_get_all_unready_modules()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel._get_callable"><code class="docutils literal notranslate"><span class="pre">_get_callable()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel._get_unready_reason"><code class="docutils literal notranslate"><span class="pre">_get_unready_reason()</span></code></a></li>
@@ -1704,6 +1781,7 @@ versions.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.copy"><code class="docutils literal notranslate"><span class="pre">copy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.deepcopy"><code class="docutils literal notranslate"><span class="pre">deepcopy()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.deserialize"><code class="docutils literal notranslate"><span class="pre">deserialize()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.freeze"><code class="docutils literal notranslate"><span class="pre">freeze()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.from_file"><code class="docutils literal notranslate"><span class="pre">from_file()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.get_hyperparameters"><code class="docutils literal notranslate"><span class="pre">get_hyperparameters()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.get_modules"><code class="docutils literal notranslate"><span class="pre">get_modules()</span></code></a></li>
@@ -1712,6 +1790,7 @@ versions.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.get_params"><code class="docutils literal notranslate"><span class="pre">get_params()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.get_rng"><code class="docutils literal notranslate"><span class="pre">get_rng()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.get_state"><code class="docutils literal notranslate"><span class="pre">get_state()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.get_trainable_modules"><code class="docutils literal notranslate"><span class="pre">get_trainable_modules()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.grad_input"><code class="docutils literal notranslate"><span class="pre">grad_input()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.grad_params"><code class="docutils literal notranslate"><span class="pre">grad_params()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.insert"><code class="docutils literal notranslate"><span class="pre">insert()</span></code></a></li>
@@ -1735,6 +1814,8 @@ versions.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.set_rng"><code class="docutils literal notranslate"><span class="pre">set_rng()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.set_state"><code class="docutils literal notranslate"><span class="pre">set_state()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.train"><code class="docutils literal notranslate"><span class="pre">train()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.trainable"><code class="docutils literal notranslate"><span class="pre">trainable</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.unfreeze"><code class="docutils literal notranslate"><span class="pre">unfreeze()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.SequentialModel.upgrade"><code class="docutils literal notranslate"><span class="pre">upgrade()</span></code></a></li>
 </ul>
 </li>

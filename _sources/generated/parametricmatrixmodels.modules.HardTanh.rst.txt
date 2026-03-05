@@ -31,6 +31,8 @@
       
          ~HardTanh.deserialize
       
+         ~HardTanh.freeze
+      
          ~HardTanh.func
       
          ~HardTanh.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~HardTanh.set_state
       
+         ~HardTanh.unfreeze
+      
          ~HardTanh.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~HardTanh.name
+      
+         ~HardTanh.trainable

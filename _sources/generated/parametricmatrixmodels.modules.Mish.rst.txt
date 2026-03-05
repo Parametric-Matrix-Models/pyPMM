@@ -31,6 +31,8 @@
       
          ~Mish.deserialize
       
+         ~Mish.freeze
+      
          ~Mish.func
       
          ~Mish.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Mish.set_state
       
+         ~Mish.unfreeze
+      
          ~Mish.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Mish.name
+      
+         ~Mish.trainable

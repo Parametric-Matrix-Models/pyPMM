@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,8 +38,8 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/modules/einsum';</script>
     <link rel="icon" href="../../../_static/favicon.ico"/>
@@ -366,13 +366,13 @@
                 <article class="bd-article">
                   
   <h1>Source code for parametricmatrixmodels.modules.einsum</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Inexact</span><span class="p">,</span> <span class="n">PyTree</span><span class="p">,</span> <span class="n">jaxtyped</span>
+<span></span><span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">beartype</span> <span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Inexact</span><span class="p">,</span> <span class="n">PyTree</span><span class="p">,</span> <span class="n">jaxtyped</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_shape_leaf</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">..tree_util</span> <span class="kn">import</span> <span class="n">is_shape_leaf</span>
+<span class="kn">from</span> <span class="nn">..typing</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Data</span><span class="p">,</span>
     <span class="n">DataShape</span><span class="p">,</span>
@@ -384,12 +384,12 @@
     <span class="n">State</span><span class="p">,</span>
     <span class="n">Tuple</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.basemodule</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
+<span class="kn">from</span> <span class="nn">.basemodule</span> <span class="kn">import</span> <span class="n">BaseModule</span>
 
 
 <div class="viewcode-block" id="Einsum">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Einsum</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Einsum</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Module that implements Einsum operations between array leaves in a PyTree</span>
 <span class="sd">    input. Optionally with leading trainable arrays. The einsum operation is</span>
@@ -478,7 +478,7 @@
 
 <div class="viewcode-block" id="Einsum.__init__">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">einsum_str</span><span class="p">:</span> <span class="p">(</span>
             <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">PyTree</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span>
@@ -554,7 +554,7 @@
 
 <div class="viewcode-block" id="Einsum._get_dimension_map">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum._get_dimension_map">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_dimension_map</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_get_dimension_map</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">concrete_einsum_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span>
@@ -670,7 +670,7 @@
 
 <div class="viewcode-block" id="Einsum._get_concrete_einsum_str">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum._get_concrete_einsum_str">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_concrete_einsum_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_concrete_einsum_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the concrete einsum string by parsing the provided einsum string,</span>
 <span class="sd">        adding batch indices and inferring any missing output indices. To</span>
@@ -870,7 +870,7 @@
         <span class="c1"># verify that all strings contain only valid characters (a-z, A-Z, &#39;,&#39;)</span>
         <span class="n">valid_chars</span> <span class="o">=</span> <span class="s2">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">validate_chars</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">validate_chars</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">invalid_chars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">valid_chars</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">invalid_chars</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -905,7 +905,7 @@
             <span class="p">)</span>
 
         <span class="c1"># reduce over input_strs to single string</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">reduce_input_strs</span><span class="p">(</span><span class="n">carry</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">reduce_input_strs</span><span class="p">(</span><span class="n">carry</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">carry</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">s</span>
             <span class="k">else</span><span class="p">:</span>
@@ -965,7 +965,7 @@
         <span class="c1"># shapes match the input_strs</span>
         <span class="n">input_str_list</span> <span class="o">=</span> <span class="n">input_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">validate_shape</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">validate_shape</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Einsum input string &#39;</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&#39; has length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">}</span><span class="s2">, but &quot;</span>
@@ -991,7 +991,7 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">concrete_einsum_str</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_get_concrete_einsum_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -1001,20 +1001,20 @@
 
 <div class="viewcode-block" id="Einsum.is_ready">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.is_ready">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="Einsum._get_callable">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum._get_callable">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleCallable</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleCallable</span><span class="p">:</span>
 
         <span class="c1"># set up the callable</span>
 
         <span class="n">concrete_einsum_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_concrete_einsum_str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">)</span>
 
         <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">einsum_callable</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">einsum_callable</span><span class="p">(</span>
             <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">State</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Data</span><span class="p">,</span> <span class="n">State</span><span class="p">]:</span>
             <span class="c1"># prepare the list of arrays to einsum over</span>
@@ -1066,7 +1066,7 @@
 
 <div class="viewcode-block" id="Einsum.compile">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.compile">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="s2">&quot;einsum_str must be set before compiling the module&quot;</span>
@@ -1165,7 +1165,7 @@
 
 <div class="viewcode-block" id="Einsum.get_output_shape">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.get_output_shape">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
         <span class="n">concrete_einsum_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_concrete_einsum_str</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
         <span class="n">dim_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_dimension_map</span><span class="p">(</span>
             <span class="n">concrete_einsum_str</span><span class="p">,</span>
@@ -1179,31 +1179,29 @@
 
 <div class="viewcode-block" id="Einsum.get_hyperparameters">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.get_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
 
         <span class="c1"># include params in hyperparameters only if they are fixed</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;einsum_str&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span><span class="p">,</span>
             <span class="s2">&quot;dim_map&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim_map</span><span class="p">,</span>
             <span class="o">**</span><span class="p">({</span><span class="s2">&quot;params&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="p">}</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span> <span class="k">else</span> <span class="p">{}),</span>
-            <span class="s2">&quot;trainable&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">,</span>
             <span class="s2">&quot;init_magnitude&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_magnitude</span><span class="p">,</span>
             <span class="s2">&quot;real&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
+            <span class="s2">&quot;input_shape&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span><span class="p">,</span>
         <span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="Einsum.set_hyperparameters">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.set_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># setting the hyperparameters should require recompilation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">def</span> <span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># only allow setting params if they are fixed</span>
+        <span class="k">if</span> <span class="s2">&quot;input_shape&quot;</span> <span class="ow">in</span> <span class="n">hyperparams</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;input_shape&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s2">&quot;einsum_str&quot;</span> <span class="ow">in</span> <span class="n">hyperparams</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">einsum_str</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;einsum_str&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s2">&quot;dim_map&quot;</span> <span class="ow">in</span> <span class="n">hyperparams</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">dim_map</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;dim_map&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="s2">&quot;trainable&quot;</span> <span class="ow">in</span> <span class="n">hyperparams</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;trainable&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s2">&quot;params&quot;</span> <span class="ow">in</span> <span class="n">hyperparams</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="p">[</span><span class="s2">&quot;params&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s2">&quot;init_magnitude&quot;</span> <span class="ow">in</span> <span class="n">hyperparams</span><span class="p">:</span>
@@ -1214,19 +1212,14 @@
 
 <div class="viewcode-block" id="Einsum.get_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.get_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
-        <span class="c1"># return params only if they are trainable</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">()</span>
+    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span></div>
 
 
 <div class="viewcode-block" id="Einsum.set_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Einsum.html#parametricmatrixmodels.modules.Einsum.set_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># only allow setting params if they are trainable</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span></div>
+    <span class="k">def</span> <span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">params</span></div>
 </div>
 
 </pre></div>

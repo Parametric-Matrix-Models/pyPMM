@@ -31,6 +31,8 @@
       
          ~ASin.deserialize
       
+         ~ASin.freeze
+      
          ~ASin.func
       
          ~ASin.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~ASin.set_state
       
+         ~ASin.unfreeze
+      
          ~ASin.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~ASin.name
+      
+         ~ASin.trainable

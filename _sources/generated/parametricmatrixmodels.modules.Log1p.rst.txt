@@ -31,6 +31,8 @@
       
          ~Log1p.deserialize
       
+         ~Log1p.freeze
+      
          ~Log1p.func
       
          ~Log1p.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Log1p.set_state
       
+         ~Log1p.unfreeze
+      
          ~Log1p.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Log1p.name
+      
+         ~Log1p.trainable

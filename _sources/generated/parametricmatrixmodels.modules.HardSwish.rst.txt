@@ -31,6 +31,8 @@
       
          ~HardSwish.deserialize
       
+         ~HardSwish.freeze
+      
          ~HardSwish.func
       
          ~HardSwish.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~HardSwish.set_state
       
+         ~HardSwish.unfreeze
+      
          ~HardSwish.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~HardSwish.name
+      
+         ~HardSwish.trainable

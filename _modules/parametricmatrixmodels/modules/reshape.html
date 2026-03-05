@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,8 +38,8 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/modules/reshape';</script>
     <link rel="icon" href="../../../_static/favicon.ico"/>
@@ -366,13 +366,13 @@
                 <article class="bd-article">
                   
   <h1>Source code for parametricmatrixmodels.modules.reshape</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">jaxtyped</span>
+<span></span><span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">beartype</span> <span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">jaxtyped</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_shape_leaf</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">..tree_util</span> <span class="kn">import</span> <span class="n">is_shape_leaf</span>
+<span class="kn">from</span> <span class="nn">..typing</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">ArrayData</span><span class="p">,</span>
     <span class="n">ArrayDataShape</span><span class="p">,</span>
@@ -384,12 +384,12 @@
     <span class="n">State</span><span class="p">,</span>
     <span class="n">Tuple</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.basemodule</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
+<span class="kn">from</span> <span class="nn">.basemodule</span> <span class="kn">import</span> <span class="n">BaseModule</span>
 
 
 <div class="viewcode-block" id="Reshape">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Reshape.html#parametricmatrixmodels.modules.Reshape">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Reshape</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Reshape</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Module that reshapes the input array to a specified shape. Ignores the</span>
 <span class="sd">    batch dimension.</span>
@@ -399,7 +399,7 @@
 
 <div class="viewcode-block" id="Reshape.__init__">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Reshape.html#parametricmatrixmodels.modules.Reshape.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">DataShape</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">:</span> <span class="n">DataShape</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize a ``Reshape`` module.</span>
 
@@ -460,29 +460,29 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Reshape(shape=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">)&quot;</span>
 
 <div class="viewcode-block" id="Reshape.is_ready">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Reshape.html#parametricmatrixmodels.modules.Reshape.is_ready">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="Reshape.get_num_trainable_floats">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Reshape.html#parametricmatrixmodels.modules.Reshape.get_num_trainable_floats">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_num_trainable_floats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_num_trainable_floats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">0</span></div>
 
 
 <div class="viewcode-block" id="Reshape._get_callable">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Reshape.html#parametricmatrixmodels.modules.Reshape._get_callable">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_get_callable</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleCallable</span><span class="p">:</span>
 
         <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">reshape_array</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">reshape_array</span><span class="p">(</span>
             <span class="n">arr</span><span class="p">:</span> <span class="n">ArrayData</span><span class="p">,</span>
             <span class="n">shape</span><span class="p">:</span> <span class="n">ArrayDataShape</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayData</span><span class="p">:</span>
@@ -493,7 +493,7 @@
                 <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="p">(</span><span class="n">batch_dim</span><span class="p">,</span> <span class="o">*</span><span class="n">shape</span><span class="p">))</span>
 
         <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">reshape_callable</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">reshape_callable</span><span class="p">(</span>
             <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">,</span>
             <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
             <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -515,7 +515,7 @@
 
 <div class="viewcode-block" id="Reshape.validate_and_concretify_shape">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Reshape.html#parametricmatrixmodels.modules.Reshape.validate_and_concretify_shape">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate_and_concretify_shape</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">validate_and_concretify_shape</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
         <span class="c1"># check that input_shape and self.shape are compatible</span>
@@ -553,7 +553,7 @@
             <span class="sa">f</span><span class="s2">&quot; structure </span><span class="si">{</span><span class="n">shape_struct</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">check_compatibility_and_concretify</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">check_compatibility_and_concretify</span><span class="p">(</span>
             <span class="n">in_shape</span><span class="p">:</span> <span class="n">ArrayDataShape</span><span class="p">,</span>
             <span class="n">target_shape</span><span class="p">:</span> <span class="n">ArrayDataShape</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayDataShape</span><span class="p">:</span>
@@ -603,19 +603,19 @@
 
 <div class="viewcode-block" id="Reshape.compile">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Reshape.html#parametricmatrixmodels.modules.Reshape.compile">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">validate_and_concretify_shape</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Reshape.get_output_shape">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Reshape.html#parametricmatrixmodels.modules.Reshape.get_output_shape">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_and_concretify_shape</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Reshape.get_hyperparameters">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Reshape.html#parametricmatrixmodels.modules.Reshape.get_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;shape&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span>
         <span class="p">}</span></div>
@@ -623,13 +623,13 @@
 
 <div class="viewcode-block" id="Reshape.get_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Reshape.html#parametricmatrixmodels.modules.Reshape.get_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Reshape.set_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.Reshape.html#parametricmatrixmodels.modules.Reshape.set_params">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span></div>
 </div>
 

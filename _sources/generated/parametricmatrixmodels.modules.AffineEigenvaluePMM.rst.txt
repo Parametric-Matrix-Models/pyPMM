@@ -39,6 +39,8 @@
       
          ~AffineEigenvaluePMM.deserialize
       
+         ~AffineEigenvaluePMM.freeze
+      
          ~AffineEigenvaluePMM.from_file
       
          ~AffineEigenvaluePMM.get_hyperparameters
@@ -54,6 +56,8 @@
          ~AffineEigenvaluePMM.get_rng
       
          ~AffineEigenvaluePMM.get_state
+      
+         ~AffineEigenvaluePMM.get_trainable_modules
       
          ~AffineEigenvaluePMM.grad_input
       
@@ -99,6 +103,8 @@
       
          ~AffineEigenvaluePMM.train
       
+         ~AffineEigenvaluePMM.unfreeze
+      
          ~AffineEigenvaluePMM.upgrade
 
    .. autosummary::
@@ -106,3 +112,5 @@
       
       
          ~AffineEigenvaluePMM.name
+      
+         ~AffineEigenvaluePMM.trainable

@@ -31,6 +31,8 @@
       
          ~Log10.deserialize
       
+         ~Log10.freeze
+      
          ~Log10.func
       
          ~Log10.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Log10.set_state
       
+         ~Log10.unfreeze
+      
          ~Log10.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Log10.name
+      
+         ~Log10.trainable

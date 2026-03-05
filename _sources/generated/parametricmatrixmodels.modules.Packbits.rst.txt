@@ -31,6 +31,8 @@
       
          ~Packbits.deserialize
       
+         ~Packbits.freeze
+      
          ~Packbits.func
       
          ~Packbits.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Packbits.set_state
       
+         ~Packbits.unfreeze
+      
          ~Packbits.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Packbits.name
+      
+         ~Packbits.trainable

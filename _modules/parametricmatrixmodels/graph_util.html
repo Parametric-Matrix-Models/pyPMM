@@ -29,7 +29,7 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,8 +38,8 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/graph_util';</script>
     <link rel="icon" href="../../_static/favicon.ico"/>
@@ -366,18 +366,18 @@
                 <article class="bd-article">
                   
   <h1>Source code for parametricmatrixmodels.graph_util</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">deque</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">deque</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">extend_structure_from_strpaths</span><span class="p">,</span> <span class="n">getitem_by_strpath</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">OrderedSet</span><span class="p">,</span> <span class="n">PyTree</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">.tree_util</span> <span class="kn">import</span> <span class="n">extend_structure_from_strpaths</span><span class="p">,</span> <span class="n">getitem_by_strpath</span>
+<span class="kn">from</span> <span class="nn">.typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">OrderedSet</span><span class="p">,</span> <span class="n">PyTree</span><span class="p">,</span> <span class="n">Tuple</span>
 
 
 <div class="viewcode-block" id="concretize_paths">
 <a class="viewcode-back" href="../../graph_util.html#parametricmatrixmodels.graph_util.concretize_paths">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">concretize_paths</span><span class="p">(</span><span class="n">paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">concretize_paths</span><span class="p">(</span><span class="n">paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Concretize a list of keypaths by appending indices or uuids to duplicate</span>
 <span class="sd">    paths. Respects existing indices or keys.</span>
@@ -471,7 +471,7 @@
 
 <div class="viewcode-block" id="concretize_connections">
 <a class="viewcode-back" href="../../graph_util.html#parametricmatrixmodels.graph_util.concretize_connections">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">concretize_connections</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">concretize_connections</span><span class="p">(</span>
     <span class="n">connections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">tree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
@@ -669,7 +669,7 @@
 
 <div class="viewcode-block" id="get_outer_connections_by_tree">
 <a class="viewcode-back" href="../../graph_util.html#parametricmatrixmodels.graph_util.get_outer_connections_by_tree">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_outer_connections_by_tree</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">get_outer_connections_by_tree</span><span class="p">(</span>
     <span class="n">connections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">tree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
@@ -754,7 +754,7 @@
 
 <div class="viewcode-block" id="partition_connections_by_tree">
 <a class="viewcode-back" href="../../graph_util.html#parametricmatrixmodels.graph_util.partition_connections_by_tree">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">partition_connections_by_tree</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">partition_connections_by_tree</span><span class="p">(</span>
     <span class="n">connections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">tree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
@@ -916,7 +916,7 @@
 
 <div class="viewcode-block" id="place_connections_in_tree">
 <a class="viewcode-back" href="../../graph_util.html#parametricmatrixmodels.graph_util.place_connections_in_tree">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">place_connections_in_tree</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">place_connections_in_tree</span><span class="p">(</span>
     <span class="n">connections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">tree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
@@ -1067,7 +1067,7 @@
 
 <div class="viewcode-block" id="resolve_connections">
 <a class="viewcode-back" href="../../graph_util.html#parametricmatrixmodels.graph_util.resolve_connections">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">resolve_connections</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">resolve_connections</span><span class="p">(</span>
     <span class="n">graph</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="n">start_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span>
     <span class="n">end_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;output&quot;</span><span class="p">,</span>
@@ -1146,7 +1146,7 @@
             <span class="s2">&quot;Failed to resolve connections into a valid topological order. &quot;</span>
             <span class="s2">&quot;Got order:</span><span class="se">\n</span><span class="s2">    &quot;</span>
             <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">topological_order</span><span class="p">)</span>
-        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+        <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
     <span class="k">return</span> <span class="n">topological_order</span><span class="p">,</span> <span class="n">visited</span></div>
 
@@ -1154,7 +1154,7 @@
 
 <div class="viewcode-block" id="validate_resolution">
 <a class="viewcode-back" href="../../graph_util.html#parametricmatrixmodels.graph_util.validate_resolution">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">validate_resolution</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">validate_resolution</span><span class="p">(</span>
     <span class="n">order</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">all_nodes</span><span class="p">:</span> <span class="n">OrderedSet</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">start_key</span><span class="o">=</span><span class="s2">&quot;input&quot;</span><span class="p">,</span>

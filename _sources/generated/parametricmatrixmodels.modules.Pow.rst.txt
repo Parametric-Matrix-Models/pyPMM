@@ -31,6 +31,8 @@
       
          ~Pow.deserialize
       
+         ~Pow.freeze
+      
          ~Pow.func
       
          ~Pow.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Pow.set_state
       
+         ~Pow.unfreeze
+      
          ~Pow.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Pow.name
+      
+         ~Pow.trainable

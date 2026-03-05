@@ -31,6 +31,8 @@
       
          ~ACosh.deserialize
       
+         ~ACosh.freeze
+      
          ~ACosh.func
       
          ~ACosh.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~ACosh.set_state
       
+         ~ACosh.unfreeze
+      
          ~ACosh.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~ACosh.name
+      
+         ~ACosh.trainable

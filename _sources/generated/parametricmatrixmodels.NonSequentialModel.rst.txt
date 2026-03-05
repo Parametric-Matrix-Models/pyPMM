@@ -39,6 +39,8 @@
       
          ~NonSequentialModel.deserialize
       
+         ~NonSequentialModel.freeze
+      
          ~NonSequentialModel.from_file
       
          ~NonSequentialModel.get_execution_order
@@ -56,6 +58,8 @@
          ~NonSequentialModel.get_rng
       
          ~NonSequentialModel.get_state
+      
+         ~NonSequentialModel.get_trainable_modules
       
          ~NonSequentialModel.grad_input
       
@@ -101,6 +105,8 @@
       
          ~NonSequentialModel.train
       
+         ~NonSequentialModel.unfreeze
+      
          ~NonSequentialModel.upgrade
 
    .. autosummary::
@@ -108,3 +114,5 @@
       
       
          ~NonSequentialModel.name
+      
+         ~NonSequentialModel.trainable

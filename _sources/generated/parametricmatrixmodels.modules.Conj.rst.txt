@@ -31,6 +31,8 @@
       
          ~Conj.deserialize
       
+         ~Conj.freeze
+      
          ~Conj.func
       
          ~Conj.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Conj.set_state
       
+         ~Conj.unfreeze
+      
          ~Conj.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Conj.name
+      
+         ~Conj.trainable

@@ -31,6 +31,8 @@
       
          ~TransitionAmplitudeSum.deserialize
       
+         ~TransitionAmplitudeSum.freeze
+      
          ~TransitionAmplitudeSum.get_hyperparameters
       
          ~TransitionAmplitudeSum.get_num_trainable_floats
@@ -53,6 +55,8 @@
       
          ~TransitionAmplitudeSum.set_state
       
+         ~TransitionAmplitudeSum.unfreeze
+      
          ~TransitionAmplitudeSum.upgrade
 
    .. autosummary::
@@ -60,3 +64,5 @@
       
       
          ~TransitionAmplitudeSum.name
+      
+         ~TransitionAmplitudeSum.trainable

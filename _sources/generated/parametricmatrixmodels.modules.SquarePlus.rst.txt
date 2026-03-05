@@ -31,6 +31,8 @@
       
          ~SquarePlus.deserialize
       
+         ~SquarePlus.freeze
+      
          ~SquarePlus.func
       
          ~SquarePlus.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~SquarePlus.set_state
       
+         ~SquarePlus.unfreeze
+      
          ~SquarePlus.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~SquarePlus.name
+      
+         ~SquarePlus.trainable

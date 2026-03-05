@@ -29,7 +29,7 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,8 +38,8 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/eigen_util';</script>
     <link rel="icon" href="../../_static/favicon.ico"/>
@@ -366,21 +366,21 @@
                 <article class="bd-article">
                   
   <h1>Source code for parametricmatrixmodels.eigen_util</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_shape_leaf</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayDataShape</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">DataShape</span>
+<span class="kn">from</span> <span class="nn">.tree_util</span> <span class="kn">import</span> <span class="n">is_shape_leaf</span>
+<span class="kn">from</span> <span class="nn">.typing</span> <span class="kn">import</span> <span class="n">ArrayDataShape</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">DataShape</span>
 
 
 <div class="viewcode-block" id="validate_eigensystem_input_shape">
 <a class="viewcode-back" href="../../eigen_util.html#parametricmatrixmodels.eigen_util.validate_eigensystem_input_shape">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">validate_eigensystem_input_shape</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">validate_eigensystem_input_shape</span><span class="p">(</span>
     <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span> <span class="n">num_eig</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid_shape</span><span class="p">(</span><span class="n">shape</span><span class="p">:</span> <span class="n">ArrayDataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_valid_shape</span><span class="p">(</span><span class="n">shape</span><span class="p">:</span> <span class="n">ArrayDataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
             <span class="ow">and</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -399,7 +399,7 @@
 
 <div class="viewcode-block" id="select_eigenpairs_by_fn">
 <a class="viewcode-back" href="../../eigen_util.html#parametricmatrixmodels.eigen_util.select_eigenpairs_by_fn">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">select_eigenpairs_by_fn</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">select_eigenpairs_by_fn</span><span class="p">(</span>
     <span class="n">E</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
     <span class="n">V</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -443,7 +443,7 @@
 
 <div class="viewcode-block" id="select_eigenpairs_by_eigenvalue">
 <a class="viewcode-back" href="../../eigen_util.html#parametricmatrixmodels.eigen_util.select_eigenpairs_by_eigenvalue">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">select_eigenpairs_by_eigenvalue</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">select_eigenpairs_by_eigenvalue</span><span class="p">(</span>
     <span class="n">E</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">V</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">which</span><span class="p">:</span> <span class="nb">str</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -509,7 +509,7 @@
         <span class="n">k_half</span> <span class="o">=</span> <span class="n">k</span> <span class="o">//</span> <span class="mi">2</span>
         <span class="n">k_rem</span> <span class="o">=</span> <span class="n">k</span> <span class="o">-</span> <span class="n">k_half</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">idx_fn</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">idx_fn</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
             <span class="n">sorted_idx</span> <span class="o">=</span> <span class="n">am_sort_fn</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">sorted_idx</span><span class="p">[:</span><span class="n">k_half</span><span class="p">],</span> <span class="n">sorted_idx</span><span class="p">[</span><span class="o">-</span><span class="n">k_rem</span><span class="p">:]))</span>
 
@@ -519,7 +519,7 @@
         <span class="n">k_half</span> <span class="o">=</span> <span class="n">k</span> <span class="o">//</span> <span class="mi">2</span>
         <span class="n">k_rem</span> <span class="o">=</span> <span class="n">k</span> <span class="o">-</span> <span class="n">k_half</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">idx_fn</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">idx_fn</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
             <span class="n">sorted_idx</span> <span class="o">=</span> <span class="n">am_sort_fn</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
                 <span class="p">(</span>
@@ -532,7 +532,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid and impossible state reached. Congrats.&quot;</span><span class="p">)</span>
 
     <span class="c1"># sort_fn</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">sort_fn</span><span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">sort_fn</span><span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">idx_fn</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">select_eigenpairs_by_fn</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">sort_fn</span><span class="p">)</span></div>
@@ -541,7 +541,7 @@
 
 <div class="viewcode-block" id="select_eigenvalues">
 <a class="viewcode-back" href="../../eigen_util.html#parametricmatrixmodels.eigen_util.select_eigenvalues">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">select_eigenvalues</span><span class="p">(</span><span class="n">E</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">which</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">select_eigenvalues</span><span class="p">(</span><span class="n">E</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">which</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selects the k eigenvalues from the array E according to the specified</span>
 <span class="sd">    &#39;which&#39; option.</span>

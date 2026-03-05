@@ -29,7 +29,7 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,8 +38,8 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/nonsequentialmodel';</script>
     <link rel="icon" href="../../_static/favicon.ico"/>
@@ -366,35 +366,35 @@
                 <article class="bd-article">
                   
   <h1>Source code for parametricmatrixmodels.nonsequentialmodel</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">random</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">jaxtyped</span>
+<span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">from</span> <span class="nn">beartype</span> <span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">jaxtyped</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.graph_util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.graph_util</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_outer_connections_by_tree</span><span class="p">,</span>
     <span class="n">place_connections_in_tree</span><span class="p">,</span>
     <span class="n">resolve_connections</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.model_util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.model</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">.model_util</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ModelCallable</span><span class="p">,</span>
     <span class="n">ModelModules</span><span class="p">,</span>
     <span class="n">ModelParams</span><span class="p">,</span>
     <span class="n">ModelState</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.modules</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.modules</span> <span class="kn">import</span> <span class="n">BaseModule</span>
+<span class="kn">from</span> <span class="nn">.tree_util</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">extend_structure_from_strpaths</span><span class="p">,</span>
     <span class="n">getitem_by_strpath</span><span class="p">,</span>
     <span class="n">is_shape_leaf</span><span class="p">,</span>
     <span class="n">make_mutable</span><span class="p">,</span>
     <span class="n">setitem_by_strpath</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">.typing</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Data</span><span class="p">,</span>
     <span class="n">DataShape</span><span class="p">,</span>
@@ -410,7 +410,7 @@
 
 <div class="viewcode-block" id="NonSequentialModel">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">NonSequentialModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">NonSequentialModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A nonsequential model that chains modules (or other models) together with</span>
 <span class="sd">    directed connections.</span>
@@ -434,7 +434,7 @@
 
 <div class="viewcode-block" id="NonSequentialModel.__init__">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">modules</span><span class="p">:</span> <span class="n">ModelModules</span> <span class="o">|</span> <span class="n">BaseModule</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">connections</span><span class="p">:</span> <span class="p">(</span>
@@ -643,7 +643,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="o">=</span> <span class="n">separator</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="n">modules_repr</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
         <span class="c1"># add the connections if present in the format</span>
@@ -664,7 +664,7 @@
 
 <div class="viewcode-block" id="NonSequentialModel.get_execution_order">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.get_execution_order">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_execution_order</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">get_execution_order</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resolve the connections dictionary to find the execution order of</span>
 <span class="sd">        module execution.</span>
@@ -706,7 +706,7 @@
 
 <div class="viewcode-block" id="NonSequentialModel.reset">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.reset">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset the compiled state of the model. This will require recompilation</span>
 <span class="sd">        before the model can be used again.</span>
@@ -717,7 +717,7 @@
 
 <div class="viewcode-block" id="NonSequentialModel.is_ready">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.is_ready">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the model is compiled and ready for use. Overrides the base</span>
 <span class="sd">        implementation since not all modules need to be ready, as some may</span>
@@ -727,6 +727,7 @@
 <span class="sd">        -------</span>
 <span class="sd">            True if the model is compiled and ready, False otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="c1"># if the execution order is not set, the model is not ready</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
@@ -752,7 +753,7 @@
 
 <div class="viewcode-block" id="NonSequentialModel.compile">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.compile">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span>
@@ -893,12 +894,12 @@
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;Error compiling module &#39;</span><span class="si">{</span><span class="n">module_path</span><span class="si">}</span><span class="s2">&#39; (</span><span class="si">{</span><span class="n">module</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">) &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;with input shape </span><span class="si">{</span><span class="n">module_input_shape</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 
 
 <div class="viewcode-block" id="NonSequentialModel._get_module_input_dependencies">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel._get_module_input_dependencies">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_module_input_dependencies</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_get_module_input_dependencies</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">PyTree</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">PyTree</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -943,7 +944,7 @@
 
 <div class="viewcode-block" id="NonSequentialModel._get_shape_progression">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel._get_shape_progression">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_shape_progression</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_get_shape_progression</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span>
         <span class="o">/</span><span class="p">,</span>
@@ -1059,7 +1060,7 @@
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">input_shapes</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Current output shapes progression:&quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">output_shapes</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+                <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
             <span class="n">setitem_by_strpath</span><span class="p">(</span>
                 <span class="n">output_shapes</span><span class="p">,</span>
                 <span class="n">mod_path</span><span class="p">,</span>
@@ -1086,7 +1087,7 @@
 
 <div class="viewcode-block" id="NonSequentialModel.get_output_shape">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.get_output_shape">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the output shape of the model given an input shape. Must be</span>
 <span class="sd">        implemented by all subclasses.</span>
@@ -1114,7 +1115,7 @@
 
 <div class="viewcode-block" id="NonSequentialModel._get_callable">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel._get_callable">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_get_callable</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelCallable</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -1203,7 +1204,7 @@
         <span class="p">)</span>
 
         <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">nonseq_callable</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">nonseq_callable</span><span class="p">(</span>
             <span class="n">params</span><span class="p">:</span> <span class="n">ModelParams</span><span class="p">,</span>
             <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
             <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -1307,7 +1308,7 @@
 
 <div class="viewcode-block" id="NonSequentialModel.get_state">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.get_state">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelState</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelState</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the state of all modules in the model as a PyTree.</span>
 
@@ -1328,7 +1329,7 @@
         <span class="c1"># if the model is ready, then all the modules in the execution order</span>
         <span class="c1"># are ready, and otherwise we can ignore them</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">get_state_or_none</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">get_state_or_none</span><span class="p">(</span><span class="n">module</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">module</span><span class="o">.</span><span class="n">is_ready</span><span class="p">():</span>
                 <span class="k">return</span> <span class="n">module</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1342,7 +1343,7 @@
 
 <div class="viewcode-block" id="NonSequentialModel.get_hyperparameters">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.get_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;execution_order&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span><span class="p">,</span>
             <span class="s2">&quot;connections&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span>
@@ -1355,7 +1356,7 @@
 
 <div class="viewcode-block" id="NonSequentialModel.set_hyperparameters">
 <a class="viewcode-back" href="../../generated/parametricmatrixmodels.NonSequentialModel.html#parametricmatrixmodels.NonSequentialModel.set_hyperparameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hyperparams</span><span class="p">:</span> <span class="n">HyperParams</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span> <span class="o">=</span> <span class="n">hyperparams</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="s2">&quot;execution_order&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">execution_order</span>
         <span class="p">)</span>
@@ -1367,7 +1368,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">hyperparams</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NonSequentialModel</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">BaseModule</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NonSequentialModel</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Overload the + operator to append a module or model to the current</span>
 <span class="sd">        model.</span>

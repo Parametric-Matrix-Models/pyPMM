@@ -31,6 +31,8 @@
       
          ~LeakyReLU.deserialize
       
+         ~LeakyReLU.freeze
+      
          ~LeakyReLU.func
       
          ~LeakyReLU.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~LeakyReLU.set_state
       
+         ~LeakyReLU.unfreeze
+      
          ~LeakyReLU.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~LeakyReLU.name
+      
+         ~LeakyReLU.trainable

@@ -30,7 +30,7 @@
   <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -39,15 +39,15 @@
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'typing';</script>
     <link rel="icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="model_util Module" href="model_util.html" />
-    <link rel="prev" title="Advanced" href="advanced.html" />
+    <link rel="prev" title="conformal Module" href="conformal.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -320,7 +320,10 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+  <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="conformal.html"><code class="docutils literal notranslate"><span class="pre">conformal</span></code> Module</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">typing</span></code> Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="model_util.html"><code class="docutils literal notranslate"><span class="pre">model_util</span></code> Module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tree_util.html"><code class="docutils literal notranslate"><span class="pre">tree_util</span></code> Module</a></li>
@@ -431,7 +434,7 @@ with no batch</p>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="parametricmatrixmodels.typing.Data">
-<span class="sig-name descname"><span class="pre">Data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeAlias" title="(in Python v3.14)"><span class="pre">TypeAlias</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">jaxtyping.PyTree[jaxtyping.Inexact[Array,</span> <span class="pre">'batch_size</span> <span class="pre">...']]</span> <span class="pre">|</span> <span class="pre">jaxtyping.Inexact[Array,</span> <span class="pre">'batch_size</span> <span class="pre">...']</span></em><a class="headerlink" href="#parametricmatrixmodels.typing.Data" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">Data</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeAlias" title="(in Python v3.14)"><span class="pre">TypeAlias</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">jaxtyping.PyTree[jaxtyping.Inexact[Array,</span> <span class="pre">'batch_size</span> <span class="pre">...']]</span> <span class="pre">|</span> <span class="pre">jaxtyping.Inexact[Array,</span> <span class="pre">'batch_size</span> <span class="pre">...']</span></span><a class="headerlink" href="#parametricmatrixmodels.typing.Data" title="Link to this definition">#</a></dt>
 <dd><p>A PyTree or JAX array representing input data. If a PyTree, each leaf is a
 numerical JAX array with a leading batch dimension. The batch dimension must
 not change during evaluation of a model or module, but all other dimensions,
@@ -452,7 +455,7 @@ specified in the type alias.</p>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="parametricmatrixmodels.typing.DataShape">
-<span class="sig-name descname"><span class="pre">DataShape</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeAlias" title="(in Python v3.14)"><span class="pre">TypeAlias</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">jaxtyping.PyTree[tuple[int</span> <span class="pre">|</span> <span class="pre">None,</span> <span class="pre">...]]</span> <span class="pre">|</span> <span class="pre">tuple[int</span> <span class="pre">|</span> <span class="pre">None,</span> <span class="pre">...]</span></em><a class="headerlink" href="#parametricmatrixmodels.typing.DataShape" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">DataShape</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeAlias" title="(in Python v3.14)"><span class="pre">TypeAlias</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">jaxtyping.PyTree[tuple[int</span> <span class="pre">|</span> <span class="pre">None,</span> <span class="pre">...]]</span> <span class="pre">|</span> <span class="pre">tuple[int</span> <span class="pre">|</span> <span class="pre">None,</span> <span class="pre">...]</span></span><a class="headerlink" href="#parametricmatrixmodels.typing.DataShape" title="Link to this definition">#</a></dt>
 <dd><p>A PyTree representing the shape of input data. Each leaf is a tuple of
 integers representing the shape of the corresponding leaf in a <code class="docutils literal notranslate"><span class="pre">Data</span></code>
 PyTree, excluding the leading batch dimension. Alternatively, a single tuple
@@ -528,6 +531,14 @@ tuple.</p>
 <p>alias of <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code></a>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">'],</span> <span class="pre">'Params']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">']]</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Num[Array,</span> <span class="pre">'*?d'],</span> <span class="pre">'State']</span></code>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Any</span></code></a>], <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<code class="xref py py-class docutils literal notranslate"><span class="pre">']]</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Num[Array,</span> <span class="pre">'*?d'],</span> <span class="pre">'State']</span></code>]]</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="parametricmatrixmodels.typing.NonSerializable">
+<span class="sig-name descname"><span class="pre">NonSerializable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeAlias" title="(in Python v3.14)"><span class="pre">TypeAlias</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">jaxtyping.PyTree[jax._src.prng.PRNGKeyArray]</span> <span class="pre">|</span> <span class="pre">jax._src.prng.PRNGKeyArray</span></span><a class="headerlink" href="#parametricmatrixmodels.typing.NonSerializable" title="Link to this definition">#</a></dt>
+<dd><p>Type for all types that inherit from <code class="docutils literal notranslate"><span class="pre">Serializable</span></code> but are not themselves
+serializable. This is used to identify types that require custom saving and
+loading methods. This need not be a complete list</p>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="parametricmatrixmodels.typing.Params">
 <span class="sig-name descname"><span class="pre">Params</span></span><a class="headerlink" href="#parametricmatrixmodels.typing.Params" title="Link to this definition">#</a></dt>
@@ -563,6 +574,13 @@ tuple.</p>
 <dt class="sig sig-object py" id="parametricmatrixmodels.typing.RealDataFixed">
 <span class="sig-name descname"><span class="pre">RealDataFixed</span></span><a class="headerlink" href="#parametricmatrixmodels.typing.RealDataFixed" title="Link to this definition">#</a></dt>
 <dd><p>A PyTree with guaranteed structure and shape and only Reals</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="parametricmatrixmodels.typing.Serializable">
+<span class="sig-name descname"><span class="pre">Serializable</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.TypeAlias" title="(in Python v3.14)"><span class="pre">TypeAlias</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">jaxtyping.PyTree[int]</span> <span class="pre">|</span> <span class="pre">jaxtyping.PyTree[float]</span> <span class="pre">|</span> <span class="pre">jaxtyping.PyTree[bool]</span> <span class="pre">|</span> <span class="pre">jaxtyping.PyTree[str]</span> <span class="pre">|</span> <span class="pre">jaxtyping.PyTree[complex]</span> <span class="pre">|</span> <span class="pre">jaxtyping.PyTree[jaxtyping.Shaped[Array,</span> <span class="pre">'...']]</span> <span class="pre">|</span> <span class="pre">jaxtyping.PyTree[numpy.ndarray,</span> <span class="pre">'...']</span></span><a class="headerlink" href="#parametricmatrixmodels.typing.Serializable" title="Link to this definition">#</a></dt>
+<dd><p>Type that represents a union between all types that are serializable without
+allow_pickle=True</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -603,12 +621,12 @@ arrays.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="advanced.html"
+       href="conformal.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Advanced</p>
+        <p class="prev-next-title"><code class="docutils literal notranslate"><span class="pre">conformal</span></code> Module</p>
       </div>
     </a>
     <a class="right-next"
@@ -654,8 +672,10 @@ arrays.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.typing.ListParams"><code class="docutils literal notranslate"><span class="pre">ListParams</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.typing.ListState"><code class="docutils literal notranslate"><span class="pre">ListState</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.typing.ModuleCallable"><code class="docutils literal notranslate"><span class="pre">ModuleCallable</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.typing.NonSerializable"><code class="docutils literal notranslate"><span class="pre">NonSerializable</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.typing.Params"><code class="docutils literal notranslate"><span class="pre">Params</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.typing.RealDataFixed"><code class="docutils literal notranslate"><span class="pre">RealDataFixed</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.typing.Serializable"><code class="docutils literal notranslate"><span class="pre">Serializable</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.typing.State"><code class="docutils literal notranslate"><span class="pre">State</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.typing.TupleParams"><code class="docutils literal notranslate"><span class="pre">TupleParams</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametricmatrixmodels.typing.TupleState"><code class="docutils literal notranslate"><span class="pre">TupleState</span></code></a></li>

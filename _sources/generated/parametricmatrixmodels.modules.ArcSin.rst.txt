@@ -31,6 +31,8 @@
       
          ~ArcSin.deserialize
       
+         ~ArcSin.freeze
+      
          ~ArcSin.func
       
          ~ArcSin.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~ArcSin.set_state
       
+         ~ArcSin.unfreeze
+      
          ~ArcSin.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~ArcSin.name
+      
+         ~ArcSin.trainable

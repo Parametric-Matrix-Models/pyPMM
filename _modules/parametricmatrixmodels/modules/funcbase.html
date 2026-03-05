@@ -29,7 +29,7 @@
   <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,8 +38,8 @@
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/modules/funcbase';</script>
     <link rel="icon" href="../../../_static/favicon.ico"/>
@@ -366,15 +366,15 @@
                 <article class="bd-article">
                   
   <h1>Source code for parametricmatrixmodels.modules.funcbase</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">final</span>
+<span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">final</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">jaxtyped</span>
+<span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">beartype</span> <span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">jaxtyped</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">parametricmatrixmodels.typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">parametricmatrixmodels.typing</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Data</span><span class="p">,</span>
     <span class="n">DataShape</span><span class="p">,</span>
@@ -385,13 +385,13 @@
     <span class="n">Tuple</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..tree_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_shapes</span><span class="p">,</span> <span class="n">is_shape_leaf</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.basemodule</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModule</span>
+<span class="kn">from</span> <span class="nn">..tree_util</span> <span class="kn">import</span> <span class="n">get_shapes</span><span class="p">,</span> <span class="n">is_shape_leaf</span>
+<span class="kn">from</span> <span class="nn">.basemodule</span> <span class="kn">import</span> <span class="n">BaseModule</span>
 
 
 <div class="viewcode-block" id="FuncBase">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">FuncBase</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">FuncBase</span><span class="p">(</span><span class="n">BaseModule</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for simple non-trainable function modules. Not to be</span>
 <span class="sd">    instantiated directly.</span>
@@ -401,50 +401,34 @@
 
 <div class="viewcode-block" id="FuncBase.__init__">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase.__init__">[docs]</a>
-    <span class="nd">@final</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the function module.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;FuncBase(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">)&quot;</span>
-
-<div class="viewcode-block" id="FuncBase.is_ready">
-<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase.is_ready">[docs]</a>
-    <span class="nd">@final</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="FuncBase.get_hyperparameters">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase.get_hyperparameters">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Funcs are always ready to be used.</span>
+<span class="sd">        Get the hyperparameters of the function module.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">            Always returns True.</span>
+<span class="sd">            An empty dictionary, as function modules do not have</span>
+<span class="sd">            hyperparameters.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
-
-
-<div class="viewcode-block" id="FuncBase.get_num_trainable_floats">
-<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase.get_num_trainable_floats">[docs]</a>
-    <span class="nd">@final</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_num_trainable_floats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Funcs do not have trainable parameters.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">            Always returns 0.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="mi">0</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;Subclasses must implement `get_hyperparameters`.&quot;</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="FuncBase.f">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase.f">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Data</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply the function to the input data</span>
 
@@ -460,10 +444,42 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Subclasses must implement `f`.&quot;</span><span class="p">)</span></div>
 
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;FuncBase(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+<div class="viewcode-block" id="FuncBase.is_ready">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase.is_ready">[docs]</a>
+    <span class="nd">@final</span>
+    <span class="k">def</span> <span class="nf">is_ready</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Funcs are always ready to be used.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Always returns True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="FuncBase.get_num_trainable_floats">
+<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase.get_num_trainable_floats">[docs]</a>
+    <span class="nd">@final</span>
+    <span class="k">def</span> <span class="nf">get_num_trainable_floats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Funcs do not have trainable parameters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Always returns 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+
 <div class="viewcode-block" id="FuncBase._get_callable">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase._get_callable">[docs]</a>
     <span class="nd">@final</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleCallable</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_callable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModuleCallable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the callable for the function module.</span>
 
@@ -474,7 +490,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">func_callable</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">func_callable</span><span class="p">(</span>
             <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">,</span>
             <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
             <span class="n">training</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
@@ -489,7 +505,7 @@
 <div class="viewcode-block" id="FuncBase.compile">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase.compile">[docs]</a>
     <span class="nd">@final</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compile the function module. No action is needed for function modules.</span>
 
@@ -507,7 +523,7 @@
 <div class="viewcode-block" id="FuncBase.get_output_shape">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase.get_output_shape">[docs]</a>
     <span class="nd">@final</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_output_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">DataShape</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DataShape</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the output shape of the function given an input shape.</span>
 
@@ -540,33 +556,17 @@
                 <span class="s2">&quot;Make sure the function `f` can handle F32 inputs with shape &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">get_shapes</span><span class="p">(</span><span class="n">dummy_input</span><span class="p">)</span><span class="si">}</span><span class="s2">, which includes a leading size-1 &quot;</span>
                 <span class="s2">&quot;batch dimension.&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span>
 
         <span class="n">output_shape</span> <span class="o">=</span> <span class="n">get_shapes</span><span class="p">(</span><span class="n">dummy_output</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">output_shape</span></div>
 
 
-<div class="viewcode-block" id="FuncBase.get_hyperparameters">
-<a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase.get_hyperparameters">[docs]</a>
-    <span class="nd">@final</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HyperParams</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the hyperparameters of the function module, of which there are</span>
-<span class="sd">        none.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">            An empty dictionary, as function modules do not have</span>
-<span class="sd">            hyperparameters.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">{}</span></div>
-
-
 <div class="viewcode-block" id="FuncBase.get_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase.get_params">[docs]</a>
     <span class="nd">@final</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Params</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the parameters of the function module, of which there are none.</span>
 
@@ -580,7 +580,7 @@
 <div class="viewcode-block" id="FuncBase.set_params">
 <a class="viewcode-back" href="../../../generated/parametricmatrixmodels.modules.FuncBase.html#parametricmatrixmodels.modules.FuncBase.set_params">[docs]</a>
     <span class="nd">@final</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span></div>
 </div>
 

@@ -31,6 +31,8 @@
       
          ~ArcSinh.deserialize
       
+         ~ArcSinh.freeze
+      
          ~ArcSinh.func
       
          ~ArcSinh.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~ArcSinh.set_state
       
+         ~ArcSinh.unfreeze
+      
          ~ArcSinh.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~ArcSinh.name
+      
+         ~ArcSinh.trainable

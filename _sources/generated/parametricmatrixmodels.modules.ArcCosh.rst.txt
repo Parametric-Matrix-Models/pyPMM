@@ -31,6 +31,8 @@
       
          ~ArcCosh.deserialize
       
+         ~ArcCosh.freeze
+      
          ~ArcCosh.func
       
          ~ArcCosh.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~ArcCosh.set_state
       
+         ~ArcCosh.unfreeze
+      
          ~ArcCosh.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~ArcCosh.name
+      
+         ~ArcCosh.trainable

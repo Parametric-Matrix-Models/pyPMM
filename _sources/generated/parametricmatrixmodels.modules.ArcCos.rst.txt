@@ -31,6 +31,8 @@
       
          ~ArcCos.deserialize
       
+         ~ArcCos.freeze
+      
          ~ArcCos.func
       
          ~ArcCos.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~ArcCos.set_state
       
+         ~ArcCos.unfreeze
+      
          ~ArcCos.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~ArcCos.name
+      
+         ~ArcCos.trainable

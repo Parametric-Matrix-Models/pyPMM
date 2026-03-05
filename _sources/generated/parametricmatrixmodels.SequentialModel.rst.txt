@@ -39,6 +39,8 @@
       
          ~SequentialModel.deserialize
       
+         ~SequentialModel.freeze
+      
          ~SequentialModel.from_file
       
          ~SequentialModel.get_hyperparameters
@@ -54,6 +56,8 @@
          ~SequentialModel.get_rng
       
          ~SequentialModel.get_state
+      
+         ~SequentialModel.get_trainable_modules
       
          ~SequentialModel.grad_input
       
@@ -99,6 +103,8 @@
       
          ~SequentialModel.train
       
+         ~SequentialModel.unfreeze
+      
          ~SequentialModel.upgrade
 
    .. autosummary::
@@ -106,3 +112,5 @@
       
       
          ~SequentialModel.name
+      
+         ~SequentialModel.trainable

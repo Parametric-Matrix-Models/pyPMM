@@ -31,6 +31,8 @@
       
          ~Imag.deserialize
       
+         ~Imag.freeze
+      
          ~Imag.func
       
          ~Imag.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Imag.set_state
       
+         ~Imag.unfreeze
+      
          ~Imag.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Imag.name
+      
+         ~Imag.trainable

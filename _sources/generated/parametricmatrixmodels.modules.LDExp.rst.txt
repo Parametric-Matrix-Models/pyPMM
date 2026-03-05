@@ -31,6 +31,8 @@
       
          ~LDExp.deserialize
       
+         ~LDExp.freeze
+      
          ~LDExp.func
       
          ~LDExp.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~LDExp.set_state
       
+         ~LDExp.unfreeze
+      
          ~LDExp.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~LDExp.name
+      
+         ~LDExp.trainable

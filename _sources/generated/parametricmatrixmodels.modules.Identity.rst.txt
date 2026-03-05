@@ -31,6 +31,8 @@
       
          ~Identity.deserialize
       
+         ~Identity.freeze
+      
          ~Identity.func
       
          ~Identity.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Identity.set_state
       
+         ~Identity.unfreeze
+      
          ~Identity.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Identity.name
+      
+         ~Identity.trainable

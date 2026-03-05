@@ -31,6 +31,8 @@
       
          ~Reshape.deserialize
       
+         ~Reshape.freeze
+      
          ~Reshape.get_hyperparameters
       
          ~Reshape.get_num_trainable_floats
@@ -53,6 +55,8 @@
       
          ~Reshape.set_state
       
+         ~Reshape.unfreeze
+      
          ~Reshape.upgrade
       
          ~Reshape.validate_and_concretify_shape
@@ -62,3 +66,5 @@
       
       
          ~Reshape.name
+      
+         ~Reshape.trainable

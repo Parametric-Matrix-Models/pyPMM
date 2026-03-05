@@ -31,6 +31,8 @@
       
          ~Reciprocal.deserialize
       
+         ~Reciprocal.freeze
+      
          ~Reciprocal.func
       
          ~Reciprocal.get_hyperparameters
@@ -55,6 +57,8 @@
       
          ~Reciprocal.set_state
       
+         ~Reciprocal.unfreeze
+      
          ~Reciprocal.upgrade
 
    .. autosummary::
@@ -62,3 +66,5 @@
       
       
          ~Reciprocal.name
+      
+         ~Reciprocal.trainable

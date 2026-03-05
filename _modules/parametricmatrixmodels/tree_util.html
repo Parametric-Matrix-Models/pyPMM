@@ -29,7 +29,7 @@
   <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 <link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
   
   <!-- So that users can add custom icons -->
   <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -38,8 +38,8 @@
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
     <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/parametricmatrixmodels/tree_util';</script>
     <link rel="icon" href="../../_static/favicon.ico"/>
@@ -366,21 +366,21 @@
                 <article class="bd-article">
                   
   <h1>Source code for parametricmatrixmodels.tree_util</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">beartype</span><span class="w"> </span><span class="kn">import</span> <span class="n">beartype</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Num</span><span class="p">,</span> <span class="n">PyTree</span><span class="p">,</span> <span class="n">Shaped</span><span class="p">,</span> <span class="n">jaxtyped</span>
+<span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">beartype</span> <span class="kn">import</span> <span class="n">beartype</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">Num</span><span class="p">,</span> <span class="n">PyTree</span><span class="p">,</span> <span class="n">Shaped</span><span class="p">,</span> <span class="n">jaxtyped</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">.typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
 
 
 <div class="viewcode-block" id="all_equal">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.all_equal">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">all_equal</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">all_equal</span><span class="p">(</span>
     <span class="n">pytree1</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">pytree2</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -406,7 +406,7 @@
 
 <div class="viewcode-block" id="all_close">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.all_close">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">all_close</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">all_close</span><span class="p">(</span>
     <span class="n">pytree1</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">pytree2</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">rtol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-05</span><span class="p">,</span>
@@ -434,7 +434,7 @@
 
 <div class="viewcode-block" id="get_shapes">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.get_shapes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_shapes</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">get_shapes</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]],</span>
     <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
@@ -443,7 +443,7 @@
 <span class="sd">    specific axes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_shape</span><span class="p">(</span><span class="n">leaf</span><span class="p">:</span> <span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_get_shape</span><span class="p">(</span><span class="n">leaf</span><span class="p">:</span> <span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
         <span class="n">shape</span> <span class="o">=</span> <span class="n">leaf</span><span class="o">.</span><span class="n">shape</span>
         <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">shape</span>
@@ -462,7 +462,7 @@
 
 <div class="viewcode-block" id="is_single_leaf">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.is_single_leaf">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">is_single_leaf</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">is_single_leaf</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">ndim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">shape</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -517,7 +517,7 @@
 
 <div class="viewcode-block" id="make_mutable">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.make_mutable">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">make_mutable</span><span class="p">(</span><span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">make_mutable</span><span class="p">(</span><span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert all tuples in a pytree to lists for mutability.</span>
 
@@ -531,7 +531,7 @@
 <span class="sd">        A new pytree with all tuples converted to lists.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_is_tuple</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_is_tuple</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span>
 
     <span class="k">while</span> <span class="ow">not</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">all</span><span class="p">(</span>
@@ -548,7 +548,7 @@
 
 <div class="viewcode-block" id="getitem_by_strpath">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.getitem_by_strpath">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">getitem_by_strpath</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">getitem_by_strpath</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">strpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
@@ -661,7 +661,7 @@
 
 <div class="viewcode-block" id="setitem_by_strpath">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.setitem_by_strpath">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">setitem_by_strpath</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">setitem_by_strpath</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
     <span class="n">strpath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
@@ -738,7 +738,7 @@
 
 <div class="viewcode-block" id="extend_structure_from_strpaths">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.extend_structure_from_strpaths">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">extend_structure_from_strpaths</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">extend_structure_from_strpaths</span><span class="p">(</span>
     <span class="n">base_pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">strpaths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
     <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
@@ -955,7 +955,7 @@
 <div class="viewcode-block" id="mean">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.mean">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">mean</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -981,7 +981,7 @@
 <div class="viewcode-block" id="add">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.add">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span>
     <span class="n">pytree1</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
     <span class="n">pytree2</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
@@ -1006,7 +1006,7 @@
 <div class="viewcode-block" id="sub">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.sub">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">sub</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">sub</span><span class="p">(</span>
     <span class="n">pytree1</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
     <span class="n">pytree2</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
@@ -1032,7 +1032,7 @@
 <div class="viewcode-block" id="mul">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.mul">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">mul</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">mul</span><span class="p">(</span>
     <span class="n">pytree1</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
     <span class="n">pytree2</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
@@ -1058,7 +1058,7 @@
 <div class="viewcode-block" id="div">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.div">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">div</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">div</span><span class="p">(</span>
     <span class="n">pytree1</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
     <span class="n">pytree2</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
@@ -1083,7 +1083,7 @@
 <div class="viewcode-block" id="neg">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.neg">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">neg</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">neg</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -1107,7 +1107,7 @@
 <div class="viewcode-block" id="abs">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.abs">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">abs</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">abs</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -1132,7 +1132,7 @@
 <div class="viewcode-block" id="abs_sqr">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.abs_sqr">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">abs_sqr</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">abs_sqr</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -1157,7 +1157,7 @@
 <div class="viewcode-block" id="sqrt">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.sqrt">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">sqrt</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -1181,7 +1181,7 @@
 <div class="viewcode-block" id="abs_sqrt">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.abs_sqrt">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">abs_sqrt</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">abs_sqrt</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -1206,7 +1206,7 @@
 <div class="viewcode-block" id="pow">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.pow">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">pow</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">pow</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
     <span class="n">exponent</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
@@ -1233,7 +1233,7 @@
 <div class="viewcode-block" id="scalar_add">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.scalar_add">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">scalar_add</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">scalar_add</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
     <span class="n">scalar</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
@@ -1260,7 +1260,7 @@
 <div class="viewcode-block" id="scalar_mul">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.scalar_mul">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">scalar_mul</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">scalar_mul</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
     <span class="n">scalar</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; *d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
@@ -1284,10 +1284,51 @@
 
 
 
+<div class="viewcode-block" id="concatenate">
+<a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.concatenate">[docs]</a>
+<span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">concatenate</span><span class="p">(</span>
+    <span class="n">pytrees</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">List</span><span class="p">[</span><span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]]</span>
+        <span class="o">|</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span>
+    <span class="p">),</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">is_leaf</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Concatenates a list of PyTrees of arrays along a specified axis. All</span>
+<span class="sd">    PyTrees must have the same structure and the same shapes along all axes</span>
+<span class="sd">    except the concatenation axis.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pytrees</span>
+<span class="sd">        A list of PyTrees where each leaf is an array. All PyTrees must have</span>
+<span class="sd">        the same structure and the same shapes along all axes except the</span>
+<span class="sd">        concatenation axis.</span>
+<span class="sd">    axis</span>
+<span class="sd">        The axis along which to concatenate the arrays. Default is 0.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A PyTree with the same structure as the input PyTrees, but with each leaf</span>
+<span class="sd">    being the concatenation of the corresponding leaves from the input PyTrees</span>
+<span class="sd">    along the specified axis.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">pytrees</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input list of PyTrees cannot be empty.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="o">*</span><span class="n">leaves</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">leaves</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">),</span>
+        <span class="o">*</span><span class="n">pytrees</span><span class="p">,</span>
+        <span class="n">is_leaf</span><span class="o">=</span><span class="n">is_leaf</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="astype">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.astype">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">astype</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">astype</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; ?*d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
     <span class="n">dtype</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">typing</span><span class="o">.</span><span class="n">DTypeLike</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; ?*d&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
@@ -1327,7 +1368,7 @@
 
 <div class="viewcode-block" id="is_shape_leaf">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.is_shape_leaf">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">is_shape_leaf</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">allow_none</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">is_shape_leaf</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">allow_none</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check if the given object is a shape leaf, i.e., a tuple of integers</span>
 <span class="sd">    representing the shape of an array, or None.</span>
@@ -1355,7 +1396,7 @@
 <div class="viewcode-block" id="has_uniform_leaf_shapes">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.has_uniform_leaf_shapes">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">has_uniform_leaf_shapes</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">has_uniform_leaf_shapes</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]],</span>
     <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -1404,7 +1445,7 @@
 <div class="viewcode-block" id="uniform_leaf_shapes_equal">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.uniform_leaf_shapes_equal">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">uniform_leaf_shapes_equal</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">uniform_leaf_shapes_equal</span><span class="p">(</span>
     <span class="n">pytree1</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]],</span>
     <span class="n">pytree2</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]],</span>
     <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1455,7 +1496,7 @@
 <div class="viewcode-block" id="shapes_equal">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.shapes_equal">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">shapes_equal</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">shapes_equal</span><span class="p">(</span>
     <span class="n">pytree1</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]],</span>
     <span class="n">pytree2</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]],</span>
     <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">|</span> <span class="nb">slice</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1510,7 +1551,7 @@
 <div class="viewcode-block" id="batch_leaves">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.batch_leaves">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">batch_leaves</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">batch_leaves</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
     <span class="n">batch_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Integer</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">],</span>
     <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Integer</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">],</span>
@@ -1556,10 +1597,84 @@
 
 
 
+<div class="viewcode-block" id="pytree_split">
+<a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.pytree_split">[docs]</a>
+<span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">pytree_split</span><span class="p">(</span>
+    <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
+    <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="n">Integer</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">],</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span>
+    <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
+    <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">]:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Splits the leaves of a PyTree of arrays using ``jax.numpy.array_split``</span>
+<span class="sd">    along a specified axis. The split is performed independently for each leaf,</span>
+<span class="sd">    so the resulting PyTrees have the same structure as the input, but with</span>
+<span class="sd">    each leaf split into arrays of the specified size along the given axis.</span>
+<span class="sd">    The remainder of the split (if the size does not evenly divide the leaf</span>
+<span class="sd">    size) is included as the second element of the returned tuple.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    pytree</span>
+<span class="sd">        A PyTree where each leaf is an array with a matching size along the</span>
+<span class="sd">        specified axis.</span>
+<span class="sd">    size</span>
+<span class="sd">        The size of the splits that the leaves are divided into.</span>
+<span class="sd">    axis</span>
+<span class="sd">        The axis along which to split the leaves. Default is 0.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    A tuple of two PyTrees with the same structure as the input. The first</span>
+<span class="sd">    PyTree contains the first part of the split leaves, and the second PyTree</span>
+<span class="sd">    contains the remainder of the split (if any). If the input PyTree had</span>
+<span class="sd">    leaves with the shape ``[..., N, ...]`` along the split axis, then the</span>
+<span class="sd">    shapes will now be ``[N // size, ..., size, ...]`` for the first PyTree and</span>
+<span class="sd">    ``[..., N % size, ...]`` for the second PyTree.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># use batch_leaves inside of a scan to get the part that evenly divides</span>
+    <span class="k">def</span> <span class="nf">get_split</span><span class="p">(</span><span class="n">carry</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
+        <span class="n">split_part</span> <span class="o">=</span> <span class="n">batch_leaves</span><span class="p">(</span>
+            <span class="n">pytree</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">batch_idx</span><span class="o">=</span><span class="n">batch_idx</span><span class="p">,</span>
+            <span class="n">length</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
+        <span class="p">)</span>  <span class="c1"># shape [..., size, ...]</span>
+        <span class="c1"># we add a leading axis to the split part to concatenate it in the scan</span>
+        <span class="k">return</span> <span class="n">carry</span><span class="p">,</span> <span class="n">split_part</span>
+
+    <span class="n">orig_size</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">leaves</span><span class="p">(</span><span class="n">pytree</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span>
+
+    <span class="n">num_batches</span> <span class="o">=</span> <span class="n">orig_size</span> <span class="o">//</span> <span class="n">size</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">split_parts</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">lax</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">get_split</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num_batches</span><span class="p">))</span>
+    <span class="c1"># scan should have already concatenated the split parts along a new leading</span>
+    <span class="c1"># axis, so we just need to deal with the remainder part</span>
+    <span class="c1"># we can use batch_leaves to get the remainder part by using the last</span>
+    <span class="c1"># batch_idx and setting the length to the remainder size</span>
+    <span class="n">remainder_size</span> <span class="o">=</span> <span class="n">orig_size</span> <span class="o">%</span> <span class="n">size</span>
+    <span class="k">if</span> <span class="n">remainder_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">remainder_part</span> <span class="o">=</span> <span class="n">batch_leaves</span><span class="p">(</span>
+            <span class="n">pytree</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span>
+            <span class="n">batch_idx</span><span class="o">=</span><span class="n">num_batches</span><span class="p">,</span>
+            <span class="n">length</span><span class="o">=</span><span class="n">remainder_size</span><span class="p">,</span>
+            <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">split_parts</span><span class="p">,</span> <span class="n">remainder_part</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">split_parts</span><span class="p">,</span> <span class="kc">None</span></div>
+
+
+
 <div class="viewcode-block" id="random_permute_leaves">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.random_permute_leaves">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">random_permute_leaves</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">random_permute_leaves</span><span class="p">(</span>
     <span class="n">pytree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Shaped</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span>
     <span class="n">key</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
@@ -1625,7 +1740,7 @@
 <div class="viewcode-block" id="safecast">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.safecast">[docs]</a>
 <span class="nd">@jaxtyped</span><span class="p">(</span><span class="n">typechecker</span><span class="o">=</span><span class="n">beartype</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">safecast</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">safecast</span><span class="p">(</span>
     <span class="n">X</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">typing</span><span class="o">.</span><span class="n">DTypeLike</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PyTree</span><span class="p">[</span><span class="n">Num</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">],</span> <span class="s2">&quot; T&quot;</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -1642,7 +1757,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># make sure that we don&#39;t cast complex to float</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cast_with_complex_check</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">cast_with_complex_check</span><span class="p">(</span>
         <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">typing</span><span class="o">.</span><span class="n">DTypeLike</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complexfloating</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span>
@@ -1657,7 +1772,7 @@
     <span class="n">X_</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">cast_with_complex_check</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="p">),</span> <span class="n">X</span><span class="p">)</span>
 
     <span class="c1"># make sure the dtype was converted, issue a warning if not</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">check_cast</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">typing</span><span class="o">.</span><span class="n">DTypeLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">check_cast</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">typing</span><span class="o">.</span><span class="n">DTypeLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="n">dtype</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Requested dtype (</span><span class="si">{</span><span class="n">dtype</span><span class="si">}</span><span class="s2">) was not successfully applied. &quot;</span>
@@ -1674,7 +1789,7 @@
 
 <div class="viewcode-block" id="strfmt_pytree">
 <a class="viewcode-back" href="../../tree_util.html#parametricmatrixmodels.tree_util.strfmt_pytree">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">strfmt_pytree</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">strfmt_pytree</span><span class="p">(</span>
     <span class="n">tree</span><span class="p">:</span> <span class="n">PyTree</span><span class="p">,</span>
     <span class="n">indent</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">indentation</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -1706,7 +1821,7 @@
     <span class="n">indent_str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="n">indent</span> <span class="o">*</span> <span class="n">indentation</span>
     <span class="n">next_indent_str</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">indent</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">indentation</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">truncate_leaf</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">truncate_leaf</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Truncate leaf representation if it exceeds max_leaf_chars.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">max_leaf_chars</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">s</span>
