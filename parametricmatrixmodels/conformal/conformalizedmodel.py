@@ -175,7 +175,10 @@ class ConformalizedModel(object):
         self._norm_S_dist = None
         self._continuous_features = None
         self._distance_cutoff = None
-        self._onehot_encoder = None
+        self._onehot_training_enc = None
+        self._stratified_bias_corrections = None
+        self._strata_unique_values = None
+        self._strata_biases = None
         self._num_params_sensitivity = (
             None  # not the same as num_trainable_floats
         )
@@ -204,6 +207,7 @@ class ConformalizedModel(object):
         input_sensitivity: bool | PyTree[bool, " In"] = True,
         distance_sensitivity: bool | PyTree[bool, " In"] = True,
         continuous_features: PyTree[bool, " In"] | None = None,
+        stratified_bias_corrections: PyTree[bool, " In"] | bool | None = None,
         dtype: jax.typing.DTypeLike = np.float64,
         max_batch_size: int | None = None,
         rng: Any | int | None = None,
@@ -288,6 +292,43 @@ class ConformalizedModel(object):
             continuous_features = jax.tree.map(lambda _: True, X_cal)
 
         self._continuous_features = continuous_features
+
+        if stratified_bias_corrections is not None:
+            # stratified bias correction should be a bool or PyTree with the
+            # same structure as the input features, and each True must be False
+            # in the continuous features, since stratified bias correction only
+            # makes sense across categorical features
+            # if true, then a single global bias correction is applied
+            if not isinstance(stratified_bias_corrections, bool):
+                if jax.tree.structure(
+                    stratified_bias_corrections
+                ) != jax.tree.structure(X_cal):
+                    raise ValueError(
+                        "The structure of stratified_bias_corrections must"
+                        " match the structure of X_cal. Got"
+                        f" {jax.tree.structure(stratified_bias_corrections)}"
+                        f" and {jax.tree.structure(X_cal)}."
+                    )
+
+                def check_stratified_bias_correction_validity(sbc, cont):
+                    if sbc and cont:
+                        raise ValueError(
+                            "Stratified bias correction cannot be applied to"
+                            " continuous features. Please set the value to"
+                            " False for continuous features. Got True for a"
+                            " continuous feature."
+                        )
+
+                jax.tree.map(
+                    check_stratified_bias_correction_validity,
+                    stratified_bias_corrections,
+                    continuous_features,
+                )
+        else:
+            # if not provided, assume no stratified bias correction
+            stratified_bias_corrections = False
+
+        self._stratified_bias_corrections = stratified_bias_corrections
 
         if not skip_sanity_checks:
             # check each feature marked as continuous has n_unique greater than
@@ -402,6 +443,99 @@ class ConformalizedModel(object):
             self._distance_sensitivity = distance_sensitivity
 
         # precompute and store relevant fields
+
+        Y_cal_pred = None  # define now to potentially reuse later
+        strata_idxs = None  # " "
+        if not isinstance(
+            self._stratified_bias_corrections, bool
+        ) and tree_util.any(self._stratified_bias_corrections):
+
+            # for all of the features that we are applying stratified bias
+            # correction across, we get the unique values to identify each
+            # strata
+            X_cal_strata_features_flat = np.concatenate(
+                jax.tree.leaves(
+                    jax.tree.map(
+                        lambda x, sbc: (
+                            x.reshape(x.shape[0], -1)
+                            if sbc
+                            else np.empty((x.shape[0], 0), dtype=x.dtype)
+                        ),
+                        X_cal,
+                        self._stratified_bias_corrections,
+                    )
+                ),
+                axis=-1,
+            )
+            self._strata_unique_values = np.unique(
+                X_cal_strata_features_flat, axis=0
+            )
+
+            # partition the calibration X and Y by the stratification features,
+            # and compute the residuals for each partition
+            matches = np.all(
+                X_cal_strata_features_flat[:, None, :]
+                == self._strata_unique_values[None, :, :],
+                axis=-1,
+            )
+            found = np.any(matches, axis=-1)
+            all_idxs = np.argmax(matches, axis=-1)
+            # for k unique values, any point that doesn't match any of them
+            # gets assigned to index k
+            idxs = np.where(
+                found, all_idxs, self._strata_unique_values.shape[0]
+            )
+            Y_cal_pred = self.model(
+                X_cal,
+                dtype=dtype,
+                rng=rng,
+                update_state=update_state,
+                max_batch_size=max_batch_size,
+            )
+            Y_cal_residuals = tree_util.sub(
+                Y_cal if Y_cal is not None else X_cal,
+                Y_cal_pred,
+            )
+
+            # partition the residuals by the strata and take the median
+            self._strata_biases = jax.tree.map(
+                lambda y: np.array(
+                    [
+                        np.median(y[idxs == i], axis=0)
+                        for i in range(self._strata_unique_values.shape[0])
+                    ]
+                    # bias of 0.0 for points that don't match any strata
+                    + [[0.0]],
+                    dtype=y.dtype,
+                ),
+                Y_cal_residuals,
+            )
+
+            # save for later
+            strata_idxs = idxs
+
+        elif (
+            isinstance(self._stratified_bias_corrections, bool)
+            and self._stratified_bias_corrections
+        ):
+            # no stratification, just a single global bias correction applied
+            # over the leaves and the leading dimension
+            Y_cal_pred = self.model(
+                X_cal,
+                dtype=dtype,
+                rng=rng,
+                update_state=update_state,
+                max_batch_size=max_batch_size,
+            )
+
+            Y_cal_residuals = tree_util.sub(
+                Y_cal if Y_cal is not None else X_cal,
+                Y_cal_pred,
+            )
+            self._strata_biases = jax.tree.map(
+                lambda y: np.median(y, axis=0), Y_cal_residuals
+            )
+
         self._training_data = X_train
 
         self._num_input_sensitivity = sum(
@@ -494,17 +628,17 @@ class ConformalizedModel(object):
             # need to convert the non-continuous features to one-hot encoding.
             # that way the L1 distance between these features is the same as
             # the binary yes/no distance which is used in the Gower distance
-            self._onehot_encoder = preprocessing.MixedScaler(
+            self._onehot_training_enc = preprocessing.MixedScaler(
                 jax.tree.map(
                     lambda cont: (None if cont else preprocessing.OneHot()),
                     continuous_features,
                 )
             )
-            self._onehot_encoder.fit(self._training_data)
+            self._onehot_training_enc.fit(self._training_data)
 
             # build KDTree for distance sensitivity
             # first re-encode and re-scale the data
-            X_train_encoded = self._onehot_encoder.transform(
+            X_train_encoded = self._onehot_training_enc.transform(
                 self._training_data
             )
             X_train_scaled = tree_util.div(
@@ -594,26 +728,45 @@ class ConformalizedModel(object):
             update_state=update_state,
             fwd=fwd,
         )
-        Y_cal_pred = self.model(
-            X_cal,
-            dtype=dtype,
-            rng=rng,
-            return_state=False,
-            update_state=update_state,
-            max_batch_size=max_batch_size,
+
+        if Y_cal_pred is None:
+            Y_cal_pred = self.model(
+                X_cal,
+                dtype=dtype,
+                rng=rng,
+                return_state=False,
+                update_state=update_state,
+                max_batch_size=max_batch_size,
+            )
+
+        # bias correction, if applicable
+        if not isinstance(
+            self._stratified_bias_corrections, bool
+        ) and tree_util.any(self._stratified_bias_corrections):
+
+            Y_cal_pred = tree_util.add(
+                Y_cal_pred,
+                jax.tree.map(
+                    lambda bias: bias[strata_idxs],
+                    self._strata_biases,
+                ),
+            )
+        elif (
+            isinstance(self._stratified_bias_corrections, bool)
+            and self._stratified_bias_corrections
+        ):
+            Y_cal_pred = tree_util.add(
+                Y_cal_pred,
+                self._strata_biases,
+            )
+
+        Y_cal_residuals = tree_util.sub(
+            Y_cal if Y_cal is not None else X_cal, Y_cal_pred
         )
 
         # s = |Y - Y_pred| / u
 
-        if Y_cal is None:
-            # unsupervised
-            self.scores = tree_util.div(
-                tree_util.abs(tree_util.sub(X_cal, Y_cal_pred)), u_cal
-            )
-        else:
-            self.scores = tree_util.div(
-                tree_util.abs(tree_util.sub(Y_cal, Y_cal_pred)), u_cal
-            )
+        self.scores = tree_util.div(tree_util.abs(Y_cal_residuals), u_cal)
 
     def parameter_sensitivity(
         self,
@@ -775,7 +928,7 @@ class ConformalizedModel(object):
         X: Data,
         dtype: jax.typing.DTypeLike = np.float64,
         normalize: bool = True,
-    ) -> float | None:
+    ) -> Real[Array, "..."] | None:
         if not self._distance_sensitivity:
             return None
         if self._training_data is None:
@@ -787,7 +940,7 @@ class ConformalizedModel(object):
         if (
             self._kdtree is None
             or self._range_X_train is None
-            or self._onehot_encoder is None
+            or self._onehot_training_enc is None
             or self._distance_cutoff is None
         ):
             raise ValueError(
@@ -804,7 +957,7 @@ class ConformalizedModel(object):
 
         # first we need to encode and scale the input data in the same way as
         # the training data, so that the KDTree query is valid
-        X_encoded = self._onehot_encoder.transform(X)
+        X_encoded = self._onehot_training_enc.transform(X)
         X_scaled = tree_util.div(X_encoded, self._range_X_train)
 
         # then we flatten the PyTree and all feature axes into a single axis
@@ -853,7 +1006,7 @@ class ConformalizedModel(object):
         distances = distances / self._num_distance_sensitivity
 
         if normalize:
-            distances = tree_util.div(distances, self._norm_S_dist)
+            distances = distances / self._norm_S_dist
 
         return distances[:, None]
 
@@ -936,6 +1089,73 @@ class ConformalizedModel(object):
             update_state=update_state,
             max_batch_size=max_batch_size,
         )
+
+        if not isinstance(
+            self._stratified_bias_corrections, bool
+        ) and tree_util.any(self._stratified_bias_corrections):
+            if (
+                self._strata_biases is None
+                or self._strata_unique_values is None
+            ):
+                raise ValueError(
+                    "Stratified bias corrections are enabled, but strata"
+                    " biases or unique values are not computed. Please"
+                    " calibrate the model first to compute them."
+                )
+
+            # flatten the stratified features to match with the unique values
+            # we computed during calibration
+            X_strata_features_flat = np.concatenate(
+                jax.tree.leaves(
+                    jax.tree.map(
+                        lambda x, sbc: (
+                            x.reshape(x.shape[0], -1)
+                            if sbc
+                            else np.empty((x.shape[0], 0), dtype=x.dtype)
+                        ),
+                        X,
+                        self._stratified_bias_corrections,
+                    )
+                ),
+                axis=-1,
+            )
+
+            # partition X and Y by the stratification features
+            matches = np.all(
+                X_strata_features_flat[:, None, :]
+                == self._strata_unique_values[None, :, :],
+                axis=-1,
+            )
+            found = np.any(matches, axis=-1)
+            all_idxs = np.argmax(matches, axis=-1)
+            # for k unique values, any point that doesn't match any of them
+            # gets assigned to index k
+            idxs = np.where(
+                found, all_idxs, self._strata_unique_values.shape[0]
+            )
+
+            # the bias is either self._strata_biases[i] for points in strata i,
+            # or 0.0 for points that don't match any strata
+            biases = jax.tree.map(
+                lambda b: np.where(found, b[idxs], np.zeros_like(b[0])),
+                self._strata_biases,
+            )
+
+            # add the bias (median residual)
+            Y_pred = tree_util.add(Y_pred, biases)
+
+        elif (
+            isinstance(self._stratified_bias_corrections, bool)
+            and self._stratified_bias_corrections
+        ):
+            if self._strata_biases is None:
+                raise ValueError(
+                    "Global bias correction is enabled, but bias is not"
+                    " computed. Please calibrate the model first to compute"
+                    " it."
+                )
+
+            Y_pred = tree_util.add(Y_pred, self._strata_biases)
 
         u_x = self.uncertainty_heuristic(
             X,

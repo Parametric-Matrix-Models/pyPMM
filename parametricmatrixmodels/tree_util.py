@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import builtins
 import warnings
 
 import jax
@@ -8,6 +9,21 @@ from beartype import beartype
 from jaxtyping import Array, Integer, Num, PyTree, Shaped, jaxtyped
 
 from .typing import Any, Callable, List, Tuple
+
+
+def any(
+    pytree: PyTree[Any],
+    is_leaf: Callable[[Any], bool] | None = None,
+) -> bool:
+    r"""
+    Call ``any()`` over the leaves of a PyTree.
+
+    See Also
+    --------
+    jax.tree.all : Call ``all()`` over the leaves of a PyTree.
+    """
+    leaves = jax.tree.leaves(pytree, is_leaf=is_leaf)
+    return builtins.any(leaves)
 
 
 def all_equal(
@@ -916,7 +932,7 @@ def astype(
     # Warn if dtype is real but any leaf is complex
     leaves = jax.tree.leaves(pytree)
     is_dtype_complex = np.issubdtype(np.dtype(dtype), np.complexfloating)
-    complex_leaf = any(
+    complex_leaf = builtins.any(
         np.issubdtype(leaf.dtype, np.complexfloating) for leaf in leaves
     )
     if not is_dtype_complex and complex_leaf:
@@ -979,7 +995,7 @@ def has_uniform_leaf_shapes(
     if not leaves:
         return True
     # check if any are not arrays
-    if any(not isinstance(leaf, np.ndarray) for leaf in leaves):
+    if builtins.any(not isinstance(leaf, np.ndarray) for leaf in leaves):
         return False
     reference_shape = leaves[0].shape
     for leaf in leaves[1:]:
