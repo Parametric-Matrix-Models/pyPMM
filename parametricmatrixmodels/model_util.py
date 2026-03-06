@@ -14,9 +14,9 @@ from jaxtyping import (
     jaxtyped,
 )
 
+from . import tree_util
 from .modules import BaseModule
 from .progressbar import ProgressBar
-from .tree_util import concatenate, pytree_split
 from .typing import (
     Any,
     Callable,
@@ -144,7 +144,9 @@ def autobatch(
                     out = jax.pure_callback(update_pb, out, out, i + 1)
                 return (i + 1, new_state), out
 
-            X_batches, X_remainder = pytree_split(X, max_batch_size, axis=0)
+            X_batches, X_remainder = tree_util.pytree_split(
+                X, max_batch_size, axis=0
+            )
 
             i_new_state, out = jax.lax.scan(
                 body_fn,
@@ -153,9 +155,12 @@ def autobatch(
             )
             _, new_state = i_new_state
 
-            # out is of shape [num_batches, batch_size, ...], so we need
-            # to reshape it to [num_batches * batch_size, ...]
-            out = np.reshape(out, (-1,) + out.shape[2:])
+            # each leaf of out is of shape [num_batches, batch_size, ...], so
+            # we need to reshape to [num_batches * batch_size, ...]
+            out = jax.tree.map(
+                lambda o_leaf: np.reshape(o_leaf, (-1,) + o_leaf.shape[2:]),
+                out,
+            )
 
             if remainder > 0:
                 # process the remainder batch first, so that the final state is
@@ -172,7 +177,7 @@ def autobatch(
                     new_state,
                     rng,
                 )
-                out = concatenate([out, out_remainder], axis=0)
+                out = tree_util.concatenate([out, out_remainder], axis=0)
 
             if verbose:
 

@@ -16,7 +16,10 @@ class ProgressBar:
 
     def start(self, extra_info: str = "") -> None:
         self.last = 0
-        self.starttime = time()  # estimate time remaining
+        self.first = True
+        # estimate time remaining, but only start the timer after the first
+        # update
+        self.starttime = None
         self.longest_str = 0
         self.extra_info = extra_info + (" | " if extra_info else "")
 
@@ -27,6 +30,9 @@ class ProgressBar:
             return
         progress_frac = raw_progress / self.total
         progress_int = int(progress_frac * self.length)
+        if self.first:
+            self.starttime = time()
+            self.first = False
         elapsed = time() - self.starttime
         est_total_time = elapsed / progress_frac if progress_frac > 1e-9 else 0
         remaining = est_total_time - elapsed

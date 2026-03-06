@@ -600,6 +600,7 @@ class Model(BaseModule):
         update_state: bool = False,
         fwd: bool | None = None,
         max_batch_size: int | None = None,
+        verbose: bool = False,
     ) -> (
         Tuple[
             PyTree[Inexact[Array, "num_samples ..."], "... DataStruct"],
@@ -810,7 +811,7 @@ class Model(BaseModule):
             rng = jax.random.key(rng)
 
         autobatched_grad_callable = autobatch(
-            self.grad_callable_inputs, max_batch_size
+            self.grad_callable_inputs, max_batch_size, verbose=verbose
         )
         grad_input_result, new_state = autobatched_grad_callable(
             self.get_params(), X_, False, self.get_state(), rng
@@ -839,6 +840,7 @@ class Model(BaseModule):
         update_state: bool = False,
         fwd: bool | None = None,
         max_batch_size: int | None = None,
+        verbose: bool = False,
     ) -> (
         Tuple[
             PyTree[Inexact[Array, "num_samples ..."] | Tuple[()] | None],
@@ -932,7 +934,7 @@ class Model(BaseModule):
             rng = jax.random.key(rng)
 
         autobatched_grad_callable = autobatch(
-            self.grad_callable_params, max_batch_size
+            self.grad_callable_params, max_batch_size, verbose=verbose
         )
         grad_params_result, new_state = autobatched_grad_callable(
             self.get_params(), X_, False, self.get_state(), rng

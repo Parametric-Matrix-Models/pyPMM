@@ -214,6 +214,7 @@ class ConformalizedModel(object):
         update_state: bool = False,
         fwd: bool | None = None,
         skip_sanity_checks: bool = False,
+        verbose: bool = False,
     ) -> float:
         r"""
         Calibrate the conformal prediction model on a calibration dataset.
@@ -491,6 +492,7 @@ class ConformalizedModel(object):
                 rng=rng,
                 update_state=update_state,
                 max_batch_size=max_batch_size,
+                verbose=verbose,
             )
             Y_cal_residuals = tree_util.sub(
                 Y_cal if Y_cal is not None else X_cal,
@@ -526,6 +528,7 @@ class ConformalizedModel(object):
                 rng=rng,
                 update_state=update_state,
                 max_batch_size=max_batch_size,
+                verbose=verbose,
             )
 
             Y_cal_residuals = tree_util.sub(
@@ -676,43 +679,49 @@ class ConformalizedModel(object):
                 nn_distances, self.nn_dist_quantile
             )
 
-        # compute each sensitivity for the calibration data, and then compute
-        # the MAD normalization
-        S_params_cal = self.parameter_sensitivity(
-            X_cal,
-            dtype=dtype,
-            max_batch_size=max_batch_size,
-            rng=rng,
-            update_state=update_state,
-            fwd=fwd,
-            normalize=False,
-        )
         weights = (
             jax.tree.map(lambda x: 1 / x, Y_cal_unc)
             if Y_cal_unc is not None
             else None
         )
-        self._norm_S_params = pytree_robust_normalization(
-            S_params_cal, weights
-        )
-        if self._training_data is not None:
-            S_input_cal = self.input_sensitivity(
+
+        # compute each sensitivity for the calibration data, and then compute
+        # the MAD normalization
+        if tree_util.any(self._parameter_sensitivity):
+            S_params_cal = self.parameter_sensitivity(
                 X_cal,
-                X_unc=X_cal_unc,
                 dtype=dtype,
                 max_batch_size=max_batch_size,
                 rng=rng,
                 update_state=update_state,
                 fwd=fwd,
                 normalize=False,
+                verbose=verbose,
             )
+            self._norm_S_params = pytree_robust_normalization(
+                S_params_cal, weights
+            )
+        if self._training_data is not None:
+            if tree_util.any(self._input_sensitivity):
+                S_input_cal = self.input_sensitivity(
+                    X_cal,
+                    X_unc=X_cal_unc,
+                    dtype=dtype,
+                    max_batch_size=max_batch_size,
+                    rng=rng,
+                    update_state=update_state,
+                    fwd=fwd,
+                    normalize=False,
+                    verbose=verbose,
+                )
+                self._norm_S_input = pytree_robust_normalization(
+                    S_input_cal, weights
+                )
+
             S_dist_cal = self.distance_sensitivity(
                 X_cal,
                 dtype=dtype,
                 normalize=False,
-            )
-            self._norm_S_input = pytree_robust_normalization(
-                S_input_cal, weights
             )
             # no weights for distance sensitivity since it is independent of
             # the labels
@@ -737,6 +746,7 @@ class ConformalizedModel(object):
                 return_state=False,
                 update_state=update_state,
                 max_batch_size=max_batch_size,
+                verbose=verbose,
             )
 
         # bias correction, if applicable
@@ -777,6 +787,7 @@ class ConformalizedModel(object):
         update_state: bool = False,
         fwd: bool | None = None,
         normalize: bool = True,
+        verbose: bool = False,
     ) -> Data | None:
         if not self._parameter_sensitivity:
             return None
@@ -802,6 +813,7 @@ class ConformalizedModel(object):
             return_state=False,
             update_state=update_state,
             fwd=fwd,
+            verbose=verbose,
         )
 
         # l2 norm over params, scaled by abs(params), divided by number of
@@ -848,6 +860,7 @@ class ConformalizedModel(object):
         update_state: bool = False,
         fwd: bool | None = None,
         normalize: bool = True,
+        verbose: bool = False,
     ) -> Data | None:
         if not self._input_sensitivity:
             return None
@@ -867,6 +880,7 @@ class ConformalizedModel(object):
             fwd=fwd,
             update_state=update_state,
             return_state=False,
+            verbose=verbose,
         )
 
         # TODO: u_dtype should match the output dtype of the model, not the
@@ -1053,6 +1067,7 @@ class ConformalizedModel(object):
         update_state: bool = False,
         return_state: bool = False,
         fwd: bool | None = None,
+        verbose: bool = False,
     ) -> (
         Tuple[Data, Tuple[Data, Data]]
         | Tuple[Data, Tuple[Data, Data], ModelState]
@@ -1088,6 +1103,7 @@ class ConformalizedModel(object):
             return_state=True,
             update_state=update_state,
             max_batch_size=max_batch_size,
+            verbose=verbose,
         )
 
         if not isinstance(
@@ -1165,6 +1181,7 @@ class ConformalizedModel(object):
             rng=rng,
             update_state=update_state,
             fwd=fwd,
+            verbose=verbose,
         )
 
         qhat = self.get_qhat(alpha=alpha)
@@ -1179,6 +1196,8 @@ class ConformalizedModel(object):
         else:
             return Y_pred, (lower, upper)
 
+    predict = __call__  # alias
+
     def uncertainty_heuristic(
         self,
         X: Data,
@@ -1188,6 +1207,7 @@ class ConformalizedModel(object):
         rng: Any | int | None = None,
         update_state: bool = False,
         fwd: bool | None = None,
+        verbose: bool = False,
     ) -> Data:
         r"""
         The uncertainty heuristic used to compute conformity scores for
@@ -1264,7 +1284,7 @@ class ConformalizedModel(object):
             is_leaf=tree_util.is_shape_leaf,
         )
 
-        if self._parameter_sensitivity:
+        if tree_util.any(self._parameter_sensitivity):
             u_param = self.parameter_sensitivity(
                 X,
                 dtype=dtype,
@@ -1273,11 +1293,12 @@ class ConformalizedModel(object):
                 update_state=update_state,
                 fwd=fwd,
                 normalize=True,
+                verbose=verbose,
             )
             u = tree_util.add(u, u_param)
 
         if self._training_data is not None:
-            if self._input_sensitivity:
+            if tree_util.any(self._input_sensitivity):
                 u_input = self.input_sensitivity(
                     X,
                     X_unc=X_unc,
@@ -1287,6 +1308,7 @@ class ConformalizedModel(object):
                     update_state=update_state,
                     fwd=fwd,
                     normalize=True,
+                    verbose=verbose,
                 )
                 u = tree_util.add(u, u_input)
 
