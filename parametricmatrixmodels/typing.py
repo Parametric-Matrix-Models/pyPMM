@@ -102,26 +102,30 @@ ArrayData: TypeAlias = Inexact[Array, "batch_size ..."]
 Data: TypeAlias = PyTree[Inexact[Array, "batch_size ..."]] | ArrayData
 
 #: A PyTree with guaranteed structure and shape and only numerical arrays
-DataFixed: TypeAlias = PyTree[Inexact[Array, "batch_size ?*d"], "DataFixed"]
+DataFixed: TypeAlias = PyTree[
+    Inexact[Array, "batch_size ?d0 ?*d"], "DataFixed"
+]
 #: A PyTree with guaranteed structure and shape and only numerical arrays
 #: with no batch
-BatchlessDataFixed: TypeAlias = PyTree[Inexact[Array, "?*d"], "DataFixed"]
+BatchlessDataFixed: TypeAlias = PyTree[Inexact[Array, "?d0 ?*d"], "DataFixed"]
 
 
 #: A PyTree with guaranteed structure and shape and only Reals
 RealDataFixed: TypeAlias = PyTree[
-    Real[Array, "batch_size ?*d"], "RealDataFixed"
+    Real[Array, "batch_size ?d0 ?*d"], "RealDataFixed"
 ]
 #: A PyTree with guaranteed structure and shape and only Reals with no batch
-BatchlessRealDataFixed: TypeAlias = PyTree[Real[Array, "?*d"], "RealDataFixed"]
+BatchlessRealDataFixed: TypeAlias = PyTree[
+    Real[Array, "?d0 ?*d"], "RealDataFixed"
+]
 #: A PyTree with guaranteed structure and shape and only Complex numbers
 ComplexDataFixed: TypeAlias = PyTree[
-    Complex[Array, "batch_size ?*d"], "ComplexDataFixed"
+    Complex[Array, "batch_size ?d0 ?*d"], "ComplexDataFixed"
 ]
 #: A PyTree with guaranteed structure and shape and only Complex numbers with
 #: no batch
 BatchlessComplexDataFixed: TypeAlias = PyTree[
-    Complex[Array, "?*d"], "ComplexDataFixed"
+    Complex[Array, "?d0 ?*d"], "ComplexDataFixed"
 ]
 
 #: A special case of ``DataShape`` where the input data shape is represented as
