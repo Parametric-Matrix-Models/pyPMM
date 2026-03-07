@@ -1,20 +1,33 @@
 import jax
 import jax.numpy as np
+from jaxtyping import Array, Inexact
+
+from ..typing import Tuple
 
 
 def commutator(
-    A: np.ndarray,
-    B: np.ndarray,
-) -> np.ndarray:
+    A: Inexact[Array, "d d"],
+    B: Inexact[Array, "d d"],
+) -> Inexact[Array, "d d"]:
     """
     Compute the commutator [A, B] = AB - BA.
     """
     return A @ B - B @ A
 
 
+# define the scan outside of exact_smoothing_matrix to avoid recompiling it
+# (breaks persistent compilation cache otherwise)
+def scan_Ms_comms(
+    acc: Inexact[Array, "d d"],
+    Mi_Mcs_im1: Tuple[Inexact[Array, "d d"], Inexact[Array, "d d"]],
+) -> Tuple[Inexact[Array, "d d"], None]:
+    Mi, Mcs_im1 = Mi_Mcs_im1
+    return acc + commutator(Mi, Mcs_im1), None
+
+
 def exact_smoothing_matrix(
-    Ms: np.ndarray,
-) -> np.ndarray:
+    Ms: Inexact[Array, "n d d"],
+) -> Inexact[Array, "d d"]:
     r"""
     Compute the exact smoothing matrix for a set of Hermitian matrices.
 
@@ -59,15 +72,13 @@ def exact_smoothing_matrix(
 
     Ms_cumsum = np.cumsum(Ms[:-1], axis=0)
 
-    def scan_Ms_comms(acc: np.ndarray, i: int) -> np.ndarray:
-        return acc + commutator(Ms[i], Ms_cumsum[i - 1]), ()
+    # pack together the Ms[1:] and Ms_cumsum to scan over
+    scan_input = (Ms[1:], Ms_cumsum)
 
     smoothing_matrix, _ = jax.lax.scan(
         scan_Ms_comms,
         np.zeros_like(Ms[0]),
-        np.arange(
-            1, Ms.shape[0]
-        ),  # we start from 1 since the first term is zero
+        scan_input,
     )
 
     return 1j * smoothing_matrix
