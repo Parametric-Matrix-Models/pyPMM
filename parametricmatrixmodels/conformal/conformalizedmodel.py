@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 import jax
 import jax.numpy as np
+import numpy as onp
 from beartype import beartype
 from jaxtyping import jaxtyped
 from scipy.spatial import KDTree
@@ -17,12 +18,14 @@ from ..typing import (
     Array,
     Data,
     Inexact,
+    List,
     PyTree,
     Real,
     Tuple,
 )
 
 
+@jaxtyped(typechecker=beartype)
 class ConformalizedModel(object):
     r"""
     A wrapper class for conformalized prediction models.
@@ -1026,12 +1029,24 @@ class ConformalizedModel(object):
 
     def get_qhat(
         self,
-        alpha: float = None,
-    ) -> float:
+        alpha: (
+            float | List[float] | Tuple[float, ...] | Real[Array, " d"] | None
+        ) = None,
+    ) -> Data | List[Data]:
 
-        alpha = alpha or self.default_alpha
+        if alpha is None:
+            alpha = self.default_alpha
 
-        if not (0 < alpha < 1):
+        if np.isscalar(alpha):
+            alpha = np.array([alpha])
+        if (
+            isinstance(alpha, onp.ndarray)
+            or isinstance(alpha, list)
+            or isinstance(alpha, tuple)
+        ):
+            alpha = np.array(alpha)
+
+        if np.any((alpha <= 0) | (alpha >= 1)):
             raise ValueError("alpha must be in the range (0, 1).")
 
         if self.scores is None:
@@ -1040,27 +1055,59 @@ class ConformalizedModel(object):
                 "the quantile. Please call the `calibrate` method."
             )
 
-        if self.qhats.get(alpha) is None:
+        # separate alphas into those already cached and new ones
+        # evaluate all the new ones at once as an array, add them to the cache
+        # then put them back in the original order to return
+        new = ~np.isin(alpha, np.array(list(self.qhats.keys())))
+        new_idxs = np.where(new)[0]
+        cached_idxs = np.where(~new)[0]
+
+        cached_alphas = alpha[cached_idxs]
+        new_alphas = alpha[new_idxs]
+
+        res_qhats = [None for _ in range(alpha.size)]
+        for idx, a in zip(cached_idxs, cached_alphas):
+            res_qhats[idx] = self.qhats[a.item()]
+
+        if new_alphas.size > 0:
             n = jax.tree.leaves(self.scores)[0].shape[0]
-            qhat = jax.tree.map(
+            new_qhats = jax.tree.map(
                 # TODO: is there a generalization of quantile for complex
                 # numbers?
                 lambda s: np.quantile(
                     s,
-                    np.ceil((n + 1) * (1 - alpha)) / n,
+                    np.ceil((n + 1) * (1 - new_alphas)) / n,
                     axis=0,
                 ),
                 self.scores,
             )
-            self.qhats[alpha] = qhat
+            # new_qhats is a PyTree where the leading dimension of each leaf is
+            # the number of new alphas, so we need to split it into a list of
+            # PyTrees, one for each new alpha
+            new_qhats_list = [
+                jax.tree.map(lambda x: x[i], new_qhats)
+                for i in range(new_alphas.size)
+            ]
+            for idx, a, qhat in zip(new_idxs, new_alphas, new_qhats_list):
+                self.qhats[a.item()] = qhat
+                res_qhats[idx] = qhat
 
-        return self.qhats[alpha]
+        # res_qhats is a list of qhats in the same order as the input alphas,
+        # so we return it as a list if the input was a list or array, but if
+        # the input was a single alpha, we return a single qhat instead of a
+        # list of one qhat
+        if len(res_qhats) == 1:
+            return res_qhats[0]
+        else:
+            return res_qhats
 
     def __call__(
         self,
         X: Data,
         X_unc: Data | None = None,
-        alpha: float | None = None,
+        alpha: (
+            float | List[float] | Tuple[float, ...] | Real[Array, " d"] | None
+        ) = None,
         dtype: jax.typing.DTypeLike = np.float64,
         max_batch_size: int | None = None,
         rng: Any | int | None = None,
@@ -1069,8 +1116,12 @@ class ConformalizedModel(object):
         fwd: bool | None = None,
         verbose: bool = False,
     ) -> (
+        # single alpha case, with and without state
         Tuple[Data, Tuple[Data, Data]]
         | Tuple[Data, Tuple[Data, Data], ModelState]
+        # multiple alpha case, with and without state
+        | Tuple[Data, List[Tuple[Data, Data]]]
+        | Tuple[Data, List[Tuple[Data, Data]], ModelState]
     ):
         r"""
         <DOC TODO>
@@ -1079,7 +1130,16 @@ class ConformalizedModel(object):
         if alpha is None:
             alpha = self.default_alpha
 
-        if not (0 < alpha < 1):
+        if np.isscalar(alpha):
+            alpha = np.array([alpha])
+        if (
+            isinstance(alpha, onp.ndarray)
+            or isinstance(alpha, list)
+            or isinstance(alpha, tuple)
+        ):
+            alpha = np.array(alpha)
+
+        if np.any((alpha <= 0) | (alpha >= 1)):
             raise ValueError("alpha must be in the range (0, 1).")
 
         if not tree_util.all_equal(
@@ -1145,15 +1205,12 @@ class ConformalizedModel(object):
             found = np.any(matches, axis=-1)
             all_idxs = np.argmax(matches, axis=-1)
             # for k unique values, any point that doesn't match any of them
-            # gets assigned to index k
+            # gets assigned to index k, which has 0.0 bias
             idxs = np.where(
                 found, all_idxs, self._strata_unique_values.shape[0]
             )
-
-            # the bias is either self._strata_biases[i] for points in strata i,
-            # or 0.0 for points that don't match any strata
             biases = jax.tree.map(
-                lambda b: np.where(found, b[idxs], np.zeros_like(b[0])),
+                lambda bias: bias[idxs],
                 self._strata_biases,
             )
 
@@ -1188,13 +1245,27 @@ class ConformalizedModel(object):
 
         # lower = Y_pred - qhat * u_x
         # upper = Y_pred + qhat * u_x
-        lower = tree_util.sub(Y_pred, tree_util.mul(qhat, u_x))
-        upper = tree_util.add(Y_pred, tree_util.mul(qhat, u_x))
 
-        if return_state:
-            return Y_pred, (lower, upper), state
+        if alpha.size == 1:
+            lower = tree_util.sub(Y_pred, tree_util.mul(qhat, u_x))
+            upper = tree_util.add(Y_pred, tree_util.mul(qhat, u_x))
+
+            if return_state:
+                return Y_pred, (lower, upper), state
+            else:
+                return Y_pred, (lower, upper)
+
         else:
-            return Y_pred, (lower, upper)
+            lowers = []
+            uppers = []
+            for q in qhat:
+                lowers.append(tree_util.sub(Y_pred, tree_util.mul(q, u_x)))
+                uppers.append(tree_util.add(Y_pred, tree_util.mul(q, u_x)))
+
+            if return_state:
+                return Y_pred, list(zip(lowers, uppers)), state
+            else:
+                return Y_pred, list(zip(lowers, uppers))
 
     predict = __call__  # alias
 
