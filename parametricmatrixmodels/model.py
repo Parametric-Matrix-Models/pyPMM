@@ -1817,7 +1817,7 @@ class Model(BaseModule):
     @classmethod
     def from_file(
         cls, file: str | IO | Path, /, *, strict_package_version: bool = False
-    ) -> "Model":
+    ) -> Model:
         """
         Load a model from a file and return an instance of the Model class.
 
