@@ -1,14 +1,20 @@
 from __future__ import annotations
 
+import sys
 import warnings
 from dataclasses import dataclass
+from pathlib import Path
+from typing import IO
 
 import jax
 import jax.numpy as np
 import numpy as onp
 from beartype import beartype
 from jaxtyping import jaxtyped
+from packaging.version import parse
 from scipy.spatial import KDTree
+
+import parametricmatrixmodels as pmm
 
 from .. import preprocessing, tree_util
 from ..model import Model
@@ -17,16 +23,19 @@ from ..typing import (
     Any,
     Array,
     Data,
+    Dict,
     Inexact,
     List,
     PyTree,
     Real,
+    Serializable,
     Tuple,
 )
 
 
 @jaxtyped(typechecker=beartype)
 class ConformalizedModel(object):
+    __version__ = "0.0.0"
     r"""
     A wrapper class for conformalized prediction models.
 
@@ -642,25 +651,7 @@ class ConformalizedModel(object):
             )
             self._onehot_training_enc.fit(self._training_data)
 
-            # build KDTree for distance sensitivity
-            # first re-encode and re-scale the data
-            X_train_encoded = self._onehot_training_enc.transform(
-                self._training_data
-            )
-            X_train_scaled = tree_util.div(
-                X_train_encoded, self._range_X_train
-            )
-            # then flatten the PyTree and all feature axes into a single axis
-            # to end up with a 2D array of shape (n_samples, n_features_total)
-            flat_data = np.concatenate(
-                jax.tree.leaves(
-                    jax.tree.map(
-                        lambda x: x.reshape((x.shape[0], -1)),
-                        X_train_scaled,
-                    )
-                ),
-                axis=-1,
-            )
+            flat_data = self._prepare_data_for_kdtree(self._training_data)
 
             # build KDTree
             self._kdtree = KDTree(flat_data)
@@ -972,22 +963,7 @@ class ConformalizedModel(object):
                 " computed. Please calibrate the model first to compute it."
             )
 
-        # first we need to encode and scale the input data in the same way as
-        # the training data, so that the KDTree query is valid
-        X_encoded = self._onehot_training_enc.transform(X)
-        X_scaled = tree_util.div(X_encoded, self._range_X_train)
-
-        # then we flatten the PyTree and all feature axes into a single axis
-        # to end up with a 2D array of shape (n_samples, n_features_total)
-        flat_data = np.concatenate(
-            jax.tree.leaves(
-                jax.tree.map(
-                    lambda x: x.reshape((x.shape[0], -1)),
-                    X_scaled,
-                )
-            ),
-            axis=-1,
-        )
+        flat_data = self._prepare_data_for_kdtree(X)
 
         # query the KDTree for all points within the distance cutoff of each
         # point in the batch
@@ -1026,6 +1002,35 @@ class ConformalizedModel(object):
             distances = distances / self._norm_S_dist
 
         return distances[:, None]
+
+    def _prepare_data_for_kdtree(
+        self, X: Data
+    ) -> Inexact[Array, " n_samples flat_features"]:
+
+        if self._onehot_training_enc is None or self._range_X_train is None:
+            raise ValueError(
+                "One-hot encoder or range of training data for KDTree is not"
+                " computed. Please calibrate the model first to compute them."
+            )
+
+        # first we need to encode and scale the input data in the same way as
+        # the training data, so that the KDTree query is valid
+        X_encoded = self._onehot_training_enc.transform(X)
+        X_scaled = tree_util.div(X_encoded, self._range_X_train)
+
+        # then we flatten the PyTree and all feature axes into a single axis
+        # to end up with a 2D array of shape (n_samples, n_features_total)
+        flat_data = np.concatenate(
+            jax.tree.leaves(
+                jax.tree.map(
+                    lambda x: x.reshape((x.shape[0], -1)),
+                    X_scaled,
+                )
+            ),
+            axis=-1,
+        )
+
+        return flat_data
 
     def get_qhat(
         self,
@@ -1394,20 +1399,82 @@ class ConformalizedModel(object):
 
         return u
 
-    def serialize(self) -> dict:
+    def serialize(self) -> Dict[str, Serializable]:
         r"""
         Serialize the conformalized model to a dictionary.
 
         Returns
         -------
         A dictionary containing the serialized conformalized model.
+
+        See Also
+        --------
+        Model.serialize
+            Serialization of the wrapped ``Model``.
+        BaseModule.serialize
+            Serialization of the wrapped ``BaseModule``.
+        ConformalizedModel.deserialize
+            Deserialization of a conformalized model from a dictionary.
         """
 
-        raise NotImplementedError(
-            "Serialization of ConformalizedModel is not yet implemented."
-        )
+        # save the package version, the serialized model, and the serialized
+        # state of the conformalization
+        package_version = pmm.__version__
+        model_typename = self.model.__class__.__name__
+        model_fulltypename = str(type(self.model))
+        model_module = self.model.__module__
+        serialized_model = self.model.serialize()
 
-    def deserialize(self, data: dict) -> "ConformalizedModel":
+        # KDTree will have to be reconstructed during deserialization from the
+        # saved training data
+
+        conformalization_state = {
+            "default_alpha": self.default_alpha,
+            "nn_dist_quantile": self.nn_dist_quantile,
+            "scores": self.scores,
+            "qhats": self.qhats,
+            "_training_data": self._training_data,
+            "_iqr_X_train": self._iqr_X_train,
+            "_range_X_train": self._range_X_train,
+            "_norm_S_params": self._norm_S_params,
+            "_norm_S_input": self._norm_S_input,
+            "_norm_S_dist": self._norm_S_dist,
+            "_continuous_features": self._continuous_features,
+            "_distance_cutoff": self._distance_cutoff,
+            "_onehot_training_enc": (
+                self._onehot_training_enc.serialize()
+                if self._onehot_training_enc is not None
+                else None
+            ),
+            "_stratified_bias_corrections": self._stratified_bias_corrections,
+            "_strata_unique_values": self._strata_unique_values,
+            "_strata_biases": self._strata_biases,
+            "_num_params_sensitivity": self._num_params_sensitivity,
+            "_num_input_sensitivity": self._num_input_sensitivity,
+            "_num_distance_sensitivity": self._num_distance_sensitivity,
+            "_input_sensitivity": self._input_sensitivity,
+            "_parameter_sensitivity": self._parameter_sensitivity,
+            "_distance_sensitivity": self._distance_sensitivity,
+        }
+
+        return {
+            "version": self.__version__,
+            "package_version": package_version,
+            "model_typename": model_typename,
+            "model_fulltypename": model_fulltypename,
+            "model_module": model_module,
+            "model": serialized_model,
+            "conformalization_state": conformalization_state,
+        }
+
+    @classmethod
+    def deserialize(
+        cls,
+        data: Dict[str, Serializable],
+        /,
+        *,
+        strict_package_version: bool = False,
+    ) -> ConformalizedModel:
         r"""
         Deserialize a conformalized model from a dictionary.
 
@@ -1421,46 +1488,134 @@ class ConformalizedModel(object):
         A ``ConformalizedModel`` instance.
         """
 
-        raise NotImplementedError(
-            "Deserialization of ConformalizedModel is not yet implemented."
+        # read the version of the package this model was serialized with
+        current_version = parse(pmm.__version__)
+        package_version = parse(str(data["package_version"]))
+
+        if current_version != package_version:
+            if strict_package_version:
+                raise ValueError(
+                    "Model was saved with package version "
+                    f"{package_version}, but current package version is "
+                    f"{current_version}."
+                )
+
+        # read the conformal mode version and handle and backward compatibility
+        # if needed
+        confmodel_version = parse(str(data["version"]))
+        if confmodel_version != parse(cls.__version__):
+            # nothing to do yet
+            pass
+
+        # deserialize the wrapped model
+        model_module = data["model_module"]
+        model_typename = data["model_typename"]
+        model = getattr(sys.modules[model_module], model_typename)()
+        model.deserialize(data["model"])
+
+        # deserialize the conformalization state
+        conf_state = data["conformalization_state"]
+        default_alpha = conf_state["default_alpha"]
+        nn_dist_quantile = conf_state["nn_dist_quantile"]
+
+        conf_model = cls(
+            model=model,
+            alpha=default_alpha,
+            nn_dist_quantile=nn_dist_quantile,
         )
 
-    def save(self, filename: str) -> None:
+        conf_model.scores = conf_state["scores"]
+        conf_model.qhats = conf_state["qhats"]
+        conf_model._training_data = conf_state["_training_data"]
+        conf_model._iqr_X_train = conf_state["_iqr_X_train"]
+        conf_model._range_X_train = conf_state["_range_X_train"]
+        conf_model._norm_S_params = conf_state["_norm_S_params"]
+        conf_model._norm_S_input = conf_state["_norm_S_input"]
+        conf_model._norm_S_dist = conf_state["_norm_S_dist"]
+        conf_model._continuous_features = conf_state["_continuous_features"]
+        conf_model._distance_cutoff = conf_state["_distance_cutoff"]
+        onehot_enc_data = conf_state["_onehot_training_enc"]
+        conf_model._onehot_training_enc = (
+            preprocessing.MixedScaler.deserialize(onehot_enc_data)
+            if onehot_enc_data is not None
+            else None
+        )
+        conf_model._stratified_bias_corrections = conf_state[
+            "_stratified_bias_corrections"
+        ]
+        conf_model._strata_unique_values = conf_state["_strata_unique_values"]
+        conf_model._strata_biases = conf_state["_strata_biases"]
+        conf_model._num_params_sensitivity = conf_state[
+            "_num_params_sensitivity"
+        ]
+        conf_model._num_input_sensitivity = conf_state[
+            "_num_input_sensitivity"
+        ]
+        conf_model._num_distance_sensitivity = conf_state[
+            "_num_distance_sensitivity"
+        ]
+        conf_model._input_sensitivity = conf_state["_input_sensitivity"]
+        conf_model._parameter_sensitivity = conf_state[
+            "_parameter_sensitivity"
+        ]
+        conf_model._distance_sensitivity = conf_state["_distance_sensitivity"]
+
+        # if the training data is not None, rebuild the KDTree
+        if conf_model._training_data is not None:
+            flat_data = conf_model._prepare_data_for_kdtree(
+                conf_model._training_data
+            )
+            conf_model._kdtree = KDTree(flat_data)
+
+        return conf_model
+
+    def save(self, file: str | IO | Path, /) -> None:
         r"""
         Save the conformalized model to a file.
 
         Parameters
         ----------
-        filename
+        file
             The name of the file to save the conformalized model to.
         """
 
-        raise NotImplementedError(
-            "Saving of ConformalizedModel is not yet implemented."
-        )
+        data: Dict[str, Serializable] = self.serialize()
+        if isinstance(file, str):
+            file = file if file.endswith(".npz") else file + ".npz"
 
-    def save_compressed(self, filename: str) -> None:
+        np.savez(file, **data)
+
+    def save_compressed(self, file: str | IO | Path, /) -> None:
         r"""
         Save the conformalized model to a compressed file.
 
         Parameters
         ----------
-        filename
+        file
             The name of the file to save the conformalized model to.
         """
 
-        raise NotImplementedError(
-            "Saving of ConformalizedModel is not yet implemented."
-        )
+        data: Dict[str, Serializable] = self.serialize()
+        if isinstance(file, str):
+            file = file if file.endswith(".npz") else file + ".npz"
+
+        # jax numpy doesn't have savez_compressed, so we use numpy
+        onp.savez_compressed(file, **data)
 
     @classmethod
-    def from_file(cls, filename: str) -> "ConformalizedModel":
+    def from_file(
+        cls,
+        file: str | IO | Path,
+        /,
+        *,
+        strict_package_version: bool = False,
+    ) -> ConformalizedModel:
         r"""
         Load a conformalized model from a file.
 
         Parameters
         ----------
-        filename
+        file
             The name of the file to load the conformalized model from.
 
         Returns
@@ -1468,8 +1623,29 @@ class ConformalizedModel(object):
         A ``ConformalizedModel`` instance.
         """
 
-        raise NotImplementedError(
-            "Loading of ConformalizedModel is not yet implemented."
+        data = np.load(file, allow_pickle=True)
+
+        # convert npz object to dict
+        data = {key: data[key] for key in data.files}
+
+        # convert certain items back to lists or bare values
+        if isinstance(data["model"], (onp.ndarray, np.ndarray)):
+            data["model"] = data["model"].item()
+        if isinstance(data["model_typename"], (onp.ndarray, np.ndarray)):
+            data["model_typename"] = data["model_typename"].item()
+        if isinstance(data["model_fulltypename"], (onp.ndarray, np.ndarray)):
+            data["model_fulltypename"] = data["model_fulltypename"].item()
+        if isinstance(data["model_module"], (onp.ndarray, np.ndarray)):
+            data["model_module"] = data["model_module"].item()
+        if isinstance(
+            data["conformalization_state"], (onp.ndarray, np.ndarray)
+        ):
+            data["conformalization_state"] = data[
+                "conformalization_state"
+            ].item()
+
+        return cls.deserialize(
+            data, strict_package_version=strict_package_version
         )
 
 
