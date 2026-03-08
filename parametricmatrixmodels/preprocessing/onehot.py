@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import jax
 import jax.numpy as np
-from jaxtyping import Array, Inexact, Integer, PyTree
+from jaxtyping import Array, Inexact, PyTree
 
 from ..typing import Any, Dict, Tuple
 from .scaler import Scaler
@@ -58,11 +58,13 @@ class OneHot(Scaler):
         )
         self.original_shapes_ = jax.tree.map(lambda x: x.shape[1:], X)
 
+        return self
+
     def transform(
         self,
         X: PyTree[Inexact[Array, "n ?f0 ?*f"], " Data"],
         y: Any | None = None,
-    ) -> PyTree[Integer[Array, "n num_unique"], " Data"]:
+    ) -> PyTree[Inexact[Array, "n num_unique"], " Data"]:
         """
         Encodes the input data as one-hot based on the unique values found
         during fitting. Values not found during fitting are encoded as all
@@ -90,14 +92,14 @@ class OneHot(Scaler):
                 x.reshape(x.shape[0], -1)[:, None, :]
                 == unique_vals[None, :, :],
                 axis=-1,
-            ).astype(int),
+            ).astype(x.dtype),
             X,
             self.unique_vals_,
         )
 
     def inverse_transform(
         self,
-        X_encoded: PyTree[Integer[Array, "n num_unique"], " Data"],
+        X_encoded: PyTree[Inexact[Array, "n num_unique"], " Data"],
         y_encoded: Any | None = None,
     ) -> PyTree[Inexact[Array, "n ?f0 ?*f"], " Data"]:
         """
