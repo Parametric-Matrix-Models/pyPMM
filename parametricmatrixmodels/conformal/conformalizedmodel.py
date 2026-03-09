@@ -837,7 +837,7 @@ class ConformalizedModel(object):
         dy_params = tree_util.scalar_mul(
             jax.tree.map(
                 lambda y, df: map_over_output_leaves(
-                    n_samples, u_dtype, y, df, params
+                    n_samples, u_dtype, y, df, params, zero_nan=True
                 ),
                 self.model.output_shape,
                 df_dparams,
@@ -897,7 +897,7 @@ class ConformalizedModel(object):
         dy_input = tree_util.scalar_mul(
             jax.tree.map(
                 lambda y, df: map_over_output_leaves(
-                    n_samples, u_dtype, y, df, self._iqr_X_train
+                    n_samples, u_dtype, y, df, self._iqr_X_train, zero_nan=True
                 ),
                 self.model.output_shape,
                 df_dx,
@@ -922,7 +922,7 @@ class ConformalizedModel(object):
             dy_input_unc = tree_util.scalar_mul(
                 jax.tree.map(
                     lambda y, df: map_over_output_leaves(
-                        n_samples, u_dtype, y, df, X_unc
+                        n_samples, u_dtype, y, df, X_unc, zero_nan=True
                     ),
                     self.model.output_shape,
                     df_dx,
@@ -1807,6 +1807,7 @@ def map_over_output_leaves(
     y_leaf_shape: Tuple[int, ...],
     df_leaf_dxs: PyTree[Inexact[Array, "..."], " In"],
     xs: PyTree[Inexact[Array, "..."], " In"],
+    zero_nan: bool = True,
 ) -> Data:
     # y_leaf_shape is the model output shape for the given leaf
     # which is <output_shape>
@@ -1818,6 +1819,18 @@ def map_over_output_leaves(
     # xs is a PyTree with the same structure as df_leaf_dxs
     # and each leaf has shape <x_shape>, matching the corresponding
     # leaf of df_leaf_dxs
+
+    # if zero_nan is True, replace any infs/nans in df or xs with 0.0 so that
+    # df*dx will be 0.0 instead of NaN
+    if zero_nan:
+        xs = jax.tree.map(
+            lambda x: np.where(~np.isfinite(x) | np.isnan(x), 0.0, x),
+            xs,
+        )
+        df_leaf_dxs = jax.tree.map(
+            lambda df: np.where(~np.isfinite(df) | np.isnan(df), 0.0, df),
+            df_leaf_dxs,
+        )
 
     # now we zip (map) together the leaves of df_leaf_dxs and
     # xs so that we can call reduce over them (reduce only takes a
