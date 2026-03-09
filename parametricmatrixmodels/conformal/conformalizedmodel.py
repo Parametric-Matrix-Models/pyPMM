@@ -645,21 +645,28 @@ class ConformalizedModel(object):
             # the binary yes/no distance which is used in the Gower distance
             self._onehot_training_enc = preprocessing.MixedScaler(
                 jax.tree.map(
-                    lambda cont: (None if cont else preprocessing.OneHot()),
-                    continuous_features,
+                    lambda cont, dist: (
+                        None if cont or not dist else preprocessing.OneHot()
+                    ),
+                    self._continuous_features,
+                    self._distance_sensitivity,
                 )
             )
             self._onehot_training_enc.fit(self._training_data)
 
             flat_data = self._prepare_data_for_kdtree(self._training_data)
 
+            # before building the KDTree, remove any duplicate points in the
+            # processed training data
+            flat_data_unique = np.unique(flat_data, axis=0)
+
             # build KDTree
-            self._kdtree = KDTree(flat_data)
+            self._kdtree = KDTree(flat_data_unique)
 
             # query the tree with the training data to get the distance cutoff
             # for the distance sensitivity
             distances, _ = self._kdtree.query(
-                flat_data, k=2, p=1.0, workers=-1
+                flat_data_unique, k=2, p=1.0, workers=-1
             )
             # if the nearest neighbor distance is zero (the tree correctly
             # identified the point itself as the nearest neighbor), we take the
@@ -937,7 +944,7 @@ class ConformalizedModel(object):
         dtype: jax.typing.DTypeLike = np.float64,
         normalize: bool = True,
     ) -> Real[Array, "..."] | None:
-        if not self._distance_sensitivity:
+        if not tree_util.any(self._distance_sensitivity):
             return None
         if self._training_data is None:
             raise ValueError(
@@ -1013,18 +1020,23 @@ class ConformalizedModel(object):
                 " computed. Please calibrate the model first to compute them."
             )
 
-        # first we need to encode and scale the input data in the same way as
-        # the training data, so that the KDTree query is valid
+        # we encode and scale the input data
         X_encoded = self._onehot_training_enc.transform(X)
         X_scaled = tree_util.div(X_encoded, self._range_X_train)
 
-        # then we flatten the PyTree and all feature axes into a single axis
+        # then we flatten the PyTree and all contributing feature axes into a
+        # single axis
         # to end up with a 2D array of shape (n_samples, n_features_total)
         flat_data = np.concatenate(
             jax.tree.leaves(
                 jax.tree.map(
-                    lambda x: x.reshape((x.shape[0], -1)),
+                    lambda x, dist: (
+                        x.reshape((x.shape[0], -1))
+                        if dist
+                        else np.empty((x.shape[0], 0), dtype=x.dtype)
+                    ),
                     X_scaled,
+                    self._distance_sensitivity,
                 )
             ),
             axis=-1,
@@ -1388,7 +1400,7 @@ class ConformalizedModel(object):
                 )
                 u = tree_util.add(u, u_input)
 
-            if self._distance_sensitivity:
+            if tree_util.any(self._distance_sensitivity):
                 u_dist = self.distance_sensitivity(
                     X,
                     dtype=dtype,
@@ -1565,7 +1577,8 @@ class ConformalizedModel(object):
             flat_data = conf_model._prepare_data_for_kdtree(
                 conf_model._training_data
             )
-            conf_model._kdtree = KDTree(flat_data)
+            flat_data_unique = np.unique(flat_data, axis=0)
+            conf_model._kdtree = KDTree(flat_data_unique)
 
         return conf_model
 
