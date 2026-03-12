@@ -691,8 +691,8 @@ def div(
 
 @jaxtyped(typechecker=beartype)
 def neg(
-    pytree: PyTree[Num[Array, " *d"], " T"],
-) -> PyTree[Num[Array, " *d"], " T"]:
+    pytree: PyTree[Num[Array, "?*d"], " T"],
+) -> PyTree[Num[Array, "?*d"], " T"]:
     r"""
     Computes the element-wise negation of all leaves of a PyTree of arrays.
 
@@ -712,8 +712,8 @@ def neg(
 
 @jaxtyped(typechecker=beartype)
 def abs(
-    pytree: PyTree[Num[Array, " *d"], " T"],
-) -> PyTree[Num[Array, " *d"], " T"]:
+    pytree: PyTree[Num[Array, "?*d"], " T"],
+) -> PyTree[Num[Array, "?*d"], " T"]:
     r"""
     Computes the element-wise absolute value of all leaves of a PyTree of
     arrays.
@@ -734,8 +734,8 @@ def abs(
 
 @jaxtyped(typechecker=beartype)
 def abs_sqr(
-    pytree: PyTree[Num[Array, " *d"], " T"],
-) -> PyTree[Num[Array, " *d"], " T"]:
+    pytree: PyTree[Num[Array, "?*d"], " T"],
+) -> PyTree[Num[Array, "?*d"], " T"]:
     r"""
     Computes the element-wise squared absolute value of all leaves of a
     PyTree of arrays.
@@ -756,8 +756,8 @@ def abs_sqr(
 
 @jaxtyped(typechecker=beartype)
 def sqrt(
-    pytree: PyTree[Num[Array, " *d"], " T"],
-) -> PyTree[Num[Array, " *d"], " T"]:
+    pytree: PyTree[Num[Array, "?*d"], " T"],
+) -> PyTree[Num[Array, "?*d"], " T"]:
     r"""
     Computes the element-wise square root of all leaves of a PyTree of arrays.
 
@@ -777,8 +777,8 @@ def sqrt(
 
 @jaxtyped(typechecker=beartype)
 def abs_sqrt(
-    pytree: PyTree[Num[Array, " *d"], " T"],
-) -> PyTree[Num[Array, " *d"], " T"]:
+    pytree: PyTree[Num[Array, "?*d"], " T"],
+) -> PyTree[Num[Array, "?*d"], " T"]:
     r"""
     Computes the element-wise square root of the absolute value of all leaves
     of a PyTree of arrays.
@@ -799,9 +799,9 @@ def abs_sqrt(
 
 @jaxtyped(typechecker=beartype)
 def pow(
-    pytree: PyTree[Num[Array, " *d"], " T"],
+    pytree: PyTree[Num[Array, "?*d"], " T"],
     exponent: float | int,
-) -> PyTree[Num[Array, " *d"], " T"]:
+) -> PyTree[Num[Array, "?*d"], " T"]:
     r"""
     Raises all leaves of a PyTree of arrays to a specified power.
 
@@ -909,9 +909,9 @@ def concatenate(
 
 @jaxtyped(typechecker=beartype)
 def astype(
-    pytree: PyTree[Shaped[Array, " ?*d"], " T"],
+    pytree: PyTree[Shaped[Array, "?*d"], " T"],
     dtype: jax.typing.DTypeLike,
-) -> PyTree[Shaped[Array, " ?*d"], " T"]:
+) -> PyTree[Shaped[Array, "?*d"], " T"]:
     r"""
     Casts all leaves of a PyTree of arrays to a specified data type.
 
@@ -1198,8 +1198,8 @@ def pytree_split(
     ``[..., N % size, ...]`` for the second PyTree.
     """
 
-    # use batch_leaves inside of a scan to get the part that evenly divides
-    def get_split(carry, batch_idx):
+    # use batch_leaves inside of a vmap to get the part that evenly divides
+    def get_split(batch_idx):
         split_part = batch_leaves(
             pytree,
             batch_size=size,
@@ -1208,13 +1208,13 @@ def pytree_split(
             axis=axis,
         )  # shape [..., size, ...]
         # we add a leading axis to the split part to concatenate it in the scan
-        return carry, split_part
+        return split_part
 
     orig_size = jax.tree.leaves(pytree)[0].shape[axis]
 
     num_batches = orig_size // size
-    _, split_parts = jax.lax.scan(get_split, None, np.arange(num_batches))
-    # scan should have already concatenated the split parts along a new leading
+    split_parts = jax.vmap(get_split)(np.arange(num_batches))
+    # vmap should have already concatenated the split parts along a new leading
     # axis, so we just need to deal with the remainder part
     # we can use batch_leaves to get the remainder part by using the last
     # batch_idx and setting the length to the remainder size
@@ -1297,8 +1297,8 @@ def random_permute_leaves(
 
 @jaxtyped(typechecker=beartype)
 def safecast(
-    X: PyTree[Num[Array, "..."], " T"], dtype: jax.typing.DTypeLike
-) -> PyTree[Num[Array, "..."], " T"]:
+    X: PyTree[Num[Array, "?*d"], " T"], dtype: jax.typing.DTypeLike
+) -> PyTree[Num[Array, "?*d"], " T"]:
     r"""
     Safely cast input data to a specified dtype, ensuring that complex types
     are not inadvertently cast to float types. And issues a warning if the

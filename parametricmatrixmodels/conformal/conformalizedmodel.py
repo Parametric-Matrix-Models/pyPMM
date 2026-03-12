@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import operator
 import sys
 import warnings
-from dataclasses import dataclass
+from functools import partial
 from pathlib import Path
 from typing import IO
 
@@ -225,6 +226,7 @@ class ConformalizedModel(object):
         rng: Any | int | None = None,
         update_state: bool = False,
         fwd: bool | None = None,
+        avoid_recompilation: bool = False,
         skip_sanity_checks: bool = False,
         verbose: bool = False,
     ) -> float:
@@ -504,6 +506,7 @@ class ConformalizedModel(object):
                 rng=rng,
                 update_state=update_state,
                 max_batch_size=max_batch_size,
+                avoid_recompilation=avoid_recompilation,
                 verbose=verbose,
             )
             Y_cal_residuals = tree_util.sub(
@@ -540,6 +543,7 @@ class ConformalizedModel(object):
                 rng=rng,
                 update_state=update_state,
                 max_batch_size=max_batch_size,
+                avoid_recompilation=avoid_recompilation,
                 verbose=verbose,
             )
 
@@ -747,6 +751,7 @@ class ConformalizedModel(object):
                 return_state=False,
                 update_state=update_state,
                 max_batch_size=max_batch_size,
+                avoid_recompilation=avoid_recompilation,
                 verbose=verbose,
             )
 
@@ -787,6 +792,7 @@ class ConformalizedModel(object):
         rng: Any | int | None = None,
         update_state: bool = False,
         fwd: bool | None = None,
+        avoid_recompilation: bool = False,
         normalize: bool = True,
         verbose: bool = False,
     ) -> Data | None:
@@ -798,8 +804,6 @@ class ConformalizedModel(object):
                 "MAD normalization factor for parameter sensitivity is not"
                 " computed. Please calibrate the model first to compute it."
             )
-
-        n_samples = jax.tree.leaves(X)[0].shape[0]
 
         # df/dTheta
         # will have the composite structure where the upper level structure is
@@ -814,6 +818,7 @@ class ConformalizedModel(object):
             return_state=False,
             update_state=update_state,
             fwd=fwd,
+            avoid_recompilation=avoid_recompilation,
             verbose=verbose,
         )
 
@@ -834,10 +839,12 @@ class ConformalizedModel(object):
         u_dtype = dtype
 
         # total uncertainty from the sensitivity to parameters
+        df_dparams = handle_naninf(df_dparams)
+        params_scale = handle_naninf(params)
         dy_params = tree_util.scalar_mul(
             jax.tree.map(
-                lambda y, df: map_over_output_leaves(
-                    n_samples, u_dtype, y, df, params, zero_nan=True
+                lambda _, df: accumulate_sum_sq_over_output_leaves(
+                    u_dtype, df, params_scale
                 ),
                 self.model.output_shape,
                 df_dparams,
@@ -860,6 +867,7 @@ class ConformalizedModel(object):
         rng: Any | int | None = None,
         update_state: bool = False,
         fwd: bool | None = None,
+        avoid_recompilation: bool = False,
         normalize: bool = True,
         verbose: bool = False,
     ) -> Data | None:
@@ -871,15 +879,14 @@ class ConformalizedModel(object):
                 " computed. Please calibrate the model first to compute it."
             )
 
-        n_samples = jax.tree.leaves(X)[0].shape[0]
-
         df_dx = self.model.grad_input(
             X,
             dtype=dtype,
             max_batch_size=max_batch_size,
             rng=rng,
-            fwd=fwd,
             update_state=update_state,
+            fwd=fwd,
+            avoid_recompilation=avoid_recompilation,
             return_state=False,
             verbose=verbose,
         )
@@ -894,10 +901,12 @@ class ConformalizedModel(object):
         # IQR will be 0.0 for non-continuous features and features not included
         # in the input sensitivity, so they won't contribute to the
         # sensitivity, as desired
+        df_dx = handle_naninf(df_dx)
+        iqr_scale = handle_naninf(self._iqr_X_train)
         dy_input = tree_util.scalar_mul(
             jax.tree.map(
-                lambda y, df: map_over_output_leaves(
-                    n_samples, u_dtype, y, df, self._iqr_X_train, zero_nan=True
+                lambda _, df: accumulate_sum_sq_over_output_leaves(
+                    u_dtype, df, iqr_scale
                 ),
                 self.model.output_shape,
                 df_dx,
@@ -919,10 +928,11 @@ class ConformalizedModel(object):
 
             # l2 norm of df/dx scaled by uncertainty in inputs
             # divided by number of continuous features
+            X_unc = handle_naninf(X_unc)
             dy_input_unc = tree_util.scalar_mul(
                 jax.tree.map(
-                    lambda y, df: map_over_output_leaves(
-                        n_samples, u_dtype, y, df, X_unc, zero_nan=True
+                    lambda _, df: accumulate_sum_sq_over_output_leaves(
+                        u_dtype, df, X_unc
                     ),
                     self.model.output_shape,
                     df_dx,
@@ -1131,6 +1141,7 @@ class ConformalizedModel(object):
         update_state: bool = False,
         return_state: bool = False,
         fwd: bool | None = None,
+        avoid_recompilation: bool = False,
         verbose: bool = False,
     ) -> (
         # single alpha case, with and without state
@@ -1180,6 +1191,7 @@ class ConformalizedModel(object):
             return_state=True,
             update_state=update_state,
             max_batch_size=max_batch_size,
+            avoid_recompilation=avoid_recompilation,
             verbose=verbose,
         )
 
@@ -1255,6 +1267,7 @@ class ConformalizedModel(object):
             rng=rng,
             update_state=update_state,
             fwd=fwd,
+            avoid_recompilation=avoid_recompilation,
             verbose=verbose,
         )
 
@@ -1295,6 +1308,7 @@ class ConformalizedModel(object):
         rng: Any | int | None = None,
         update_state: bool = False,
         fwd: bool | None = None,
+        avoid_recompilation: bool = False,
         verbose: bool = False,
     ) -> Data:
         r"""
@@ -1380,6 +1394,7 @@ class ConformalizedModel(object):
                 rng=rng,
                 update_state=update_state,
                 fwd=fwd,
+                avoid_recompilation=avoid_recompilation,
                 normalize=True,
                 verbose=verbose,
             )
@@ -1395,6 +1410,7 @@ class ConformalizedModel(object):
                     rng=rng,
                     update_state=update_state,
                     fwd=fwd,
+                    avoid_recompilation=avoid_recompilation,
                     normalize=True,
                     verbose=verbose,
                 )
@@ -1662,6 +1678,17 @@ class ConformalizedModel(object):
         )
 
 
+@jaxtyped(typechecker=beartype)
+def handle_naninf(
+    pytree: PyTree[Inexact[Array, "?*d"], " T"],
+) -> PyTree[Inexact[Array, "?*d"], " T"]:
+    # we replace NaN and inf values with 0.0
+    return jax.tree.map(
+        lambda x: np.where(~np.isfinite(x) | np.isnan(x), np.zeros_like(x), x),
+        pytree,
+    )
+
+
 def weighted_quantile(
     data: Inexact[Array, "..."],
     weights: Inexact[Array, "..."],
@@ -1765,83 +1792,40 @@ def pytree_robust_normalization(
         return jax.tree.map(lambda d: robust_normalization(d, None, eps), data)
 
 
-# data class for zipped grad and input (so that it becomes a leaf in PyTrees)
-@dataclass
-class GradAndInput:
-    grad: Inexact[Array, "..."]
-    x: Inexact[Array, "..."]
-
-    def __iter__(self):
-        yield self.grad
-        yield self.x
-
-
-# we map over the output leaves and reduce over the input leaves
+@partial(jax.vmap, in_axes=(None, 0, None))
 @jaxtyped(typechecker=beartype)
-def reduce_over_input_leaves(
-    out_shape: Tuple[int, ...],
-    df_leaf_carry: Inexact[Array, "..."],
-    df_leaf_dx_and_x: GradAndInput,
-) -> Inexact[Array, "..."]:
-    # df_leaf_carry is the accumulated sum over x leaves which has
-    # shape (n_samples, <output_shape>)
-    # df_leaf_dx_and_x is a GradAndInput object containing
-    # (df_leaf_dx, x) for a single x leaf
-    df_leaf_dx, x = df_leaf_dx_and_x
-    # df_leaf_dx has shape (n_samples, <output_shape>, <x_shape>)
-    # x has shape (<x_shape>,)
-    # we scale df_leaf_dx by abs(x)
-    scaled = df_leaf_dx * np.abs(x)
-    # reshape to (n_samples, <output_shape>, -1)
-    scaled_reshaped = scaled.reshape((scaled.shape[0],) + out_shape + (-1,))
-    # and compute the squared abs sum over the last axis (all xs)
-    sum_squares = np.sum(np.abs(scaled_reshaped) ** 2, axis=-1)
-    # accumulate
-    return df_leaf_carry + sum_squares
-
-
-@jaxtyped(typechecker=beartype)
-def map_over_output_leaves(
-    n_samples: int,
+def accumulate_sum_sq_over_output_leaves(
     u_dtype: jax.typing.DTypeLike,
-    y_leaf_shape: Tuple[int, ...],
     df_leaf_dxs: PyTree[Inexact[Array, "..."], " In"],
-    xs: PyTree[Inexact[Array, "..."], " In"],
-    zero_nan: bool = True,
-) -> Data:
-    # y_leaf_shape is the model output shape for the given leaf
-    # which is <output_shape>
-    # df_leaf_dxs is a PyTree with the same structure as xs
-    # representing the gradient of this particular output leaf w.r.t.
-    # each x leaf. each leaf of df_leaf_dxs has shape
-    # (n_samples, <output_shape>, <x_shape>)
-    # where <x_shape> varies per leaf
-    # xs is a PyTree with the same structure as df_leaf_dxs
-    # and each leaf has shape <x_shape>, matching the corresponding
-    # leaf of df_leaf_dxs
+    x_scales: PyTree[Inexact[Array, "..."], " In"],
+) -> Inexact[Array, "..."]:
+    r"""
+    Accumulate the sum of squares of the scaled gradients over the output
+    leaves, with no leading batch dimension.
 
-    # if zero_nan is True, replace any infs/nans in df or xs with 0.0 so that
-    # df*dx will be 0.0 instead of NaN
-    if zero_nan:
-        xs = jax.tree.map(
-            lambda x: np.where(~np.isfinite(x) | np.isnan(x), 0.0, x),
-            xs,
-        )
-        df_leaf_dxs = jax.tree.map(
-            lambda df: np.where(~np.isfinite(df) | np.isnan(df), 0.0, df),
-            df_leaf_dxs,
-        )
+    df_leaf_dxs is a PyTree with the same structure as xs representing the
+    gradient of each output leaf w.r.t. each x leaf. each leaf of
+    df_leaf_dxs has shape (<output_shape>, <x_shape>) where <x_shape>
+    varies per leaf.
+    x_scales is a PyTree with the same structure as df_leaf_dxs and each
+    leaf has shape <x_shape>, matching the corresponding leaf of
+    df_leaf_dxs
 
-    # now we zip (map) together the leaves of df_leaf_dxs and
-    # xs so that we can call reduce over them (reduce only takes a
-    # single tree, unlike map)
-    df_leaf_dx_and_xs = jax.tree.map(
-        lambda d, p: GradAndInput(d, p), df_leaf_dxs, xs
+    we simply want to compute df_leaf_dx * x_scale for each leaf, then sum of
+    squares over all leaves and <x_shape> dimensions, to get an output of shape
+    <output_shape>
+
+    THIS FUNCTION ASSUMES NO NaNs/Infs IN df_leaf_dxs OR
+    x_scales. If this is not the case, the output is undefined.
+    """
+
+    return jax.tree.reduce(
+        operator.add,
+        jax.tree.map(
+            lambda df, x: np.sum(
+                np.abs(df) ** 2, axis=tuple(range(-x.ndim, 0))
+            ),
+            tree_util.mul(df_leaf_dxs, x_scales),
+            x_scales,
+        ),
     )
-    # now we reduce over the x leaves
-    dy_leaf = jax.tree.reduce(
-        lambda acc, dfdx: reduce_over_input_leaves(y_leaf_shape, acc, dfdx),
-        df_leaf_dx_and_xs,
-        initializer=np.zeros((n_samples,) + y_leaf_shape, dtype=u_dtype),
-    )
-    return dy_leaf

@@ -28,7 +28,7 @@ from .model_util import (
 )
 from .modules import BaseModule
 from .training import OptimizerState, make_loss_fn, train
-from .tree_util import is_shape_leaf, safecast, strfmt_pytree
+from .tree_util import safecast, strfmt_pytree
 from .typing import (
     Any,
     Array,
@@ -186,6 +186,13 @@ class Model(BaseModule):
         self.grad_callable_params_options = None
         self.grad_callable_inputs = None
         self.grad_callable_inputs_options = None
+
+        self.autobatched_callable = None
+        self.autobatched_callable_options = None
+        self.autobatched_grad_callable_params = None
+        self.autobatched_grad_callable_params_options = None
+        self.autobatched_grad_callable_inputs = None
+        self.autobatched_grad_callable_inputs_options = None
 
     @abstractmethod
     def compile(
@@ -498,6 +505,7 @@ class Model(BaseModule):
         return_state: bool = False,
         update_state: bool = False,
         max_batch_size: int | None = None,
+        avoid_recompilation: bool = False,
         verbose: bool = False,
     ) -> Tuple[Data, ModelState] | Data:
         """
@@ -566,11 +574,26 @@ class Model(BaseModule):
         elif isinstance(rng, int):
             rng = jax.random.key(rng)
 
-        autobatched_callable = autobatch(
-            self.callable, max_batch_size, verbose=verbose
-        )
+        if self.autobatched_callable is None or (
+            self.autobatched_callable_options
+            != {
+                "max_batch_size": max_batch_size,
+                "avoid_recompilation": avoid_recompilation,
+            }
+        ):
+            self.autobatched_callable_options = {
+                "max_batch_size": max_batch_size,
+                "avoid_recompilation": avoid_recompilation,
+            }
 
-        out, new_state = autobatched_callable(
+            self.autobatched_callable = autobatch(
+                self.callable,
+                max_batch_size,
+                avoid_recompilation=avoid_recompilation,
+                verbose=verbose,
+            )
+
+        out, new_state = self.autobatched_callable(
             self.get_params(), X_, False, self.get_state(), rng
         )
 
@@ -600,6 +623,7 @@ class Model(BaseModule):
         update_state: bool = False,
         fwd: bool | None = None,
         max_batch_size: int | None = None,
+        avoid_recompilation: bool = False,
         verbose: bool = False,
     ) -> (
         Tuple[
@@ -651,8 +675,6 @@ class Model(BaseModule):
                 f"\nReason: {unready_reason}"
             )
         self._verify_input(X)
-        if self.callable is None:
-            self.callable = jax.jit(self._get_callable(), static_argnums=(2,))
 
         def get_num_elems(count: int, shape: Tuple[int, ...]) -> int:
             return count + onp.prod(shape)
@@ -668,139 +690,57 @@ class Model(BaseModule):
             # if fwd is None, decide based on input and output sizes
             # fwd is more efficient when the number of input elements is less
             # than the number of output elements in general
-            fwd = (
-                fwd
-                if fwd is not None
-                else (num_input_elems < num_output_elems)
-            )
-
-        batched = (max_batch_size is None) or (max_batch_size > 1)
+            fwd = num_input_elems < num_output_elems
 
         # prepare the grad callable if not already done
         if (self.grad_callable_inputs is None) or (
             fwd is not None
-            and (self.grad_callable_inputs_options != (batched, fwd))
+            and (
+                self.grad_callable_inputs_options
+                != {
+                    "fwd": fwd,
+                }
+            )
         ):
-            self.grad_callable_inputs_options = (batched, fwd)
-            if not batched:
-                # make non-batched version of the callable
-                def remove_batch_dim(x: np.ndarray) -> np.ndarray:
-                    return x[0, ...]
+            raw_callable = self._get_callable()
 
-                @jaxtyped(typechecker=beartype)
-                def callable_single(
-                    params: ModelParams,
-                    x: Data,
-                    training: bool,
-                    state: ModelState,
-                    rng: Any,
-                ) -> Data:
-                    y, new_state = self.callable(
-                        params, x[None, ...], training, state, rng
-                    )
-                    return jax.tree.map(remove_batch_dim, y), new_state
+            self.grad_callable_inputs_options = {
+                "fwd": fwd,
+            }
 
-                if fwd:
-                    grad_single = jax.jacfwd(
-                        callable_single, argnums=1, has_aux=True
-                    )
-                else:
-                    grad_single = jax.jacrev(
-                        callable_single, argnums=1, has_aux=True
-                    )
-                self.grad_callable_inputs = jax.jit(
-                    jax.vmap(grad_single, in_axes=(None, 0, None, None, None)),
-                    static_argnums=(2,),
+            # make non-batched version of the callable so that gradients
+            # aren't taken over the batch dimension
+            def remove_batch_dim(x: np.ndarray) -> np.ndarray:
+                return x[0, ...]
+
+            @jaxtyped(typechecker=beartype)
+            def callable_single(
+                params: ModelParams,
+                x: Data,
+                training: bool,
+                state: ModelState,
+                rng: Any,
+            ) -> Data:
+                y, new_state = raw_callable(
+                    params,
+                    jax.tree.map(lambda u: u[None, ...], x),
+                    training,
+                    state,
+                    rng,
+                )
+                return jax.tree.map(remove_batch_dim, y), new_state
+
+            if fwd:
+                grad_single = jax.jacfwd(
+                    callable_single, argnums=1, has_aux=True
                 )
             else:
-                if fwd:
-                    grad_callable_inputs_ = jax.jit(
-                        jax.jacfwd(self.callable, argnums=1, has_aux=True),
-                        static_argnums=(2,),
-                    )
-                else:
-                    grad_callable_inputs_ = jax.jit(
-                        jax.jacrev(self.callable, argnums=1, has_aux=True),
-                        static_argnums=(2,),
-                    )
-
-                output_ndims = jax.tree.map(
-                    lambda shape: len(shape),
-                    self.output_shape,
-                    is_leaf=is_shape_leaf,
+                grad_single = jax.jacrev(
+                    callable_single, argnums=1, has_aux=True
                 )
-                input_ndims = jax.tree.map(
-                    lambda shape: len(shape),
-                    self.input_shape,
-                    is_leaf=is_shape_leaf,
-                )
-
-                # take the diagonal (batch-wise jacobian)
-                @jaxtyped(typechecker=beartype)
-                def inner_map_fn(
-                    input_ndim: int,
-                    Y_out: Inexact[Array, "batch ..."],
-                    output_ndim: int,
-                ) -> Inexact[Array, "batch ..."]:
-
-                    # Y_out is an array of shape (batch, <output dims>, batch,
-                    # <input dims>)
-
-                    batch_size = Y_out.shape[0]
-                    diag_indices = (
-                        (np.arange(batch_size),)
-                        + (slice(None),) * output_ndim
-                        + (np.arange(batch_size),)
-                        + (slice(None),) * input_ndim
-                    )
-                    return Y_out[diag_indices]
-
-                # map over output structure
-                @jaxtyped(typechecker=beartype)
-                def outer_map_fn(
-                    output_ndim: int,
-                    Y_out: PyTree[Inexact[Array, "batch ..."]],
-                    in_ndims: PyTree[int],
-                ) -> PyTree[Inexact[Array, "..."]]:
-                    return jax.tree.map(
-                        lambda in_ndim, y: inner_map_fn(
-                            in_ndim, y, output_ndim
-                        ),
-                        in_ndims,
-                        Y_out,
-                    )
-
-                @jaxtyped(typechecker=beartype)
-                def grad_callable_inputs(
-                    params: ModelParams,
-                    X: Data,
-                    training: bool,
-                    state: ModelState,
-                    rng: Any,
-                ) -> Tuple[Data, ModelState]:
-                    Y, new_states = grad_callable_inputs_(
-                        params, X, training, state, rng
-                    )
-                    # the structure of Y is a composite PyTree where
-                    # the outer structure matches that of the model output,
-                    # and the inner structure matches that of the input X
-                    # so we have to map over both structures to take the
-                    # diagonal
-                    # each leaf of Y is and array of shape
-                    # (batch_size, output_dim1, output_dim2, ...,
-                    # batch_size, input_dim1, input_dim2, ...)
-                    # we want to take the diagonal along the two batch axes
-
-                    Y_diag = jax.tree.map(
-                        lambda out_ndim, y: outer_map_fn(
-                            out_ndim, y, input_ndims
-                        ),
-                        output_ndims,
-                        Y,
-                    )
-                    return Y_diag, new_states
-
-                self.grad_callable_inputs = grad_callable_inputs
+            self.grad_callable_inputs = jax.vmap(
+                grad_single, in_axes=(None, 0, None, None, None)
+            )
 
         # safecast input to requested dtype
         X_ = safecast(X, dtype)
@@ -810,10 +750,25 @@ class Model(BaseModule):
         elif isinstance(rng, int):
             rng = jax.random.key(rng)
 
-        autobatched_grad_callable = autobatch(
-            self.grad_callable_inputs, max_batch_size, verbose=verbose
-        )
-        grad_input_result, new_state = autobatched_grad_callable(
+        if self.autobatched_grad_callable_inputs is None or (
+            self.autobatched_grad_callable_inputs_options
+            != {
+                "max_batch_size": max_batch_size,
+                "avoid_recompilation": avoid_recompilation,
+            }
+        ):
+            self.autobatched_grad_callable_inputs_options = {
+                "max_batch_size": max_batch_size,
+                "avoid_recompilation": avoid_recompilation,
+            }
+            self.autobatched_grad_callable_inputs = autobatch(
+                self.grad_callable_inputs,
+                max_batch_size,
+                avoid_recompilation=avoid_recompilation,
+                verbose=verbose,
+            )
+
+        grad_input_result, new_state = self.autobatched_grad_callable_inputs(
             self.get_params(), X_, False, self.get_state(), rng
         )
 
@@ -840,6 +795,7 @@ class Model(BaseModule):
         update_state: bool = False,
         fwd: bool | None = None,
         max_batch_size: int | None = None,
+        avoid_recompilation: bool = False,
         verbose: bool = False,
     ) -> (
         Tuple[
@@ -887,8 +843,6 @@ class Model(BaseModule):
                 f"\nReason: {unready_reason}"
             )
         self._verify_input(X)
-        if self.callable is None:
-            self.callable = jax.jit(self._get_callable(), static_argnums=(2,))
 
         def get_num_elems(count: int, shape: Tuple[int, ...]) -> int:
             return count + onp.prod(shape)
@@ -904,25 +858,20 @@ class Model(BaseModule):
             # if fwd is None, decide based on input and output sizes
             # fwd is more efficient when the number of input elements is less
             # than the number of output elements in general
-            fwd = (
-                fwd
-                if fwd is not None
-                else (num_input_elems < num_output_elems)
-            )
+            fwd = num_input_elems < num_output_elems
 
         if self.grad_callable_params is None or (
             fwd is not None and (self.grad_callable_params_options != fwd)
         ):
+            raw_callable = self._get_callable()
             self.grad_callable_params_options = fwd
             if fwd:
-                self.grad_callable_params = jax.jit(
-                    jax.jacfwd(self.callable, argnums=0, has_aux=True),
-                    static_argnums=(2,),
+                self.grad_callable_params = jax.jacfwd(
+                    raw_callable, argnums=0, has_aux=True
                 )
             else:
-                self.grad_callable_params = jax.jit(
-                    jax.jacrev(self.callable, argnums=0, has_aux=True),
-                    static_argnums=(2,),
+                self.grad_callable_params = jax.jacrev(
+                    raw_callable, argnums=0, has_aux=True
                 )
 
         # safecast input to requested dtype
@@ -933,10 +882,25 @@ class Model(BaseModule):
         elif isinstance(rng, int):
             rng = jax.random.key(rng)
 
-        autobatched_grad_callable = autobatch(
-            self.grad_callable_params, max_batch_size, verbose=verbose
-        )
-        grad_params_result, new_state = autobatched_grad_callable(
+        if self.autobatched_grad_callable_params is None or (
+            self.autobatched_grad_callable_params_options
+            != {
+                "max_batch_size": max_batch_size,
+                "avoid_recompilation": avoid_recompilation,
+            }
+        ):
+            self.autobatched_grad_callable_params_options = {
+                "max_batch_size": max_batch_size,
+                "avoid_recompilation": avoid_recompilation,
+            }
+            self.autobatched_grad_callable_params = autobatch(
+                self.grad_callable_params,
+                max_batch_size,
+                avoid_recompilation=avoid_recompilation,
+                verbose=verbose,
+            )
+
+        grad_params_result, new_state = self.autobatched_grad_callable_params(
             self.get_params(), X_, False, self.get_state(), rng
         )
 
