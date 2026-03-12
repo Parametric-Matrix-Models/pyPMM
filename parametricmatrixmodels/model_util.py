@@ -75,7 +75,6 @@ def autobatch(
     max_batch_size: int | None,
     avoid_recompilation: bool = False,
     verbose: bool = False,
-    **kwargs: Any,
 ) -> ModelCallable | ModuleCallable:
     r"""
     Decorator to automatically limit the batch size of a ``ModelCallable`` or
