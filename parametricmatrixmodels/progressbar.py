@@ -66,6 +66,8 @@ class ProgressBar:
     def end(self, final_info: str = "", newline: bool = False) -> None:
         if self.total <= 1e-9:
             return
+        if self.starttime is None:
+            self.starttime = time()
         disp = (
             f"\r{self.extra_info}"
             + final_info
