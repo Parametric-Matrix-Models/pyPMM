@@ -7,7 +7,7 @@ from functools import partial
 import jax
 import jax.numpy as np
 from beartype import beartype
-from jax import grad, jit, lax
+from jax import jit, lax
 from jaxtyping import Array, Float, Inexact, Integer, jaxtyped
 
 from . import tree_util as pmm_tree_util
@@ -1266,6 +1266,7 @@ def train(
     eps: float = 1e-8,
     clip: float = 1e3,
     real: bool = False,  # if True, use the real Adam optimizer
+    fwd: bool = False,
 ):
     """
     Train a model from scratch using the Adam optimizer.
@@ -1611,7 +1612,14 @@ def train(
     # set up everything for the JAX trainer
     # has_aux=True allows us to return the new state from the loss function
     # this will return (gradients, new_state)
-    grad_loss_fn = grad(loss_fn, argnums=trainable_argnums, has_aux=True)
+    if fwd:
+        grad_loss_fn = jax.jacfwd(
+            loss_fn, argnums=trainable_argnums, has_aux=True
+        )
+    else:
+        grad_loss_fn = jax.grad(
+            loss_fn, argnums=trainable_argnums, has_aux=True
+        )
 
     # random key for JAX
     if batch_rng is None:

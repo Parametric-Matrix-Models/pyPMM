@@ -1050,6 +1050,7 @@ class Model(BaseModule):
         b2: float = 0.999,
         eps: float = 1e-8,
         clip: float = 1e3,
+        fwd: bool = False,
     ) -> None:
 
         # check if the model is ready
@@ -1197,6 +1198,7 @@ class Model(BaseModule):
             eps=eps,
             clip=clip,
             real=not any_complex,
+            fwd=fwd,
         )
 
         # set the final parameters
