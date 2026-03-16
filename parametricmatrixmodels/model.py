@@ -720,7 +720,7 @@ class Model(BaseModule):
                 training: bool,
                 state: ModelState,
                 rng: Any,
-            ) -> Data:
+            ) -> PyTree[Inexact[Array, "..."]]:  # no batch dim
                 y, new_state = raw_callable(
                     params,
                     jax.tree.map(lambda u: u[None, ...], x),
