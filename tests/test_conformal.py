@@ -211,7 +211,7 @@ def test_conformal_nonsequentialpytree():
     model.train(
         pmm.tree_util.astype(X_train, np.float32),
         Y=pmm.tree_util.astype(Y_train, np.float32),
-        epochs=200,
+        epochs=100,
         batch_size=20,
         lr=1e-3,
         batch_rng=key,

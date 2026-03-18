@@ -91,7 +91,6 @@ class Model(BaseModule):
 
     @trainable.setter
     def trainable(self, value: bool) -> None:
-        print(f"{self.name}.trainable set to {value}.")
         for module in jax.tree.leaves(self.modules):
             module.trainable = value
 

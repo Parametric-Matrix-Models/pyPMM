@@ -814,7 +814,7 @@ class Einsum(BaseModule):
             self.real = hyperparams["real"]
 
     def get_params(self) -> Params:
-        return self.params if self.trainable else ()
+        return self.params
 
     def set_params(self, params: Params) -> None:
         self.params = params
