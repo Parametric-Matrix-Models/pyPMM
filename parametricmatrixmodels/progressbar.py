@@ -4,10 +4,34 @@ from time import time
 
 class ProgressBar:
     """
+    Factory for ProgressBarSingleton, which is a simple console progress bar.
+    """
+
+    Instance = None
+
+    def __new__(
+        cls, total: int | float, length: int = 40, extra_info: str = ""
+    ):
+        if cls.Instance is None:
+            cls.Instance = ProgressBarSingleton(total, length, extra_info)
+        else:
+            cls.Instance.reset(total, length, extra_info)
+        return cls.Instance
+
+
+class ProgressBarSingleton:
+    """
     Simple console progress bar
     """
 
     def __init__(
+        self, total: int | float, length: int = 40, extra_info: str = ""
+    ) -> None:
+        self.total = total
+        self.length = length
+        self.start(extra_info)
+
+    def reset(
         self, total: int | float, length: int = 40, extra_info: str = ""
     ) -> None:
         self.total = total

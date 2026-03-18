@@ -129,17 +129,22 @@ def autobatch(
             num_batches = orig_batch_size // max_batch_size
             remainder = orig_batch_size % max_batch_size
 
-            if verbose:
-                pb = ProgressBar(
+            def start_pb(in_X: Data) -> Data:
+                ProgressBar(
                     num_batches + 1 + (1 if remainder > 0 else 0), length=20
                 )
+                ProgressBar.Instance.start()
+                return in_X
+
+            if verbose:
+                X = jax.pure_callback(start_pb, X, X)
 
             def update_pb(out: Data, i: int) -> Data:
-                pb.update(i)
+                ProgressBar.Instance.update(i)
                 return out
 
             def end_pb(out: Data) -> Data:
-                pb.end()
+                ProgressBar.Instance.end()
                 return out
 
             def body_fn(i_new_state, X_batch):
@@ -147,7 +152,7 @@ def autobatch(
                 out, new_state = jfn(params, X_batch, training, new_state, rng)
                 if verbose:
                     if avoid_recompilation:
-                        pb.update(i + 1)
+                        ProgressBar.Instance.update(i + 1)
                     else:
                         out = jax.pure_callback(update_pb, out, out, i + 1)
                 return (i + 1, new_state), out
@@ -193,7 +198,7 @@ def autobatch(
                 # from the last batch processed
                 if verbose:
                     if avoid_recompilation:
-                        pb.update(num_batches + 2)
+                        ProgressBar.Instance.update(num_batches + 2)
                     else:
                         out = jax.pure_callback(
                             update_pb, out, out, num_batches + 2
@@ -237,7 +242,7 @@ def autobatch(
 
             if verbose:
                 if avoid_recompilation:
-                    pb.end()
+                    ProgressBar.Instance.end()
 
                 else:
                     out = jax.pure_callback(end_pb, out, out)
