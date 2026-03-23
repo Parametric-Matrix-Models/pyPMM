@@ -100,6 +100,7 @@ class Model(BaseModule):
         /,
         *,
         rng: Any | int | None = None,
+        name: str | None = None,
     ) -> None:
         """
         Initialize the model with a PyTree of modules and a random key.
@@ -120,6 +121,7 @@ class Model(BaseModule):
         ModelModules : Type alias for a PyTree of modules in a model.
         jax.random.key : JAX function to create a random key.
         """
+        self._name = name
         self.modules = modules if modules is not None else []
         if isinstance(modules, BaseModule):
             self.modules = [modules]
@@ -130,6 +132,17 @@ class Model(BaseModule):
         else:
             self.rng = rng
         self.reset()
+
+    @property
+    def name(self) -> str:
+        if self._name is not None:
+            return self._name
+        else:
+            return super().name
+
+    @name.setter
+    def name(self, value: str) -> None:
+        self._name = value
 
     def get_num_trainable_floats(self) -> int | None:
         num_trainable_floats = [
@@ -506,6 +519,9 @@ class Model(BaseModule):
         max_batch_size: int | None = None,
         avoid_recompilation: bool = False,
         verbose: bool = False,
+        extra_info: str = "",
+        newline: bool = True,
+        clearline: bool = False,
     ) -> Tuple[Data, ModelState] | Data:
         """
         Call the model with the input data.
@@ -590,6 +606,9 @@ class Model(BaseModule):
                 max_batch_size,
                 avoid_recompilation=avoid_recompilation,
                 verbose=verbose,
+                extra_info=self.name if extra_info == "" else extra_info,
+                newline=newline,
+                clearline=clearline,
             )
 
         out, new_state = self.autobatched_callable(
@@ -624,6 +643,9 @@ class Model(BaseModule):
         max_batch_size: int | None = None,
         avoid_recompilation: bool = False,
         verbose: bool = False,
+        extra_info: str = "",
+        newline: bool = True,
+        clearline: bool = False,
     ) -> (
         Tuple[
             PyTree[Inexact[Array, "num_samples ..."], "... DataStruct"],
@@ -765,6 +787,13 @@ class Model(BaseModule):
                 max_batch_size,
                 avoid_recompilation=avoid_recompilation,
                 verbose=verbose,
+                extra_info=(
+                    self.name + " (grad_input)"
+                    if extra_info == ""
+                    else extra_info
+                ),
+                newline=newline,
+                clearline=clearline,
             )
 
         grad_input_result, new_state = self.autobatched_grad_callable_inputs(
@@ -796,6 +825,9 @@ class Model(BaseModule):
         max_batch_size: int | None = None,
         avoid_recompilation: bool = False,
         verbose: bool = False,
+        extra_info: str = "",
+        newline: bool = True,
+        clearline: bool = False,
     ) -> (
         Tuple[
             PyTree[Inexact[Array, "num_samples ..."] | Tuple[()] | None],
@@ -897,6 +929,13 @@ class Model(BaseModule):
                 max_batch_size,
                 avoid_recompilation=avoid_recompilation,
                 verbose=verbose,
+                extra_info=(
+                    self.name + " (grad_params)"
+                    if extra_info == ""
+                    else extra_info
+                ),
+                newline=newline,
+                clearline=clearline,
             )
 
         grad_params_result, new_state = self.autobatched_grad_callable_params(
@@ -1582,6 +1621,7 @@ class Model(BaseModule):
         )
 
         return {
+            "model_name": self._name,
             "module_typenames": module_typenames,
             "module_modules": module_modules,
             "module_fulltypenames": module_fulltypenames,
@@ -1662,6 +1702,9 @@ class Model(BaseModule):
                 "Deserialized model structure does not match the expected "
                 "structure."
             )
+
+        # deserialize the model name
+        self._name = data.get("model_name", None)
 
         # deserialize the rng key
         key = jax.random.wrap_key_data(data["key_data"])

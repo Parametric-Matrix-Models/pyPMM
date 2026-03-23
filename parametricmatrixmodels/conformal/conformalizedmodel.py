@@ -148,6 +148,7 @@ class ConformalizedModel(object):
         model: Model,
         alpha: float = 1 - 0.682689492137,
         nn_dist_quantile: float = 0.5,
+        name: str | None = None,
     ):
         r"""
         Parameters
@@ -170,6 +171,7 @@ class ConformalizedModel(object):
             distance.
         """
 
+        self._name = name
         # default alpha
         self.default_alpha = alpha
         self.nn_dist_quantile = nn_dist_quantile
@@ -200,6 +202,17 @@ class ConformalizedModel(object):
         self._input_sensitivity = None
         self._parameter_sensitivity = None
         self._distance_sensitivity = None
+
+    @property
+    def name(self) -> str:
+        if self._name:
+            return self._name
+        else:
+            return f"ConformalizedModel({self.model.name})"
+
+    @name.setter
+    def name(self, value: str):
+        self._name = value
 
     def calibrate(
         self,
@@ -508,6 +521,8 @@ class ConformalizedModel(object):
                 max_batch_size=max_batch_size,
                 avoid_recompilation=avoid_recompilation,
                 verbose=verbose,
+                extra_info=self.name + " (statified bias correction)",
+                newline=False,
             )
             Y_cal_residuals = tree_util.sub(
                 Y_cal if Y_cal is not None else X_cal,
@@ -545,6 +560,8 @@ class ConformalizedModel(object):
                 max_batch_size=max_batch_size,
                 avoid_recompilation=avoid_recompilation,
                 verbose=verbose,
+                extra_info=self.name + " (global bias correction)",
+                newline=False,
             )
 
             Y_cal_residuals = tree_util.sub(
@@ -702,6 +719,8 @@ class ConformalizedModel(object):
                 fwd=fwd,
                 normalize=False,
                 verbose=verbose,
+                extra_info="calibration",
+                newline=False,
             )
             self._norm_S_params = pytree_robust_normalization(
                 S_params_cal, weights
@@ -718,6 +737,8 @@ class ConformalizedModel(object):
                     fwd=fwd,
                     normalize=False,
                     verbose=verbose,
+                    extra_info="calibration",
+                    newline=False,
                 )
                 self._norm_S_input = pytree_robust_normalization(
                     S_input_cal, weights
@@ -727,6 +748,9 @@ class ConformalizedModel(object):
                 X_cal,
                 dtype=dtype,
                 normalize=False,
+                verbose=verbose,
+                extra_info="calibration",
+                newline=False,
             )
             # no weights for distance sensitivity since it is independent of
             # the labels
@@ -741,6 +765,9 @@ class ConformalizedModel(object):
             rng=rng,
             update_state=update_state,
             fwd=fwd,
+            verbose=verbose,
+            extra_info="calibration",
+            newline=False,
         )
 
         if Y_cal_pred is None:
@@ -753,6 +780,8 @@ class ConformalizedModel(object):
                 max_batch_size=max_batch_size,
                 avoid_recompilation=avoid_recompilation,
                 verbose=verbose,
+                extra_info=self.name + " forward pass for calibration",
+                newline=False,
             )
 
         # bias correction, if applicable
@@ -795,6 +824,9 @@ class ConformalizedModel(object):
         avoid_recompilation: bool = False,
         normalize: bool = True,
         verbose: bool = False,
+        extra_info: str = "",
+        newline: bool = True,
+        clearline: bool = False,
     ) -> Data | None:
         if not self._parameter_sensitivity:
             return None
@@ -820,6 +852,13 @@ class ConformalizedModel(object):
             fwd=fwd,
             avoid_recompilation=avoid_recompilation,
             verbose=verbose,
+            extra_info=(
+                extra_info
+                if extra_info
+                else self.name + " parameter sensitivity"
+            ),
+            newline=newline,
+            clearline=clearline,
         )
 
         # l2 norm over params, scaled by abs(params), divided by number of
@@ -870,6 +909,9 @@ class ConformalizedModel(object):
         avoid_recompilation: bool = False,
         normalize: bool = True,
         verbose: bool = False,
+        extra_info: str = "",
+        newline: bool = True,
+        clearline: bool = False,
     ) -> Data | None:
         if not self._input_sensitivity:
             return None
@@ -889,6 +931,11 @@ class ConformalizedModel(object):
             avoid_recompilation=avoid_recompilation,
             return_state=False,
             verbose=verbose,
+            extra_info=(
+                extra_info if extra_info else self.name + " input sensitivity"
+            ),
+            newline=newline,
+            clearline=clearline,
         )
 
         # TODO: u_dtype should match the output dtype of the model, not the
@@ -953,6 +1000,10 @@ class ConformalizedModel(object):
         X: Data,
         dtype: jax.typing.DTypeLike = np.float64,
         normalize: bool = True,
+        verbose: bool = False,
+        extra_info: str = "",
+        newline: bool = True,
+        clearline: bool = False,
     ) -> Real[Array, "..."] | None:
         if not tree_util.any(self._distance_sensitivity):
             return None
@@ -979,6 +1030,17 @@ class ConformalizedModel(object):
                 "MAD normalization factor for distance sensitivity is not"
                 " computed. Please calibrate the model first to compute it."
             )
+
+        if verbose:
+            disp = (
+                self.name
+                + " distance sensitivity"
+                + (f" ({extra_info})" if extra_info else "")
+            )
+            if newline:
+                disp += "\n"
+            sys.stdout.write(disp)
+            sys.stdout.flush()
 
         flat_data = self._prepare_data_for_kdtree(X)
 
@@ -1017,6 +1079,12 @@ class ConformalizedModel(object):
 
         if normalize:
             distances = distances / self._norm_S_dist
+
+        if verbose:
+            if clearline and not newline:
+                cleardisp = "\r" + " " * len(disp) + "\r"
+                sys.stdout.write(cleardisp)
+                sys.stdout.flush()
 
         return distances[:, None]
 
@@ -1143,6 +1211,9 @@ class ConformalizedModel(object):
         fwd: bool | None = None,
         avoid_recompilation: bool = False,
         verbose: bool = False,
+        extra_info: str = "",
+        newline: bool = True,
+        clearline: bool = False,
     ) -> (
         # single alpha case, with and without state
         Tuple[Data, Tuple[Data, Data]]
@@ -1193,6 +1264,9 @@ class ConformalizedModel(object):
             max_batch_size=max_batch_size,
             avoid_recompilation=avoid_recompilation,
             verbose=verbose,
+            extra_info=self.name + (f"({extra_info})" if extra_info else ""),
+            newline=False,
+            clearline=True,
         )
 
         if not isinstance(
@@ -1269,6 +1343,8 @@ class ConformalizedModel(object):
             fwd=fwd,
             avoid_recompilation=avoid_recompilation,
             verbose=verbose,
+            newline=newline,
+            clearline=clearline,
         )
 
         qhat = self.get_qhat(alpha=alpha)
@@ -1310,6 +1386,9 @@ class ConformalizedModel(object):
         fwd: bool | None = None,
         avoid_recompilation: bool = False,
         verbose: bool = False,
+        extra_info: str = "",
+        newline: bool = True,
+        clearline: bool = False,
     ) -> Data:
         r"""
         The uncertainty heuristic used to compute conformity scores for
@@ -1397,10 +1476,17 @@ class ConformalizedModel(object):
                 avoid_recompilation=avoid_recompilation,
                 normalize=True,
                 verbose=verbose,
+                extra_info=extra_info,
+                newline=newline if self._training_data is None else False,
+                clearline=clearline if self._training_data is None else True,
             )
             u = tree_util.add(u, u_param)
 
         if self._training_data is not None:
+            any_distance_sensitivity = tree_util.any(
+                self._distance_sensitivity
+            )
+
             if tree_util.any(self._input_sensitivity):
                 u_input = self.input_sensitivity(
                     X,
@@ -1413,14 +1499,23 @@ class ConformalizedModel(object):
                     avoid_recompilation=avoid_recompilation,
                     normalize=True,
                     verbose=verbose,
+                    extra_info=extra_info,
+                    newline=newline if not any_distance_sensitivity else False,
+                    clearline=(
+                        clearline if not any_distance_sensitivity else True
+                    ),
                 )
                 u = tree_util.add(u, u_input)
 
-            if tree_util.any(self._distance_sensitivity):
+            if any_distance_sensitivity:
                 u_dist = self.distance_sensitivity(
                     X,
                     dtype=dtype,
                     normalize=True,
+                    verbose=verbose,
+                    extra_info=extra_info,
+                    newline=newline,
+                    clearline=clearline,
                 )
 
                 u = jax.tree.map(lambda x: x + u_dist, u)
@@ -1493,6 +1588,7 @@ class ConformalizedModel(object):
             "model_module": model_module,
             "model": serialized_model,
             "conformalization_state": conformalization_state,
+            "conformal_name": self._name,
         }
 
     @classmethod
@@ -1550,6 +1646,7 @@ class ConformalizedModel(object):
             model=model,
             alpha=default_alpha,
             nn_dist_quantile=nn_dist_quantile,
+            name=data.get("conformal_name", None),
         )
 
         conf_model.scores = conf_state["scores"]

@@ -75,6 +75,9 @@ def autobatch(
     max_batch_size: int | None,
     avoid_recompilation: bool = False,
     verbose: bool = False,
+    extra_info: str = "",
+    newline: bool = False,
+    clearline: bool = False,
 ) -> ModelCallable | ModuleCallable:
     r"""
     Decorator to automatically limit the batch size of a ``ModelCallable`` or
@@ -131,9 +134,11 @@ def autobatch(
 
             def start_pb(in_X: Data) -> Data:
                 ProgressBar(
-                    num_batches + 1 + (1 if remainder > 0 else 0), length=20
+                    num_batches + 1 + (1 if remainder > 0 else 0),
+                    length=20,
+                    extra_info=extra_info,
                 )
-                ProgressBar.Instance.start()
+                ProgressBar.Instance.start(extra_info=extra_info)
                 return in_X
 
             if verbose:
@@ -144,7 +149,7 @@ def autobatch(
                 return out
 
             def end_pb(out: Data) -> Data:
-                ProgressBar.Instance.end()
+                ProgressBar.Instance.end(newline=newline, clearline=clearline)
                 return out
 
             def body_fn(i_new_state, X_batch):
@@ -242,7 +247,9 @@ def autobatch(
 
             if verbose:
                 if avoid_recompilation:
-                    ProgressBar.Instance.end()
+                    ProgressBar.Instance.end(
+                        newline=newline, clearline=clearline
+                    )
 
                 else:
                     out = jax.pure_callback(end_pb, out, out)

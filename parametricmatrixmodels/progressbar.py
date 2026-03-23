@@ -36,6 +36,13 @@ class ProgressBarSingleton:
     ) -> None:
         self.total = total
         self.length = length
+        self.last = 0
+        self.first = True
+        self.starttime = None
+        self.longest_str = 0
+
+        # clear the line
+        self.end(clearline=True)
         self.start(extra_info)
 
     def start(self, extra_info: str = "") -> None:
@@ -87,7 +94,12 @@ class ProgressBarSingleton:
             sys.stdout.flush()
             self.last = progress
 
-    def end(self, final_info: str = "", newline: bool = False) -> None:
+    def end(
+        self,
+        final_info: str = "",
+        newline: bool = False,
+        clearline: bool = False,
+    ) -> None:
         if self.total <= 1e-9:
             return
         if self.starttime is None:
@@ -106,6 +118,10 @@ class ProgressBarSingleton:
             disp += " " * diff
         else:
             self.longest_str = disp_len
+
+        # if clearline, replace all characters except for \r with spaces
+        if clearline:
+            disp = "\r" + " " * (len(disp) - 1) + "\r"
 
         if newline:
             disp += "\n"
