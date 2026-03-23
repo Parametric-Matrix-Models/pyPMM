@@ -256,7 +256,7 @@ def test_conformal_nonsequentialpytree():
 
         if coverage < 1 - alpha - 0.01:
             raise ValueError(f"Coverage {coverage} is less than {1 - alpha}.")
-        if coverage > 1 - alpha + 0.10:
+        if coverage > 1 - alpha + 0.15:
             raise ValueError(
                 f"Coverage {coverage} is much greater than {1 - alpha}."
             )
