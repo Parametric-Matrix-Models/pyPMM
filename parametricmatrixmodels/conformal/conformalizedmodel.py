@@ -57,7 +57,7 @@ class ConformalizedModel(object):
 
     .. math::
 
-        S_\Theta(x) = \left\Vert\frac{\partial f}{\partial \Theta} \cdot
+        S_\Theta(x) = \left\Vert\frac{\partial f}{\partial \Theta} \odot
             \left|\Theta\right| \right\Vert_2^2 / \mathrm{size}(\Theta)
 
     the sensitivity of the model with respect to the continuous input features
@@ -65,7 +65,7 @@ class ConformalizedModel(object):
 
     .. math::
 
-        S_x(x) = \left\Vert\frac{\partial f}{\partial x_\mathrm{cont}} \cdot
+        S_x(x) = \left\Vert\frac{\partial f}{\partial x_\mathrm{cont}} \odot
             \mathrm{IQR}(X_\mathrm{cont,\,train}) \right\Vert_2^2 /
             n_\mathrm{cont\,features}
 
@@ -120,7 +120,7 @@ class ConformalizedModel(object):
     .. math::
         S_\mathrm{input}(x) = \left\Vert\frac{\partial f}
             {\partial x_\mathrm{cont}}
-            \cdot \sigma_{x_\mathrm{cont}} \right\Vert_2^2 /
+            \odot \sigma_{x_\mathrm{cont}} \right\Vert_2^2 /
             n_\mathrm{cont\,features}
 
     where :math:`\sigma_{x_\mathrm{cont}}` is the uncertainty in the continuous
