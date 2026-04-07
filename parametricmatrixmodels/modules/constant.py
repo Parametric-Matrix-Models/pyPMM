@@ -5,6 +5,7 @@ import jax.numpy as np
 from beartype import beartype
 from jaxtyping import Array, Inexact, PyTree, jaxtyped
 
+from parametricmatrixmodels.tree_util import is_shape_leaf
 from parametricmatrixmodels.typing import (
     Any,
     Data,
@@ -76,7 +77,7 @@ class Constant(BaseModule):
             )
 
         if constant is None and real is None and trainable:
-            real = jax.tree.map(lambda _: True, shape)
+            real = jax.tree.map(lambda _: True, shape, is_leaf=is_shape_leaf)
 
         if constant is not None:
             if shape is not None:
@@ -167,7 +168,9 @@ class Constant(BaseModule):
                 )
 
             if isinstance(self.real, bool):
-                self.real = jax.tree.map(lambda _: self.real, self.shape)
+                self.real = jax.tree.map(
+                    lambda _: self.real, self.shape, is_leaf=is_shape_leaf
+                )
 
             def init_constant(cur_key, sr):
                 shape, real = sr
@@ -207,8 +210,7 @@ class Constant(BaseModule):
                 lambda s, r: (s, r),
                 self.shape,
                 self.real,
-                is_leaf=lambda x: isinstance(x, tuple)
-                and all(isinstance(i, int) for i in x),
+                is_leaf=is_shape_leaf,
             )
 
             self.constant = jax.tree.map(
