@@ -444,6 +444,14 @@ class NonSequentialModel(Model):
             self._get_shape_progression(input_shape)
         )
 
+        # assert that the output shape is [batch, ...] with at least one
+        # non-batch dimension
+        if len(self.output_shape) < 1:
+            raise ValueError(
+                f"Model {self.name} output shape must have at least one"
+                f" non-batch dimension, but got {self.output_shape}."
+            )
+
         if verbose:
             print(f"{self.name} input shape: {self.input_shape}")
             # print progression of shapes through the execution order
@@ -717,6 +725,13 @@ class NonSequentialModel(Model):
             return self.output_shape
 
         _, _, output_shape = self._get_shape_progression(input_shape)
+
+        if len(output_shape) < 1:
+            raise ValueError(
+                f"Model {self.name} output shape must have at least one"
+                f" non-batch dimension, but got {output_shape}."
+            )
+
         return output_shape
 
     def _get_callable(

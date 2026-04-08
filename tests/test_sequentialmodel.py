@@ -11,7 +11,7 @@ def test_sequentialmodel_trivial():
     Test the SequentialModel class with trivial examples.
     """
 
-    modules = [pmm.modules.Constant(1.0)]
+    modules = [pmm.modules.Constant(np.array([1.0]))]
 
     model = pmm.SequentialModel(modules)
 
@@ -28,16 +28,16 @@ def test_sequentialmodel_trivial():
 
     output = model(input_data)
 
-    assert output.shape == (batch_dim,)
-    assert np.allclose(output, 1.0)
+    assert output.shape == (batch_dim, 1)
+    assert np.allclose(output, np.array([1.0]))
 
     model.append(pmm.modules.Bias(0.5, scalar=True))
 
     model.compile(None, input_data.shape[1:])
 
     output = model(input_data)
-    assert output.shape == (batch_dim,)
-    assert np.allclose(output, 1.5)
+    assert output.shape == (batch_dim, 1)
+    assert np.allclose(output, np.array([1.5]))
 
     # test with PyTree inputs, and PyTree modules
     modules = {

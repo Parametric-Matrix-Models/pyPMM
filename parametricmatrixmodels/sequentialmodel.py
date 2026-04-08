@@ -146,6 +146,14 @@ class SequentialModel(Model):
 
         self.output_shape = input_shape
 
+        # make sure the output shape is [batch, ...] with at least one
+        # non-batch dimension
+        if len(self.output_shape) < 1:
+            raise ValueError(
+                f"Model {self.name} output shape must have at least one"
+                f" non-batch dimension, but got {self.output_shape}."
+            )
+
     def get_output_shape(self, input_shape: DataShape, /) -> DataShape:
         r"""
         Get the output shape of the model given an input shape. Must be
@@ -171,6 +179,13 @@ class SequentialModel(Model):
             shape = input_shape
             for module in jax.tree.leaves(self.modules):
                 shape = module.get_output_shape(shape)
+
+            if len(shape) < 1:
+                raise ValueError(
+                    f"Model {self.name} output shape must have at least one"
+                    f" non-batch dimension, but got {shape}."
+                )
+
             return shape
 
     def _get_callable(
