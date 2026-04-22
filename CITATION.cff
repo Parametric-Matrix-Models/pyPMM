@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "Suggested citation for this software is below."
+authors:
+- family-names: "Cook"
+  given-names: "Patrick"
+  orcid: "https://orcid.org/0000-0002-7934-5428"
+title: "pyPMM: The Python Package for Parametric Matrix Models"
+version: 0.0.0+dev
+date-released: 2026-04-01
+url: "https://github.com/Parametric-Matrix-Models/pyPMM"
