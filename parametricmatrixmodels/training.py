@@ -1380,6 +1380,8 @@ def train(
             UserWarning,
         )
 
+    _callback_is_default = callback is None
+
     if callback is None:
 
         def callback(
@@ -1562,11 +1564,98 @@ def train(
             )
         orig_struct = orig_adam_struct
 
-    # now we resign the loss function to take the parameters as separate
-    # arguments
-    # this only needs to be done for the training loss function, since we don't
-    # take gradients of the validation loss function, but it's easier to just
-    # do it for both to keep the signatures consistent
+    # === PACK PARAMETERS BY DTYPE ===
+    # Instead of N individual parameter arrays (one per param leaf), pack
+    # them into 1-2 concatenated arrays (one per unique dtype). This
+    # reduces the number of traced operations inside JIT from O(N) to
+    # O(num_dtype_groups), dramatically cutting compile time for large
+    # models.
+
+    if not resume:
+        param_arrays = init_params_flat
+    else:
+        param_arrays = [state.params for state in adam_state_flat]
+
+    num_flat_params = len(param_arrays)
+    param_shapes = [p.shape for p in param_arrays]
+    param_sizes = [p.size for p in param_arrays]
+
+    # Group params by dtype for efficient packing
+    dtype_to_indices: Dict[str, list] = {}
+    for i, p in enumerate(param_arrays):
+        key = str(p.dtype)
+        if key not in dtype_to_indices:
+            dtype_to_indices[key] = []
+        dtype_to_indices[key].append(i)
+
+    # Sort for deterministic ordering
+    sorted_dtype_groups = sorted(dtype_to_indices.items())
+
+    # Build index mapping: orig_idx -> (group_idx, offset_within_group)
+    param_to_group: Dict[int, tuple] = {}
+    group_info = []  # list of (dtype_obj, indices_in_group)
+    for group_idx, (_key, indices) in enumerate(sorted_dtype_groups):
+        dt = param_arrays[indices[0]].dtype
+        offset = 0
+        for orig_idx in indices:
+            param_to_group[orig_idx] = (group_idx, offset)
+            offset += param_sizes[orig_idx]
+        group_info.append((dt, indices))
+
+    num_groups = len(group_info)
+
+    # Build unpack metadata (static, used inside JIT)
+    unpack_meta = []
+    for i in range(num_flat_params):
+        group_idx, offset = param_to_group[i]
+        unpack_meta.append(
+            (group_idx, offset, param_sizes[i], param_shapes[i])
+        )
+
+    # Pack params into per-dtype arrays
+    packed_params_list = []
+    for _dt, indices in group_info:
+        flat_arrays = [param_arrays[i].flatten() for i in indices]
+        packed_params_list.append(np.concatenate(flat_arrays))
+
+    # Create trainable masks per dtype group (for gradient masking)
+    packed_masks = []
+    for _dt, indices in group_info:
+        mask_parts = []
+        for i in indices:
+            if trainable_flags_flat[i]:
+                mask_parts.append(
+                    np.ones(param_sizes[i], dtype=np.float32)
+                )
+            else:
+                mask_parts.append(
+                    np.zeros(param_sizes[i], dtype=np.float32)
+                )
+        packed_masks.append(np.concatenate(mask_parts))
+
+    def unpack_packed_params(*packed_params):
+        """Unpack per-dtype packed arrays back to individual params."""
+        result = []
+        for group_idx, offset, size, shape in unpack_meta:
+            part = packed_params[group_idx][offset : offset + size]
+            result.append(part.reshape(shape))
+        return result
+
+    def pack_params_from_flat(params_flat_list):
+        """Pack individual param arrays into per-dtype packed arrays."""
+        packed = []
+        for dt, indices in group_info:
+            flat_arrays = [
+                params_flat_list[i].astype(dt).flatten()
+                for i in indices
+            ]
+            packed.append(np.concatenate(flat_arrays))
+        return packed
+
+    # === RESIGN LOSS FUNCTIONS FOR PACKED PARAMS ===
+    # The loss functions now accept 1-2 packed arrays instead of N
+    # individual arrays. Gradient masking via stop_gradient ensures
+    # non-trainable params receive zero gradients.
 
     orig_loss_fn = loss_fn
     orig_val_loss_fn = val_loss_fn
@@ -1580,11 +1669,27 @@ def train(
         training: bool,
         state: ModelState,
         rng: Any,
-        *params: Params,
+        *packed_params: Params,
     ) -> Tuple[float | Float[Array, ""], ModelState]:
-        reconstructed_params = jax.tree.unflatten(orig_struct, params)
+        # Apply gradient mask: stop_gradient for non-trainable elements
+        masked = tuple(
+            jax.lax.stop_gradient(pp)
+            + (pp - jax.lax.stop_gradient(pp)) * mask.astype(pp.dtype)
+            for pp, mask in zip(packed_params, packed_masks)
+        )
+        params_flat = unpack_packed_params(*masked)
+        reconstructed_params = jax.tree.unflatten(
+            orig_struct, params_flat
+        )
         return orig_loss_fn(
-            epoch, X, Y, Y_unc, reconstructed_params, training, state, rng
+            epoch,
+            X,
+            Y,
+            Y_unc,
+            reconstructed_params,
+            training,
+            state,
+            rng,
         )
 
     @jaxtyped(typechecker=beartype)
@@ -1596,18 +1701,25 @@ def train(
         training: bool,
         state: ModelState,
         rng: Any,
-        *params: Params,
+        *packed_params: Params,
     ) -> Tuple[float | Float[Array, ""], ModelState]:
-        reconstructed_params = jax.tree.unflatten(orig_struct, params)
+        params_flat = unpack_packed_params(*packed_params)
+        reconstructed_params = jax.tree.unflatten(
+            orig_struct, params_flat
+        )
         return orig_val_loss_fn(
-            epoch, X, Y, Y_unc, reconstructed_params, training, state, rng
+            epoch,
+            X,
+            Y,
+            Y_unc,
+            reconstructed_params,
+            training,
+            state,
+            rng,
         )
 
-    # now we calculate which argnums are trainable based on the
-    # trainable_flags_flat
-    trainable_argnums = [
-        7 + i for i, flag in enumerate(trainable_flags_flat) if flag
-    ]
+    # All packed groups are "trainable" (masking is in the loss function)
+    trainable_argnums = [7 + i for i in range(num_groups)]
 
     # set up everything for the JAX trainer
     # has_aux=True allows us to return the new state from the loss function
@@ -1664,8 +1776,30 @@ def train(
             clip=clip,
         )
 
+    # Create packed adam states (1-2 instead of N)
     if not resume or adam_state is None:
-        adam_state_flat = jax.tree.map(init_fn, init_params_flat)
+        packed_adam_states = [init_fn(p) for p in packed_params_list]
+    else:
+        packed_adam_states = []
+        for _dt, indices in group_info:
+            packed_p = np.concatenate(
+                [adam_state_flat[i].params.flatten() for i in indices]
+            )
+            packed_m = np.concatenate(
+                [adam_state_flat[i].m.flatten() for i in indices]
+            )
+            packed_v = np.concatenate(
+                [adam_state_flat[i].v.flatten() for i in indices]
+            )
+            packed_epoch = max(
+                int(adam_state_flat[i].epoch) for i in indices
+            )
+            packed_adam_states.append(
+                OptimizerState(packed_p, packed_m, packed_v, packed_epoch)
+            )
+
+    # Packed trainable flags (all True - masking handled in loss)
+    packed_trainable_flags = tuple(True for _ in range(num_groups))
 
     # make sure the validation batch size isn't larger than the validation set
     num_val_samples = jax.tree.leaves(X_val)[0].shape[0]
@@ -1680,9 +1814,27 @@ def train(
     elif val_batch_size <= 0:
         val_batch_size = num_val_samples
 
+    # Wrap callback to work with packed params.
+    # For the default (identity) callback, skip wrapping since it works
+    # with any param format and avoids O(N) unpack/repack overhead.
+    if _callback_is_default:
+        packed_callback = callback
+    else:
+        orig_callback = callback
+
+        def packed_callback(rng, epoch, packed_params_list_):
+            params_flat = unpack_packed_params(*packed_params_list_)
+            params_tree = jax.tree.unflatten(orig_struct, params_flat)
+            rng, new_params_tree = orig_callback(
+                rng, epoch, params_tree
+            )
+            new_params_flat, _ = jax.tree.flatten(new_params_tree)
+            new_packed = pack_params_from_flat(new_params_flat)
+            return rng, new_packed
+
     # train
     (
-        final_adam_state_flat,
+        final_packed_adam_states,
         final_model_state,
         final_model_rng,
         final_epoch,
@@ -1692,8 +1844,8 @@ def train(
         batch_rng,
         update_fn,
         increment_epoch,
-        adam_state_flat,
-        tuple(trainable_flags_flat),
+        packed_adam_states,
+        packed_trainable_flags,
         get_params,
         update_params_direct,
         init_state,  # initial model state
@@ -1714,19 +1866,36 @@ def train(
         target_loss=target_loss,
         early_stopping_patience=early_stopping_patience,
         early_stopping_min_delta=early_stopping_min_delta,
-        callback=callback,
+        callback=packed_callback,
         unroll=unroll,
         verbose=verbose,
     )
 
-    # rebuild the params PyTree
-    best_params_list = jax.tree.map(
+    # === UNPACK RESULTS ===
+    # Extract final params from packed adam states
+    final_packed_params_list = jax.tree.map(
         get_params,
-        final_adam_state_flat,
+        final_packed_adam_states,
         is_leaf=lambda x: isinstance(x, OptimizerState),
     )
-    best_params = jax.tree.unflatten(orig_struct, best_params_list)
-    final_adam_state = jax.tree.unflatten(orig_struct, final_adam_state_flat)
+    final_params_flat = unpack_packed_params(*final_packed_params_list)
+    best_params = jax.tree.unflatten(orig_struct, final_params_flat)
+
+    # Reconstruct individual adam states for the caller
+    final_adam_states_flat = []
+    for i in range(num_flat_params):
+        group_idx, offset = param_to_group[i]
+        packed_state = final_packed_adam_states[group_idx]
+        size = param_sizes[i]
+        shape = param_shapes[i]
+        p = packed_state.params[offset : offset + size].reshape(shape)
+        m = packed_state.m[offset : offset + size].reshape(shape)
+        v = packed_state.v[offset : offset + size].reshape(shape)
+        e = packed_state.epoch
+        final_adam_states_flat.append(OptimizerState(p, m, v, e))
+    final_adam_state = jax.tree.unflatten(
+        orig_struct, final_adam_states_flat
+    )
 
     # return the final parameters
     return (
